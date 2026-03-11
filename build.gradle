@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.nhj'
+version = '0.0.1-SNAPSHOT'
+description = 'LibraryManage'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    //implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    //implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    //implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+
+    implementation 'org.springframework.boot:spring-boot-h2console'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    runtimeOnly 'com.h2database:h2'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+    //testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+    //testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
+    //testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+    //
+    implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-71', version: '3.15.2'
+
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

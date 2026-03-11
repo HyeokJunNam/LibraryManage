@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: max
+    password: 1234
+    url: jdbc:h2:file:./data/library;AUTO_SERVER=TRUE
+  jpa:
+    # JPA ??? ???? ?? ??
+    open-in-view: false
+    # DataBase DDL ?? ??,??,?? ??
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        # SQL ??
+        show_sql: true
+        # ?? SQL ??? ??? ??
+        format_sql: true
+        # ?? SQL ?? ??
+        highlight_sql: true
+        default_batch_fetch_size: 100
+        query:
+          fail_on_pagination_over_collection_fetch: true
