@@ -6,11 +6,11 @@ import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberManageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,8 +29,8 @@ public class MemberController {
 
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
-    public ResponseEntity<ApiResponse> getMembers(@RequestBody(required = false) MemberRequest.SearchDto searchDto) {
-        List<MemberResponse.InfoDto> infoDtoList = memberManageService.getMembers(searchDto);
+    public ResponseEntity<ApiResponse> getMembers(Pageable pageable) {
+        Page<MemberResponse.InfoDto> infoDtoList = memberManageService.getMembers(pageable);
         ApiResponse apiResponse = ApiResponse.result(infoDtoList);
 
         return ResponseEntity.ok().body(apiResponse);

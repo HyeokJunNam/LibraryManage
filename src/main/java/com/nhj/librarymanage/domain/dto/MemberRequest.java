@@ -8,10 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberRequest {
 
-    // 수행 할 작업에 필요한 파라미터 (CRUD 제외)
     @AllArgsConstructor
     @Getter
-    public static class SearchDto {
+    public static class ParamDto {
 
     }
 

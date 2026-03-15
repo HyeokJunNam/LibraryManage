@@ -29,8 +29,8 @@ public class BookController {
 
     @Description(value = "도서 목록 조회")
     @GetMapping("/books")
-    public ResponseEntity<ApiResponse> getBooks(@RequestBody(required = false) BookRequest.SearchDto searchDto) {
-        List<BookResponse.InfoDto> infoDtoList = bookManageService.getBooks(searchDto);
+    public ResponseEntity<ApiResponse> getBooks(@RequestBody(required = false) BookRequest.ParamDto paramDto) {
+        List<BookResponse.InfoDto> infoDtoList = bookManageService.getBooks(paramDto);
         ApiResponse apiResponse = ApiResponse.result(infoDtoList);
 
         return ResponseEntity.ok().body(apiResponse);

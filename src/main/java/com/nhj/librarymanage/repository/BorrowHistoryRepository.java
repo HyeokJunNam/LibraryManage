@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BorrowHistoryRepository extends JpaRepository<BorrowHistoryEntity, Long> {
-
+public interface BorrowHistoryRepository extends JpaRepository<BorrowHistoryEntity, Long>, BorrowHistoryRepositoryCustom {
 
 }

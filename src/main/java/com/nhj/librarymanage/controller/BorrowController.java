@@ -3,14 +3,14 @@ package com.nhj.librarymanage.controller;
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.BorrowResponse;
 import com.nhj.librarymanage.service.BorrowService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,9 +20,9 @@ public class BorrowController {
 
     @Description(value = "도서 대여 현황 조회")
     @GetMapping("/borrows")
-    public ResponseEntity<ApiResponse> getBorrows() {
-        //BookResponse.InfoDto infoDtoList = bookManageService.getBook(id);
-        ApiResponse apiResponse = ApiResponse.result(null);
+    public ResponseEntity<ApiResponse> getBorrowHistories(@ModelAttribute BorrowRequest.ParamDto paramDto, Pageable pageable) {
+        Page<BorrowResponse.InfoDto> infoDtoList = borrowService.getBorrowHistories(paramDto, pageable);
+        ApiResponse apiResponse = ApiResponse.result(infoDtoList);
 
         return ResponseEntity.ok().body(apiResponse);
     }

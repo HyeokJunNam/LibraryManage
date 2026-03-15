@@ -10,6 +10,9 @@ public enum ErrorCode implements Error {
 
     MEMBER_NOT_FOND("Not Found", "요청한 회원을 찾을 수 없습니다."),
     BOOK_NOT_FOND("Not Found", "요청한 책을 찾을 수 없습니다."),
+
+    BORROWED_BOOK("Invalid State", "이미 대여 중인 책 입니다."),
+    NOT_BORROWED_BOOK("Invalid State", "대여 중인 책이 아닙니다.")
     ;
 
     private final HttpStatus status = HttpStatus.BAD_REQUEST;

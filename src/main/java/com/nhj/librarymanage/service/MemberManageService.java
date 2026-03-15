@@ -5,10 +5,10 @@ import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.domain.entity.MemberEntity;
 import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,10 +21,9 @@ public class MemberManageService {
     }
 
     @Transactional
-    public List<MemberResponse.InfoDto> getMembers(MemberRequest.SearchDto searchDto) {
-        return memberRepository.findAll().stream().map(MemberResponse.InfoDto::from).toList();
+    public Page<MemberResponse.InfoDto> getMembers(Pageable pageable) {
+        return memberRepository.findAll(pageable).map(MemberResponse.InfoDto::from);
     }
-
 
     @Transactional
     public void createMember(MemberRequest.CreateDto createDto) {

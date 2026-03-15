@@ -16,7 +16,7 @@ public class BookResponse {
         private String name;
         private boolean borrowed;
 
-        public static InfoDto from(BookEntity bookEntity) {
+        public static InfoDto toDto(BookEntity bookEntity) {
             return InfoDto.builder()
                     .id(bookEntity.getId())
                     .name(bookEntity.getName())

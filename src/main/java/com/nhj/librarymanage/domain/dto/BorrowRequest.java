@@ -1,18 +1,26 @@
 package com.nhj.librarymanage.domain.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BorrowRequest {
 
-    // 수행 할 작업에 필요한 파라미터 (CRUD 제외)
     @AllArgsConstructor
     @Getter
-    public static class SearchDto {
+    public static class ParamDto {
+        private boolean borrowed;
+    }
 
+    @Builder(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class SearchConditionDto {
+        private boolean onlyBorrowed;
+
+        public static SearchConditionDto of(boolean onlyBorrowed) {
+            return SearchConditionDto.builder()
+                    .onlyBorrowed(onlyBorrowed)
+                    .build();
+        }
     }
 
     @AllArgsConstructor

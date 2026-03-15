@@ -17,12 +17,14 @@ public class BookManageService {
     private final BookRepository bookRepository;
 
     public BookResponse.InfoDto getBook(long id) {
-        return BookResponse.InfoDto.from(bookRepository.get(id));
+        return BookResponse.InfoDto.toDto(bookRepository.get(id));
     }
 
     @Transactional
-    public List<BookResponse.InfoDto> getBooks(BookRequest.SearchDto searchDto) {
-        return bookRepository.findAll().stream().map(BookResponse.InfoDto::from).toList();
+    public List<BookResponse.InfoDto> getBooks(BookRequest.ParamDto paramDto) {
+        List<BookEntity> bookEntityList = bookRepository.findAll();
+
+        return bookEntityList.stream().map(BookResponse.InfoDto::toDto).toList();
     }
 
 
