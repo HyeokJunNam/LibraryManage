@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### in-mem db ###
+/data/
+*.mv.db
+*.trace.db
+*.db
