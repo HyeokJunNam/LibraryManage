@@ -11,12 +11,14 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
-
     Optional<MemberEntity> findById(long id);
+
+    Optional<MemberEntity> findByLoginId(String loginId);
+
+    boolean existsByLoginId(String loginId);
 
     default MemberEntity get(long id) {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOND));
     }
-
 
 }

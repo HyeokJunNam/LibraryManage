@@ -3,16 +3,24 @@ package com.nhj.librarymanage.service;
 import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.domain.entity.MemberEntity;
+import com.nhj.librarymanage.error.ErrorCode;
+import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
+import com.nhj.librarymanage.security.member.SecurityUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
-public class MemberManageService {
+public class MemberManageService extends SecurityUserService<MemberEntity> {
+
+    private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
 
@@ -27,7 +35,16 @@ public class MemberManageService {
 
     @Transactional
     public void createMember(MemberRequest.CreateDto createDto) {
+        boolean existsMember = memberRepository.existsByLoginId(createDto.getLoginId());
+
+        if (existsMember) {
+            throw new EntityAlreadyExistsException(ErrorCode.ALREADY_MEMBER);
+        }
+
         MemberEntity memberEntity = MemberEntity.builder()
+                .loginId(createDto.getLoginId())
+                .password(passwordEncoder.encode(createDto.getPassword()))
+                .role(createDto.getRole())
                 .name(createDto.getName())
                 .build();
 
@@ -46,4 +63,8 @@ public class MemberManageService {
         memberRepository.deleteById(id);
     }
 
+    @Override
+    public Optional<MemberEntity> findUser(String loginId) {
+        return memberRepository.findByLoginId(loginId);
+    }
 }

@@ -37,7 +37,12 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-h2console'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    // implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // jwt
+    implementation group: 'com.auth0', name: 'java-jwt', version: '4.5.1'
+
+    // jjwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.13.0'
     //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     runtimeOnly 'com.h2database:h2'

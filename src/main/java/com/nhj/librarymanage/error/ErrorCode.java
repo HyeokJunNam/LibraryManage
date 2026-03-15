@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode implements Error {
 
+    ALREADY_MEMBER("Already Exists", "이미 존재하는 회원 ID 입니다."),
+
     MEMBER_NOT_FOND("Not Found", "요청한 회원을 찾을 수 없습니다."),
     BOOK_NOT_FOND("Not Found", "요청한 책을 찾을 수 없습니다."),
 
