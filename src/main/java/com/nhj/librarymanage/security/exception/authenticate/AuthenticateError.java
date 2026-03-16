@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Getter
-public enum AuthenticateErrorCode implements SecurityError {
+public enum AuthenticateError implements SecurityError {
 
     UNEXPECTED_AUTHENTICATION("Authenticate Error", "예상치 못한 인증 오류가 발생했습니다."),
     AUTHENTICATION_FAILURE("Authenticate Error", "사용자 인증에 실패했습니다."),

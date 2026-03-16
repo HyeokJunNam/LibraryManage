@@ -1,6 +1,5 @@
 package com.nhj.librarymanage.security.member;
 
-import com.nhj.librarymanage.security.exception.security.DuplicateRoleLevelException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -32,7 +31,7 @@ public enum Role {
             Role currentRole = roles.get(i);
 
             if (currentRole.getLevel() == previousLevel) {
-                throw new DuplicateRoleLevelException("Duplicate Role Level Found");
+                throw new RuntimeException("Duplicate Role Level Found");
             }
 
             roleStringBuilder.append(currentRole.name());

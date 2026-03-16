@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.security.authenticate;
 
-import com.nhj.librarymanage.security.exception.authenticate.AuthenticateErrorCode;
-import com.nhj.librarymanage.security.exception.authenticate.SecurityAuthenticateException;
+import com.nhj.librarymanage.security.exception.authenticate.AuthenticateError;
+import com.nhj.librarymanage.security.exception.authenticate.AuthenticateFailureException;
 import com.nhj.librarymanage.security.member.SecurityUser;
 import com.nhj.librarymanage.security.member.SecurityUserService;
 import com.nhj.librarymanage.security.util.AuthorityUtils;
@@ -31,16 +31,16 @@ public class AbstractCustomAuthenticationProvider<T extends SecurityUser> implem
     private SecurityUser getUser(String requestLoginId) {
         if (StringUtils.hasText(requestLoginId)) {
             return securityUserService.loadSecurityUser(requestLoginId)
-                    .orElseThrow(() -> new SecurityAuthenticateException(AuthenticateErrorCode.MEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new AuthenticateFailureException(AuthenticateError.MEMBER_NOT_FOUND));
         }
         else {
-            throw new SecurityAuthenticateException(AuthenticateErrorCode.INVALID_LOGIN_REQUEST);
+            throw new AuthenticateFailureException(AuthenticateError.INVALID_LOGIN_REQUEST);
         }
     }
 
     private void validatePassword(SecurityUser securityUser, String requestPassword) {
         if (!passwordEncoder.matches(requestPassword, securityUser.getPassword())) {
-            throw new SecurityAuthenticateException(AuthenticateErrorCode.LOGIN_FAILURE);
+            throw new AuthenticateFailureException(AuthenticateError.LOGIN_FAILURE);
         }
     }
 

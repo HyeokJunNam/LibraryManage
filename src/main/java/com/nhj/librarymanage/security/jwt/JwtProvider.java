@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.security.jwt;
 
-import com.nhj.librarymanage.security.exception.authenticate.CustomJwtException;
+import com.nhj.librarymanage.security.exception.authenticate.AuthenticateError;
+import com.nhj.librarymanage.security.exception.jwt.CustomJwtException;
 import com.nhj.librarymanage.security.member.SecurityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -38,7 +39,8 @@ public class JwtProvider {
 
     public String parseJwt(String authorization) {
         if (authorization == null || !authorization.startsWith("Bearer")) {
-            throw new CustomJwtException(null);
+            // TODO 예외 변경
+            throw new CustomJwtException(AuthenticateError.INVALID_AUTHENTICATION);
         }
 
         return authorization.replace("Bearer ", "");

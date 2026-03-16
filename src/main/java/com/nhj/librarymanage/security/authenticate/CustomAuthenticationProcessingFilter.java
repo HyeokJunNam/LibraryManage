@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.security.authenticate;
 
-import com.nhj.librarymanage.security.exception.authenticate.AuthenticateErrorCode;
-import com.nhj.librarymanage.security.exception.authenticate.SecurityAuthenticateException;
+import com.nhj.librarymanage.security.exception.authenticate.AuthenticateError;
+import com.nhj.librarymanage.security.exception.authenticate.AuthenticateFailureException;
 import com.nhj.librarymanage.security.jwt.JwtProvider;
 import com.nhj.librarymanage.security.member.SecurityUser;
 import jakarta.servlet.FilterChain;
@@ -65,7 +65,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
         SecurityUser securityUser = (SecurityUser) authResult.getDetails();
 
         if (securityUser == null) {
-            throw new SecurityAuthenticateException(AuthenticateErrorCode.AUTHENTICATION_FAILURE);
+            throw new AuthenticateFailureException(AuthenticateError.AUTHENTICATION_FAILURE);
         }
 
         String accessToken = jwtProvider.generateToken(securityUser);

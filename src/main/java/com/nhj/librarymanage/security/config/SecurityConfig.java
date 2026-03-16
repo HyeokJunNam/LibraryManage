@@ -1,7 +1,9 @@
 package com.nhj.librarymanage.security.config;
 
 import com.nhj.librarymanage.security.authenticate.CustomAuthenticationProcessingFilter;
+import com.nhj.librarymanage.security.authorize.JwtAuthorizationFilter;
 import com.nhj.librarymanage.security.jwt.JwtProvider;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -70,10 +72,8 @@ public class SecurityConfig {
     private final PathPatternRequestMatcher[] DEFAULT_PERMIT_REQUEST_MATCHERS = {
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/refresh"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/logout"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/test")
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/login")
     };
-
-
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -91,26 +91,18 @@ public class SecurityConfig {
         return source;
     }
 
-    // UserDetailsService 구현체가 2개 이상인 경우, AuthenticationManager 가 어떤 UserDetailsService 를 사용 해야 할 지 모르겠는데? 라는 상황이 나올 것이므로
-    // 직접 하나씩 지정해줌으로써 모호성을 해결하여 AuthenticationManager 를 생성한다.. 라는 목적으로 쓰는거구만?
-    // 그것도 기본 UserDetailsService 를 구현한 구현체를 쓴다는 전제 조건 하에..! 그래야 내부 로직에서 처리할 수 있으니까.. 난 그 과정을 오버라이드 했으니 필요가 없는거지.
-    /*@Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-
-        authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
-
-        return authenticationManagerBuilder.build();
-    }*/
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
-                                           AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, JwtProvider jwtProvider) throws Exception {
+                                           AuthenticationManager authenticationManager,
+                                           AuthenticationEntryPoint authenticationEntryPoint,
+                                           JwtProvider jwtProvider) {
+
         CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter =
                 new CustomAuthenticationProcessingFilter(authenticationManager, authenticationEntryPoint, jwtProvider);
+
+        JwtAuthorizationFilter jwtAuthorizationFilter =
+                new JwtAuthorizationFilter(authenticationEntryPoint, jwtProvider);
+
 
         httpSecurity
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
@@ -125,12 +117,12 @@ public class SecurityConfig {
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    request.anyRequest().permitAll();
-                    // request.requestMatchers(DEFAULT_PERMIT_REQUEST_MATCHERS).permitAll();
-
-                    //request.anyRequest().authenticated();
+                    //request.anyRequest().permitAll();
+                    request.requestMatchers(DEFAULT_PERMIT_REQUEST_MATCHERS).permitAll();
+                    request.anyRequest().authenticated();
                 })
-                .addFilterBefore(customAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(customAuthenticationProcessingFilter, JwtAuthorizationFilter.class);
         ;
 
                /* .addFilterBefore(securityCustomFilterFactory.jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
