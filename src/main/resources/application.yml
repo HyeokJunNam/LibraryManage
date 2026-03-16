@@ -21,3 +21,12 @@ spring:
         default_batch_fetch_size: 100
         query:
           fail_on_pagination_over_collection_fetch: true
+
+
+jwt:
+  token:
+    header: Authorization
+    issuer: admin
+    secret: sWn0JzD7/zhJlQrCh2NA8h8ko56EZdBb/mNJGXhW/g4as8eVbERVjLickmZr8K78cLYCbOrCb9xo4W1E1WZEEA==
+    expiry-seconds: 100000000
+    refresh-expiry-seconds : 100000000

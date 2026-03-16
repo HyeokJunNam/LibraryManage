@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.security.config;
 
 import com.nhj.librarymanage.security.authenticate.CustomAuthenticationProcessingFilter;
+import com.nhj.librarymanage.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
@@ -105,8 +107,10 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
-        CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter = new CustomAuthenticationProcessingFilter(authenticationManager);
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
+                                           AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint, JwtProvider jwtProvider) throws Exception {
+        CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter =
+                new CustomAuthenticationProcessingFilter(authenticationManager, authenticationEntryPoint, jwtProvider);
 
         httpSecurity
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
