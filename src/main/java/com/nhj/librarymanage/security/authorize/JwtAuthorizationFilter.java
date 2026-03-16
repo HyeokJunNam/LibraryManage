@@ -34,47 +34,54 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final JwtProvider jwtProvider;
 
-    private static final List<RequestMatcher> SKIP_REQUEST_MATCHER = List.of(
+    /*private static final List<RequestMatcher> SKIP_REQUEST_MATCHER = List.of(
+            RequestMatherFactory.of(HttpMethod.GET, "/login"),
+            RequestMatherFactory.of(HttpMethod.GET, "/favicon.ico"),
             RequestMatherFactory.of(HttpMethod.POST, "/login"),
-            RequestMatherFactory.of(HttpMethod.POST, "/refresh"),
-            RequestMatherFactory.of(HttpMethod.POST, "/logout"),
-            RequestMatherFactory.of(HttpMethod.POST, "/test")
-    );
+            RequestMatherFactory.of(HttpMethod.GET, "/signup"),
+            RequestMatherFactory.of(HttpMethod.GET, "/js/**"),
+            RequestMatherFactory.of(HttpMethod.POST, "/members")
+    );*/
+
+    private void handleAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+        SecurityContextHolder.clearContext();
+        authenticationEntryPoint.commence(request, response, e);
+    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException, AccessDeniedException {
         try {
             String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken;
-
             if (StringUtils.hasText(authorization)) {
                 Claims claims = jwtProvider.getClaims(jwtProvider.parseJwt(authorization));
-                usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.authenticated(claims, null, JwtUtils.extractRole(claims));
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.authenticated(claims, null, JwtUtils.extractRole(claims));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+                filterChain.doFilter(request, response);
             }
             else {
-                throw new CustomJwtException(AuthenticateError.NO_AUTHENTICATION);
+                // handleAuthenticationFailure(request, response, new CustomJwtException(AuthenticateError.NO_AUTHENTICATION));
+
+                filterChain.doFilter(request, response);
+
+                /*UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(null, null);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                filterChain.doFilter(request, response);*/
             }
-            //securityService.verifyAccountBlack(UUID.fromString(claims.getAudience()), authorization);
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            filterChain.doFilter(request, response);
         }
         catch (AuthenticationException e) {
-            SecurityContextHolder.clearContext();
-
-            authenticationEntryPoint.commence(request, response, e);
+            handleAuthenticationFailure(request, response, e);
         }
         catch (JwtException e) {
-            SecurityContextHolder.clearContext();
-
-            authenticationEntryPoint.commence(request, response, new CustomJwtException(AuthenticateError.INVALID_AUTHENTICATION, e));
+            handleAuthenticationFailure(request, response, new CustomJwtException(AuthenticateError.INVALID_AUTHENTICATION));
         }
     }
 
-    @Override
+    /*@Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         return SKIP_REQUEST_MATCHER.stream()
                 .anyMatch(matcher -> matcher.matches(request));
-    }
+    }*/
 
 }

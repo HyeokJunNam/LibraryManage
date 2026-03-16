@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f5f7fa;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .container{
+            width:380px;
+        }
+
+        .card{
+            background:white;
+            padding:40px;
+            border-radius:15px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .title{
+            text-align:center;
+            font-size:26px;
+            font-weight:700;
+            margin-bottom:25px;
+        }
+
+        .input-group{
+            margin-bottom:15px;
+        }
+
+        .input-group label{
+            display:block;
+            margin-bottom:6px;
+        }
+
+        .input-group input{
+            width:100%;
+            height:42px;
+            padding:0 10px;
+            border:1px solid #dcdcdc;
+            border-radius:8px;
+        }
+
+        .btn{
+            width:100%;
+            height:45px;
+            border:none;
+            border-radius:10px;
+            background:#4c7dff;
+            color:white;
+            font-size:15px;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .footer{
+            margin-top:15px;
+            text-align:center;
+        }
+
+        .footer a{
+            color:#4c7dff;
+            text-decoration:none;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="title">
+            회원가입
+        </div>
+
+        <form id="signupForm">
+
+            <div class="input-group">
+                <label>아이디</label>
+                <input id="loginId" type="text" required placeholder="아이디 입력">
+            </div>
+
+            <div class="input-group">
+                <label>비밀번호</label>
+                <input id="password" type="password" required placeholder="비밀번호 입력">
+            </div>
+
+            <div class="input-group">
+                <label>이름</label>
+                <input id="name" type="text" required placeholder="이름 입력">
+            </div>
+
+            <button class="btn" type="submit">
+                회원가입
+            </button>
+
+        </form>
+
+        <div class="footer">
+            이미 계정이 있으신가요?
+            <a th:href="@{/login}">로그인</a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    document.getElementById("signupForm").addEventListener("submit", signup);
+
+    async function signup(e){
+
+        e.preventDefault();
+
+        const data = {
+            loginId: document.getElementById("loginId").value,
+            password: document.getElementById("password").value,
+            name: document.getElementById("name").value
+        };
+
+        try {
+
+            const response = await fetch("/members",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(data)
+            });
+
+            // 성공 (200~299)
+            if(response.ok){
+                alert("회원가입 완료");
+                location.href="/login";
+                return;
+            }
+
+            // 실패 응답 처리
+            let message="요청 처리 중 오류가 발생했습니다.";
+
+            try{
+                const result=await response.json();
+                if(result && result.message){
+                    message=result.message;
+                }
+            }catch(e){}
+
+            alert(message);
+
+        }
+        catch(e){
+            console.error(e);
+            alert("서버 오류가 발생했습니다.");
+        }
+
+    }
+
+</script>
+
+</body>
+</html>

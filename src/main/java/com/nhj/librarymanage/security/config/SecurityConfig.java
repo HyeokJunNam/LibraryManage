@@ -1,7 +1,9 @@
 package com.nhj.librarymanage.security.config;
 
 import com.nhj.librarymanage.security.authenticate.CustomAuthenticationProcessingFilter;
+import com.nhj.librarymanage.security.authorize.CustomAccessDeniedHandler;
 import com.nhj.librarymanage.security.authorize.JwtAuthorizationFilter;
+import com.nhj.librarymanage.security.authorize.RequestMatherFactory;
 import com.nhj.librarymanage.security.jwt.JwtProvider;
 import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +21,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,6 +47,31 @@ public class SecurityConfig {
     //private final SecurityCustomFilterFactory securityCustomFilterFactory;
 
 
+    private static final String[] PERMIT_URLS = {
+            "/library/**",
+            "/login",
+            "/signup",
+            "/members",
+            "/oauth2/**",
+            "/favicon.ico",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/error"
+    };
+
+    /*private static final PathPatternRequestMatcher[] PERMIT_URLS = {
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/login"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup")
+            *//*"/signup",
+            "/members",
+            "/oauth2/**",
+            "/favicon.ico",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/error"*//*
+    };*/
 
     private final List<String> ALLOWED_ORIGIN_PATTERN_LIST = List.of(
             CorsConfiguration.ALL
@@ -69,12 +98,6 @@ public class SecurityConfig {
             HttpHeaders.SET_COOKIE
     );
 
-    private final PathPatternRequestMatcher[] DEFAULT_PERMIT_REQUEST_MATCHERS = {
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/refresh"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/logout"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/login")
-    };
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -95,6 +118,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
                                            AuthenticationManager authenticationManager,
                                            AuthenticationEntryPoint authenticationEntryPoint,
+                                           CustomAccessDeniedHandler accessDeniedHandler,
                                            JwtProvider jwtProvider) {
 
         CustomAuthenticationProcessingFilter customAuthenticationProcessingFilter =
@@ -108,18 +132,25 @@ public class SecurityConfig {
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
                         .configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable)
-//                        .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
-//                        .authenticationEntryPoint(authenticationEntryPoint)
-//                        .accessDeniedHandler(accessDeniedHandler))
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                        httpSecurityExceptionHandlingConfigurer
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                )
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
-                    //request.anyRequest().permitAll();
-                    request.requestMatchers(DEFAULT_PERMIT_REQUEST_MATCHERS).permitAll();
+                    request.requestMatchers(PERMIT_URLS).permitAll();
                     request.anyRequest().authenticated();
+                    //request.requestMatchers(PathPatternRequestMatcher.pathPattern("/books")).authenticated();
+
                 })
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(customAuthenticationProcessingFilter, JwtAuthorizationFilter.class);

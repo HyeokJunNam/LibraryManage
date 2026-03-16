@@ -13,7 +13,7 @@ public enum Role {
 
     ROLE_ADMIN(0, "관리자"),
     ROLE_SYSTEM_ENGINEER(1, "시스템 엔지니어"),
-    ROLE_MANAGER(2, "담당자")
+    ROLE_USER(2, "유저")
     ;
 
     private final int level;

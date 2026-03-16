@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>도서 목록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 32px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #4c7dff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3b69e6;
+        }
+
+        .btn-secondary {
+            background: #eef2ff;
+            color: #3559c7;
+        }
+
+        .btn-secondary:hover {
+            background: #e1e8ff;
+        }
+
+        .btn-danger {
+            background: #fff1f1;
+            color: #d93025;
+        }
+
+        .btn-danger:hover {
+            background: #ffe4e4;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.error {
+            background: #fff1f1;
+            color: #d93025;
+            border: 1px solid #ffd5d2;
+        }
+
+        .message.empty {
+            background: #f8f9fb;
+            color: #555;
+            border: 1px solid #e2e6ee;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: #f3f6fb;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 14px 16px;
+            border-bottom: 1px solid #eceff5;
+            font-size: 15px;
+        }
+
+        th {
+            font-weight: 700;
+            color: #333;
+        }
+
+        tr:hover td {
+            background: #fafcff;
+        }
+
+        .status {
+            display: inline-block;
+            min-width: 76px;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-available {
+            background: #eefaf0;
+            color: #1e8e3e;
+        }
+
+        .status-borrowed {
+            background: #fff4e5;
+            color: #b26a00;
+        }
+
+        .loading {
+            padding: 30px 0;
+            text-align: center;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .top-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #4c7dff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .top-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="header">
+            <h1 class="title">도서 목록</h1>
+            <div class="actions">
+                <button type="button" class="btn btn-secondary" onclick="loadBooks()">새로고침</button>
+                <button type="button" class="btn btn-danger" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="message error"></div>
+        <div id="emptyMessage" class="message empty">등록된 도서가 없습니다.</div>
+
+        <div id="loading" class="loading">도서 목록을 불러오는 중입니다...</div>
+
+        <div class="table-wrap">
+            <table id="bookTable" style="display:none;">
+                <thead>
+                <tr>
+                    <th style="width: 140px;">도서 번호</th>
+                    <th>도서 명</th>
+                    <th style="width: 180px;">대여 여부</th>
+                </tr>
+                </thead>
+                <tbody id="bookTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/api.js}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const token = getToken();
+
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            location.href = "/login";
+            return;
+        }
+
+        loadBooks();
+    });
+
+    async function loadBooks() {
+        const loading = document.getElementById("loading");
+        const errorMessage = document.getElementById("errorMessage");
+        const emptyMessage = document.getElementById("emptyMessage");
+        const table = document.getElementById("bookTable");
+        const tbody = document.getElementById("bookTableBody");
+
+        loading.style.display = "block";
+        errorMessage.style.display = "none";
+        emptyMessage.style.display = "none";
+        table.style.display = "none";
+        tbody.innerHTML = "";
+
+        try {
+            const response = await apiFetch("/books", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (!response) {
+                return;
+            }
+
+            let data = null;
+
+            try {
+                data = await response.json();
+            } catch (e) {
+            }
+
+            if (!response.ok) {
+                const message = data?.message ?? "도서 목록 조회 중 오류가 발생했습니다.";
+                throw new Error(message);
+            }
+
+            if (!data || data.code !== "SUCCESS") {
+                throw new Error("정상 응답 형식이 아닙니다.");
+            }
+
+            const books = Array.isArray(data.result) ? data.result : [];
+
+            if (books.length === 0) {
+                emptyMessage.style.display = "block";
+                return;
+            }
+
+            books.forEach(book => {
+                const tr = document.createElement("tr");
+
+                const borrowed = !!book.borrowed;
+                const borrowedText = borrowed ? "대여중" : "대여가능";
+                const statusClass = borrowed ? "status-borrowed" : "status-available";
+
+                tr.innerHTML = `
+                    <td>${escapeHtml(book.id)}</td>
+                    <td>${escapeHtml(book.name)}</td>
+                    <td>
+                        <span class="status ${statusClass}">
+                            ${borrowedText}
+                        </span>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            table.style.display = "table";
+
+        } catch (e) {
+            errorMessage.textContent = e.message || "서버 오류가 발생했습니다.";
+            errorMessage.style.display = "block";
+        } finally {
+            loading.style.display = "none";
+        }
+    }
+
+    function logout() {
+        // clearToken();
+        location.href = "/login";
+    }
+
+    function escapeHtml(value) {
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+</script>
+</body>
+</html>
