@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,40 +39,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
-    //private final JwtProperties jwtProperties;
-
-    // private final AuthenticationEntryPoint authenticationEntryPoint;
-    // private final AccessDeniedHandler accessDeniedHandler;
-
-    //private final SecurityCustomFilterFactory securityCustomFilterFactory;
-
-
-    private static final String[] PERMIT_URLS = {
-            "/library/**",
-            "/login",
-            "/signup",
-            "/members",
-            "/oauth2/**",
-            "/favicon.ico",
-            "/css/**",
-            "/js/**",
-            "/images/**",
-            "/error"
+    private static final RequestMatcher[] PERMIT_URLS = {
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/members"),
+            PathPatternRequestMatcher.pathPattern(null, "/library/**"),
+            PathPatternRequestMatcher.pathPattern(null, "/login"),
+            PathPatternRequestMatcher.pathPattern(null, "/signup"),
+            PathPatternRequestMatcher.pathPattern(null, "/oauth2/**"),
+            PathPatternRequestMatcher.pathPattern(null, "/favicon.ico"),
+            PathPatternRequestMatcher.pathPattern(null, "/css/**"),
+            PathPatternRequestMatcher.pathPattern(null, "/js/**"),
+            PathPatternRequestMatcher.pathPattern(null, "/images/**"),
+            PathPatternRequestMatcher.pathPattern(null, "/error")
     };
 
-    /*private static final PathPatternRequestMatcher[] PERMIT_URLS = {
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/login"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup")
-            *//*"/signup",
-            "/members",
-            "/oauth2/**",
-            "/favicon.ico",
-            "/css/**",
-            "/js/**",
-            "/images/**",
-            "/error"*//*
-    };*/
 
     private final List<String> ALLOWED_ORIGIN_PATTERN_LIST = List.of(
             CorsConfiguration.ALL
@@ -144,21 +124,16 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
+                // TODO 토큰 작업 필요 / 리다이렉트는 되나 토큰이 없어서 결국 데이터는 못불러옴
+                .oauth2Login(oauth -> oauth.defaultSuccessUrl("/library/book-list", true))
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(PERMIT_URLS).permitAll();
                     request.anyRequest().authenticated();
-                    //request.requestMatchers(PathPatternRequestMatcher.pathPattern("/books")).authenticated();
-
                 })
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(customAuthenticationProcessingFilter, JwtAuthorizationFilter.class);
-        ;
-
-               /* .addFilterBefore(securityCustomFilterFactory.jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(securityCustomFilterFactory.refreshTokenFilter(), JwtAuthorizationFilter.class)
-                .addFilterAfter(securityCustomFilterFactory.customAuthenticationProcessingFilter(), JwtAuthorizationFilter.class);*/
 
         return httpSecurity.build();
     }

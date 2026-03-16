@@ -150,14 +150,18 @@
             }
 
             // 실패 응답 처리
-            let message="요청 처리 중 오류가 발생했습니다.";
+            let message = "요청 처리 중 오류가 발생했습니다.";
 
-            try{
-                const result=await response.json();
-                if(result && result.message){
-                    message=result.message;
+            try {
+                const result = await response.json();
+
+                if (result) {
+                    message = result.detail || result.message || message;
                 }
-            }catch(e){}
+
+            } catch (e) {
+                console.error("error response parse 실패", e);
+            }
 
             alert(message);
 
