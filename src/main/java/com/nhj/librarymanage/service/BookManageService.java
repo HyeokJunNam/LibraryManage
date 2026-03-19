@@ -21,7 +21,7 @@ public class BookManageService {
     }
 
     @Transactional
-    public List<BookResponse.InfoDto> getBooks(BookRequest.ParamDto paramDto) {
+    public List<BookResponse.InfoDto> getBooks() {
         List<BookEntity> bookEntityList = bookRepository.findAll();
 
         return bookEntityList.stream().map(BookResponse.InfoDto::toDto).toList();

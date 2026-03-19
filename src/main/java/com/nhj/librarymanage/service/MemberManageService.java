@@ -24,6 +24,11 @@ public class MemberManageService extends SecurityUserService<MemberEntity> {
 
     private final MemberRepository memberRepository;
 
+    @Override
+    public Optional<MemberEntity> findUser(String loginId) {
+        return memberRepository.findByLoginId(loginId);
+    }
+
     public MemberResponse.InfoDto getMember(long id) {
         return MemberResponse.InfoDto.from(memberRepository.get(id));
     }
@@ -63,8 +68,4 @@ public class MemberManageService extends SecurityUserService<MemberEntity> {
         memberRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<MemberEntity> findUser(String loginId) {
-        return memberRepository.findByLoginId(loginId);
-    }
 }

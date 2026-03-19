@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서관 메인</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero__overlay"></div>
+
+    <div class="hero__inner">
+        <nav class="topbar">
+            <a th:href="@{/}" class="topbar__brand">Library</a>
+
+            <div class="auth-menu">
+                <div th:if="${loginMember == null}" class="auth-menu__guest">
+                    <a class="btn btn--ghost" th:href="@{/login}">로그인</a>
+                    <a class="btn btn--light" th:href="@{/signup}">회원가입</a>
+                </div>
+
+                <div th:if="${loginMember != null}" class="auth-menu__user">
+                    <span class="auth-menu__welcome">
+                        <strong th:text="${loginMember.name}">사용자</strong>님, 환영합니다
+                    </span>
+                    <a class="btn btn--ghost" th:href="@{/member/me}">내 정보</a>
+                    <form th:action="@{/logout}" method="post" class="auth-menu__logout-form">
+                        <button type="submit" class="btn btn--danger">로그아웃</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero__content">
+            <div class="hero__text">
+                <p class="hero__eyebrow">Library Management System</p>
+                <h1 class="hero__title">
+                    원하는 도서를<br>
+                    쉽고 빠르게 찾아보세요
+                </h1>
+                <p class="hero__description">
+                    도서 목록 조회, 대여 가능 여부 확인, 검색 기능까지
+                    한눈에 볼 수 있는 도서관 메인 화면입니다.
+                </p>
+            </div>
+
+            <div class="hero__panel">
+                <div class="hero-stat">
+                    <span class="hero-stat__label">전체 도서</span>
+                    <strong class="hero-stat__value" th:text="${#lists.size(books)}">0</strong>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat__label">대여 가능</span>
+                    <strong class="hero-stat__value" th:text="${availableCount}">0</strong>
+                </div>
+                <p class="hero__panel-text">
+                    메인 화면에서 도서 상태를 바로 확인할 수 있습니다.
+                </p>
+            </div>
+        </section>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <section class="search-card">
+            <div class="search-card__header">
+                <div>
+                    <p class="section-label">SEARCH</p>
+                    <h2 class="section-title">도서 검색</h2>
+                </div>
+                <p class="section-subtitle">도서명 또는 저자로 검색해보세요.</p>
+            </div>
+
+            <form class="search-form" method="get" action="/">
+                <div class="search-form__input-wrap">
+                    <span class="search-form__icon">⌕</span>
+                    <input
+                            class="search-form__input"
+                            type="text"
+                            name="keyword"
+                            placeholder="도서명 또는 저자를 입력하세요"
+                            th:value="${keyword}"
+                    >
+                </div>
+                <button class="search-form__button" type="submit">검색</button>
+            </form>
+        </section>
+
+        <section class="book-section">
+            <div class="book-section__header">
+                <div>
+                    <p class="section-label">COLLECTION</p>
+                    <h2 class="section-title">도서 목록</h2>
+                </div>
+                <span class="book-section__count">
+                    총 <strong th:text="${#lists.size(books)}">0</strong>권
+                </span>
+            </div>
+
+            <div th:if="${#lists.isEmpty(books)}" class="empty-box">
+                <div class="empty-box__icon">📚</div>
+                <h3 class="empty-box__title">등록된 도서가 없습니다</h3>
+                <p class="empty-box__description">도서를 등록하면 이 영역에 목록이 표시됩니다.</p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(books)}" class="book-grid">
+                <article class="book-card" th:each="book : ${books}">
+                    <div class="book-card__top">
+                        <span th:if="${book.borrowed}" class="badge badge--available">대여 가능</span>
+                        <span th:unless="${book.borrowed}" class="badge badge--borrowed">대여 중</span>
+                    </div>
+
+                    <div class="book-card__body">
+                        <h3 class="book-card__title" th:text="${book.title}">도서 제목</h3>
+
+                        <div class="book-card__meta">
+                            <div class="book-card__row">
+                                <span class="book-card__label">저자</span>
+                                <span class="book-card__value" th:text="${book.author}">홍길동</span>
+                            </div>
+
+                            <div class="book-card__row">
+                                <span class="book-card__label">출판사</span>
+                                <span class="book-card__value" th:text="${book.publisher}">한빛미디어</span>
+                            </div>
+
+                            <div class="book-card__row">
+                                <span class="book-card__label">도서번호</span>
+                                <span class="book-card__value book-card__value--mono" th:text="${book.id}">1</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="book-card__bottom">
+                        <a th:href="@{/books/{id}(id=${book.id})}" class="book-card__action">상세 보기</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container footer__inner">
+        <p class="footer__text">Library Management Project</p>
+    </div>
+</footer>
+
+</body>
+</html>

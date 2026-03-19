@@ -30,6 +30,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final RequestMatcher[] PERMIT_URLS = {
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/members"),
             //PathPatternRequestMatcher.pathPattern(null, "/library/**"),
             PathPatternRequestMatcher.pathPattern(null, "/login"),
@@ -86,7 +87,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler("/library/book-list");
+        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler("/");
         LoginFailureHandler loginFailureHandler = new LoginFailureHandler("/login?error");
 
         httpSecurity
@@ -94,6 +95,8 @@ public class SecurityConfig {
                         .configurationSource(corsConfigurationSource()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable)
+                // 임시 해제
+                .csrf(AbstractHttpConfigurer::disable)
                 /*.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer
                         .authenticationEntryPoint(authenticationEntryPoint)
@@ -101,6 +104,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
+                        .usernameParameter("loginId")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
                         .permitAll()

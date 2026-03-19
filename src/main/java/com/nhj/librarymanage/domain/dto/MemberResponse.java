@@ -7,9 +7,10 @@ import lombok.*;
 public class MemberResponse {
 
     // Service → Controller
-    @Builder(access = AccessLevel.PRIVATE)
+    @Builder
     @Getter
     public static class InfoDto {
+        private String loginId;
         private String name;
 
         public static InfoDto from(MemberEntity memberEntity) {

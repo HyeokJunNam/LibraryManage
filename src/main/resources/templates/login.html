@@ -3,207 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: "Malgun Gothic", Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #e9eefb);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #222;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 420px;
-            padding: 24px;
-        }
-
-        .login-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 36px 28px;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
-        }
-
-        .title {
-            margin: 0 0 8px;
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .subtitle {
-            margin: 0 0 28px;
-            text-align: center;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .alert {
-            margin-bottom: 16px;
-            padding: 12px 14px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-
-        .alert-error {
-            background: #fff2f2;
-            color: #c62828;
-            border: 1px solid #ffcdd2;
-        }
-
-        .alert-success {
-            background: #f1fff4;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            height: 46px;
-            padding: 0 14px;
-            border: 1px solid #d9dfe8;
-            border-radius: 12px;
-            outline: none;
-            font-size: 14px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            border-color: #5b8def;
-            box-shadow: 0 0 0 4px rgba(91, 141, 239, 0.12);
-        }
-
-        .option-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 6px 0 20px;
-            font-size: 13px;
-            color: #555;
-        }
-
-        .checkbox-wrap {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .login-button {
-            width: 100%;
-            height: 48px;
-            border: none;
-            border-radius: 12px;
-            background: #2f6fed;
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.05s;
-        }
-
-        .login-button:hover {
-            background: #245dd0;
-        }
-
-        .login-button:active {
-            transform: translateY(1px);
-        }
-
-        .bottom-text {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 13px;
-            color: #666;
-        }
-
-        .bottom-text a {
-            color: #2f6fed;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .bottom-text a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>로그인 | Library</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
-<div class="container">
-    <div class="login-card">
-        <h1 class="title">로그인</h1>
-        <p class="subtitle">도서 관리 시스템에 로그인하세요.</p>
 
-        <!-- 로그인 실패 -->
-        <div class="alert alert-error" th:if="${param.error}">
-            아이디 또는 비밀번호가 올바르지 않습니다.
-        </div>
+<div class="login-page">
+    <div class="login-page__bg"></div>
 
-        <!-- 로그아웃 성공 -->
-        <div class="alert alert-success" th:if="${param.logout}">
-            정상적으로 로그아웃되었습니다.
-        </div>
+    <main class="login-layout">
+        <section class="login-hero">
+            <a th:href="@{/}" class="login-hero__brand">Library</a>
 
-        <form th:action="@{/login}" method="post">
-            <div class="form-group">
-                <label for="username">아이디</label>
-                <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="아이디를 입력하세요"
-                        autocomplete="username"
-                        required>
+            <div class="login-hero__content">
+                <p class="login-hero__eyebrow">Library Management System</p>
+                <h1 class="login-hero__title">
+                    다시 만나서 반가워요.<br>
+                    도서관 서비스를 시작해보세요.
+                </h1>
+                <p class="login-hero__description">
+                    도서 조회, 대여 관리, 회원 기능까지 한 번에 사용할 수 있는
+                    도서관 관리 시스템입니다.
+                </p>
+
+                <div class="login-hero__features">
+                    <div class="feature-card">
+                        <div class="feature-card__icon">📚</div>
+                        <div class="feature-card__text">
+                            <strong>도서 조회</strong>
+                            <span>보유 도서를 빠르게 탐색</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-card__icon">🔍</div>
+                        <div class="feature-card__text">
+                            <strong>간편 검색</strong>
+                            <span>제목과 저자로 손쉽게 검색</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-card__icon">👤</div>
+                        <div class="feature-card__text">
+                            <strong>회원 기능</strong>
+                            <span>로그인 후 개인 기능 이용</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="form-group">
-                <label for="password">비밀번호</label>
-                <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="비밀번호를 입력하세요"
-                        autocomplete="current-password"
-                        required>
+        <section class="login-panel">
+            <div class="login-card">
+                <div class="login-card__header">
+                    <p class="login-card__eyebrow">WELCOME BACK</p>
+                    <h2 class="login-card__title">로그인</h2>
+                    <p class="login-card__description">
+                        계정 정보를 입력하고 서비스를 이용해보세요.
+                    </p>
+                </div>
+
+                <div th:if="${param.error}" class="alert alert--error">
+                    아이디 또는 비밀번호를 다시 확인해주세요.
+                </div>
+
+                <div th:if="${param.logout}" class="alert alert--success">
+                    정상적으로 로그아웃되었습니다.
+                </div>
+
+                <form class="login-form" th:action="@{/login}" method="post">
+                    <div class="form-group">
+                        <label for="username" class="form-label">아이디</label>
+                        <input
+                                id="username"
+                                name="username"
+                                type="text"
+                                class="form-input"
+                                placeholder="아이디를 입력하세요"
+                                autocomplete="username"
+                                required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label for="password" class="form-label">비밀번호</label>
+                            <a href="#" class="form-link">비밀번호 찾기</a>
+                        </div>
+                        <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                class="form-input"
+                                placeholder="비밀번호를 입력하세요"
+                                autocomplete="current-password"
+                                required
+                        >
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember-me">
+                            <span>로그인 상태 유지</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="login-button">로그인</button>
+                </form>
+
+                <div class="divider">
+                    <span>또는</span>
+                </div>
+
+                <div class="social-login">
+                    <a th:href="@{/oauth2/authorization/google}" class="social-button social-button--google">
+                        <span class="social-button__icon">G</span>
+                        <span>Google로 계속하기</span>
+                    </a>
+                </div>
+
+                <div class="login-card__footer">
+                    <span>아직 계정이 없나요?</span>
+                    <a th:href="@{/signup}" class="login-card__signup-link">회원가입</a>
+                </div>
             </div>
-
-            <div class="option-row">
-                <label class="checkbox-wrap">
-                    <input type="checkbox" name="remember-me">
-                    로그인 상태 유지
-                </label>
-            </div>
-
-            <button type="submit" class="login-button">로그인</button>
-        </form>
-
-        <div class="bottom-text">
-            계정이 없으신가요?
-            <a th:href="@{/signup}">회원가입</a>
-        </div>
-    </div>
+        </section>
+    </main>
 </div>
+
 </body>
 </html>
