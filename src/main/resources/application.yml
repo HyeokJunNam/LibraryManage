@@ -37,12 +37,3 @@ spring:
 
   profiles:
     active: secret
-
-
-jwt:
-  token:
-    header: Authorization
-    issuer: admin
-    secret: ${JWT_SECRET}
-    expiry-seconds: 100000000
-    refresh-expiry-seconds : 100000000

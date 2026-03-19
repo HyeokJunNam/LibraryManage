@@ -1,12 +1,10 @@
 package com.nhj.librarymanage.security.member;
 
-public interface SecurityUser {
+import org.springframework.security.core.userdetails.UserDetails;
+
+public interface SecurityUser extends UserDetails {
 
     Long getId();
-
-    String getLoginId();
-
-    String getPassword();
 
     Role getRole();
 

@@ -61,7 +61,7 @@ public class JwtProvider {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", securityUser.getId());
-        claims.put("loginId", securityUser.getLoginId());
+        claims.put("loginId", securityUser.getUsername());
         claims.put("role", securityUser.getRole());
 
         return "Bearer " + Jwts.builder()

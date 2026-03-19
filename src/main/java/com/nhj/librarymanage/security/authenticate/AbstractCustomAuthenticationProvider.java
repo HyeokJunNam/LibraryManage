@@ -21,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+//@Component
 public class AbstractCustomAuthenticationProvider<T extends SecurityUser> implements AuthenticationProvider {
 
     private final SecurityUserService<T> securityUserService;
@@ -47,7 +47,7 @@ public class AbstractCustomAuthenticationProvider<T extends SecurityUser> implem
     private UsernamePasswordAuthenticationToken authenticated(SecurityUser securityUser) {
         List<SimpleGrantedAuthority> authorityList = AuthorityUtils.generateSimpleGrantedAuthorityList(securityUser.getRole());
 
-        UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(securityUser.getLoginId(), null, authorityList);
+        UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.authenticated(securityUser.getUsername(), null, authorityList);
         authenticationToken.setDetails(securityUser);
 
         return authenticationToken;
