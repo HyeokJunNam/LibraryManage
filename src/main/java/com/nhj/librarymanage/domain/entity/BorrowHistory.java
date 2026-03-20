@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity(name = "borrow_history")
-public class BorrowHistoryEntity extends BaseEntity {
+public class BorrowHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +18,11 @@ public class BorrowHistoryEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
-    private BookEntity bookEntity;
+    private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity memberEntity;
+    private Member member;
 
     private LocalDateTime borrowedAt;
 

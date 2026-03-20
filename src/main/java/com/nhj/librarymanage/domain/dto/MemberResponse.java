@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.domain.dto;
 
-import com.nhj.librarymanage.domain.entity.MemberEntity;
+import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -13,9 +13,9 @@ public class MemberResponse {
         private String loginId;
         private String name;
 
-        public static InfoDto from(MemberEntity memberEntity) {
+        public static InfoDto from(Member member) {
             return InfoDto.builder()
-                    .name(memberEntity.getName())
+                    .name(member.getName())
                     .build();
         }
 

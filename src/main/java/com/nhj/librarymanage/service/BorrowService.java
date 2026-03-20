@@ -2,9 +2,9 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.dto.BorrowResponse;
-import com.nhj.librarymanage.domain.entity.BookEntity;
-import com.nhj.librarymanage.domain.entity.BorrowHistoryEntity;
-import com.nhj.librarymanage.domain.entity.MemberEntity;
+import com.nhj.librarymanage.domain.entity.Book;
+import com.nhj.librarymanage.domain.entity.BorrowHistory;
+import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.error.ErrorCode;
 import com.nhj.librarymanage.error.exception.InvalidStateException;
 import com.nhj.librarymanage.repository.BookRepository;
@@ -31,37 +31,38 @@ public class BorrowService {
         boolean onlyBorrowed = paramDto.isBorrowed();
         BorrowRequest.SearchConditionDto searchConditionDto = BorrowRequest.SearchConditionDto.of(onlyBorrowed);
 
-        Page<BorrowHistoryEntity> borrowHistoryEntityPage = borrowHistoryRepository.findAll(searchConditionDto, pageable);
+        Page<BorrowHistory> borrowHistoryEntityPage = borrowHistoryRepository.findAll(searchConditionDto, pageable);
 
         return borrowHistoryEntityPage.map(BorrowResponse.InfoDto::toDto);
     }
 
-    private boolean isBorrowed(BookEntity bookEntity) {
-        return bookEntity.getBorrowHistoryEntity() != null;
+    private boolean isBorrowed(Book book) {
+        //return bookEntity.getBorrowHistoryEntity() != null;
+        return true;
     }
 
     @Transactional
     public void borrow(BorrowRequest.BorrowDto borrowDto) {
-        BookEntity bookEntity = bookRepository.get(borrowDto.getBookId());
+        Book book = bookRepository.get(borrowDto.getBookId());
 
-        if (isBorrowed(bookEntity)) {
+        if (isBorrowed(book)) {
             throw new InvalidStateException(ErrorCode.BORROWED_BOOK);
         }
 
-        MemberEntity memberEntity = memberRepository.get(borrowDto.getMemberId());
+        Member member = memberRepository.get(borrowDto.getMemberId());
 
-        bookEntity.startBorrow(memberEntity, BORROW_DAY);
+        book.startBorrow(member, BORROW_DAY);
     }
 
     @Transactional
     public void returnBook(BorrowRequest.ReturnBookDto returnBookDto) {
-        BookEntity bookEntity = bookRepository.get(returnBookDto.getBookId());
+        Book book = bookRepository.get(returnBookDto.getBookId());
 
-        if (!isBorrowed(bookEntity)) {
+        if (!isBorrowed(book)) {
             throw new InvalidStateException(ErrorCode.NOT_BORROWED_BOOK);
         }
 
-        bookEntity.endBorrow();
+        book.endBorrow();
     }
 
 }

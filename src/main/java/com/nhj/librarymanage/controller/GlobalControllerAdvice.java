@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
-public class GlobalModelAttributeAdvice {
+public class GlobalControllerAdvice {
 
     @ModelAttribute("loginMember")
     public MemberResponse.InfoDto loginMember(@AuthenticationPrincipal SecurityUser securityUser) {

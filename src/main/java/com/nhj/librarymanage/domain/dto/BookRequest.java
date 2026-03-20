@@ -17,10 +17,13 @@ public class BookRequest {
 
     // 생성 요청
     @AllArgsConstructor
+    @NoArgsConstructor
     @Getter
     public static class CreateDto {
-        private String bookCode;
-        private String name;
+        private String isbn;
+        private String title;
+        private String author;
+        private String publisher;
     }
 
     // 수정 요청

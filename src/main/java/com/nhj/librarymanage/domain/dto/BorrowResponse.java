@@ -1,10 +1,9 @@
 package com.nhj.librarymanage.domain.dto;
 
-import com.nhj.librarymanage.domain.entity.BookEntity;
-import com.nhj.librarymanage.domain.entity.BorrowHistoryEntity;
-import com.nhj.librarymanage.domain.entity.MemberEntity;
+import com.nhj.librarymanage.domain.entity.Book;
+import com.nhj.librarymanage.domain.entity.BorrowHistory;
+import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -16,25 +15,25 @@ public class BorrowResponse {
     @Getter
     public static class InfoDto {
         private long bookId;
-        private String bookName;
+        private String bookTitle;
         private long memberId;
         private String memberName;
         private LocalDateTime borrowedAt;
         private LocalDateTime dueAt;
         private LocalDateTime returnedAt;
 
-        public static InfoDto toDto(BorrowHistoryEntity borrowHistoryEntity) {
-            BookEntity bookEntity = borrowHistoryEntity.getBookEntity();
-            MemberEntity memberEntity = borrowHistoryEntity.getMemberEntity();
+        public static InfoDto toDto(BorrowHistory borrowHistory) {
+            Book book = borrowHistory.getBook();
+            Member member = borrowHistory.getMember();
 
             return InfoDto.builder()
-                    .bookId(bookEntity.getId())
-                    .bookName(bookEntity.getName())
-                    .memberId(memberEntity.getId())
-                    .memberName(memberEntity.getName())
-                    .borrowedAt(borrowHistoryEntity.getBorrowedAt())
-                    .dueAt(borrowHistoryEntity.getDueAt())
-                    .returnedAt(borrowHistoryEntity.getReturnedAt())
+                    .bookId(book.getId())
+                    .bookTitle(book.getTitle())
+                    .memberId(member.getId())
+                    .memberName(member.getName())
+                    .borrowedAt(borrowHistory.getBorrowedAt())
+                    .dueAt(borrowHistory.getDueAt())
+                    .returnedAt(borrowHistory.getReturnedAt())
                     .build();
 
         }

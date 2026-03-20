@@ -19,7 +19,7 @@ import java.util.Collection;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity(name = "member")
-public class MemberEntity extends BaseEntity implements SecurityUser {
+public class Member extends BaseEntity implements SecurityUser {
 
     @Id
     @Tsid

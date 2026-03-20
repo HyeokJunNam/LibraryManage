@@ -2,12 +2,13 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.dto.BookRequest;
 import com.nhj.librarymanage.domain.dto.BookResponse;
-import com.nhj.librarymanage.domain.entity.BookEntity;
+import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,28 +23,35 @@ public class BookManageService {
 
     @Transactional
     public List<BookResponse.InfoDto> getBooks() {
-        List<BookEntity> bookEntityList = bookRepository.findAll();
+        List<Book> bookList = bookRepository.findAll();
 
-        return bookEntityList.stream().map(BookResponse.InfoDto::toDto).toList();
+        return bookList.stream().map(BookResponse.InfoDto::toDto).toList();
     }
 
 
     @Transactional
-    public void createBook(BookRequest.CreateDto createDto) {
-        BookEntity bookEntity = BookEntity.builder()
-                .bookCode(createDto.getBookCode())
-                .name(createDto.getName())
+    public void createBook(List<BookRequest.CreateDto> createDtoList) {
+        List<Book> bookList = new ArrayList<>();
 
+        for (BookRequest.CreateDto createDto : createDtoList) {
+        Book book = Book.builder()
+                .isbn(createDto.getIsbn())
+                .title(createDto.getTitle())
+                .author(createDto.getAuthor())
+                .publisher(createDto.getPublisher())
                 .build();
 
-        bookRepository.save(bookEntity);
+            bookList.add(book);
+        }
+
+        bookRepository.saveAll(bookList);
     }
 
     @Transactional
     public void updateBook(BookRequest.UpdateDto updateDto) {
-        BookEntity bookEntity = bookRepository.get(updateDto.getId());
+        Book book = bookRepository.get(updateDto.getId());
 
-        bookEntity.changeName(updateDto.getName());
+        book.changeTitle(updateDto.getName());
     }
 
     @Transactional

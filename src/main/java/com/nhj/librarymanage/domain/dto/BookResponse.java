@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.domain.dto;
 
-import com.nhj.librarymanage.domain.entity.BookEntity;
+import com.nhj.librarymanage.domain.entity.Book;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,20 +13,25 @@ public class BookResponse {
     @Getter
     public static class InfoDto {
         private long id;
-        private String name;
         private String title;
         private String author;
         private String publisher;
-        private boolean borrowed;
+        private int bookCount;
+        private int borrowedCount;
+        private boolean canBorrow;
         //private long availableCount;
 
-        public static InfoDto toDto(BookEntity bookEntity) {
+        public static InfoDto toDto(Book book) {
+            //boolean canBorrow = bookEntity.getBookCount() - 0 >= 1 ? true : false;
+
             return InfoDto.builder()
-                    .id(bookEntity.getId())
-                    .title(bookEntity.getName())
-                    .name(bookEntity.getName())
-                    .borrowed(bookEntity.isBorrowed())
-                    //.availableCount(0)
+                    .id(book.getId())
+                    .title(book.getTitle())
+                    .author(book.getAuthor())
+                    .publisher(book.getPublisher())
+                    //.bookCount(bookEntity.getBookCount())
+                    .borrowedCount(0)
+                    //.canBorrow(canBorrow)
                     .build();
         }
 

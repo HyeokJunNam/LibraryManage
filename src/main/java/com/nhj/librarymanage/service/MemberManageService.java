@@ -2,7 +2,7 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
-import com.nhj.librarymanage.domain.entity.MemberEntity;
+import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.error.ErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
@@ -18,14 +18,14 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class MemberManageService extends SecurityUserService<MemberEntity> {
+public class MemberManageService extends SecurityUserService<Member> {
 
     private final PasswordEncoder passwordEncoder;
 
     private final MemberRepository memberRepository;
 
     @Override
-    public Optional<MemberEntity> findUser(String loginId) {
+    public Optional<Member> findUser(String loginId) {
         return memberRepository.findByLoginId(loginId);
     }
 
@@ -46,21 +46,21 @@ public class MemberManageService extends SecurityUserService<MemberEntity> {
             throw new EntityAlreadyExistsException(ErrorCode.ALREADY_MEMBER);
         }
 
-        MemberEntity memberEntity = MemberEntity.builder()
+        Member member = Member.builder()
                 .loginId(createDto.getLoginId())
                 .password(passwordEncoder.encode(createDto.getPassword()))
                 .role(createDto.getRole())
                 .name(createDto.getName())
                 .build();
 
-        memberRepository.save(memberEntity);
+        memberRepository.save(member);
     }
 
     @Transactional
     public void updateMember(MemberRequest.UpdateDto updateDto) {
-        MemberEntity memberEntity = memberRepository.get(updateDto.getId());
+        Member member = memberRepository.get(updateDto.getId());
 
-        memberEntity.changeName(updateDto.getName());
+        member.changeName(updateDto.getName());
     }
 
     @Transactional
