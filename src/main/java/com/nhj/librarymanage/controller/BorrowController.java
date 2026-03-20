@@ -20,9 +20,9 @@ public class BorrowController {
 
     @Description(value = "도서 대여 현황 조회")
     @GetMapping("/borrows")
-    public ResponseEntity<ApiResponse> getBorrowHistories(@ModelAttribute BorrowRequest.ParamDto paramDto, Pageable pageable) {
-        Page<BorrowResponse.InfoDto> infoDtoList = borrowService.getBorrowHistories(paramDto, pageable);
-        ApiResponse apiResponse = ApiResponse.result(infoDtoList);
+    public ResponseEntity<ApiResponse> getBorrowHistories(@ModelAttribute BorrowRequest.Param param, Pageable pageable) {
+        Page<BorrowResponse.Info> infos = borrowService.getBorrowHistories(param, pageable);
+        ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);
     }
@@ -30,16 +30,16 @@ public class BorrowController {
 
     @Description(value = "도서 대여")
     @PostMapping("/borrows")
-    public ResponseEntity<Void> borrow(@RequestBody BorrowRequest.BorrowDto borrowDto) {
-        borrowService.borrow(borrowDto);
+    public ResponseEntity<Void> borrow(@RequestBody BorrowRequest.Borrow borrow) {
+        borrowService.borrow(borrow);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Description(value = "도서 반납")
     @PostMapping("/returns")
-    public ResponseEntity<Void> returnBook(@RequestBody BorrowRequest.ReturnBookDto returnBookDto) {
-        borrowService.returnBook(returnBookDto);
+    public ResponseEntity<Void> returnBook(@RequestBody BorrowRequest.ReturnBook returnBook) {
+        borrowService.returnBook(returnBook);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

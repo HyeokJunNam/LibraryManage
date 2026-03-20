@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface BorrowHistoryRepositoryCustom {
 
-    Page<BorrowHistory> findAll(BorrowRequest.SearchConditionDto searchConditionDto, Pageable pageable);
+    Page<BorrowHistory> findAll(BorrowRequest.SearchCondition searchCondition, Pageable pageable);
 
 }

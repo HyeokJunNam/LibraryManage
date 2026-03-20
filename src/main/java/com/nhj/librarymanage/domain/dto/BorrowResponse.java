@@ -13,7 +13,7 @@ public class BorrowResponse {
     // Service → Controller
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
-    public static class InfoDto {
+    public static class Info {
         private long bookId;
         private String bookTitle;
         private long memberId;
@@ -22,11 +22,11 @@ public class BorrowResponse {
         private LocalDateTime dueAt;
         private LocalDateTime returnedAt;
 
-        public static InfoDto toDto(BorrowHistory borrowHistory) {
+        public static Info toDto(BorrowHistory borrowHistory) {
             Book book = borrowHistory.getBook();
             Member member = borrowHistory.getMember();
 
-            return InfoDto.builder()
+            return Info.builder()
                     .bookId(book.getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())

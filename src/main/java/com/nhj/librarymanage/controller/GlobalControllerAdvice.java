@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalControllerAdvice {
 
     @ModelAttribute("loginMember")
-    public MemberResponse.InfoDto loginMember(@AuthenticationPrincipal SecurityUser securityUser) {
+    public MemberResponse.Info loginMember(@AuthenticationPrincipal SecurityUser securityUser) {
         if (securityUser == null) {
             return null;
         }
 
-        return MemberResponse.InfoDto.builder()
+        return MemberResponse.Info.builder()
                 .loginId(securityUser.getUsername())
                 .name(securityUser.getName())
                 .build();

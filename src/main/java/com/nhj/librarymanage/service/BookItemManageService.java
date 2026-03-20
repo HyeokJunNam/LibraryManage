@@ -17,13 +17,13 @@ public class BookItemManageService {
     private final BookItemRepository bookItemRepository;
 
     @Transactional
-    public void createBookItem(Long bookId, BookItemRequest.CreateDto createDto) {
+    public void createBookItem(Long bookId, BookItemRequest.Create create) {
         Book book = bookRepository.get(bookId);
 
         BookItem bookItem = BookItem.builder()
                 .book(book)
-                .status(createDto.getStatus())
-                .location(createDto.getLocation())
+                .status(create.getStatus())
+                .location(create.getLocation())
                 .build();
 
         bookItemRepository.save(bookItem);

@@ -7,17 +7,17 @@ public class BorrowRequest {
 
     @AllArgsConstructor
     @Getter
-    public static class ParamDto {
+    public static class Param {
         private boolean borrowed;
     }
 
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
-    public static class SearchConditionDto {
+    public static class SearchCondition {
         private boolean onlyBorrowed;
 
-        public static SearchConditionDto of(boolean onlyBorrowed) {
-            return SearchConditionDto.builder()
+        public static SearchCondition of(boolean onlyBorrowed) {
+            return SearchCondition.builder()
                     .onlyBorrowed(onlyBorrowed)
                     .build();
         }
@@ -25,14 +25,14 @@ public class BorrowRequest {
 
     @AllArgsConstructor
     @Getter
-    public static class BorrowDto {
+    public static class Borrow {
         private long bookId;
         private long memberId;
     }
 
     @AllArgsConstructor
     @Getter
-    public static class ReturnBookDto {
+    public static class ReturnBook {
         private long bookId;
         // 관리자 ID가 들어갈 수도 있겠구나
 

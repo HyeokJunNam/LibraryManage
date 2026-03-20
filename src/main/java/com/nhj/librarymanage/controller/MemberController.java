@@ -21,8 +21,8 @@ public class MemberController {
     @Description(value = "회원 조회")
     @GetMapping("/members/{id}")
     public ResponseEntity<ApiResponse> getMember(@PathVariable long id) {
-        MemberResponse.InfoDto infoDtoList = memberManageService.getMember(id);
-        ApiResponse apiResponse = ApiResponse.result(infoDtoList);
+        MemberResponse.Info infos = memberManageService.getMember(id);
+        ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);
     }
@@ -30,24 +30,24 @@ public class MemberController {
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
     public ResponseEntity<ApiResponse> getMembers(Pageable pageable) {
-        Page<MemberResponse.InfoDto> infoDtoList = memberManageService.getMembers(pageable);
-        ApiResponse apiResponse = ApiResponse.result(infoDtoList);
+        Page<MemberResponse.Info> infos = memberManageService.getMembers(pageable);
+        ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);
     }
 
     @Description(value = "회원 생성")
     @PostMapping("/members")
-    public ResponseEntity<Void> createMember(@RequestBody MemberRequest.CreateDto createDto) {
-        memberManageService.createMember(createDto);
+    public ResponseEntity<Void> createMember(@RequestBody MemberRequest.Create create) {
+        memberManageService.createMember(create);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Description(value = "회원 수정")
     @PutMapping("/members")
-    public ResponseEntity<Void> updateMember(@RequestBody MemberRequest.UpdateDto updateDto) {
-        memberManageService.updateMember(updateDto);
+    public ResponseEntity<Void> updateMember(@RequestBody MemberRequest.Update update) {
+        memberManageService.updateMember(update);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -32,7 +32,7 @@ public class BorrowHistoryRepositoryImpl implements BorrowHistoryRepositoryCusto
             ));
 
     @Override
-    public Page<BorrowHistory> findAll(BorrowRequest.SearchConditionDto searchConditionDto, Pageable pageable) {
+    public Page<BorrowHistory> findAll(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         //BooleanExpression onlyBorrowed = searchConditionDto.isOnlyBorrowed() ? QuerydslFilterHelper.istNotNull(book.borrowHistory) : null;
 
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowHistory.createdAt, ORDER_COLUMN_MAP, pageable);

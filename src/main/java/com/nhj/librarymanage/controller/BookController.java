@@ -24,33 +24,33 @@ public class BookController {
     @Description(value = "도서 조회")
     @GetMapping("/books/{id}")
     public ResponseEntity<ApiResponse> getBook(@PathVariable long id) {
-        BookResponse.InfoDto infoDtoList = bookManageService.getBook(id);
-        ApiResponse apiResponse = ApiResponse.result(infoDtoList);
+        BookResponse.Info info = bookManageService.getBook(id);
+        ApiResponse apiResponse = ApiResponse.result(info);
 
         return ResponseEntity.ok().body(apiResponse);
     }
 
     @Description(value = "도서 목록 조회")
     @GetMapping("/books")
-    public ResponseEntity<ApiResponse> getBooks(@RequestBody(required = false) BookRequest.ParamDto paramDto) {
-        List<BookResponse.InfoDto> infoDtoList = bookManageService.getBooks();
-        ApiResponse apiResponse = ApiResponse.result(infoDtoList);
+    public ResponseEntity<ApiResponse> getBooks(@RequestBody(required = false) BookRequest.Param param) {
+        List<BookResponse.Info> infos = bookManageService.getBooks();
+        ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);
     }
 
     @Description(value = "도서 생성")
     @PostMapping("/books")
-    public ResponseEntity<Void> createBook(@RequestBody List<BookRequest.CreateDto> createDtoList) {
-        bookManageService.createBook(createDtoList);
+    public ResponseEntity<Void> createBook(@RequestBody List<BookRequest.Create> creates) {
+        bookManageService.createBook(creates);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Description(value = "도서 수정")
     @PutMapping("/books")
-    public ResponseEntity<Void> updateBook(@RequestBody BookRequest.UpdateDto updateDto) {
-        bookManageService.updateBook(updateDto);
+    public ResponseEntity<Void> updateBook(@RequestBody BookRequest.Update update) {
+        bookManageService.updateBook(update);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -65,8 +65,8 @@ public class BookController {
 
     @Description(value = "도서 재고 정보 등록")
     @PostMapping("/books/{bookId}/items")
-    public ResponseEntity<Void> createBookItem(@PathVariable Long bookId, @RequestBody BookItemRequest.CreateDto createDto) {
-        bookItemManageService.createBookItem(bookId, createDto);
+    public ResponseEntity<Void> createBookItem(@PathVariable Long bookId, @RequestBody BookItemRequest.Create create) {
+        bookItemManageService.createBookItem(bookId, create);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

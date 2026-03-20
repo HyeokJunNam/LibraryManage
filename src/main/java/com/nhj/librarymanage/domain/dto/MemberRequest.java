@@ -11,14 +11,14 @@ public class MemberRequest {
 
     @AllArgsConstructor
     @Getter
-    public static class ParamDto {
+    public static class Param {
 
     }
 
     // 생성 요청
     @AllArgsConstructor
     @Getter
-    public static class CreateDto {
+    public static class Create {
         private String loginId;
         private String password;
         private Role role;
@@ -29,7 +29,7 @@ public class MemberRequest {
     // 수정 요청
     @AllArgsConstructor
     @Getter
-    public static class UpdateDto {
+    public static class Update {
         private long id;
         private String name;
 

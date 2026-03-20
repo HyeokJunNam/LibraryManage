@@ -9,12 +9,12 @@ public class MemberResponse {
     // Service → Controller
     @Builder
     @Getter
-    public static class InfoDto {
+    public static class Info {
         private String loginId;
         private String name;
 
-        public static InfoDto from(Member member) {
-            return InfoDto.builder()
+        public static Info from(Member member) {
+            return Info.builder()
                     .name(member.getName())
                     .build();
         }

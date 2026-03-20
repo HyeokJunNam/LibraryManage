@@ -29,38 +29,38 @@ public class MemberManageService extends SecurityUserService<Member> {
         return memberRepository.findByLoginId(loginId);
     }
 
-    public MemberResponse.InfoDto getMember(long id) {
-        return MemberResponse.InfoDto.from(memberRepository.get(id));
+    public MemberResponse.Info getMember(long id) {
+        return MemberResponse.Info.from(memberRepository.get(id));
     }
 
     @Transactional
-    public Page<MemberResponse.InfoDto> getMembers(Pageable pageable) {
-        return memberRepository.findAll(pageable).map(MemberResponse.InfoDto::from);
+    public Page<MemberResponse.Info> getMembers(Pageable pageable) {
+        return memberRepository.findAll(pageable).map(MemberResponse.Info::from);
     }
 
     @Transactional
-    public void createMember(MemberRequest.CreateDto createDto) {
-        boolean existsMember = memberRepository.existsByLoginId(createDto.getLoginId());
+    public void createMember(MemberRequest.Create create) {
+        boolean existsMember = memberRepository.existsByLoginId(create.getLoginId());
 
         if (existsMember) {
             throw new EntityAlreadyExistsException(ErrorCode.ALREADY_MEMBER);
         }
 
         Member member = Member.builder()
-                .loginId(createDto.getLoginId())
-                .password(passwordEncoder.encode(createDto.getPassword()))
-                .role(createDto.getRole())
-                .name(createDto.getName())
+                .loginId(create.getLoginId())
+                .password(passwordEncoder.encode(create.getPassword()))
+                .role(create.getRole())
+                .name(create.getName())
                 .build();
 
         memberRepository.save(member);
     }
 
     @Transactional
-    public void updateMember(MemberRequest.UpdateDto updateDto) {
-        Member member = memberRepository.get(updateDto.getId());
+    public void updateMember(MemberRequest.Update update) {
+        Member member = memberRepository.get(update.getId());
 
-        member.changeName(updateDto.getName());
+        member.changeName(update.getName());
     }
 
     @Transactional

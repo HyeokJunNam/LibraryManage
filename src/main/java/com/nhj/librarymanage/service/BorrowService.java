@@ -27,13 +27,13 @@ public class BorrowService {
     private static final long BORROW_DAY = 7;
 
     @Transactional
-    public Page<BorrowResponse.InfoDto> getBorrowHistories(BorrowRequest.ParamDto paramDto, Pageable pageable) {
-        boolean onlyBorrowed = paramDto.isBorrowed();
-        BorrowRequest.SearchConditionDto searchConditionDto = BorrowRequest.SearchConditionDto.of(onlyBorrowed);
+    public Page<BorrowResponse.Info> getBorrowHistories(BorrowRequest.Param param, Pageable pageable) {
+        boolean onlyBorrowed = param.isBorrowed();
+        BorrowRequest.SearchCondition searchCondition = BorrowRequest.SearchCondition.of(onlyBorrowed);
 
-        Page<BorrowHistory> borrowHistoryEntityPage = borrowHistoryRepository.findAll(searchConditionDto, pageable);
+        Page<BorrowHistory> borrowHistoryEntityPage = borrowHistoryRepository.findAll(searchCondition, pageable);
 
-        return borrowHistoryEntityPage.map(BorrowResponse.InfoDto::toDto);
+        return borrowHistoryEntityPage.map(BorrowResponse.Info::toDto);
     }
 
     private boolean isBorrowed(Book book) {
@@ -42,21 +42,21 @@ public class BorrowService {
     }
 
     @Transactional
-    public void borrow(BorrowRequest.BorrowDto borrowDto) {
-        Book book = bookRepository.get(borrowDto.getBookId());
+    public void borrow(BorrowRequest.Borrow borrow) {
+        Book book = bookRepository.get(borrow.getBookId());
 
         if (isBorrowed(book)) {
             throw new InvalidStateException(ErrorCode.BORROWED_BOOK);
         }
 
-        Member member = memberRepository.get(borrowDto.getMemberId());
+        Member member = memberRepository.get(borrow.getMemberId());
 
         book.startBorrow(member, BORROW_DAY);
     }
 
     @Transactional
-    public void returnBook(BorrowRequest.ReturnBookDto returnBookDto) {
-        Book book = bookRepository.get(returnBookDto.getBookId());
+    public void returnBook(BorrowRequest.ReturnBook returnBook) {
+        Book book = bookRepository.get(returnBook.getBookId());
 
         if (!isBorrowed(book)) {
             throw new InvalidStateException(ErrorCode.NOT_BORROWED_BOOK);

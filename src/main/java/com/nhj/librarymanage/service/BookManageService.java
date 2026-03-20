@@ -17,41 +17,41 @@ public class BookManageService {
 
     private final BookRepository bookRepository;
 
-    public BookResponse.InfoDto getBook(long id) {
-        return BookResponse.InfoDto.toDto(bookRepository.get(id));
+    public BookResponse.Info getBook(long id) {
+        return BookResponse.Info.toDto(bookRepository.get(id));
     }
 
     @Transactional
-    public List<BookResponse.InfoDto> getBooks() {
+    public List<BookResponse.Info> getBooks() {
         List<Book> bookList = bookRepository.findAll();
 
-        return bookList.stream().map(BookResponse.InfoDto::toDto).toList();
+        return bookList.stream().map(BookResponse.Info::toDto).toList();
     }
 
 
     @Transactional
-    public void createBook(List<BookRequest.CreateDto> createDtoList) {
-        List<Book> bookList = new ArrayList<>();
+    public void createBook(List<BookRequest.Create> creates) {
+        List<Book> books = new ArrayList<>();
 
-        for (BookRequest.CreateDto createDto : createDtoList) {
+        for (BookRequest.Create create : creates) {
         Book book = Book.builder()
-                .isbn(createDto.getIsbn())
-                .title(createDto.getTitle())
-                .author(createDto.getAuthor())
-                .publisher(createDto.getPublisher())
+                .isbn(create.getIsbn())
+                .title(create.getTitle())
+                .author(create.getAuthor())
+                .publisher(create.getPublisher())
                 .build();
 
-            bookList.add(book);
+            books.add(book);
         }
 
-        bookRepository.saveAll(bookList);
+        bookRepository.saveAll(books);
     }
 
     @Transactional
-    public void updateBook(BookRequest.UpdateDto updateDto) {
-        Book book = bookRepository.get(updateDto.getId());
+    public void updateBook(BookRequest.Update update) {
+        Book book = bookRepository.get(update.getId());
 
-        book.changeTitle(updateDto.getName());
+        book.changeTitle(update.getName());
     }
 
     @Transactional

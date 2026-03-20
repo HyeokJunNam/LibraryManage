@@ -17,8 +17,8 @@ public class LibraryController {
 
     @GetMapping("/")
     public String libraryMain(Model model) {
-        List<BookResponse.InfoDto> infoDtoList = bookManageService.getBooks();
-        model.addAttribute("books", infoDtoList);
+        List<BookResponse.Info> infos = bookManageService.getBooks();
+        model.addAttribute("books", infos);
         return "main";
     }
 

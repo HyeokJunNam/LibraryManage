@@ -11,7 +11,7 @@ public class BookRequest {
     // 수행 할 작업에 필요한 파라미터 (CRUD 제외)
     @AllArgsConstructor
     @Getter
-    public static class ParamDto {
+    public static class Param {
 
     }
 
@@ -19,7 +19,7 @@ public class BookRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
-    public static class CreateDto {
+    public static class Create {
         private String isbn;
         private String title;
         private String author;
@@ -29,7 +29,7 @@ public class BookRequest {
     // 수정 요청
     @AllArgsConstructor
     @Getter
-    public static class UpdateDto {
+    public static class Update {
         private long id;
         private String name;
 

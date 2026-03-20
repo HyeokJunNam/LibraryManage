@@ -11,7 +11,7 @@ public class BookResponse {
     // Service → Controller
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
-    public static class InfoDto {
+    public static class Info {
         private long id;
         private String title;
         private String author;
@@ -21,10 +21,10 @@ public class BookResponse {
         private boolean canBorrow;
         //private long availableCount;
 
-        public static InfoDto toDto(Book book) {
+        public static Info toDto(Book book) {
             //boolean canBorrow = bookEntity.getBookCount() - 0 >= 1 ? true : false;
 
-            return InfoDto.builder()
+            return Info.builder()
                     .id(book.getId())
                     .title(book.getTitle())
                     .author(book.getAuthor())

@@ -28,21 +28,21 @@ public class QuerydslSortHelper {
     }
 
     public static OrderSpecifier<?>[] sort(ComparableExpressionBase<?> defaultOrderColumn, Map<String, Expression<? extends Comparable<?>>> orderColumnMap, Pageable pageable) {
-        List<OrderSpecifier<?>> orderSpecifierList = new ArrayList<>();
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
 
         for (Sort.Order order : pageable.getSort()) {
             Expression<? extends Comparable<?>> orderColumn = orderColumnMap.get(order.getProperty());
 
             if (orderColumn != null) {
-                orderSpecifierList.add(new OrderSpecifier<>(order.isAscending() ? Order.ASC : Order.DESC, orderColumn));
+                orderSpecifiers.add(new OrderSpecifier<>(order.isAscending() ? Order.ASC : Order.DESC, orderColumn));
             }
         }
 
-        if (orderSpecifierList.isEmpty()) {
-            orderSpecifierList.add(defaultOrderColumn.desc());
+        if (orderSpecifiers.isEmpty()) {
+            orderSpecifiers.add(defaultOrderColumn.desc());
         }
 
-        return orderSpecifierList.toArray(new OrderSpecifier[0]);
+        return orderSpecifiers.toArray(new OrderSpecifier[0]);
     }
 
 }
