@@ -26,7 +26,7 @@ public class BorrowRequest {
     @AllArgsConstructor
     @Getter
     public static class Borrow {
-        private long bookId;
+        private long bookItemId;
         private long memberId;
     }
 

@@ -1,9 +1,6 @@
 package com.nhj.librarymanage.domain.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookRequest {
@@ -13,6 +10,15 @@ public class BookRequest {
     @Getter
     public static class Param {
 
+    }
+
+    @Builder(access = AccessLevel.PRIVATE)
+    @Getter
+    public static class SearchCondition {
+        private String isbn;
+        private String title;
+        private String author;
+        private String publisher;
     }
 
     // 생성 요청

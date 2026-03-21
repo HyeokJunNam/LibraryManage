@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long>, BookRepositoryCustom {
 
     Optional<Book> findById(long id);
 
     default Book get(long id) {
-        return findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.BOOK_NOT_FOND));
+        return findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorCode.BOOK_NOT_FOUND));
     }
 
 

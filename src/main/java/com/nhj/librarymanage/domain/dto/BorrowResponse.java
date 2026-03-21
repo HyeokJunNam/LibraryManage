@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.domain.dto;
 
 import com.nhj.librarymanage.domain.entity.Book;
+import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowHistory;
 import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
@@ -23,11 +24,13 @@ public class BorrowResponse {
         private LocalDateTime returnedAt;
 
         public static Info toDto(BorrowHistory borrowHistory) {
-            Book book = borrowHistory.getBook();
+            //Book book = borrowHistory.getBook();
+            BookItem bookItem = borrowHistory.getBookitem();
+            Book book = bookItem.getBook();
             Member member = borrowHistory.getMember();
 
             return Info.builder()
-                    .bookId(book.getId())
+                    .bookId(bookItem.getBook().getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())
                     .memberName(member.getName())

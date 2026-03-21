@@ -8,6 +8,8 @@ import com.nhj.librarymanage.domain.dto.BookResponse;
 import com.nhj.librarymanage.service.BookItemManageService;
 import com.nhj.librarymanage.service.BookManageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +34,9 @@ public class BookController {
 
     @Description(value = "도서 목록 조회")
     @GetMapping("/books")
-    public ResponseEntity<ApiResponse> getBooks(@RequestBody(required = false) BookRequest.Param param) {
-        List<BookResponse.Info> infos = bookManageService.getBooks();
-        ApiResponse apiResponse = ApiResponse.result(infos);
+    public ResponseEntity<ApiResponse> getBooks(@ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<BookResponse.Info> queryInfos = bookManageService.getBooks(searchCondition, pageable);
+        ApiResponse apiResponse = ApiResponse.result(queryInfos);
 
         return ResponseEntity.ok().body(apiResponse);
     }

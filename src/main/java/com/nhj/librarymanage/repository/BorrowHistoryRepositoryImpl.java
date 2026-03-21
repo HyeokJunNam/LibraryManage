@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-import static com.nhj.librarymanage.domain.entity.QBook.book;
+import static com.nhj.librarymanage.domain.entity.QBookItem.bookItem;
 import static com.nhj.librarymanage.domain.entity.QBorrowHistory.borrowHistory;
 import static com.nhj.librarymanage.domain.entity.QMember.member;
 
@@ -27,9 +27,7 @@ public class BorrowHistoryRepositoryImpl implements BorrowHistoryRepositoryCusto
     private final JPAQueryFactory jpaQueryFactory;
 
     private static final Map<String, Expression<? extends Comparable<?>>> ORDER_COLUMN_MAP =
-            QuerydslSortHelper.buildOrderColumnMap(List.of(
-                    book.title
-            ));
+            QuerydslSortHelper.buildOrderColumnMap(List.of());
 
     @Override
     public Page<BorrowHistory> findAll(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
@@ -39,7 +37,7 @@ public class BorrowHistoryRepositoryImpl implements BorrowHistoryRepositoryCusto
 
         List<BorrowHistory> query = jpaQueryFactory
                 .selectFrom(borrowHistory)
-                .innerJoin(borrowHistory.book, book).fetchJoin()
+                .innerJoin(borrowHistory.bookitem, bookItem).fetchJoin()
                 .innerJoin(borrowHistory.member, member).fetchJoin()
                 //.where(onlyBorrowed)
                 .offset(pageable.getOffset())
@@ -50,7 +48,7 @@ public class BorrowHistoryRepositoryImpl implements BorrowHistoryRepositoryCusto
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(borrowHistory.id.count())
                 .from(borrowHistory)
-                .innerJoin(borrowHistory.book, book).fetchJoin()
+                .innerJoin(borrowHistory.bookitem, bookItem).fetchJoin()
                 .innerJoin(borrowHistory.member, member).fetchJoin();
                 //.where(onlyBorrowed);
 

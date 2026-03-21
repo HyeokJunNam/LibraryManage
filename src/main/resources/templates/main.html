@@ -109,8 +109,8 @@
             <div th:unless="${#lists.isEmpty(books)}" class="book-grid">
                 <article class="book-card" th:each="book : ${books}">
                     <div class="book-card__top">
-                        <span th:if="${book.borrowed}" class="badge badge--available">대여 가능</span>
-                        <span th:unless="${book.borrowed}" class="badge badge--borrowed">대여 중</span>
+                        <!--<span th:if="${book.borrowed}" class="badge badge&#45;&#45;available">대여 가능</span>-->
+                        <!--<span th:unless="${book.borrowed}" class="badge badge&#45;&#45;borrowed">대여 중</span>-->
                     </div>
 
                     <div class="book-card__body">

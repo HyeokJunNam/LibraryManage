@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: secret
 
   security:
     oauth2:
@@ -34,6 +36,8 @@ spring:
         default_batch_fetch_size: 100
         query:
           fail_on_pagination_over_collection_fetch: true
-
-  profiles:
-    active: secret
+  data:
+    web:
+      pageable:
+        default-page-size: 5
+        max-page-size: 50
