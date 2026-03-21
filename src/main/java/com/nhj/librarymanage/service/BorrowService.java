@@ -1,15 +1,15 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.code.BookItemStatus;
 import com.nhj.librarymanage.domain.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.dto.BorrowResponse;
-import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowHistory;
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.error.ErrorCode;
-import com.nhj.librarymanage.error.exception.InvalidStateException;
+import com.nhj.librarymanage.error.code.BookErrorCode;
+import com.nhj.librarymanage.error.exception.book.NotBorrowableException;
+import com.nhj.librarymanage.error.exception.book.NotReturnableException;
 import com.nhj.librarymanage.repository.BookItemRepository;
-import com.nhj.librarymanage.repository.BookRepository;
 import com.nhj.librarymanage.repository.BorrowHistoryRepository;
 import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class BorrowService {
-
-    private final BookRepository bookRepository;
 
     private final BookItemRepository bookItemRepository;
     private final MemberRepository memberRepository;
@@ -42,25 +38,16 @@ public class BorrowService {
         return borrowHistoryEntityPage.map(BorrowResponse.Info::toDto);
     }
 
-    private boolean canBorrow(Book book) {
-        List<BookItem> bookItems = book.getBookItems();
-
-        for (BookItem bookItem : bookItems) {
-            if (bookItem.getBorrowHistory() == null) {
-                return true;
-            }
-        }
-
-        return false;
+    private boolean isBorrowable(BookItem bookItem) {
+        return bookItem.getBorrowHistory() == null && bookItem.getStatus() == BookItemStatus.AVAILABLE;
     }
 
     @Transactional
     public void borrow(BorrowRequest.Borrow borrow) {
         BookItem bookItem = bookItemRepository.get(borrow.getBookItemId());
 
-        if (!canBorrow(bookItem.getBook())) {
-            // TODO 예외명이 좀 안어울리긴 함
-            throw new InvalidStateException(ErrorCode.BORROWED_BOOK);
+        if (!isBorrowable(bookItem)) {
+            throw new NotBorrowableException(BookErrorCode.BOOK_NOT_BORROWABLE);
         }
 
         Member member = memberRepository.get(borrow.getMemberId());
@@ -68,15 +55,20 @@ public class BorrowService {
         bookItem.startBorrow(member, BORROW_DAY);
     }
 
+    private boolean isBorrowed(BookItem bookItem) {
+        BorrowHistory borrowHistory = bookItem.getBorrowHistory();
+        return borrowHistory != null && borrowHistory.getReturnedAt() == null;
+    }
+
     @Transactional
     public void returnBook(BorrowRequest.ReturnBook returnBook) {
-        Book book = bookRepository.get(returnBook.getBookId());
+        BookItem bookItem = bookItemRepository.get(returnBook.getBookItemId());
 
-        if (!canBorrow(book)) {
-            throw new InvalidStateException(ErrorCode.NOT_BORROWED_BOOK);
+        if (!isBorrowed(bookItem)) {
+            throw new NotReturnableException(BookErrorCode.BOOK_NOT_RETURNABLE);
         }
 
-        //book.endBorrow();
+        bookItem.returnBook();
     }
 
 }

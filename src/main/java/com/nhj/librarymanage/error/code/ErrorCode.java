@@ -1,8 +1,8 @@
-package com.nhj.librarymanage.error;
+package com.nhj.librarymanage.error.code;
 
 import org.springframework.http.HttpStatus;
 
-public interface Error {
+public interface ErrorCode {
 
     String getCode();
 

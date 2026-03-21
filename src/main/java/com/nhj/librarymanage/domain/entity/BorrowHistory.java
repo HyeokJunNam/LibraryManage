@@ -35,5 +35,4 @@ public class BorrowHistory extends BaseEntity {
         this.returnedAt = LocalDateTime.now();
     }
 
-
 }

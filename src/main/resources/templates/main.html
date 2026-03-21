@@ -3,151 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서관 메인</title>
+    <title>도서 목록</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 
-<header class="hero">
-    <div class="hero__overlay"></div>
+<div class="page">
+    <div class="page__inner">
 
-    <div class="hero__inner">
-        <nav class="topbar">
-            <a th:href="@{/}" class="topbar__brand">Library</a>
-
-            <div class="auth-menu">
-                <div th:if="${loginMember == null}" class="auth-menu__guest">
-                    <a class="btn btn--ghost" th:href="@{/login}">로그인</a>
-                    <a class="btn btn--light" th:href="@{/signup}">회원가입</a>
+        <header class="hero">
+            <div class="hero__layout">
+                <div class="hero__content">
+                    <p class="hero__eyebrow">LIBRARY</p>
+                    <h1 class="hero__title">도서 목록</h1>
+                    <p class="hero__desc">
+                        보유 중인 도서를 검색하고, 도서별 보유 현황과 대여 가능 여부를 한눈에 확인할 수 있습니다.
+                    </p>
                 </div>
 
-                <div th:if="${loginMember != null}" class="auth-menu__user">
-                    <span class="auth-menu__welcome">
-                        <strong th:text="${loginMember.name}">사용자</strong>님, 환영합니다
-                    </span>
-                    <a class="btn btn--ghost" th:href="@{/member/me}">내 정보</a>
-                    <form th:action="@{/logout}" method="post" class="auth-menu__logout-form">
-                        <button type="submit" class="btn btn--danger">로그아웃</button>
-                    </form>
+                <div class="hero__side">
+                    <div th:if="${#authorization.expression('!isAuthenticated()')}"
+                         class="member-panel">
+                        <p class="member-panel__title">지금 로그인해서 책을 빌려보세요.</p>
+                        <p class="member-panel__desc">
+                            로그인하면 도서 대여 신청과 내 이용정보 확인이 가능합니다.
+                        </p>
+                        <a th:href="@{/login}" class="member-panel__btn">로그인</a>
+                    </div>
+
+                    <div th:if="${#authorization.expression('isAuthenticated()')}"
+                         class="member-panel member-panel--logged-in">
+                        <p class="member-panel__title">
+                            안녕하세요.
+                            <span th:text="${#authentication.name}">사용자</span>
+                            님. 어떤 책이 필요하신가요?
+                        </p>
+                        <p class="member-panel__desc">
+                            내 정보와 대여 내역을 확인하고 원하는 도서를 바로 신청해보세요.
+                        </p>
+                        <a th:href="@{/my}" class="member-panel__btn">내정보</a>
+                    </div>
                 </div>
             </div>
-        </nav>
+        </header>
 
-        <section class="hero__content">
-            <div class="hero__text">
-                <p class="hero__eyebrow">Library Management System</p>
-                <h1 class="hero__title">
-                    원하는 도서를<br>
-                    쉽고 빠르게 찾아보세요
-                </h1>
-                <p class="hero__description">
-                    도서 목록 조회, 대여 가능 여부 확인, 검색 기능까지
-                    한눈에 볼 수 있는 도서관 메인 화면입니다.
-                </p>
-            </div>
+        <section class="search-panel">
+            <form id="searchForm" class="search-form">
+                <div class="search-form__group search-form__group--condition">
+                    <label for="condition" class="search-form__label">검색 조건</label>
+                    <select id="condition" class="search-form__select">
+                        <option value="title">도서명</option>
+                        <option value="isbn">ISBN</option>
+                        <option value="author">저자</option>
+                        <option value="publisher">출판사</option>
+                    </select>
+                </div>
 
-            <div class="hero__panel">
-                <div class="hero-stat">
-                    <span class="hero-stat__label">전체 도서</span>
-                    <strong class="hero-stat__value" th:text="${#lists.size(books)}">0</strong>
+                <div class="search-form__group search-form__group--keyword">
+                    <label for="keyword" class="search-form__label">검색어</label>
+                    <input id="keyword"
+                           type="text"
+                           class="search-form__input"
+                           placeholder="검색어를 입력하세요">
                 </div>
-                <div class="hero-stat">
-                    <span class="hero-stat__label">대여 가능</span>
-                    <strong class="hero-stat__value" th:text="${availableCount}">0</strong>
-                </div>
-                <p class="hero__panel-text">
-                    메인 화면에서 도서 상태를 바로 확인할 수 있습니다.
-                </p>
-            </div>
-        </section>
-    </div>
-</header>
 
-<main class="main-content">
-    <div class="container">
-        <section class="search-card">
-            <div class="search-card__header">
-                <div>
-                    <p class="section-label">SEARCH</p>
-                    <h2 class="section-title">도서 검색</h2>
+                <div class="search-form__actions">
+                    <button type="submit" class="btn btn--primary">검색</button>
+                    <a th:href="@{/}" class="btn btn--secondary">초기화</a>
                 </div>
-                <p class="section-subtitle">도서명 또는 저자로 검색해보세요.</p>
-            </div>
-
-            <form class="search-form" method="get" action="/">
-                <div class="search-form__input-wrap">
-                    <span class="search-form__icon">⌕</span>
-                    <input
-                            class="search-form__input"
-                            type="text"
-                            name="keyword"
-                            placeholder="도서명 또는 저자를 입력하세요"
-                            th:value="${keyword}"
-                    >
-                </div>
-                <button class="search-form__button" type="submit">검색</button>
             </form>
         </section>
 
         <section class="book-section">
-            <div class="book-section__header">
-                <div>
-                    <p class="section-label">COLLECTION</p>
-                    <h2 class="section-title">도서 목록</h2>
-                </div>
-                <span class="book-section__count">
-                    총 <strong th:text="${#lists.size(books)}">0</strong>권
-                </span>
-            </div>
+            <div class="book-section__top">
+                <div class="book-section__top-left">
+                    <h2 class="book-section__title">전체 도서 목록</h2>
+                    <p class="book-section__sub">
+                        검색 결과를 포함한 전체 도서 현황입니다.
+                    </p>
 
-            <div th:if="${#lists.isEmpty(books)}" class="empty-box">
-                <div class="empty-box__icon">📚</div>
-                <h3 class="empty-box__title">등록된 도서가 없습니다</h3>
-                <p class="empty-box__description">도서를 등록하면 이 영역에 목록이 표시됩니다.</p>
-            </div>
-
-            <div th:unless="${#lists.isEmpty(books)}" class="book-grid">
-                <article class="book-card" th:each="book : ${books}">
-                    <div class="book-card__top">
-                        <!--<span th:if="${book.borrowed}" class="badge badge&#45;&#45;available">대여 가능</span>-->
-                        <!--<span th:unless="${book.borrowed}" class="badge badge&#45;&#45;borrowed">대여 중</span>-->
+                    <div class="book-section__summary">
+                        <span>총</span>
+                        <strong th:text="${books != null ? books.totalElements : 0}">0</strong>
+                        <span>권</span>
                     </div>
+                </div>
+            </div>
 
-                    <div class="book-card__body">
-                        <h3 class="book-card__title" th:text="${book.title}">도서 제목</h3>
+            <div th:if="${books == null or books.content == null or #lists.isEmpty(books.content)}"
+                 class="book-empty">
+                <div class="book-empty__icon">📚</div>
+                <div class="book-empty__title">조회된 도서가 없습니다.</div>
+                <div class="book-empty__desc">검색 조건을 바꾸거나 새 도서를 등록해보세요.</div>
+            </div>
 
-                        <div class="book-card__meta">
-                            <div class="book-card__row">
-                                <span class="book-card__label">저자</span>
-                                <span class="book-card__value" th:text="${book.author}">홍길동</span>
-                            </div>
+            <div th:if="${books != null and books.content != null and !#lists.isEmpty(books.content)}"
+                 class="book-list">
 
-                            <div class="book-card__row">
-                                <span class="book-card__label">출판사</span>
-                                <span class="book-card__value" th:text="${book.publisher}">한빛미디어</span>
-                            </div>
+                <div class="book-list__header">
+                    <div>도서 정보</div>
+                    <div>저자 / 출판사</div>
+                    <div>보유 현황</div>
+                    <div>신청</div>
+                </div>
 
-                            <div class="book-card__row">
-                                <span class="book-card__label">도서번호</span>
-                                <span class="book-card__value book-card__value--mono" th:text="${book.id}">1</span>
-                            </div>
+                <div th:each="book : ${books.content}" class="book-item">
+                    <div class="book-item__main">
+                        <div class="book-item__title-row">
+                            <a th:href="@{/library/books/{bookId}(bookId=${book.id})}"
+                               class="book-item__title"
+                               th:text="${book.title}">
+                                도서명
+                            </a>
+
+                            <span class="book-badge"
+                                  th:classappend="${
+                                      book.bookCount == 0 ? ' book-badge--empty' :
+                                      (book.canBorrow ? ' book-badge--available' : ' book-badge--unavailable')
+                                  }"
+                                  th:text="${
+                                      book.bookCount == 0 ? '미보유' :
+                                      (book.canBorrow ? '대여 가능' : '전체 대여 중')
+                                  }">
+                                대여 가능
+                            </span>
+                        </div>
+
+                        <div class="book-item__meta">
+                            <span class="book-item__isbn-label">ISBN</span>
+                            <span class="book-item__isbn-value" th:text="${book.isbn}">9780000000000</span>
                         </div>
                     </div>
 
-                    <div class="book-card__bottom">
-                        <a th:href="@{/books/{id}(id=${book.id})}" class="book-card__action">상세 보기</a>
+                    <div class="book-item__info">
+                        <div class="book-item__author" th:text="${book.author}">저자</div>
+                        <div class="book-item__publisher" th:text="${book.publisher}">출판사</div>
                     </div>
-                </article>
+
+                    <div class="book-item__stock">
+                        <div class="stock-box">
+                            <span class="stock-box__label">전체 보유</span>
+                            <strong class="stock-box__value" th:text="${book.bookCount}">0</strong>
+                        </div>
+
+                        <div class="stock-box stock-box--borrowed">
+                            <span class="stock-box__label">대여 중</span>
+                            <strong class="stock-box__value" th:text="${book.borrowedCount}">0</strong>
+                        </div>
+
+                        <div class="stock-box stock-box--available-count">
+                            <span class="stock-box__label">대여 가능</span>
+                            <strong class="stock-box__value"
+                                    th:text="${book.bookCount - book.borrowedCount}">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="book-item__action">
+                        <form th:if="${book.bookCount > 0 and book.canBorrow}"
+                              th:action="@{/library/borrow}"
+                              method="post"
+                              class="borrow-form">
+                            <input type="hidden" name="bookId" th:value="${book.id}">
+                            <button type="submit" class="borrow-btn">대여 신청</button>
+                        </form>
+
+                        <button th:if="${book.bookCount == 0}"
+                                type="button"
+                                class="borrow-btn borrow-btn--disabled">
+                            미보유
+                        </button>
+
+                        <button th:if="${book.bookCount > 0 and !book.canBorrow}"
+                                type="button"
+                                class="borrow-btn borrow-btn--disabled">
+                            신청 불가
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            <nav th:if="${books != null and books.totalPages > 0}" class="pagination">
+                <a th:if="${!books.first}"
+                   th:href="@{/(page=${books.number - 1})}"
+                   class="pagination__button">
+                    이전
+                </a>
+                <span th:if="${books.first}" class="pagination__button pagination__button--disabled">
+                    이전
+                </span>
+
+                <a th:each="pageNumber : ${#numbers.sequence(0, books.totalPages - 1)}"
+                   th:href="@{/(page=${pageNumber})}"
+                   class="pagination__number"
+                   th:classappend="${pageNumber == books.number} ? ' pagination__number--active' : ''"
+                   th:text="${pageNumber + 1}">
+                    1
+                </a>
+
+                <a th:if="${!books.last}"
+                   th:href="@{/(page=${books.number + 1})}"
+                   class="pagination__button">
+                    다음
+                </a>
+                <span th:if="${books.last}" class="pagination__button pagination__button--disabled">
+                    다음
+                </span>
+            </nav>
         </section>
     </div>
-</main>
+</div>
 
-<footer class="footer">
-    <div class="container footer__inner">
-        <p class="footer__text">Library Management Project</p>
-    </div>
-</footer>
-
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>

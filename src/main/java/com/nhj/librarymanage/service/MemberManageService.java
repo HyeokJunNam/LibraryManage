@@ -3,7 +3,7 @@ package com.nhj.librarymanage.service;
 import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.error.ErrorCode;
+import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
 import com.nhj.librarymanage.security.member.SecurityUserService;
@@ -43,7 +43,7 @@ public class MemberManageService extends SecurityUserService<Member> {
         boolean existsMember = memberRepository.existsByLoginId(create.getLoginId());
 
         if (existsMember) {
-            throw new EntityAlreadyExistsException(ErrorCode.ALREADY_MEMBER);
+            throw new EntityAlreadyExistsException(MemberErrorCode.ALREADY_MEMBER);
         }
 
         Member member = Member.builder()

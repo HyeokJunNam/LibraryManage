@@ -15,7 +15,7 @@ public class BorrowResponse {
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
     public static class Info {
-        private long bookId;
+        private long bookItemId;
         private String bookTitle;
         private long memberId;
         private String memberName;
@@ -24,13 +24,12 @@ public class BorrowResponse {
         private LocalDateTime returnedAt;
 
         public static Info toDto(BorrowHistory borrowHistory) {
-            //Book book = borrowHistory.getBook();
             BookItem bookItem = borrowHistory.getBookitem();
             Book book = bookItem.getBook();
             Member member = borrowHistory.getMember();
 
             return Info.builder()
-                    .bookId(bookItem.getBook().getId())
+                    .bookItemId(bookItem.getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())
                     .memberName(member.getName())

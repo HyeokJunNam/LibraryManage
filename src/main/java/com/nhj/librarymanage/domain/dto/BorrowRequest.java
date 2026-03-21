@@ -33,9 +33,7 @@ public class BorrowRequest {
     @AllArgsConstructor
     @Getter
     public static class ReturnBook {
-        private long bookId;
-        // 관리자 ID가 들어갈 수도 있겠구나
-
+        private long bookItemId;
     }
 
 }

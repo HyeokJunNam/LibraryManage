@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.domain.dto;
 
+import com.nhj.librarymanage.domain.code.BookItemStatus;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import lombok.AccessLevel;
@@ -29,7 +30,7 @@ public class BookResponse {
     ) {
         public record bookItemInfo(
                 Long id,
-                String status,
+                BookItemStatus status,
                 String location
         ) {
         }

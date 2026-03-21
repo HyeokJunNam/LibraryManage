@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.domain.dto;
 
+import com.nhj.librarymanage.domain.code.BookItemStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class BookItemRequest {
     @AllArgsConstructor
     @Getter
     public static class Create {
-        private String status;
+        private BookItemStatus status;
         private String location;
     }
 

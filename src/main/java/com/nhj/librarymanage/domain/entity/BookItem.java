@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.domain.entity;
 
+import com.nhj.librarymanage.domain.code.BookItemStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,8 @@ public class BookItem extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookItemStatus status;
 
     private String location;
 
@@ -39,9 +41,9 @@ public class BookItem extends BaseEntity {
                 .build();
     }
 
-    public void endBorrow() {
-        /*this.borrowHistoryEntity.returnBook();
-        this.borrowHistoryEntity = null;*/
+    public void returnBook() {
+        this.borrowHistory.returnBook();
+        this.borrowHistory = null;
     }
 
 }
