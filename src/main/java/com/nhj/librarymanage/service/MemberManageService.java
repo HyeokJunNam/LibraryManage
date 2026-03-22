@@ -8,6 +8,7 @@ import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
 import com.nhj.librarymanage.security.member.SecurityUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class MemberManageService extends SecurityUserService<Member> {
@@ -30,7 +32,7 @@ public class MemberManageService extends SecurityUserService<Member> {
     }
 
     public MemberResponse.Info getMember(long id) {
-        return MemberResponse.Info.from(memberRepository.get(id));
+        return MemberResponse.Info.from(memberRepository.getById(id));
     }
 
     @Transactional
@@ -58,7 +60,7 @@ public class MemberManageService extends SecurityUserService<Member> {
 
     @Transactional
     public void updateMember(MemberRequest.Update update) {
-        Member member = memberRepository.get(update.getId());
+        Member member = memberRepository.getById(update.getId());
 
         member.changeName(update.getName());
     }

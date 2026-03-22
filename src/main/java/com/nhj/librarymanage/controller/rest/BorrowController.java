@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.controller;
+package com.nhj.librarymanage.controller.rest;
 
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;

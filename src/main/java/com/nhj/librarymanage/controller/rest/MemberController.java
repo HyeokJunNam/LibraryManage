@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.controller;
+package com.nhj.librarymanage.controller.rest;
 
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
@@ -21,8 +21,8 @@ public class MemberController {
     @Description(value = "회원 조회")
     @GetMapping("/members/{id}")
     public ResponseEntity<ApiResponse> getMember(@PathVariable long id) {
-        MemberResponse.Info infos = memberManageService.getMember(id);
-        ApiResponse apiResponse = ApiResponse.result(infos);
+        MemberResponse.Info info = memberManageService.getMember(id);
+        ApiResponse apiResponse = ApiResponse.result(info);
 
         return ResponseEntity.ok().body(apiResponse);
     }

@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.controller;
+package com.nhj.librarymanage.controller.rest;
 
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
@@ -26,8 +26,8 @@ public class BookController {
     @Description(value = "도서 조회")
     @GetMapping("/books/{id}")
     public ResponseEntity<ApiResponse> getBook(@PathVariable long id) {
-        BookResponse.Info info = bookManageService.getBook(id);
-        ApiResponse apiResponse = ApiResponse.result(info);
+        BookResponse.Detail detail = bookManageService.getBook(id);
+        ApiResponse apiResponse = ApiResponse.result(detail);
 
         return ResponseEntity.ok().body(apiResponse);
     }

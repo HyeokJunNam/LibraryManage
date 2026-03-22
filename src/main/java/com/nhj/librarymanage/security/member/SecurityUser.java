@@ -4,9 +4,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface SecurityUser extends UserDetails {
 
-    String getName();
-
     Long getId();
+
+    String getLoginId();
+
+    String getName();
 
     Role getRole();
 

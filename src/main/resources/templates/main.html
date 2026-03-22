@@ -17,7 +17,7 @@
                     <p class="hero__eyebrow">LIBRARY</p>
                     <h1 class="hero__title">도서 목록</h1>
                     <p class="hero__desc">
-                        보유 중인 도서를 검색하고, 도서별 보유 현황과 대여 가능 여부를 한눈에 확인할 수 있습니다.
+                        보유 중인 도서를 검색하고 도서 정보를 확인할 수 있습니다.
                     </p>
                 </div>
 
@@ -35,13 +35,24 @@
                          class="member-panel member-panel--logged-in">
                         <p class="member-panel__title">
                             안녕하세요.
-                            <span th:text="${#authentication.name}">사용자</span>
-                            님. 어떤 책이 필요하신가요?
+                            <span th:text="${#authentication.principal.name}">사용자</span>
+                            님
+                            <br>
+                            어떤 책이 필요하신가요?
                         </p>
                         <p class="member-panel__desc">
-                            내 정보와 대여 내역을 확인하고 원하는 도서를 바로 신청해보세요.
+                            내 정보와 대여 내역을 확인하고 원하는 도서를 찾아보세요.
                         </p>
-                        <a th:href="@{/my}" class="member-panel__btn">내정보</a>
+
+                        <div class="member-panel__actions">
+                            <a th:href="@{/my}" class="member-panel__btn">내정보</a>
+
+                            <form th:action="@{/logout}" method="post" class="member-panel__logout-form">
+                                <button type="submit" class="member-panel__btn member-panel__btn--secondary">
+                                    로그아웃
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -79,14 +90,14 @@
                 <div class="book-section__top-left">
                     <h2 class="book-section__title">전체 도서 목록</h2>
                     <p class="book-section__sub">
-                        검색 결과를 포함한 전체 도서 현황입니다.
+                        검색 결과를 포함한 전체 도서 목록입니다.
                     </p>
+                </div>
 
-                    <div class="book-section__summary">
-                        <span>총</span>
-                        <strong th:text="${books != null ? books.totalElements : 0}">0</strong>
-                        <span>권</span>
-                    </div>
+                <div class="book-section__summary">
+                    <span>총</span>
+                    <strong th:text="${books != null ? books.totalElements : 0}">0</strong>
+                    <span>권</span>
                 </div>
             </div>
 
@@ -101,83 +112,31 @@
                  class="book-list">
 
                 <div class="book-list__header">
-                    <div>도서 정보</div>
-                    <div>저자 / 출판사</div>
-                    <div>보유 현황</div>
-                    <div>신청</div>
+                    <div>도서명</div>
+                    <div>ISBN</div>
+                    <div>저자</div>
+                    <div>출판사</div>
                 </div>
 
                 <div th:each="book : ${books.content}" class="book-item">
-                    <div class="book-item__main">
-                        <div class="book-item__title-row">
-                            <a th:href="@{/library/books/{bookId}(bookId=${book.id})}"
-                               class="book-item__title"
-                               th:text="${book.title}">
-                                도서명
-                            </a>
-
-                            <span class="book-badge"
-                                  th:classappend="${
-                                      book.bookCount == 0 ? ' book-badge--empty' :
-                                      (book.canBorrow ? ' book-badge--available' : ' book-badge--unavailable')
-                                  }"
-                                  th:text="${
-                                      book.bookCount == 0 ? '미보유' :
-                                      (book.canBorrow ? '대여 가능' : '전체 대여 중')
-                                  }">
-                                대여 가능
-                            </span>
-                        </div>
-
-                        <div class="book-item__meta">
-                            <span class="book-item__isbn-label">ISBN</span>
-                            <span class="book-item__isbn-value" th:text="${book.isbn}">9780000000000</span>
-                        </div>
+                    <div class="book-item__title-wrap">
+                        <a th:href="@{/library/books/{bookId}(bookId=${book.id})}"
+                           class="book-item__title"
+                           th:text="${book.title}">
+                            도서명
+                        </a>
                     </div>
 
-                    <div class="book-item__info">
-                        <div class="book-item__author" th:text="${book.author}">저자</div>
-                        <div class="book-item__publisher" th:text="${book.publisher}">출판사</div>
+                    <div class="book-item__cell book-item__cell--isbn" th:text="${book.isbn}">
+                        9780000000000
                     </div>
 
-                    <div class="book-item__stock">
-                        <div class="stock-box">
-                            <span class="stock-box__label">전체 보유</span>
-                            <strong class="stock-box__value" th:text="${book.bookCount}">0</strong>
-                        </div>
-
-                        <div class="stock-box stock-box--borrowed">
-                            <span class="stock-box__label">대여 중</span>
-                            <strong class="stock-box__value" th:text="${book.borrowedCount}">0</strong>
-                        </div>
-
-                        <div class="stock-box stock-box--available-count">
-                            <span class="stock-box__label">대여 가능</span>
-                            <strong class="stock-box__value"
-                                    th:text="${book.bookCount - book.borrowedCount}">0</strong>
-                        </div>
+                    <div class="book-item__cell book-item__cell--author" th:text="${book.author}">
+                        저자
                     </div>
 
-                    <div class="book-item__action">
-                        <form th:if="${book.bookCount > 0 and book.canBorrow}"
-                              th:action="@{/library/borrow}"
-                              method="post"
-                              class="borrow-form">
-                            <input type="hidden" name="bookId" th:value="${book.id}">
-                            <button type="submit" class="borrow-btn">대여 신청</button>
-                        </form>
-
-                        <button th:if="${book.bookCount == 0}"
-                                type="button"
-                                class="borrow-btn borrow-btn--disabled">
-                            미보유
-                        </button>
-
-                        <button th:if="${book.bookCount > 0 and !book.canBorrow}"
-                                type="button"
-                                class="borrow-btn borrow-btn--disabled">
-                            신청 불가
-                        </button>
+                    <div class="book-item__cell book-item__cell--publisher" th:text="${book.publisher}">
+                        출판사
                     </div>
                 </div>
             </div>
@@ -188,6 +147,7 @@
                    class="pagination__button">
                     이전
                 </a>
+
                 <span th:if="${books.first}" class="pagination__button pagination__button--disabled">
                     이전
                 </span>
@@ -205,11 +165,13 @@
                    class="pagination__button">
                     다음
                 </a>
+
                 <span th:if="${books.last}" class="pagination__button pagination__button--disabled">
                     다음
                 </span>
             </nav>
         </section>
+
     </div>
 </div>
 

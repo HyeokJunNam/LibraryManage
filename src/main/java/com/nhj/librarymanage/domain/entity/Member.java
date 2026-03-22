@@ -50,4 +50,5 @@ public class Member extends BaseEntity implements SecurityUser {
     public String getUsername() {
         return this.loginId;
     }
+
 }

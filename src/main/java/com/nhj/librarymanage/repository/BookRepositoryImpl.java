@@ -31,7 +31,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
 
     @Override
     public Page<Book> findAll(BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        OrderSpecifier<?>[] order = QuerydslSortHelper.sort(book.createdAt, ORDER_COLUMN_MAP, pageable);
+        OrderSpecifier<?>[] order = QuerydslSortHelper.sort(book.id, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression likeIsbn = QuerydslFilterHelper.like(book.isbn, searchCondition.getIsbn());
         BooleanExpression likeTitle = QuerydslFilterHelper.like(book.title, searchCondition.getTitle());

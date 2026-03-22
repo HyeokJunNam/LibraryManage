@@ -50,7 +50,7 @@ public class BorrowService {
             throw new NotBorrowableException(BookErrorCode.BOOK_NOT_BORROWABLE);
         }
 
-        Member member = memberRepository.get(borrow.getMemberId());
+        Member member = memberRepository.getByLoginId(borrow.getLoginId());
 
         bookItem.startBorrow(member, BORROW_DAY);
     }

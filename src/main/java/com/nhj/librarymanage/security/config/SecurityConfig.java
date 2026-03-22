@@ -2,6 +2,8 @@ package com.nhj.librarymanage.security.config;
 
 import com.nhj.librarymanage.security.session.LoginFailureHandler;
 import com.nhj.librarymanage.security.session.LoginSuccessHandler;
+import com.nhj.librarymanage.security.test.AjaxAuthenticationFailureHandler;
+import com.nhj.librarymanage.security.test.AjaxAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -90,6 +92,9 @@ public class SecurityConfig {
         LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler("/");
         LoginFailureHandler loginFailureHandler = new LoginFailureHandler("/login?error");
 
+        AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler = new AjaxAuthenticationSuccessHandler();
+        AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler = new AjaxAuthenticationFailureHandler();
+
         httpSecurity
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
                         .configurationSource(corsConfigurationSource()))
@@ -105,9 +110,15 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("loginId")
-                        .successHandler(loginSuccessHandler)
-                        .failureHandler(loginFailureHandler)
+                        .successHandler(ajaxAuthenticationSuccessHandler)
+                        .failureHandler(ajaxAuthenticationFailureHandler)
                         .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")                // 로그아웃 요청 URL
+                        .logoutSuccessUrl("/")               // ⭐ 로그아웃 성공 후 이동
+                        .invalidateHttpSession(true)         // 세션 무효화
+                        .deleteCookies("JSESSIONID")    // 쿠키 삭제
                 )
                 // TODO 토큰 작업 필요 / 리다이렉트는 되나 토큰이 없어서 결국 데이터는 못불러옴
                 //.oauth2Login(oauth -> oauth.defaultSuccessUrl("/library/book-list", true))

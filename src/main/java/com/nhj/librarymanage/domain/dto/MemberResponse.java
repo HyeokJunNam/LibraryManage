@@ -15,6 +15,7 @@ public class MemberResponse {
 
         public static Info from(Member member) {
             return Info.builder()
+                    .loginId(member.getLoginId())
                     .name(member.getName())
                     .build();
         }

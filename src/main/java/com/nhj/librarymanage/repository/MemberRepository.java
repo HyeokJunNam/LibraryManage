@@ -1,7 +1,6 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.error.code.CommonErrorCode;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +17,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByLoginId(String loginId);
 
-    default Member get(long id) {
+    default Member getById(long id) {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    default Member getByLoginId(String loginId) {
+        return findByLoginId(loginId).orElseThrow(() -> new EntityNotFoundException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
 }

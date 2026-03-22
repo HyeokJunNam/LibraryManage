@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const currentListUrl = window.location.pathname + window.location.search;
+    sessionStorage.setItem("bookListReturnUrl", currentListUrl);
+
     const searchForm = document.getElementById("searchForm");
     const conditionElement = document.getElementById("condition");
     const keywordElement = document.getElementById("keyword");
@@ -15,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     for (const key of searchKeys) {
         const value = searchParams.get(key);
+
         if (value !== null && value.trim() !== "") {
             selectedKey = key;
             selectedValue = value;
@@ -31,37 +35,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const condition = conditionElement.value;
         const keyword = keywordElement.value.trim();
 
-        if (!keyword) {
-            window.location.href = "/";
-            return;
-        }
-
         const params = new URLSearchParams();
 
-        params.set(condition, keyword);
-
-        const currentPage = searchParams.get("page");
-        if (currentPage !== null) {
-            params.set("page", "0");
+        if (keyword !== "") {
+            params.set(condition, keyword);
         }
 
-        window.location.href = `/?${params.toString()}`;
+        const queryString = params.toString();
+        window.location.href = queryString ? `/?${queryString}` : "/";
     });
 
-    const paginationLinks = document.querySelectorAll(".pagination a[href]");
 
-    paginationLinks.forEach((link) => {
-        const href = link.getAttribute("href");
-        if (!href) {
-            return;
-        }
 
-        const url = new URL(href, window.location.origin);
-
-        if (selectedValue) {
-            url.searchParams.set(selectedKey, selectedValue);
-        }
-
-        link.setAttribute("href", url.pathname + url.search);
-    });
 });

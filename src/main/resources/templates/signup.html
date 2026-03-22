@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
     <link rel="stylesheet" th:href="@{/css/auth.css}">
+
+    <!-- Spring Security CSRF 사용 중이면 필요 -->
+    <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
 </head>
 <body>
 <div class="auth-page">
@@ -47,18 +51,7 @@
                     </p>
                 </div>
 
-                <form th:action="@{/signup}" method="post" class="auth-form">
-
-                    <!-- 이름 -->
-                    <div class="form-group">
-                        <label for="name" class="form-label">이름</label>
-                        <input id="name"
-                               name="name"
-                               type="text"
-                               class="form-input"
-                               placeholder="이름을 입력하세요"
-                               required>
-                    </div>
+                <form id="signupForm" class="auth-form" novalidate>
 
                     <!-- 아이디 -->
                     <div class="form-group">
@@ -69,6 +62,7 @@
                                class="form-input"
                                placeholder="아이디를 입력하세요"
                                required>
+                        <div id="loginIdError" class="field-error"></div>
                     </div>
 
                     <!-- 비밀번호 -->
@@ -80,20 +74,29 @@
                                class="form-input"
                                placeholder="비밀번호를 입력하세요"
                                required>
+                        <div id="passwordError" class="field-error"></div>
                     </div>
 
-                    <!-- 🔥 ROLE hidden -->
-                    <input type="hidden" name="role" value="ROLE_ADMIN">
-
-                    <!-- 에러 메시지 -->
-                    <div th:if="${errorMessage != null}"
-                         class="form-message form-message--error"
-                         th:text="${errorMessage}">
-                        오류 메시지
+                    <!-- 이름 -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">이름</label>
+                        <input id="name"
+                               name="name"
+                               type="text"
+                               class="form-input"
+                               placeholder="이름을 입력하세요"
+                               required>
+                        <div id="nameError" class="field-error"></div>
                     </div>
+
+                    <!-- ROLE -->
+                    <input type="hidden" id="role" name="role" value="ROLE_ADMIN">
+
+                    <!-- 공통 에러 -->
+                    <div id="formError" class="form-message form-message--error" style="display: none;"></div>
 
                     <!-- 버튼 -->
-                    <button type="submit" class="submit-btn">
+                    <button type="submit" id="signupButton" class="submit-btn">
                         회원가입
                     </button>
 
@@ -110,5 +113,7 @@
 
     </div>
 </div>
+
+<script th:src="@{/js/signup.js}"></script>
 </body>
 </html>
