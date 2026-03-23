@@ -90,12 +90,16 @@ textarea {
     display: flex;
 }
 
-.hero__eyebrow {
-    margin: 0 0 8px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--green-700);
+.hero__logo-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.hero__logo {
+    display: block;
+    width: 176px;
+    height: auto;
 }
 
 .hero__title {
@@ -563,6 +567,10 @@ textarea {
         padding: 28px 24px;
     }
 
+    .hero__logo {
+        width: 160px;
+    }
+
     .hero__title {
         font-size: 32px;
     }
@@ -670,6 +678,10 @@ textarea {
 @media (max-width: 520px) {
     .page {
         padding: 20px 12px 40px;
+    }
+
+    .hero__logo {
+        width: 144px;
     }
 
     .hero__title {

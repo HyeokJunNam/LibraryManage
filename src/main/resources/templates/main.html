@@ -14,7 +14,13 @@
         <header class="hero">
             <div class="hero__layout">
                 <div class="hero__content">
-                    <p class="hero__eyebrow">LIBRARY</p>
+                    <a th:href="@{/}" class="hero__logo-link" aria-label="메인으로 이동">
+                        <img th:src="@{/images/library-pill-logo.svg}"
+                             src="/images/library-pill-logo.svg"
+                             alt="LIBRARY"
+                             class="hero__logo">
+                    </a>
+
                     <h1 class="hero__title">도서 목록</h1>
                     <p class="hero__desc">
                         보유 중인 도서를 검색하고 도서 정보를 확인할 수 있습니다.

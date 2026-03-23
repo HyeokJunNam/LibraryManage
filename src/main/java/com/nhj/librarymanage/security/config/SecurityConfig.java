@@ -33,16 +33,22 @@ public class SecurityConfig {
 
     private static final RequestMatcher[] PERMIT_URLS = {
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/books"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/members"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup")
             //PathPatternRequestMatcher.pathPattern(null, "/library/**"),
-            PathPatternRequestMatcher.pathPattern(null, "/login"),
+            /*PathPatternRequestMatcher.pathPattern(null, "/login"),
             PathPatternRequestMatcher.pathPattern(null, "/signup"),
             PathPatternRequestMatcher.pathPattern(null, "/oauth2/**"),
             PathPatternRequestMatcher.pathPattern(null, "/favicon.ico"),
             PathPatternRequestMatcher.pathPattern(null, "/css/**"),
             PathPatternRequestMatcher.pathPattern(null, "/js/**"),
             PathPatternRequestMatcher.pathPattern(null, "/images/**"),
-            PathPatternRequestMatcher.pathPattern(null, "/error")
+            PathPatternRequestMatcher.pathPattern(null, "/error")*/
+    };
+
+    private static final String[] STATIC_RESOURCE_URLS = {
+            "/css/**", "/js/**", "/images/**"
     };
 
 
@@ -128,6 +134,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers(PERMIT_URLS).permitAll();
+                    request.requestMatchers(STATIC_RESOURCE_URLS).permitAll();
                     request.anyRequest().authenticated();
                 });
                 //.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

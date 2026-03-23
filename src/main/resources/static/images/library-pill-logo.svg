@@ -1,0 +1,19 @@
+<svg width="512" height="140" viewBox="0 0 512 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-8%" y="-18%" width="116%" height="170%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#15261C" flood-opacity="0.10"/>
+    </filter>
+    <linearGradient id="strokeGrad" x1="8" y1="8" x2="504" y2="132" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7F2EA"/>
+      <stop offset="1" stop-color="#D5E6DA"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="8" y="8" width="496" height="124" rx="62"
+        fill="white" stroke="url(#strokeGrad)" stroke-width="2" filter="url(#shadow)"/>
+
+  <text x="256" y="75" text-anchor="middle"
+        font-family="Pretendard, Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, Arial, sans-serif"
+        font-size="60" font-weight="800" letter-spacing="2.5" fill="#256B48"
+        dominant-baseline="middle">LIBRARY</text>
+</svg>
