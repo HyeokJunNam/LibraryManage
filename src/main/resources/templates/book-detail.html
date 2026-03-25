@@ -9,15 +9,15 @@
     <meta name="_csrf" th:if="${_csrf != null}" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
 </head>
-<body>
+<body th:with="isLoggedIn=${#authentication != null and #authentication.principal != 'anonymousUser'}">
 
-<div class="page" th:data-login-id="${#authentication.principal.loginId}">
+<div class="page" th:data-login-id="${isLoggedIn ? #authentication.principal.loginId : ''}">
     <div class="page__inner">
 
         <div class="detail-topbar">
             <a id="backToList" th:href="@{/}" class="back-link">← 도서 목록으로</a>
 
-            <div class="detail-topbar__user">
+            <div class="detail-topbar__user" th:if="${isLoggedIn}">
                 <span class="detail-topbar__username">
                     <span th:text="${#authentication.principal.name}">사용자</span> 님
                 </span>
@@ -25,6 +25,10 @@
                 <form th:action="@{/logout}" method="post" class="detail-topbar__logout-form">
                     <button type="submit" class="detail-topbar__logout-btn">로그아웃</button>
                 </form>
+            </div>
+
+            <div class="detail-topbar__guest" th:unless="${isLoggedIn}">
+                <a th:href="@{/login}" class="detail-topbar__login-btn">로그인</a>
             </div>
         </div>
 
@@ -181,8 +185,8 @@
                                 ? #temporals.format(item.dueAt, 'yyyy-MM-dd')
                                 : '-'
                             }">
-                          -
-                      </span>
+                            -
+                        </span>
                     </div>
 
                     <div class="item-row__cell item-row__cell--action">
@@ -191,23 +195,29 @@
                         <button type="button"
                                 class="book-action-btn"
                                 th:classappend="${
-                                    item.borrowed
-                                    ? ' book-action-btn--return'
-                                    : (item.status.name() == 'AVAILABLE'
-                                        ? ' book-action-btn--borrow'
-                                        : ' book-action-btn--disabled')
+                                    !isLoggedIn
+                                    ? ' book-action-btn--disabled'
+                                    : (item.borrowed
+                                        ? ' book-action-btn--return'
+                                        : (item.status.name() == 'AVAILABLE'
+                                            ? ' book-action-btn--borrow'
+                                            : ' book-action-btn--disabled'))
                                 }"
                                 th:data-book-item-id="${item.id}"
                                 th:data-action="${
-                                    item.borrowed
-                                    ? 'return'
-                                    : (item.status.name() == 'AVAILABLE' ? 'borrow' : 'disabled')
+                                    !isLoggedIn
+                                    ? 'login'
+                                    : (item.borrowed
+                                        ? 'return'
+                                        : (item.status.name() == 'AVAILABLE' ? 'borrow' : 'disabled'))
                                 }"
-                                th:disabled="${!item.borrowed && item.status.name() != 'AVAILABLE'}"
+                                th:disabled="${!isLoggedIn or (!item.borrowed && item.status.name() != 'AVAILABLE')}"
                                 th:text="${
-                                    item.borrowed
-                                    ? '반납'
-                                    : (item.status.name() == 'AVAILABLE' ? '대여' : '대여 불가')
+                                    !isLoggedIn
+                                    ? '로그인 필요'
+                                    : (item.borrowed
+                                        ? '반납'
+                                        : (item.status.name() == 'AVAILABLE' ? '대여' : '대여 불가'))
                                 }">
                             대여하기
                         </button>
