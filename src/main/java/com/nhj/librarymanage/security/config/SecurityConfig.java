@@ -33,10 +33,13 @@ public class SecurityConfig {
 
     private static final RequestMatcher[] PERMIT_URLS = {
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/members/exists"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/books/**"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/library/**"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/members"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup")
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/signup"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/mail/**"),
+            PathPatternRequestMatcher.pathPattern(null, "/error")
             /*PathPatternRequestMatcher.pathPattern(null, "/login"),
             PathPatternRequestMatcher.pathPattern(null, "/signup"),
             PathPatternRequestMatcher.pathPattern(null, "/oauth2/**"),
@@ -92,9 +95,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
-        LoginSuccessHandler loginSuccessHandler = new LoginSuccessHandler("/");
-        LoginFailureHandler loginFailureHandler = new LoginFailureHandler("/login?error");
-
         AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler = new AjaxAuthenticationSuccessHandler();
         AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler = new AjaxAuthenticationFailureHandler();
 

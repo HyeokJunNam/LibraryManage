@@ -2,7 +2,7 @@ package com.nhj.librarymanage.controller;
 
 import com.nhj.librarymanage.domain.dto.BookRequest;
 import com.nhj.librarymanage.domain.dto.BookResponse;
-import com.nhj.librarymanage.service.BookManageService;
+import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class LibraryController {
 
-    private final BookManageService bookManageService;
+    private final BookService bookService;
 
     @GetMapping("/")
     public String libraryMain(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<BookResponse.Info> infos = bookManageService.getBooks(searchCondition, pageable);
+        Page<BookResponse.Info> infos = bookService.getBooks(searchCondition, pageable);
         model.addAttribute("books", infos);
         return "main";
     }
 
     @GetMapping("/library/books/{bookId}")
     public String bookDetail(@PathVariable Long bookId, Model model) {
-        BookResponse.Detail detail = bookManageService.getBook(bookId);
+        BookResponse.Detail detail = bookService.getBook(bookId);
         model.addAttribute("book", detail);
         return "book-detail";
     }

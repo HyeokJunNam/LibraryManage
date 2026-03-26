@@ -28,4 +28,11 @@ public class MemberResponse {
 
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class LoginIdCheck {
+        private String loginId;
+        private boolean available;
+    }
+
 }

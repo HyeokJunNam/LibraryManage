@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class BookManageService {
+public class BookService {
 
     private final BookRepository bookRepository;
 

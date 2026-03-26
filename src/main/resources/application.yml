@@ -1,14 +1,16 @@
 spring:
   profiles:
-    active: secret
+    include:
+      - app
+      - secret
 
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-id: ${google.client-id}
+            client-secret: ${google.client-secret}
             scope:
               - openid
               - profile
@@ -16,9 +18,9 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
   jpa:
     # JPA ??? ???? ?? ??
     open-in-view: false

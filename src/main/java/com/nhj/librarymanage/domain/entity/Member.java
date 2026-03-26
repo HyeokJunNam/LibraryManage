@@ -34,6 +34,8 @@ public class Member extends BaseEntity implements SecurityUser {
 
     private String name;
 
+    private String email;
+
 
     public void changeName(String name) {
         this.name = name;

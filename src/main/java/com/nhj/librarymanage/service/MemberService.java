@@ -3,8 +3,6 @@ package com.nhj.librarymanage.service;
 import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.error.code.MemberErrorCode;
-import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
 import com.nhj.librarymanage.security.member.SecurityUserService;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +18,12 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MemberManageService extends SecurityUserService<Member> {
+public class MemberService extends SecurityUserService<Member> {
+
+    private final MemberValidationService memberValidationService;
+    private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
-
-    private final MemberRepository memberRepository;
 
     @Override
     public Optional<Member> findUser(String loginId) {
@@ -42,17 +41,14 @@ public class MemberManageService extends SecurityUserService<Member> {
 
     @Transactional
     public void createMember(MemberRequest.Create create) {
-        boolean existsMember = memberRepository.existsByLoginId(create.getLoginId());
-
-        if (existsMember) {
-            throw new EntityAlreadyExistsException(MemberErrorCode.ALREADY_MEMBER);
-        }
+        memberValidationService.validateSignup(create.getLoginId(), create.getEmail(), create.getSignupToken());
 
         Member member = Member.builder()
                 .loginId(create.getLoginId())
                 .password(passwordEncoder.encode(create.getPassword()))
                 .role(create.getRole())
                 .name(create.getName())
+                .email(create.getEmail())
                 .build();
 
         memberRepository.save(member);

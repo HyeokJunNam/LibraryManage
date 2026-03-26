@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class BookItemManageService {
+public class BookItemService {
 
     private final BookRepository bookRepository;
     private final BookItemRepository bookItemRepository;

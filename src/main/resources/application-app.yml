@@ -1,0 +1,25 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${app.mail.username}
+    password: ${app.mail.password}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+
+
+app:
+  mail:
+    personal: '관리자'
+    app-name: '도서 관리 시스템'
+    from-name: '도서 관리 시스템'
+    subject: '[도서 관리 시스템] 이메일 인증 요청 입니다.'
+    default-user-name: '회원'
+  signup:
+    verification:
+      expire-email-minutes: 3
+      expire-signup-minutes: 10

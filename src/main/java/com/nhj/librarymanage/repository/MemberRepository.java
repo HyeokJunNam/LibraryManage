@@ -17,6 +17,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByLoginId(String loginId);
 
+    boolean existsByEmail(String email);
+
     default Member getById(long id) {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(MemberErrorCode.MEMBER_NOT_FOUND));
     }

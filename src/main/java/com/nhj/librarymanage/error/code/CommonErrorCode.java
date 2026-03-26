@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum CommonErrorCode implements ErrorCode {
 
-    INVALID_STATE("유효하지 않은 요청", "이미 존재하는 회원 ID 입니다."),
+    INVALID_STATE("유효하지 않은 요청", "시스템 오류가 발생했습니다."),
 
     ;
 
