@@ -16,12 +16,8 @@ public class MemberValidationService {
     public boolean isLoginIdDuplicated(String loginId) {
         return memberRepository.existsByLoginId(loginId);
 
-        /*if (existsMember) {
-            throw new EntityAlreadyExistsException(MemberErrorCode.ALREADY_MEMBER);
-        }*/
     }
 
-    // TODO 캐치는 되는데, 이걸 프론트에서 받아 쓰질 못하네..... 에러일때도 무조건 전환이 아니라...
     public void validateSignup(String loginId, String email, String token) {
         signupTokenService.validateSignupToken(email, token);
 

@@ -2,10 +2,12 @@ package com.nhj.librarymanage.error;
 
 import com.nhj.librarymanage.error.code.ErrorCode;
 import com.nhj.librarymanage.error.exception.BusinessException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Log4j2
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -19,7 +21,12 @@ public class GlobalExceptionHandler {
         pd.setDetail(errorCode.getDetail());
         pd.setProperty("code", errorCode.getCode());
 
+        String message = errorCode.getLogMessage() != null ? errorCode.getLogMessage() : errorCode.getDetail();
+
+        log.error(message, ex);
+
         return pd;
     }
+
 
 }

@@ -32,6 +32,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final RequestMatcher[] PERMIT_URLS = {
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/test"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/members/exists"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/books/**"),

@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let verifiedEmail = "";
     let requestedEmail = "";
+    let signupToken = "";
     let verificationTimerId = null;
     let verificationDeadline = null;
 
@@ -356,6 +357,7 @@ document.addEventListener("DOMContentLoaded", function () {
         emailVerifiedElement.value = "false";
         verifiedEmail = "";
         requestedEmail = "";
+        signupToken = "";
 
         verificationCodeElement.value = "";
         verificationCodeElement.disabled = false;
@@ -375,6 +377,7 @@ document.addEventListener("DOMContentLoaded", function () {
         emailVerifiedElement.value = "false";
         verifiedEmail = "";
         requestedEmail = "";
+        signupToken = "";
 
         verificationCodeElement.value = "";
         verificationCodeElement.disabled = false;
@@ -530,6 +533,9 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (emailVerifiedElement.value !== "true" || verifiedEmail !== email) {
             showFieldError("email", "이메일 인증을 완료해주세요.");
             valid = false;
+        } else if (isBlank(signupToken)) {
+            showFieldError("email", "이메일 인증 토큰이 없습니다. 다시 인증해주세요.");
+            valid = false;
         }
 
         return valid;
@@ -586,6 +592,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             requestedEmail = email;
             verifiedEmail = "";
+            signupToken = "";
             emailVerifiedElement.value = "false";
 
             verificationCodeElement.value = "";
@@ -646,8 +653,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             });
 
+            const result = await parseJsonResponse(response);
+
             if (!response.ok) {
-                const result = await parseJsonResponse(response);
                 const message = result?.detail || "인증코드 확인에 실패했습니다.";
                 const field = result?.field || "verificationCode";
 
@@ -661,6 +669,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            const verifyToken = result?.result?.verify;
+
+            if (isBlank(verifyToken)) {
+                verifyCodeButton.disabled = false;
+                showFormError("인증 토큰을 받지 못했습니다. 다시 인증해주세요.");
+                return;
+            }
+
             stopVerificationTimer();
 
             clearVerificationCodeMessage();
@@ -668,6 +684,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             emailVerifiedElement.value = "true";
             verifiedEmail = email;
+            signupToken = verifyToken;
 
             verificationCodeElement.disabled = true;
             verifyCodeButton.disabled = true;
@@ -728,7 +745,7 @@ document.addEventListener("DOMContentLoaded", function () {
     emailElement.addEventListener("input", function () {
         clearEmailMessage();
 
-        if (!emailElement.disabled && (requestedEmail || verifiedEmail)) {
+        if (!emailElement.disabled && (requestedEmail || verifiedEmail || signupToken)) {
             resetEmailVerificationState();
         }
     });
@@ -770,7 +787,8 @@ document.addEventListener("DOMContentLoaded", function () {
             password: passwordElement.value,
             name: nameElement.value.trim(),
             email: emailElement.value.trim(),
-            role: roleElement.value
+            role: roleElement.value,
+            signupToken: signupToken
         };
 
         try {

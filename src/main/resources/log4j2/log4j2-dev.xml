@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <property name="LOG_PATH" value="./logs" />
+        <property name="LOG_BACKUP_PATH" value="${sys:LOG_PATH}/backup" />
+        <property name="DEFAULT_LOG_NAME" value="default.log" />
+        <property name="ERROR_LOG_NAME" value="error.log" />
+
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd'T'HH:mm:ss.SSSXXX</Property>
+        <Property name="CONSOLE_LOG_PATTERN">%clr{%d{${sys:LOG_DATEFORMAT_PATTERN}}{Asia/Seoul}}{faint} %clr{${sys:LOG_LEVEL_PATTERN}} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+        <Property name="FILE_LOG_PATTERN">%d{${sys:LOG_DATEFORMAT_PATTERN}}{Asia/Seoul} ${sys:LOG_LEVEL_PATTERN} %pid --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}"/>
+            <RegexFilter regex=".*Aggregation query used without partition key.*" onMatch="DENY" onMismatch="ACCEPT"/>
+            <RegexFilter regex=".*see tombstone_warn_threshold.*" onMatch="DENY" onMismatch="ACCEPT"/>
+        </Console>
+
+        <RollingFile name="DefaultAppender" fileName="${sys:LOG_PATH}/${sys:DEFAULT_LOG_NAME}" filePattern="${sys:LOG_BACKUP_PATH}/default/$${date:yyyy-MM}/%d{yyyy-MM-dd}{Asia/Seoul}-%i.log">
+            <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"/>
+            <RegexFilter regex=".*Aggregation query used without partition key.*" onMatch="DENY" onMismatch="ACCEPT"/>
+            <RegexFilter regex=".*see tombstone_warn_threshold.*" onMatch="DENY" onMismatch="ACCEPT"/>
+            <Policies>
+                <!--<TimeBasedTriggeringPolicy interval="1" modulate="true"/>-->
+                <CronTriggeringPolicy schedule="0 0 15 * * ? *" evaluateOnStartup="false"/>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="ErrorAppender" fileName="${sys:LOG_PATH}/${sys:ERROR_LOG_NAME}" filePattern="${sys:LOG_BACKUP_PATH}/error/$${date:yyyy-MM}/%d{yyyy-MM-dd}{Asia/Seoul}-%i.log">
+            <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"/>
+            <LevelRangeFilter minLevel="FATAL" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY" />
+            <Policies>
+                <CronTriggeringPolicy schedule="0 0 15 * * ? *" evaluateOnStartup="false"/>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info" additivity="true">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="DefaultAppender" />
+            <AppenderRef ref="ErrorAppender" />
+        </Root>
+
+        <!--<Logger level="off" name="com.datastax.oss.driver.internal.core.cql.CqlRequestHandler" />-->
+
+        <Logger name="org.apache.catalina.startup.DigesterFactory" level="error" />
+        <Logger name="org.apache.catalina.util.LifecycleBase" level="error" />
+        <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="warn" />
+        <Logger name="org.apache.sshd.common.util.SecurityUtils" level="warn"/>
+        <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="warn" />
+        <Logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="error" />
+        <Logger name="org.hibernate.validator.internal.util.Version" level="warn" />
+        <Logger name="org.springframework.boot.actuate.endpoint.jmx" level="warn"/>
+        <!--<logger name="org.springframework.orm.jpa.JpaTransactionManager" level="debug"/>-->
+        <Logger name="com.remonn.radius" level="debug" />
+    </Loggers>
+</Configuration>

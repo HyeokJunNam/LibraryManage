@@ -43,3 +43,6 @@ spring:
       pageable:
         default-page-size: 5
         max-page-size: 50
+
+logging:
+  config: classpath:log4j2/log4j2-local.xml

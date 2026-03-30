@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.config.SignupProperties;
-import com.nhj.librarymanage.error.code.CommonErrorCode;
+import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.ValidationFailureException;
 import com.nhj.librarymanage.util.RedisUtils;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +34,13 @@ public class SignupTokenService {
     public void validateSignupToken(String email, String token) {
         String tokenKey = verifiedKey(token);
 
-        String verifiedEmail = redisUtils.getAndDelete(tokenKey);
+        String verifiedEmail = redisUtils.getAndDelete(tokenKey, String.class);
         if (verifiedEmail == null) {
-            throw new ValidationFailureException(CommonErrorCode.INVALID_STATE); // TODO
+            throw new ValidationFailureException(MemberErrorCode.TOKEN_NOT_FOUND);
         }
 
         if (!verifiedEmail.equalsIgnoreCase(email)) {
-            throw new ValidationFailureException(CommonErrorCode.INVALID_STATE); // TODO
+            throw new ValidationFailureException(MemberErrorCode.INVALID_TOKEN);
         }
     }
 

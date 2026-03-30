@@ -41,6 +41,14 @@ public class RedisUtils {
         return stringRedisTemplate.opsForValue().getAndDelete(key); // String을 돌려주냐.. Object를 돌려주냐..? ok
     }
 
+    public <T> T getAndDelete(String key, Class<T> clazz) {
+        Object value = redisTemplate.opsForValue().getAndDelete(key);
+        if (value == null) {
+            return null;
+        }
+        return clazz.cast(value);
+    }
+
     public void delete(String key) {
         redisTemplate.delete(key);
     }
