@@ -39,7 +39,7 @@ public class SecurityConfig {
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/library/**"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/signup"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/mail/**"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/auth/**"),
             PathPatternRequestMatcher.pathPattern(null, "/error")
             /*PathPatternRequestMatcher.pathPattern(null, "/login"),
             PathPatternRequestMatcher.pathPattern(null, "/signup"),

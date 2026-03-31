@@ -1,8 +1,10 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.dto.MemberRequest;
-import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.domain.model.dto.MemberRequest;
+import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.domain.entity.Member;
+import com.nhj.librarymanage.error.code.MemberErrorCode;
+import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
 import com.nhj.librarymanage.security.member.SecurityUserService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +22,15 @@ import java.util.Optional;
 @Service
 public class MemberService extends SecurityUserService<Member> {
 
-    private final MemberValidationService memberValidationService;
+    private final SignupTokenService signupTokenService;
+
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    public boolean isLoginIdDuplicated(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
+    }
 
     @Override
     public Optional<Member> findUser(String loginId) {
@@ -39,9 +46,17 @@ public class MemberService extends SecurityUserService<Member> {
         return memberRepository.findAll(pageable).map(MemberResponse.Info::from);
     }
 
+    private void validateSignup(String email, String loginId, String token) {
+        signupTokenService.verifyToken(email, token);
+
+        if (isLoginIdDuplicated(loginId)) {
+            throw new EntityAlreadyExistsException(MemberErrorCode.ALREADY_MEMBER);
+        }
+    }
+
     @Transactional
     public void createMember(MemberRequest.Create create) {
-        memberValidationService.validateSignup(create.getLoginId(), create.getEmail(), create.getSignupToken());
+        validateSignup(create.getEmail(), create.getLoginId(), create.getSignupToken());
 
         Member member = Member.builder()
                 .loginId(create.getLoginId())

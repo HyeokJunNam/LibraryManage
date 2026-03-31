@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.repository;
 
-import com.nhj.librarymanage.domain.dto.BookRequest;
+import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;

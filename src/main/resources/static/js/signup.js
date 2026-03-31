@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
 
     const LOGIN_ID_CHECK_API = "/members/exists";
-    const EMAIL_SEND_API = "/mail/send";
-    const EMAIL_VERIFY_API = "/mail/verify";
+    const EMAIL_SEND_API = "/auth/email-verifications";
+    const EMAIL_VERIFY_API = "/auth/email-verifications/confirm";
     const SIGNUP_API = "/signup";
 
     const VERIFICATION_TIMEOUT_SECONDS = 180;
@@ -669,7 +669,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            const verifyToken = result?.result?.verify;
+            const verifyToken = result?.result?.token;
 
             if (isBlank(verifyToken)) {
                 verifyCodeButton.disabled = false;

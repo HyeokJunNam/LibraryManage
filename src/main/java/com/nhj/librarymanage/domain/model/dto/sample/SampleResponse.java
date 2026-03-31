@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.domain.dto.sample;
+package com.nhj.librarymanage.domain.model.dto.sample;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

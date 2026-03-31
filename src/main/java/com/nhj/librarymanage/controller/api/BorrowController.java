@@ -1,9 +1,9 @@
-package com.nhj.librarymanage.controller.rest;
+package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
-import com.nhj.librarymanage.domain.dto.BorrowResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowResponse;
 import com.nhj.librarymanage.service.BorrowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

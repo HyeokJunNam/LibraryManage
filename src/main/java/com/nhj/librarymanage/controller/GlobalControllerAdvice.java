@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.controller;
 
-import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.security.member.SecurityUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,10 +15,7 @@ public class GlobalControllerAdvice {
             return null;
         }
 
-        return MemberResponse.Info.builder()
-                .loginId(securityUser.getUsername())
-                .name(securityUser.getName())
-                .build();
+        return MemberResponse.Info.of(securityUser.getUsername(), securityUser.getName());
     }
 
 }

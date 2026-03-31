@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.controller;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.MemberRequest;
+import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.domain;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.model.dto.PageResponse;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 

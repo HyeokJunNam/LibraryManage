@@ -1,7 +1,6 @@
 package com.nhj.librarymanage.service.test;
 
-import com.nhj.librarymanage.domain.dto.BookItemRequest;
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

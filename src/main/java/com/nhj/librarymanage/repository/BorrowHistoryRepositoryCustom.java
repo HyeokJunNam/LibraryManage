@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.repository;
 
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.entity.BorrowHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

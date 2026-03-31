@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.code.BookItemStatus;
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
-import com.nhj.librarymanage.domain.dto.BorrowResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowResponse;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowHistory;
 import com.nhj.librarymanage.domain.entity.Member;

@@ -1,10 +1,10 @@
-package com.nhj.librarymanage.controller.rest;
+package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.BookItemRequest;
-import com.nhj.librarymanage.domain.dto.BookRequest;
-import com.nhj.librarymanage.domain.dto.BookResponse;
+import com.nhj.librarymanage.domain.model.dto.BookItemRequest;
+import com.nhj.librarymanage.domain.model.dto.BookRequest;
+import com.nhj.librarymanage.domain.model.dto.BookResponse;
 import com.nhj.librarymanage.service.BookItemService;
 import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;

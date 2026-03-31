@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.domain.dto;
+package com.nhj.librarymanage.domain.model.dto;
 
 import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
@@ -7,7 +7,7 @@ import lombok.*;
 public class MemberResponse {
 
     // Service → Controller
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     @Getter
     public static class Info {
         private String loginId;
@@ -20,6 +20,13 @@ public class MemberResponse {
                     .build();
         }
 
+        public static Info of(String loginId, String name) {
+            return Info.builder()
+                    .loginId(loginId)
+                    .name(name)
+                    .build();
+        }
+
     }
 
     @AllArgsConstructor
@@ -28,11 +35,18 @@ public class MemberResponse {
 
     }
 
-    @AllArgsConstructor
+    @Builder(access = AccessLevel.PRIVATE)
     @Getter
     public static class LoginIdCheck {
         private String loginId;
         private boolean available;
+
+        public static LoginIdCheck of(String loginId, boolean available) {
+            return LoginIdCheck.builder()
+                    .loginId(loginId)
+                    .available(available)
+                    .build();
+        }
     }
 
 }

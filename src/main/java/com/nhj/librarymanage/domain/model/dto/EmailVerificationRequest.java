@@ -1,9 +1,9 @@
-package com.nhj.librarymanage.domain.dto;
+package com.nhj.librarymanage.domain.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public class MailRequest {
+public class EmailVerificationRequest {
 
     @AllArgsConstructor
     @Getter

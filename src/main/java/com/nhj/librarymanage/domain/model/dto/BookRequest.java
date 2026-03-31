@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.domain.dto;
+package com.nhj.librarymanage.domain.model.dto;
 
 import lombok.*;
 

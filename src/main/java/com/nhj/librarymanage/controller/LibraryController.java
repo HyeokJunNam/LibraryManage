@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.controller;
 
-import com.nhj.librarymanage.domain.dto.BookRequest;
-import com.nhj.librarymanage.domain.dto.BookResponse;
+import com.nhj.librarymanage.domain.model.dto.BookRequest;
+import com.nhj.librarymanage.domain.model.dto.BookResponse;
 import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

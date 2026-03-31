@@ -1,11 +1,10 @@
-package com.nhj.librarymanage.controller.rest;
+package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.MemberRequest;
-import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.domain.model.dto.MemberRequest;
+import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberService;
-import com.nhj.librarymanage.service.MemberValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberValidationService memberValidationService;
 
     @Description(value = "회원 조회")
     @GetMapping("/members/{id}")
@@ -65,12 +63,13 @@ public class MemberController {
     @Description(value = "ID 중복 검사")
     @GetMapping("/members/exists")
     public ResponseEntity<ApiResponse> verifyDuplicateLoginId(@RequestParam String loginId) {
-        boolean duplicatedLoginId = memberValidationService.isLoginIdDuplicated(loginId);
-        MemberResponse.LoginIdCheck loginIdCheck = new MemberResponse.LoginIdCheck(loginId, !duplicatedLoginId);
+        boolean duplicatedLoginId = memberService.isLoginIdDuplicated(loginId);
+        MemberResponse.LoginIdCheck loginIdCheck = MemberResponse.LoginIdCheck.of(loginId, !duplicatedLoginId);
 
         ApiResponse apiResponse = ApiResponse.result(loginIdCheck);
 
         return ResponseEntity.ok().body(apiResponse);
     }
+
 
 }

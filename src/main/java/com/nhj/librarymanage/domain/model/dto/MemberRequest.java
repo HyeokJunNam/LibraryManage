@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.domain.dto;
+package com.nhj.librarymanage.domain.model.dto;
 
 import com.nhj.librarymanage.security.member.Role;
 import lombok.AccessLevel;
