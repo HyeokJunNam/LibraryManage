@@ -40,11 +40,8 @@ public class SecurityConfig {
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/signup"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/auth/**"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/dashboard"),
             PathPatternRequestMatcher.pathPattern(null, "/error")
-            /*PathPatternRequestMatcher.pathPattern(null, "/login"),
-            PathPatternRequestMatcher.pathPattern(null, "/signup"),
-            PathPatternRequestMatcher.pathPattern(null, "/oauth2/**"),
-            PathPatternRequestMatcher.pathPattern(null, "/error")*/
     };
 
     private static final String[] RESOURCE_URLS = {

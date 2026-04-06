@@ -24,7 +24,7 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Authentication authentication) throws IOException, ServletException {
 
-        /*SavedRequest savedRequest = requestCache.getRequest(request, response);
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         String redirectUrl;
 
@@ -35,14 +35,14 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
             requestCache.removeRequest(request, response);
         } else {
             redirectUrl = "/";
-        }*/
+        }
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
 
         Map<String, Object> body = new HashMap<>();
         body.put("success", true);
-        //body.put("redirectUrl", redirectUrl);
+        body.put("redirectUrl", redirectUrl);
         //body.put("redirectUrl", "/");
 
         response.getWriter().write(objectMapper.writeValueAsString(body));

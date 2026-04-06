@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드</title>
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar__brand">
+            <a th:href="@{/admin}" class="admin-sidebar__brand-link">
+                <div class="admin-sidebar__logo">📚</div>
+            </a>
+            <div>
+                <p class="admin-sidebar__eyebrow">LIBRARY ADMIN</p>
+                <h1 class="admin-sidebar__title">관리자 센터</h1>
+            </div>
+        </div>
+
+        <nav class="admin-nav">
+            <a th:href="@{/admin}" class="admin-nav__item admin-nav__item--active">대시보드</a>
+            <a th:href="@{/admin/members}" class="admin-nav__item">회원 관리</a>
+            <a th:href="@{/admin/books}" class="admin-nav__item">도서 관리</a>
+            <a th:href="@{/admin/loans}" class="admin-nav__item">대출 관리</a>
+            <a th:href="@{/admin/returns}" class="admin-nav__item">반납 관리</a>
+            <a th:href="@{/admin/settings}" class="admin-nav__item">설정</a>
+        </nav>
+
+        <div class="admin-sidebar__footer">
+            <div class="admin-profile">
+                <div class="admin-profile__avatar">관</div>
+                <div>
+                    <p class="admin-profile__name"
+                       th:text="${#authentication != null and #authentication.principal != null ? #authentication.principal.name : '관리자'}">
+                        관리자
+                    </p>
+                    <p class="admin-profile__role">시스템 운영자</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-hero">
+            <div class="admin-hero__content">
+                <p class="admin-hero__eyebrow">ADMIN DASHBOARD</p>
+                <h2 class="admin-hero__title">도서관 운영 현황을 한눈에 확인하세요</h2>
+                <p class="admin-hero__desc">
+                    회원, 도서, 대출 상태와 최근 처리 내역을 빠르게 확인하고 필요한 관리 작업으로 이동할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="admin-hero__side">
+                <div class="admin-hero__status-card">
+                    <p class="admin-hero__status-label">오늘 처리 건수</p>
+                    <strong class="admin-hero__status-value"
+                            th:text="${dashboard != null ? dashboard.todayTaskCount : 0}">
+                        0
+                    </strong>
+                    <span class="admin-hero__status-sub">대출, 반납, 회원 승인 포함</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <p class="summary-card__label">전체 회원 수</p>
+                <strong class="summary-card__value"
+                        th:text="${dashboard != null ? dashboard.memberCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta"
+                   th:text="${dashboard != null ? dashboard.memberMeta : '이번 주 신규 가입 0명'}">
+                    이번 주 신규 가입 0명
+                </p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">전체 도서 수</p>
+                <strong class="summary-card__value"
+                        th:text="${dashboard != null ? dashboard.bookCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta"
+                   th:text="${dashboard != null ? dashboard.bookMeta : '이번 달 신규 등록 0권'}">
+                    이번 달 신규 등록 0권
+                </p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">현재 대출 중</p>
+                <strong class="summary-card__value"
+                        th:text="${dashboard != null ? dashboard.activeLoanCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta"
+                   th:text="${dashboard != null ? dashboard.activeLoanMeta : '오늘 기준 변동 없음'}">
+                    오늘 기준 변동 없음
+                </p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">연체 건수</p>
+                <strong class="summary-card__value"
+                        th:text="${dashboard != null ? dashboard.overdueCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta"
+                   th:text="${dashboard != null ? dashboard.overdueMeta : '확인이 필요한 항목입니다'}">
+                    확인이 필요한 항목입니다
+                </p>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <div class="panel panel--wide">
+                <div class="panel__head">
+                    <div>
+                        <h3 class="panel__title">빠른 작업</h3>
+                        <p class="panel__desc">자주 사용하는 관리 기능으로 바로 이동합니다.</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <a th:href="@{/admin/members}" class="quick-action-card">
+                        <span class="quick-action-card__icon">👤</span>
+                        <strong class="quick-action-card__title">회원 관리</strong>
+                        <span class="quick-action-card__desc">회원 조회, 상태 변경, 권한 조작</span>
+                    </a>
+
+                    <a th:href="@{/admin/books}" class="quick-action-card">
+                        <span class="quick-action-card__icon">📘</span>
+                        <strong class="quick-action-card__title">도서 관리</strong>
+                        <span class="quick-action-card__desc">도서 등록, 수정, 삭제, 재고 확인</span>
+                    </a>
+
+                    <a th:href="@{/admin/loans}" class="quick-action-card">
+                        <span class="quick-action-card__icon">📦</span>
+                        <strong class="quick-action-card__title">대출 관리</strong>
+                        <span class="quick-action-card__desc">대출 승인, 반납 처리, 연체 확인</span>
+                    </a>
+
+                    <a th:href="@{/admin/notices}" class="quick-action-card">
+                        <span class="quick-action-card__icon">🛎️</span>
+                        <strong class="quick-action-card__title">알림 관리</strong>
+                        <span class="quick-action-card__desc">연체 알림, 공지, 운영 메시지 확인</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel__head">
+                    <div>
+                        <h3 class="panel__title">대출 현황</h3>
+                        <p class="panel__desc">현재 운영 상태를 빠르게 확인합니다.</p>
+                    </div>
+                </div>
+
+                <div class="loan-status-list">
+                    <article class="loan-status-item">
+                        <div class="loan-status-item__top">
+                            <p class="loan-status-item__label">오늘 신규 대출</p>
+                            <strong class="loan-status-item__value"
+                                    th:text="${dashboard != null ? dashboard.todayLoanCount : 0}">
+                                0
+                            </strong>
+                        </div>
+                        <p class="loan-status-item__desc">오늘 승인된 대출 건수입니다.</p>
+                    </article>
+
+                    <article class="loan-status-item">
+                        <div class="loan-status-item__top">
+                            <p class="loan-status-item__label">오늘 반납 완료</p>
+                            <strong class="loan-status-item__value"
+                                    th:text="${dashboard != null ? dashboard.todayReturnCount : 0}">
+                                0
+                            </strong>
+                        </div>
+                        <p class="loan-status-item__desc">오늘 반납 처리된 도서 건수입니다.</p>
+                    </article>
+
+                    <article class="loan-status-item">
+                        <div class="loan-status-item__top">
+                            <p class="loan-status-item__label">연장 요청</p>
+                            <strong class="loan-status-item__value"
+                                    th:text="${dashboard != null ? dashboard.extensionRequestCount : 0}">
+                                0
+                            </strong>
+                        </div>
+                        <p class="loan-status-item__desc">관리자 확인이 필요한 연장 요청입니다.</p>
+                    </article>
+                </div>
+            </div>
+
+            <div class="panel panel--wide">
+                <div class="panel__head">
+                    <div>
+                        <h3 class="panel__title">최근 활동</h3>
+                        <p class="panel__desc">최근 처리된 회원/도서/대출 관련 이벤트입니다.</p>
+                    </div>
+                    <a th:href="@{/admin/logs}" class="panel__action">전체 보기</a>
+                </div>
+
+                <div th:if="${recentActivities == null or #lists.isEmpty(recentActivities)}" class="empty-block">
+                    <p class="empty-block__title">최근 활동 내역이 없습니다.</p>
+                    <p class="empty-block__desc">처리 내역이 생기면 이 영역에 표시됩니다.</p>
+                </div>
+
+                <div th:if="${recentActivities != null and !#lists.isEmpty(recentActivities)}" class="activity-list">
+                    <article th:each="activity : ${recentActivities}" class="activity-item">
+                        <div class="activity-item__top">
+                            <p class="activity-item__title"
+                               th:text="${activity.title}">
+                                활동 제목
+                            </p>
+                        </div>
+                        <p class="activity-item__meta"
+                           th:text="${activity.meta}">
+                            1분 전 · 회원 관리
+                        </p>
+                    </article>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel__head">
+                    <div>
+                        <h3 class="panel__title">시스템 알림</h3>
+                        <p class="panel__desc">확인이 필요한 주요 이슈입니다.</p>
+                    </div>
+                </div>
+
+                <div th:if="${alerts == null or #lists.isEmpty(alerts)}" class="empty-block">
+                    <p class="empty-block__title">시스템 알림이 없습니다.</p>
+                    <p class="empty-block__desc">현재 확인이 필요한 항목이 없습니다.</p>
+                </div>
+
+                <div th:if="${alerts != null and !#lists.isEmpty(alerts)}" class="alert-list">
+                    <article th:each="alert : ${alerts}"
+                             class="alert-item"
+                             th:classappend="${alert.level == 'danger'} ? ' alert-item--danger' :
+                                             (${alert.level == 'warning'} ? ' alert-item--warning' : ' alert-item--normal')">
+                        <div class="alert-item__top">
+                            <p class="alert-item__title"
+                               th:text="${alert.title}">
+                                알림 제목
+                            </p>
+
+                            <span class="alert-badge"
+                                  th:classappend="${alert.level == 'danger'} ? ' alert-badge--danger' :
+                                                  (${alert.level == 'warning'} ? ' alert-badge--warning' : ' alert-badge--normal')"
+                                  th:text="${alert.level == 'danger'} ? '긴급' :
+                                          (${alert.level == 'warning'} ? '주의' : '정상')">
+                                정상
+                            </span>
+                        </div>
+
+                        <p class="alert-item__desc"
+                           th:text="${alert.description}">
+                            알림 설명
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/admin-dashboard.js}"></script>
+</body>
+</html>

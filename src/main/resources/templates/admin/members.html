@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin-members.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar__brand">
+            <a th:href="@{/admin}" class="admin-sidebar__brand-link" aria-label="관리자 메인으로 이동">
+                <div class="admin-sidebar__logo">📚</div>
+            </a>
+            <div>
+                <p class="admin-sidebar__eyebrow">LIBRARY ADMIN</p>
+                <h1 class="admin-sidebar__title">관리자 센터</h1>
+            </div>
+        </div>
+
+        <nav class="admin-nav">
+            <a th:href="@{/admin/dashboard}" class="admin-nav__item">대시보드</a>
+            <a th:href="@{/admin/members}" class="admin-nav__item admin-nav__item--active">회원 관리</a>
+            <a th:href="@{/admin/books}" class="admin-nav__item">도서 관리</a>
+            <a th:href="@{/admin/loans}" class="admin-nav__item">대출 관리</a>
+            <a th:href="@{/admin/returns}" class="admin-nav__item">반납 관리</a>
+            <a th:href="@{/admin/settings}" class="admin-nav__item">설정</a>
+        </nav>
+
+        <div class="admin-sidebar__footer">
+            <div class="admin-profile">
+                <div class="admin-profile__avatar">관</div>
+                <div>
+                    <p class="admin-profile__name"
+                       th:text="${#authentication != null and #authentication.principal != null ? #authentication.principal.name : '관리자'}">
+                        관리자
+                    </p>
+                    <p class="admin-profile__role">시스템 운영자</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="page-hero">
+            <div class="page-hero__content">
+                <p class="page-hero__eyebrow">MEMBER MANAGEMENT</p>
+                <h2 class="page-hero__title">회원 목록 관리</h2>
+                <p class="page-hero__desc">
+                    전체 회원을 조회하고 상태 변경, 상세 확인, 수정 등 회원 관련 관리 작업을 수행할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="page-hero__actions">
+                <a th:href="@{/admin/members/new}" class="btn btn--primary">회원 추가</a>
+            </div>
+        </header>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <p class="summary-card__label">전체 회원</p>
+                <strong class="summary-card__value"
+                        th:text="${memberSummary != null ? memberSummary.totalCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">등록된 전체 회원 수</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">활성 회원</p>
+                <strong class="summary-card__value"
+                        th:text="${memberSummary != null ? memberSummary.activeCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">정상 이용 가능한 회원</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">휴면 회원</p>
+                <strong class="summary-card__value"
+                        th:text="${memberSummary != null ? memberSummary.inactiveCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">최근 이용 기록이 적은 회원</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">제재 회원</p>
+                <strong class="summary-card__value"
+                        th:text="${memberSummary != null ? memberSummary.suspendedCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">이용 제한 또는 정지 상태</p>
+            </article>
+        </section>
+
+        <section class="filter-panel">
+            <form th:action="@{/admin/members}" method="get" class="filter-form" id="memberFilterForm">
+                <div class="filter-form__group filter-form__group--keyword">
+                    <label for="keyword" class="filter-form__label">검색어</label>
+                    <input id="keyword"
+                           name="keyword"
+                           type="text"
+                           class="filter-form__input"
+                           placeholder="이름, 이메일, 전화번호로 검색"
+                           th:value="${param.keyword}">
+                </div>
+
+                <div class="filter-form__group">
+                    <label for="status" class="filter-form__label">회원 상태</label>
+                    <select id="status" name="status" class="filter-form__select">
+                        <option value="">전체</option>
+                        <option value="ACTIVE" th:selected="${param.status != null and param.status[0] == 'ACTIVE'}">활성</option>
+                        <option value="INACTIVE" th:selected="${param.status != null and param.status[0] == 'INACTIVE'}">휴면</option>
+                        <option value="SUSPENDED" th:selected="${param.status != null and param.status[0] == 'SUSPENDED'}">정지</option>
+                    </select>
+                </div>
+
+                <div class="filter-form__group">
+                    <label for="role" class="filter-form__label">권한</label>
+                    <select id="role" name="role" class="filter-form__select">
+                        <option value="">전체</option>
+                        <option value="USER" th:selected="${param.role != null and param.role[0] == 'USER'}">일반 회원</option>
+                        <option value="ADMIN" th:selected="${param.role != null and param.role[0] == 'ADMIN'}">관리자</option>
+                    </select>
+                </div>
+
+                <div class="filter-form__group">
+                    <label for="sort" class="filter-form__label">정렬</label>
+                    <select id="sort" name="sort" class="filter-form__select">
+                        <option value="latest" th:selected="${param.sort == null or param.sort[0] == 'latest'}">최신 가입순</option>
+                        <option value="name" th:selected="${param.sort != null and param.sort[0] == 'name'}">이름순</option>
+                        <option value="loanCount" th:selected="${param.sort != null and param.sort[0] == 'loanCount'}">대출 많은 순</option>
+                    </select>
+                </div>
+
+                <div class="filter-form__actions">
+                    <button type="submit" class="btn btn--primary">검색</button>
+                    <a th:href="@{/admin/members}" class="btn btn--secondary" id="resetFilterButton">초기화</a>
+                </div>
+            </form>
+        </section>
+
+        <section class="table-panel">
+            <div class="table-panel__head">
+                <div>
+                    <h3 class="table-panel__title">회원 목록</h3>
+                    <p class="table-panel__desc">조건에 맞는 회원 목록을 확인하고 관리할 수 있습니다.</p>
+                </div>
+
+                <div class="table-panel__summary">
+                    <span>총</span>
+                    <strong th:text="${members != null ? members.totalElements : 0}">0</strong>
+                    <span>명</span>
+                </div>
+            </div>
+
+            <div th:if="${members == null or members.content == null or #lists.isEmpty(members.content)}" class="empty-block">
+                <div class="empty-block__icon">👤</div>
+                <p class="empty-block__title">조회된 회원이 없습니다.</p>
+                <p class="empty-block__desc">검색 조건을 변경하거나 새로운 회원을 등록해보세요.</p>
+            </div>
+
+            <div th:if="${members != null and members.content != null and !#lists.isEmpty(members.content)}" class="member-table-wrap">
+                <div class="member-table">
+                    <div class="member-table__header">
+                        <div>회원 정보</div>
+                        <div>연락처</div>
+                        <div>권한</div>
+                        <div>상태</div>
+                        <div>대출 현황</div>
+                        <div>가입일</div>
+                        <div>관리</div>
+                    </div>
+
+                    <div th:each="member : ${members.content}" class="member-row">
+                        <div class="member-row__cell member-row__cell--member">
+                            <div class="member-card">
+                                <div class="member-card__avatar"
+                                     th:text="${member.name != null and !#strings.isEmpty(member.name) ? #strings.substring(member.name, 0, 1) : '회'}">
+                                    회
+                                </div>
+                                <div class="member-card__info">
+                                    <strong class="member-card__name" th:text="${member.name}">홍길동</strong>
+                                    <p class="member-card__email" th:text="${member.email}">hong@example.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="member-row__cell member-row__cell--phone" th:text="${member.phone != null ? member.phone : '-'}">
+                            010-1234-5678
+                        </div>
+
+                        <div class="member-row__cell">
+                            <span class="role-badge"
+                                  th:classappend="${member.role == 'ADMIN'} ? ' role-badge--admin' : ' role-badge--user'"
+                                  th:text="${member.role == 'ADMIN'} ? '관리자' : '일반 회원'">
+                                일반 회원
+                            </span>
+                        </div>
+
+                        <div class="member-row__cell">
+                            <span class="status-badge"
+                                  th:classappend="${member.status == 'ACTIVE'} ? ' status-badge--active' :
+                                                  (${member.status == 'INACTIVE'} ? ' status-badge--inactive' : ' status-badge--suspended')"
+                                  th:text="${member.status == 'ACTIVE'} ? '활성' :
+                                          (${member.status == 'INACTIVE'} ? '휴면' : '정지')">
+                                활성
+                            </span>
+                        </div>
+
+                        <div class="member-row__cell member-row__cell--loan">
+                            <div class="loan-meta">
+                                <strong class="loan-meta__count"
+                                        th:text="${member.currentLoanCount != null ? member.currentLoanCount : 0}">
+                                    0
+                                </strong>
+                                <span class="loan-meta__label">권 대출 중</span>
+                            </div>
+                        </div>
+
+                        <div class="member-row__cell member-row__cell--date"
+                             th:text="${member.createdAtText != null ? member.createdAtText : '-'}">
+                            2026-04-07
+                        </div>
+
+                        <div class="member-row__cell member-row__cell--actions">
+                            <div class="row-actions">
+                                <a th:href="@{/admin/members/{memberId}(memberId=${member.id})}"
+                                   class="row-actions__button">
+                                    상세
+                                </a>
+
+                                <a th:href="@{/admin/members/{memberId}/edit(memberId=${member.id})}"
+                                   class="row-actions__button">
+                                    수정
+                                </a>
+
+                                <button type="button"
+                                        class="row-actions__button row-actions__button--primary js-status-toggle"
+                                        th:attr="data-member-id=${member.id},data-member-name=${member.name},data-current-status=${member.status}">
+                                    상태변경
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav th:if="${members != null and members.totalPages > 0}" class="pagination">
+                <a th:if="${!members.first}"
+                   th:href="@{/admin/members(page=${members.number - 1}, keyword=${param.keyword}, status=${param.status}, role=${param.role}, sort=${param.sort})}"
+                   class="pagination__button">
+                    이전
+                </a>
+
+                <span th:if="${members.first}" class="pagination__button pagination__button--disabled">이전</span>
+
+                <a th:each="pageNumber : ${#numbers.sequence(0, members.totalPages - 1)}"
+                   th:href="@{/admin/members(page=${pageNumber}, keyword=${param.keyword}, status=${param.status}, role=${param.role}, sort=${param.sort})}"
+                   class="pagination__number"
+                   th:classappend="${pageNumber == members.number} ? ' pagination__number--active' : ''"
+                   th:text="${pageNumber + 1}">
+                    1
+                </a>
+
+                <a th:if="${!members.last}"
+                   th:href="@{/admin/members(page=${members.number + 1}, keyword=${param.keyword}, status=${param.status}, role=${param.role}, sort=${param.sort})}"
+                   class="pagination__button">
+                    다음
+                </a>
+
+                <span th:if="${members.last}" class="pagination__button pagination__button--disabled">다음</span>
+            </nav>
+        </section>
+    </main>
+</div>
+
+<div class="modal" id="statusModal" hidden>
+    <div class="modal__backdrop"></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="statusModalTitle">
+        <div class="modal__head">
+            <h3 class="modal__title" id="statusModalTitle">회원 상태 변경</h3>
+            <button type="button" class="modal__close" id="closeStatusModal" aria-label="닫기">✕</button>
+        </div>
+
+        <div class="modal__body">
+            <p class="modal__desc">
+                <strong id="modalMemberName">회원명</strong> 회원의 상태를 선택하세요.
+            </p>
+
+            <form id="statusChangeForm" class="status-form">
+                <input type="hidden" id="modalMemberId" name="memberId">
+
+                <div class="status-form__group">
+                    <label for="modalStatus" class="status-form__label">변경할 상태</label>
+                    <select id="modalStatus" name="status" class="status-form__select">
+                        <option value="ACTIVE">활성</option>
+                        <option value="INACTIVE">휴면</option>
+                        <option value="SUSPENDED">정지</option>
+                    </select>
+                </div>
+
+                <p class="status-form__help">
+                    실제 저장 요청은 백엔드 연결 후 처리하면 됩니다.
+                </p>
+
+                <div class="status-form__actions">
+                    <button type="button" class="btn btn--secondary" id="cancelStatusModal">취소</button>
+                    <button type="submit" class="btn btn--primary">변경 적용</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/admin-members.js}"></script>
+</body>
+</html>
