@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.controller;
 
+import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
 import com.nhj.librarymanage.service.BookService;
@@ -18,6 +19,7 @@ public class LibraryController {
 
     private final BookService bookService;
 
+    @Description("메인 화면 (도서 목록)")
     @GetMapping("/")
     public String libraryMain(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<BookResponse.Info> infos = bookService.getBooks(searchCondition, pageable);
@@ -25,8 +27,9 @@ public class LibraryController {
         return "main";
     }
 
+    @Description("도서 상세 화면")
     @GetMapping("/library/books/{bookId}")
-    public String bookDetail(@PathVariable Long bookId, Model model) {
+    public String bookDetail(Model model, @PathVariable Long bookId) {
         BookResponse.Detail detail = bookService.getBook(bookId);
         model.addAttribute("book", detail);
         return "book-detail";

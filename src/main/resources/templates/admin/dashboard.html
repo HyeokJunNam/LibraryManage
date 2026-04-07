@@ -4,43 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 대시보드</title>
-    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
 </head>
 <body>
 <div class="admin-page">
-    <aside class="admin-sidebar">
-        <div class="admin-sidebar__brand">
-            <a th:href="@{/admin}" class="admin-sidebar__brand-link">
-                <div class="admin-sidebar__logo">📚</div>
-            </a>
-            <div>
-                <p class="admin-sidebar__eyebrow">LIBRARY ADMIN</p>
-                <h1 class="admin-sidebar__title">관리자 센터</h1>
-            </div>
-        </div>
-
-        <nav class="admin-nav">
-            <a th:href="@{/admin}" class="admin-nav__item admin-nav__item--active">대시보드</a>
-            <a th:href="@{/admin/members}" class="admin-nav__item">회원 관리</a>
-            <a th:href="@{/admin/books}" class="admin-nav__item">도서 관리</a>
-            <a th:href="@{/admin/loans}" class="admin-nav__item">대출 관리</a>
-            <a th:href="@{/admin/returns}" class="admin-nav__item">반납 관리</a>
-            <a th:href="@{/admin/settings}" class="admin-nav__item">설정</a>
-        </nav>
-
-        <div class="admin-sidebar__footer">
-            <div class="admin-profile">
-                <div class="admin-profile__avatar">관</div>
-                <div>
-                    <p class="admin-profile__name"
-                       th:text="${#authentication != null and #authentication.principal != null ? #authentication.principal.name : '관리자'}">
-                        관리자
-                    </p>
-                    <p class="admin-profile__role">시스템 운영자</p>
-                </div>
-            </div>
-        </div>
-    </aside>
+    <aside th:replace="~{admin/fragments/sidebar :: sidebar('dashboard')}"></aside>
 
     <main class="admin-main">
         <header class="admin-hero">
@@ -211,13 +180,11 @@
                 <div th:if="${recentActivities != null and !#lists.isEmpty(recentActivities)}" class="activity-list">
                     <article th:each="activity : ${recentActivities}" class="activity-item">
                         <div class="activity-item__top">
-                            <p class="activity-item__title"
-                               th:text="${activity.title}">
+                            <p class="activity-item__title" th:text="${activity.title}">
                                 활동 제목
                             </p>
                         </div>
-                        <p class="activity-item__meta"
-                           th:text="${activity.meta}">
+                        <p class="activity-item__meta" th:text="${activity.meta}">
                             1분 전 · 회원 관리
                         </p>
                     </article>
@@ -243,8 +210,7 @@
                              th:classappend="${alert.level == 'danger'} ? ' alert-item--danger' :
                                              (${alert.level == 'warning'} ? ' alert-item--warning' : ' alert-item--normal')">
                         <div class="alert-item__top">
-                            <p class="alert-item__title"
-                               th:text="${alert.title}">
+                            <p class="alert-item__title" th:text="${alert.title}">
                                 알림 제목
                             </p>
 
@@ -257,8 +223,7 @@
                             </span>
                         </div>
 
-                        <p class="alert-item__desc"
-                           th:text="${alert.description}">
+                        <p class="alert-item__desc" th:text="${alert.description}">
                             알림 설명
                         </p>
                     </article>
@@ -268,6 +233,6 @@
     </main>
 </div>
 
-<script th:src="@{/js/admin-dashboard.js}"></script>
+<script th:src="@{/js/admin/dashboard.js}"></script>
 </body>
 </html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 상세 정보</title>
+    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/member-detail.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/fragments/sidebar :: sidebar('members')}"></aside>
+
+    <main class="admin-main">
+        <header class="detail-hero">
+            <div class="detail-hero__content">
+                <p class="detail-hero__eyebrow">MEMBER DETAIL</p>
+                <h2 class="detail-hero__title">회원 상세 정보</h2>
+                <p class="detail-hero__desc">
+                    회원의 기본 정보를 확인할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="detail-hero__actions">
+                <a th:href="@{/admin/members}" class="btn btn--secondary">목록으로</a>
+            </div>
+        </header>
+
+        <section class="profile-card">
+            <div class="profile-card__main">
+                <div class="profile-card__avatar"
+                     th:text="${member.name != null and !#strings.isEmpty(member.name) ? #strings.substring(member.name, 0, 1) : '?'}">
+                    홍
+                </div>
+
+                <div class="profile-card__info">
+                    <div class="profile-card__top">
+                        <h3 class="profile-card__name" th:text="${member.name != null ? member.name : '-'}">홍길동</h3>
+
+                        <span class="role-badge"
+                              th:classappend="${member.role == 'ROLE_ADMIN'} ? ' role-badge--admin' : ' role-badge--user'"
+                              th:text="${member.role == 'ROLE_ADMIN'} ? '관리자' : '일반 회원'">
+                            일반 회원
+                        </span>
+                    </div>
+
+                    <p class="profile-card__meta">
+                        회원 번호
+                        <strong th:text="${member.id != null ? member.id : '-'}">1</strong>
+                    </p>
+
+                    <p class="profile-card__meta">
+                        가입일
+                        <strong th:text="${member.createdAt != null ? member.createdAt : '-'}">2026-04-07</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detail-grid">
+            <article class="info-card">
+                <div class="info-card__head">
+                    <h3 class="info-card__title">기본 정보</h3>
+                </div>
+
+                <div class="info-list">
+                    <div class="info-list__item">
+                        <span class="info-list__label">이름</span>
+                        <strong class="info-list__value" th:text="${member.name != null ? member.name : '-'}">홍길동</strong>
+                    </div>
+
+                    <div class="info-list__item">
+                        <span class="info-list__label">이메일</span>
+                        <strong class="info-list__value" th:text="${member.email != null ? member.email : '-'}">hong@example.com</strong>
+                    </div>
+
+                    <div class="info-list__item">
+                        <span class="info-list__label">연락처</span>
+                        <strong class="info-list__value" th:text="${member.phone != null ? member.phone : '-'}">010-1234-5678</strong>
+                    </div>
+
+                    <div class="info-list__item">
+                        <span class="info-list__label">권한</span>
+                        <strong class="info-list__value"
+                                th:text="${member.role == 'ROLE_ADMIN'} ? '관리자' : '일반 회원'">
+                            일반 회원
+                        </strong>
+                    </div>
+
+                    <div class="info-list__item">
+                        <span class="info-list__label">가입일</span>
+                        <strong class="info-list__value" th:text="${member.createdAt != null ? member.createdAt : '-'}">2026-04-07</strong>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/admin/member-detail.js}"></script>
+</body>
+</html>

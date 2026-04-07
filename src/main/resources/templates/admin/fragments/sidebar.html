@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside class="admin-sidebar" th:fragment="sidebar(activeMenu)">
+    <div class="admin-sidebar__brand">
+        <a th:href="@{/admin/dashboard}" class="admin-sidebar__brand-link" aria-label="관리자 메인으로 이동">
+            <div class="admin-sidebar__logo">📚</div>
+        </a>
+        <div>
+            <p class="admin-sidebar__eyebrow">LIBRARY ADMIN</p>
+            <h1 class="admin-sidebar__title">관리자 센터</h1>
+        </div>
+    </div>
+
+    <nav class="admin-nav">
+        <a th:href="@{/admin/dashboard}"
+           class="admin-nav__item"
+           th:classappend="${activeMenu == 'dashboard'} ? ' admin-nav__item--active' : ''">
+            대시보드
+        </a>
+
+        <a th:href="@{/admin/members}"
+           class="admin-nav__item"
+           th:classappend="${activeMenu == 'members'} ? ' admin-nav__item--active' : ''">
+            회원 관리
+        </a>
+
+        <a th:href="@{/admin/books}"
+           class="admin-nav__item"
+           th:classappend="${activeMenu == 'books'} ? ' admin-nav__item--active' : ''">
+            도서 관리
+        </a>
+
+        <a th:href="@{/admin/loans}"
+           class="admin-nav__item"
+           th:classappend="${activeMenu == 'loans'} ? ' admin-nav__item--active' : ''">
+            대출 관리
+        </a>
+
+        <a th:href="@{/admin/returns}"
+           class="admin-nav__item"
+           th:classappend="${activeMenu == 'returns'} ? ' admin-nav__item--active' : ''">
+            반납 관리
+        </a>
+
+        <a th:href="@{/admin/settings}"
+           class="admin-nav__item"
+           th:classappend="${activeMenu == 'settings'} ? ' admin-nav__item--active' : ''">
+            설정
+        </a>
+    </nav>
+
+    <div class="admin-sidebar__footer">
+        <div class="admin-profile">
+            <div class="admin-profile__avatar">관</div>
+            <div>
+                <p class="admin-profile__name"
+                   th:text="${#authentication != null and #authentication.principal != null ? #authentication.principal.name : '관리자'}">
+                    관리자
+                </p>
+                <p class="admin-profile__role">시스템 운영자</p>
+            </div>
+        </div>
+    </div>
+</aside>
+</body>
+</html>

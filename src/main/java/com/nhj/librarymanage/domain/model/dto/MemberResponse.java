@@ -3,6 +3,8 @@ package com.nhj.librarymanage.domain.model.dto;
 import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberResponse {
 
@@ -10,13 +12,23 @@ public class MemberResponse {
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
     public static class Info {
+        private Long id;
         private String loginId;
         private String name;
+        private String email;
+        private String phone;
+        private String role;
+        private LocalDateTime createdAt;
 
         public static Info from(Member member) {
             return Info.builder()
+                    .id(member.getId())
                     .loginId(member.getLoginId())
                     .name(member.getName())
+                    .email(member.getEmail())
+                    .phone("010-4582-8903")
+                    .role(member.getRole().name())
+                    .createdAt(member.getCreatedAt())
                     .build();
         }
 
