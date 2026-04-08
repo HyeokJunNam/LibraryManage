@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@Entity(name = "borrow_history")
-public class BorrowHistory extends BaseEntity {
+@Entity(name = "borrow_record")
+public class BorrowRecord extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

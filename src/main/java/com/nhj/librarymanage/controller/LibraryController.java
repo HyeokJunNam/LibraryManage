@@ -19,13 +19,25 @@ public class LibraryController {
 
     private final BookService bookService;
 
-    @Description("메인 화면 (도서 목록)")
     @GetMapping("/")
-    public String libraryMain(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<BookResponse.Info> infos = bookService.getBooks(searchCondition, pageable);
-        model.addAttribute("books", infos);
+    public String redirectToMain() {
+        return "redirect:/library";
+    }
+
+    @Description("메인 검색 화면")
+    @GetMapping("/library")
+    public String libraryMain() {
         return "main";
     }
+
+    @Description("도서 목록 화면")
+    @GetMapping("/library/books")
+    public String bookList(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<BookResponse.Info> infos = bookService.getBooks(searchCondition, pageable);
+        model.addAttribute("books", infos);
+        return "book-list";
+    }
+
 
     @Description("도서 상세 화면")
     @GetMapping("/library/books/{bookId}")

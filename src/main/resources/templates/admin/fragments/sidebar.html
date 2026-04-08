@@ -61,6 +61,14 @@
                 <p class="admin-profile__role">시스템 운영자</p>
             </div>
         </div>
+
+        <form th:action="@{/logout}" method="post" class="admin-logout-form">
+            <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
+            <button type="submit" class="admin-logout-button">
+                <span class="admin-logout-button__icon" aria-hidden="true">↪</span>
+                <span>로그아웃</span>
+            </button>
+        </form>
     </div>
 </aside>
 </body>

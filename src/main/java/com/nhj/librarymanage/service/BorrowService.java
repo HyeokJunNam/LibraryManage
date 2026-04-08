@@ -1,16 +1,16 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowResponse;
 import com.nhj.librarymanage.domain.entity.BookItem;
-import com.nhj.librarymanage.domain.entity.BorrowHistory;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.NotBorrowableException;
 import com.nhj.librarymanage.error.exception.book.NotReturnableException;
 import com.nhj.librarymanage.repository.BookItemRepository;
-import com.nhj.librarymanage.repository.BorrowHistoryRepository;
+import com.nhj.librarymanage.repository.BorrowRecordRepository;
 import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,22 +24,29 @@ public class BorrowService {
 
     private final BookItemRepository bookItemRepository;
     private final MemberRepository memberRepository;
-    private final BorrowHistoryRepository borrowHistoryRepository;
+    private final BorrowRecordRepository borrowRecordRepository;
 
     private static final long BORROW_DAY = 7;
 
     @Transactional
-    public Page<BorrowResponse.Info> getBorrowHistories(BorrowRequest.Param param, Pageable pageable) {
+    public Page<BorrowResponse.Info> getBorrowHistory(BorrowRequest.Param param, Pageable pageable) {
         boolean onlyBorrowed = param.isBorrowed();
         BorrowRequest.SearchCondition searchCondition = BorrowRequest.SearchCondition.of(onlyBorrowed);
 
-        Page<BorrowHistory> borrowHistoryEntityPage = borrowHistoryRepository.findAll(searchCondition, pageable);
+        Page<BorrowRecord> borrows = borrowRecordRepository.search(searchCondition, pageable);
 
-        return borrowHistoryEntityPage.map(BorrowResponse.Info::toDto);
+        return borrows.map(BorrowResponse.Info::toDto);
+    }
+
+    @Transactional
+    public Page<BorrowResponse.Info> getMemberBorrowHistory(Long memberId, Pageable pageable) {
+        Page<BorrowRecord> borrows = borrowRecordRepository.searchByMemberId(memberId, pageable);
+
+        return borrows.map(BorrowResponse.Info::toDto);
     }
 
     private boolean isBorrowable(BookItem bookItem) {
-        return bookItem.getBorrowHistory() == null && bookItem.getStatus() == BookItemStatus.AVAILABLE;
+        return bookItem.getBorrowRecord() == null && bookItem.getStatus() == BookItemStatus.AVAILABLE;
     }
 
     @Transactional
@@ -56,8 +63,8 @@ public class BorrowService {
     }
 
     private boolean isBorrowed(BookItem bookItem) {
-        BorrowHistory borrowHistory = bookItem.getBorrowHistory();
-        return borrowHistory != null && borrowHistory.getReturnedAt() == null;
+        BorrowRecord borrowRecord = bookItem.getBorrowRecord();
+        return borrowRecord != null && borrowRecord.getReturnedAt() == null;
     }
 
     @Transactional

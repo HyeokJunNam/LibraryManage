@@ -14,7 +14,7 @@ public enum MailErrorCode implements ErrorCode {
     EMAIL_CODE_MISMATCH("Verification Failure", "올바르지 않은 인증 코드 입니다.", null),
     // EMAIL_CODE_EXPIRED("Verification Failure", "이미 만료 된 인증 코드 입니다.", null),
     EMAIL_CODE_INVALID("Verification Failure", "유효하지 않은 인증 코드 입니다.", null),
-    EMAIL_DUPLICATE("Verification Failure", "이미 가입 된 이메일 입니다.", null),
+    EMAIL_ALREADY_VERIFIED("Verification Failure", "이미 가입 된 이메일 입니다.", null),
     ;
 
     private final HttpStatus status = HttpStatus.BAD_REQUEST;

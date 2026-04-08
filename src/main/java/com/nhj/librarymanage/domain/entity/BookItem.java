@@ -24,16 +24,14 @@ public class BookItem extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BookItemStatus status;
 
-    private String location;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private BorrowHistory borrowHistory;
+    private BorrowRecord borrowRecord;
 
 
     public void startBorrow(Member member, long borrowDay) {
         LocalDateTime now = LocalDateTime.now();
 
-        this.borrowHistory = BorrowHistory.builder()
+        this.borrowRecord = BorrowRecord.builder()
                 .bookitem(this)
                 .member(member)
                 .borrowedAt(now)
@@ -42,8 +40,8 @@ public class BookItem extends BaseEntity {
     }
 
     public void returnBook() {
-        this.borrowHistory.returnBook();
-        this.borrowHistory = null;
+        this.borrowRecord.returnBook();
+        this.borrowRecord = null;
     }
 
 }

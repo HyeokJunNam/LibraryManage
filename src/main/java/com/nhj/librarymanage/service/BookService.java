@@ -41,6 +41,7 @@ public class BookService {
                 .title(create.getTitle())
                 .author(create.getAuthor())
                 .publisher(create.getPublisher())
+                .location(create.getLocation())
                 .build();
 
             books.add(book);

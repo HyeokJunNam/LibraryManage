@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="topbar" th:fragment="topbar">
+    <div class="topbar__inner">
+        <a th:href="@{/}" class="topbar__brand" aria-label="메인으로 이동">
+            <img th:src="@{/images/library-pill-logo.svg}"
+                 src="/images/library-pill-logo.svg"
+                 alt="LIBRARY"
+                 class="topbar__logo">
+            <span class="topbar__title">LIBRARY</span>
+        </a>
+
+        <div class="topbar__actions">
+            <div th:if="${#authorization.expression('!isAuthenticated()')}" class="auth-menu">
+                <a th:href="@{/login}" class="btn btn--primary btn--sm">로그인</a>
+            </div>
+
+            <div th:if="${#authorization.expression('isAuthenticated()')}" class="auth-menu">
+                <div class="auth-menu__user">
+                    <strong class="auth-menu__name"
+                            th:text="${#authentication.principal.name}">
+                        사용자
+                    </strong>
+                </div>
+
+                <a th:href="@{/my}" class="btn btn--ghost btn--sm">내정보</a>
+
+                <form th:action="@{/logout}" method="post" class="auth-menu__logout">
+                    <button type="submit" class="btn btn--secondary btn--sm">
+                        로그아웃
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

@@ -5,6 +5,7 @@ import com.nhj.librarymanage.config.MailProperties;
 import com.nhj.librarymanage.config.SignupProperties;
 import com.nhj.librarymanage.error.code.MailErrorCode;
 import com.nhj.librarymanage.error.exception.mail.MailVerificationFailureException;
+import com.nhj.librarymanage.repository.MemberRepository;
 import com.nhj.librarymanage.util.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,20 +35,21 @@ public class SignupEmailVerificationService {
     private final SignupProperties signupProperties;
     private final MailProperties mailProperties;
 
+    private final MemberRepository memberRepository;
+
 
     private String buildKey(String email) {
         return SIGNUP_EMAIL_VERIFICATION_KEY + email.trim();
     }
 
     private String generateCode() {
-        StringBuilder code = new StringBuilder(VERIFICATION_CODE_LENGTH);
+        char[] result = new char[VERIFICATION_CODE_LENGTH];
 
         for (int i = 0; i < VERIFICATION_CODE_LENGTH; i++) {
-            int index = SECURE_RANDOM.nextInt(CHARACTERS.length());
-            code.append(CHARACTERS.charAt(index));
+            result[i] = CHARACTERS.charAt(SECURE_RANDOM.nextInt(CHARACTERS.length()));
         }
 
-        return code.toString();
+        return new String(result);
     }
 
 
@@ -74,6 +76,10 @@ public class SignupEmailVerificationService {
     }
 
     public void sendCode(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new MailVerificationFailureException(MailErrorCode.EMAIL_ALREADY_VERIFIED);
+        }
+
         String verificationCode = generateCode();
         MailTemplate mailTemplate = composeMail(email, verificationCode);
 

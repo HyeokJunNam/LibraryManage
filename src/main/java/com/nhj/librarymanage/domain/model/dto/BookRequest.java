@@ -30,6 +30,7 @@ public class BookRequest {
         private String title;
         private String author;
         private String publisher;
+        private String location;
     }
 
     // 수정 요청

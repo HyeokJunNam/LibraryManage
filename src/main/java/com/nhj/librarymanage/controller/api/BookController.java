@@ -25,7 +25,7 @@ public class BookController {
 
     @Description(value = "도서 조회")
     @GetMapping("/books/{id}")
-    public ResponseEntity<ApiResponse> getBook(@PathVariable long id) {
+    public ResponseEntity<ApiResponse> getBook(@PathVariable Long id) {
         BookResponse.Detail detail = bookService.getBook(id);
         ApiResponse apiResponse = ApiResponse.result(detail);
 
@@ -59,7 +59,7 @@ public class BookController {
 
     @Description(value = "도서 삭제")
     @DeleteMapping("/books/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable long id) {
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

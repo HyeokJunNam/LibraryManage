@@ -246,6 +246,56 @@ button {
     color: var(--gray-500);
 }
 
+.admin-sidebar__footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-logout-form {
+    margin: 0;
+}
+
+.admin-logout-button {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid var(--gray-100);
+    color: var(--gray-700);
+    box-shadow: 0 10px 24px rgba(27, 53, 36, 0.06);
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.admin-logout-button:hover {
+    background: #fff5f5;
+    border-color: #ffd7d7;
+    color: #d9485f;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(217, 72, 95, 0.12);
+}
+
+.admin-logout-button:focus-visible {
+    outline: 3px solid rgba(47, 158, 91, 0.18);
+    outline-offset: 2px;
+}
+
+.admin-logout-button__icon {
+    width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
 @media (max-width: 1400px) {
     .summary-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));

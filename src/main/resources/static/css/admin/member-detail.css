@@ -10,7 +10,6 @@
     padding: 32px;
 }
 
-/* 헤더 (members.css 톤 그대로) */
 .detail-hero {
     display: flex;
     justify-content: space-between;
@@ -40,7 +39,6 @@
     color: var(--gray-700);
 }
 
-/* 카드 */
 .profile-card,
 .info-card {
     background: var(--white);
@@ -49,7 +47,6 @@
     box-shadow: var(--shadow);
 }
 
-/* 프로필 */
 .profile-card {
     padding: 28px;
     margin-bottom: 24px;
@@ -57,7 +54,7 @@
 
 .profile-card__main {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 20px;
 }
 
@@ -72,6 +69,20 @@
     justify-content: center;
     font-size: 28px;
     font-weight: 800;
+    flex-shrink: 0;
+}
+
+.profile-card__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-card__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .profile-card__name {
@@ -79,7 +90,10 @@
     font-weight: 800;
 }
 
-/* 정보 영역 */
+.profile-card__details {
+    margin-top: 8px;
+}
+
 .detail-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -96,25 +110,32 @@
     margin-bottom: 16px;
 }
 
-/* 리스트 */
 .info-list__item {
     display: flex;
     justify-content: space-between;
+    gap: 16px;
     padding: 12px 0;
     border-bottom: 1px solid var(--gray-100);
+}
+
+.info-list__item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
 }
 
 .info-list__label {
     color: var(--gray-600);
     font-weight: 700;
+    flex-shrink: 0;
 }
 
 .info-list__value {
     font-weight: 800;
     color: var(--gray-900);
+    text-align: right;
+    word-break: break-all;
 }
 
-/* 버튼 (members.css 스타일 맞춤) */
 .btn {
     height: 48px;
     padding: 0 18px;
@@ -134,7 +155,6 @@
     background: #f2f6f3;
 }
 
-/* role badge 그대로 재사용 */
 .role-badge--admin {
     background: var(--green-50);
     color: var(--green-700);
@@ -143,4 +163,161 @@
 .role-badge--user {
     background: var(--gray-50);
     color: var(--gray-700);
+}
+
+.borrow-history__status {
+    margin-bottom: 16px;
+    color: var(--gray-600);
+    font-weight: 700;
+}
+
+.borrow-history__table-wrap {
+    overflow-x: auto;
+}
+
+.borrow-history__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.borrow-history__table th,
+.borrow-history__table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.borrow-history__table th {
+    color: var(--gray-600);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.borrow-history__table td {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.borrow-history__empty {
+    text-align: center;
+    color: var(--gray-600);
+    padding: 24px;
+    font-weight: 600;
+}
+
+.borrow-history__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.borrow-history__summary {
+    color: var(--gray-600);
+    font-weight: 700;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pagination__button {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--gray-700);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pagination__button:hover:not(:disabled) {
+    background: var(--gray-50);
+}
+
+.pagination__button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.pagination__button.is-active {
+    border-color: var(--green-200);
+    background: var(--green-50);
+    color: var(--green-700);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.status-badge--borrowing {
+    background: #eef6ff;
+    color: #2563eb;
+}
+
+.status-badge--returned {
+    background: #ecfdf3;
+    color: #15803d;
+}
+
+.status-badge--overdue {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.status-badge--default {
+    background: var(--gray-50);
+    color: var(--gray-700);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .admin-main {
+        padding: 20px;
+    }
+
+    .detail-hero {
+        padding: 24px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .profile-card__main {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .info-list__item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .info-list__value {
+        text-align: left;
+    }
+
+    .borrow-history__footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

@@ -18,10 +18,19 @@ public class BorrowController {
 
     private final BorrowService borrowService;
 
-    @Description(value = "도서 대여 현황 조회")
+    @Description(value = "전체 도서 대여 현황 조회")
     @GetMapping("/borrows")
-    public ResponseEntity<ApiResponse> getBorrowHistories(@ModelAttribute BorrowRequest.Param param, Pageable pageable) {
-        Page<BorrowResponse.Info> infos = borrowService.getBorrowHistories(param, pageable);
+    public ResponseEntity<ApiResponse> getBorrowHistory(@ModelAttribute BorrowRequest.Param param, Pageable pageable) {
+        Page<BorrowResponse.Info> infos = borrowService.getBorrowHistory(param, pageable);
+        ApiResponse apiResponse = ApiResponse.result(infos);
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @Description(value = "회원 도서 대여 현황 조회")
+    @GetMapping("/members/{memberId}/borrows")
+    public ResponseEntity<ApiResponse> getMemberBorrowHistory(@PathVariable Long memberId, Pageable pageable) {
+        Page<BorrowResponse.Info> infos = borrowService.getMemberBorrowHistory(memberId, pageable);
         ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);

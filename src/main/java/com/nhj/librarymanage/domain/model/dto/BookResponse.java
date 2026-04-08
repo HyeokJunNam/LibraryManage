@@ -3,7 +3,7 @@ package com.nhj.librarymanage.domain.model.dto;
 import com.nhj.librarymanage.domain.code.BookItemStatus;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
-import com.nhj.librarymanage.domain.entity.BorrowHistory;
+import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,6 +19,7 @@ public class BookResponse {
             String title,
             String author,
             String publisher,
+            String location,
             int bookItemCount,
             int borrowedCount,
             int availableCount,
@@ -29,7 +30,6 @@ public class BookResponse {
         public record bookItemDetail(
                 Long id,
                 BookItemStatus status,
-                String location,
                 boolean borrowed,
                 LocalDateTime borrowedAt,
                 LocalDateTime dueAt,
@@ -53,7 +53,7 @@ public class BookResponse {
                     unavailableCount++;
                 }
                 else {
-                    if (bookItem.getBorrowHistory() != null) {
+                    if (bookItem.getBorrowRecord() != null) {
                         borrowedCount++;
                         isBorrowed = true;
                     }
@@ -62,17 +62,16 @@ public class BookResponse {
                     }
                 }
 
-                BorrowHistory borrowHistory = bookItem.getBorrowHistory();
+                BorrowRecord borrowRecord = bookItem.getBorrowRecord();
 
                 bookItemDetails.add(
                         new bookItemDetail(
                                 bookItem.getId(),
                                 bookItem.getStatus(),
-                                bookItem.getLocation(),
                                 isBorrowed,
-                                borrowHistory != null ? borrowHistory.getBorrowedAt() : null,
-                                borrowHistory != null ? borrowHistory.getDueAt() : null,
-                                borrowHistory != null ? borrowHistory.getReturnedAt() : null
+                                borrowRecord != null ? borrowRecord.getBorrowedAt() : null,
+                                borrowRecord != null ? borrowRecord.getDueAt() : null,
+                                borrowRecord != null ? borrowRecord.getReturnedAt() : null
                         )
                 );
             }
@@ -83,6 +82,7 @@ public class BookResponse {
                     book.getTitle(),
                     book.getAuthor(),
                     book.getPublisher(),
+                    book.getLocation(),
                     bookItemCount,
                     borrowedCount,
                     availableCount,
@@ -97,7 +97,8 @@ public class BookResponse {
             String isbn,
             String title,
             String author,
-            String publisher
+            String publisher,
+            String location
     ) {
         public static Info from(Book book) {
             return new Info(
@@ -105,7 +106,8 @@ public class BookResponse {
                     book.getIsbn(),
                     book.getTitle(),
                     book.getAuthor(),
-                    book.getPublisher()
+                    book.getPublisher(),
+                    book.getLocation()
             );
         }
     }

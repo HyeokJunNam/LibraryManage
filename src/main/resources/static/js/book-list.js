@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchForm = document.getElementById("searchForm");
     const conditionElement = document.getElementById("condition");
     const keywordElement = document.getElementById("keyword");
-    const resetButton = document.getElementById("resetBtn");
 
     if (!searchForm || !conditionElement || !keywordElement) {
         return;
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     syncSearchFieldsFromQuery(conditionElement, keywordElement);
     bindSearchSubmit(searchForm, conditionElement, keywordElement);
-    bindResetButton(resetButton, conditionElement, keywordElement);
 });
 
 function syncSearchFieldsFromQuery(conditionElement, keywordElement) {
@@ -51,17 +49,5 @@ function bindSearchSubmit(searchForm, conditionElement, keywordElement) {
 
         const queryString = params.toString();
         window.location.href = queryString ? `/library/books?${queryString}` : "/library/books";
-    });
-}
-
-function bindResetButton(resetButton, conditionElement, keywordElement) {
-    if (!resetButton) {
-        return;
-    }
-
-    resetButton.addEventListener("click", function () {
-        conditionElement.value = "title";
-        keywordElement.value = "";
-        keywordElement.focus();
     });
 }

@@ -171,7 +171,7 @@
                         </div>
 
                         <div class="member-row__cell member-row__cell--date"
-                             th:text="${member.createdAt}">
+                             th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm')}">
                             2026-04-07
                         </div>
                     </div>

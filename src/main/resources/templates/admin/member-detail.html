@@ -17,7 +17,7 @@
                 <p class="detail-hero__eyebrow">MEMBER DETAIL</p>
                 <h2 class="detail-hero__title">회원 상세 정보</h2>
                 <p class="detail-hero__desc">
-                    회원의 기본 정보를 확인할 수 있습니다.
+                    회원 기본 정보와 대출 이력을 확인할 수 있습니다.
                 </p>
             </div>
 
@@ -44,15 +44,30 @@
                         </span>
                     </div>
 
-                    <p class="profile-card__meta">
-                        회원 번호
-                        <strong th:text="${member.id != null ? member.id : '-'}">1</strong>
-                    </p>
+                    <div class="info-list profile-card__details">
+                        <div class="info-list__item">
+                            <span class="info-list__label">회원 번호</span>
+                            <strong class="info-list__value" th:text="${member.id != null ? member.id : '-'}">1</strong>
+                        </div>
 
-                    <p class="profile-card__meta">
-                        가입일
-                        <strong th:text="${member.createdAt != null ? member.createdAt : '-'}">2026-04-07</strong>
-                    </p>
+                        <div class="info-list__item">
+                            <span class="info-list__label">이메일</span>
+                            <strong class="info-list__value" th:text="${member.email != null ? member.email : '-'}">hong@example.com</strong>
+                        </div>
+
+                        <div class="info-list__item">
+                            <span class="info-list__label">연락처</span>
+                            <strong class="info-list__value" th:text="${member.phone != null ? member.phone : '-'}">010-1234-5678</strong>
+                        </div>
+
+                        <div class="info-list__item">
+                            <span class="info-list__label">가입일</span>
+                            <strong class="info-list__value"
+                                    th:text="${member.createdAt != null ? #temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm') : '-'}">
+                                2026-04-07 10:30
+                            </strong>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -60,36 +75,37 @@
         <section class="detail-grid">
             <article class="info-card">
                 <div class="info-card__head">
-                    <h3 class="info-card__title">기본 정보</h3>
+                    <h3 class="info-card__title">대출 이력</h3>
                 </div>
 
-                <div class="info-list">
-                    <div class="info-list__item">
-                        <span class="info-list__label">이름</span>
-                        <strong class="info-list__value" th:text="${member.name != null ? member.name : '-'}">홍길동</strong>
+                <div class="borrow-history"
+                     th:attr="data-member-id=${member.id},data-page-size=10">
+                    <div class="borrow-history__status" id="borrow-history-status">
+                        대출 이력을 불러오는 중입니다.
                     </div>
 
-                    <div class="info-list__item">
-                        <span class="info-list__label">이메일</span>
-                        <strong class="info-list__value" th:text="${member.email != null ? member.email : '-'}">hong@example.com</strong>
+                    <div class="borrow-history__table-wrap">
+                        <table class="borrow-history__table">
+                            <thead>
+                            <tr>
+                                <th>대출 번호</th>
+                                <th>도서 번호</th>
+                                <th>도서 재고번호</th>
+                                <th>도서명</th>
+                                <th>대출일</th>
+                                <th>반납 예정일</th>
+                                <th>반납일</th>
+                                <th>상태</th>
+                            </tr>
+                            </thead>
+                            <tbody id="borrow-history-body">
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div class="info-list__item">
-                        <span class="info-list__label">연락처</span>
-                        <strong class="info-list__value" th:text="${member.phone != null ? member.phone : '-'}">010-1234-5678</strong>
-                    </div>
-
-                    <div class="info-list__item">
-                        <span class="info-list__label">권한</span>
-                        <strong class="info-list__value"
-                                th:text="${member.role == 'ROLE_ADMIN'} ? '관리자' : '일반 회원'">
-                            일반 회원
-                        </strong>
-                    </div>
-
-                    <div class="info-list__item">
-                        <span class="info-list__label">가입일</span>
-                        <strong class="info-list__value" th:text="${member.createdAt != null ? member.createdAt : '-'}">2026-04-07</strong>
+                    <div class="borrow-history__footer">
+                        <div class="borrow-history__summary" id="borrow-history-summary">총 0건</div>
+                        <nav class="pagination" id="borrow-history-pagination" aria-label="대출 이력 페이지네이션"></nav>
                     </div>
                 </div>
             </article>

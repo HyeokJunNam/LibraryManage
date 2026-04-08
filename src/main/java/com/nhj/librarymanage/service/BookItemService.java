@@ -23,7 +23,6 @@ public class BookItemService {
         BookItem bookItem = BookItem.builder()
                 .book(book)
                 .status(create.getStatus())
-                .location(create.getLocation())
                 .build();
 
         bookItemRepository.save(bookItem);
