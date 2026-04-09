@@ -29,6 +29,10 @@ public class Book extends BaseEntity {
 
     private String location;
 
+    private String description;
+
+    private String thumbnailUrl;
+
     @OneToMany(mappedBy = "book")
     private List<BookItem> bookItems = new ArrayList<>();
 

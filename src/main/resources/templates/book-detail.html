@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 상세</title>
+
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/book-detail.css}">
@@ -13,7 +14,7 @@
     <div th:replace="~{fragments/topbar :: topbar}"></div>
 
     <div class="book-detail">
-        <main class="page" data-book-id="">
+        <main class="page">
             <div class="detail-toolbar">
                 <div class="detail-toolbar__spacer" aria-hidden="true"></div>
                 <a href="#" class="detail-back-btn" data-role="back-to-list-button">목록으로</a>
@@ -23,157 +24,106 @@
                 <div class="detail-hero__main">
                     <div class="book-cover">
                         <div class="book-cover__inner">
-                            <div class="book-cover__placeholder" data-role="book-cover-placeholder">
+                            <img
+                                    class="book-cover__image"
+                                    th:if="${book != null and book.thumbnailUrl != null and !#strings.isEmpty(book.thumbnailUrl)}"
+                                    th:src="${book.thumbnailUrl}"
+                                    th:alt="${(book.title != null and !#strings.isEmpty(book.title) ? book.title : '도서') + ' 이미지'}"
+                            >
+
+                            <div class="book-cover__placeholder"
+                                 th:if="${book == null or book.thumbnailUrl == null or #strings.isEmpty(book.thumbnailUrl)}">
                                 <span>BOOK</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="book-summary">
-                        <div class="book-summary__badges">
-                            <span class="status-badge" data-role="book-status-badge">상태 미확인</span>
-                            <span class="meta-badge" data-role="book-location-badge">위치 미등록</span>
+                    <div class="book-summary-wrap">
+                        <div class="book-summary">
+                            <h1 class="book-summary__title"
+                                th:text="${book != null and book.title != null and !#strings.isEmpty(book.title) ? book.title : '도서명 미등록'}">
+                                도서명 미등록
+                            </h1>
+
+                            <div class="book-summary__meta-list">
+                                <div class="book-meta-chip">
+                                    <span class="book-meta-chip__label">ISBN</span>
+                                    <strong class="book-meta-chip__value"
+                                            th:text="${book != null and book.isbn != null and !#strings.isEmpty(book.isbn) ? book.isbn : '-'}">
+                                        -
+                                    </strong>
+                                </div>
+
+                                <div class="book-meta-chip">
+                                    <span class="book-meta-chip__label">저자</span>
+                                    <strong class="book-meta-chip__value"
+                                            th:text="${book != null and book.author != null and !#strings.isEmpty(book.author) ? book.author : '저자 미등록'}">
+                                        저자 미등록
+                                    </strong>
+                                </div>
+
+                                <div class="book-meta-chip">
+                                    <span class="book-meta-chip__label">출판사</span>
+                                    <strong class="book-meta-chip__value"
+                                            th:text="${book != null and book.publisher != null and !#strings.isEmpty(book.publisher) ? book.publisher : '출판사 미등록'}">
+                                        출판사 미등록
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <p class="book-summary__description"
+                               th:text="${book != null and book.description != null and !#strings.isEmpty(book.description) ? book.description : '등록된 도서 설명이 없습니다.'}">
+                                등록된 도서 설명이 없습니다.
+                            </p>
                         </div>
-
-                        <h1 class="book-summary__title" data-role="book-title">도서명 미등록</h1>
-
-                        <p class="book-summary__subtitle">
-                            <span data-role="book-author">저자 미등록</span>
-                            <span class="dot">•</span>
-                            <span data-role="book-publisher">출판사 미등록</span>
-                            <span class="dot">•</span>
-                            <span>ISBN</span>
-                            <span data-role="book-isbn">-</span>
-                        </p>
-
-                        <div class="book-highlight">
-                            <div class="book-highlight__item">
-                                <span class="book-highlight__label">보관 위치</span>
-                                <strong class="book-highlight__value" data-role="book-location">-</strong>
-                            </div>
-                            <div class="book-highlight__item">
-                                <span class="book-highlight__label">전체 권수</span>
-                                <strong class="book-highlight__value" data-role="book-item-count">0</strong>
-                            </div>
-                            <div class="book-highlight__item">
-                                <span class="book-highlight__label">대출 가능</span>
-                                <strong class="book-highlight__value" data-role="available-count">0</strong>
-                            </div>
-                            <div class="book-highlight__item">
-                                <span class="book-highlight__label">대출 중</span>
-                                <strong class="book-highlight__value" data-role="borrowed-count">0</strong>
-                            </div>
-                        </div>
-
-                        <p class="book-summary__description" data-role="book-description">
-                            등록된 도서 설명이 없습니다.
-                        </p>
                     </div>
                 </div>
 
                 <aside class="detail-hero__side">
                     <div class="action-card">
-                        <div class="action-card__top">
-                            <h2 class="action-card__title">이용 안내</h2>
-                            <p class="action-card__desc">현재 도서 상태와 이용 가능한 작업을 확인할 수 있습니다.</p>
+                        <div class="action-card__section">
+                        <span class="action-card__label">현재 상태</span>
+
+                        <strong class="action-card__status action-card__status--signal action-card__status--unknown"
+                                th:if="${book == null or book.canBorrow == null}">
+                            상태 미확인
+                        </strong>
+
+                        <strong class="action-card__status action-card__status--signal action-card__status--available"
+                                th:if="${book != null and book.canBorrow == true}">
+                            대출 가능
+                        </strong>
+
+                        <strong class="action-card__status action-card__status--signal action-card__status--unavailable"
+                                th:if="${book != null and book.canBorrow == false}">
+                            대출 불가
+                        </strong>
+                    </div>
+
+                        <div class="action-card__section">
+                            <span class="action-card__label">도서 위치</span>
+                            <strong class="action-card__location"
+                                    th:text="${book != null and book.location != null and !#strings.isEmpty(book.location) ? book.location : '-'}">
+                                -
+                            </strong>
                         </div>
 
-                        <div class="availability">
-                            <div class="availability__label">현재 상태</div>
-                            <div class="availability__value" data-role="book-status-text">상태 미확인</div>
-                        </div>
-
-                        <div class="action-card__buttons" data-role="action-buttons">
-                            <button type="button" class="btn btn--primary btn--xl" data-role="borrow-button" hidden>
-                                대출하기
+                        <div class="action-card__section">
+                            <button type="button"
+                                    class="notify-btn"
+                                    data-role="notify-button"
+                                    th:classappend="${book != null and book.canBorrow == false} ? ' notify-btn--enabled' : ''"
+                                    th:disabled="${book == null or book.canBorrow == null or book.canBorrow}">
+                                <span class="notify-btn__icon" aria-hidden="true">🔔</span>
+                                <span>알림 신청</span>
                             </button>
 
-                            <button type="button" class="btn btn--ghost btn--xl" data-role="dummy-button-1">
-                                준비 중 기능
-                            </button>
-                            <button type="button" class="btn btn--ghost btn--xl" data-role="dummy-button-2">
-                                추후 추가 예정
-                            </button>
+                            <p class="notify-help">
+                                도서가 반납 될 경우 알림 이메일이 발송됩니다.
+                            </p>
                         </div>
                     </div>
                 </aside>
-            </section>
-
-            <section class="detail-grid">
-                <article class="panel">
-                    <div class="panel__head">
-                        <h2 class="panel__title">도서 정보</h2>
-                        <p class="panel__desc">기본 서지 정보를 확인할 수 있습니다.</p>
-                    </div>
-
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-item__label">도서 ID</span>
-                            <strong class="info-item__value" data-role="info-id">-</strong>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item__label">도서명</span>
-                            <strong class="info-item__value" data-role="info-title">도서명 미등록</strong>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item__label">저자</span>
-                            <strong class="info-item__value" data-role="info-author">저자 미등록</strong>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item__label">출판사</span>
-                            <strong class="info-item__value" data-role="info-publisher">출판사 미등록</strong>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item__label">ISBN</span>
-                            <strong class="info-item__value" data-role="info-isbn">-</strong>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-item__label">보관 위치</span>
-                            <strong class="info-item__value" data-role="info-location">-</strong>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="panel">
-                    <div class="panel__head">
-                        <h2 class="panel__title">소장 및 대출 정보</h2>
-                        <p class="panel__desc">도서 보유 현황과 대출 가능 여부를 확인할 수 있습니다.</p>
-                    </div>
-
-                    <div class="loan-info">
-                        <div class="loan-info__row">
-                            <span class="loan-info__label">전체 권수</span>
-                            <strong class="loan-info__value" data-role="loan-book-item-count">0</strong>
-                        </div>
-                        <div class="loan-info__row">
-                            <span class="loan-info__label">대출 중 권수</span>
-                            <strong class="loan-info__value" data-role="loan-borrowed-count">0</strong>
-                        </div>
-                        <div class="loan-info__row">
-                            <span class="loan-info__label">대출 가능 권수</span>
-                            <strong class="loan-info__value" data-role="loan-available-count">0</strong>
-                        </div>
-                        <div class="loan-info__row">
-                            <span class="loan-info__label">이용 불가 권수</span>
-                            <strong class="loan-info__value" data-role="loan-unavailable-count">0</strong>
-                        </div>
-                        <div class="loan-info__row">
-                            <span class="loan-info__label">대출 가능 여부</span>
-                            <strong class="loan-info__value" data-role="loan-can-borrow">-</strong>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="panel">
-                    <div class="panel__head">
-                        <h2 class="panel__title">도서 개별 상태</h2>
-                        <p class="panel__desc">실제 소장 도서별 상태입니다.</p>
-                    </div>
-
-                    <div class="book-items" data-role="book-item-list">
-                        <div class="summary-box">등록된 소장 도서 정보가 없습니다.</div>
-                    </div>
-                </article>
             </section>
         </main>
     </div>

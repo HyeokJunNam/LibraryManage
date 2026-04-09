@@ -13,82 +13,42 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookResponse {
 
+    @Builder(access = AccessLevel.PRIVATE)
     public record Detail(
             Long id,
             String isbn,
             String title,
             String author,
             String publisher,
+            String description,
             String location,
-            int bookItemCount,
-            int borrowedCount,
+            String thumbnailUrl,
             int availableCount,
-            int unavailableCount,
-            boolean canBorrow,
-            List<bookItemDetail> bookItemDetails
+            boolean canBorrow
     ) {
-        public record bookItemDetail(
-                Long id,
-                BookItemStatus status,
-                boolean borrowed,
-                LocalDateTime borrowedAt,
-                LocalDateTime dueAt,
-                LocalDateTime returnedAt
-        ) {
-        }
-
         public static Detail from(Book book) {
-            int bookItemCount = 0;
-            int borrowedCount = 0;
             int availableCount = 0;
-            int unavailableCount = 0;
-
-            List<bookItemDetail> bookItemDetails = new ArrayList<>();
 
             for (BookItem bookItem : book.getBookItems()) {
-                bookItemCount++;
-                boolean isBorrowed = false;
-
-                if (bookItem.getStatus() != BookItemStatus.AVAILABLE) {
-                    unavailableCount++;
+                if (bookItem.getStatus() == BookItemStatus.AVAILABLE && bookItem.getBorrowRecord() == null) {
+                    availableCount++;
                 }
-                else {
-                    if (bookItem.getBorrowRecord() != null) {
-                        borrowedCount++;
-                        isBorrowed = true;
-                    }
-                    else {
-                        availableCount++;
-                    }
-                }
-
-                BorrowRecord borrowRecord = bookItem.getBorrowRecord();
-
-                bookItemDetails.add(
-                        new bookItemDetail(
-                                bookItem.getId(),
-                                bookItem.getStatus(),
-                                isBorrowed,
-                                borrowRecord != null ? borrowRecord.getBorrowedAt() : null,
-                                borrowRecord != null ? borrowRecord.getDueAt() : null,
-                                borrowRecord != null ? borrowRecord.getReturnedAt() : null
-                        )
-                );
             }
 
-            return new Detail(
-                    book.getId(),
-                    book.getIsbn(),
-                    book.getTitle(),
-                    book.getAuthor(),
-                    book.getPublisher(),
-                    book.getLocation(),
-                    bookItemCount,
-                    borrowedCount,
-                    availableCount,
-                    unavailableCount,
-                    availableCount >= 1,
-                    bookItemDetails);
+            boolean canBorrow = availableCount >= 1;
+
+            return Detail.builder()
+                    .id(book.getId())
+                    .isbn(book.getIsbn())
+                    .title(book.getTitle())
+                    .author(book.getAuthor())
+                    .publisher(book.getPublisher())
+                    .description(book.getDescription())
+                    .location(book.getLocation())
+                    .thumbnailUrl(book.getThumbnailUrl())
+                    .availableCount(availableCount)
+                    .canBorrow(canBorrow)
+                    .build();
         }
     }
 
