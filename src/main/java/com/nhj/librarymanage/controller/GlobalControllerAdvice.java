@@ -15,7 +15,7 @@ public class GlobalControllerAdvice {
             return null;
         }
 
-        return MemberResponse.Info.of(securityUser.getUsername(), securityUser.getName());
+        return MemberResponse.Info.of(securityUser.getLoginId(), securityUser.getName());
     }
 
 }

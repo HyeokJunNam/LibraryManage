@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
     const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
 
-    const LOGIN_ID_CHECK_API = "/members/exists";
-    const EMAIL_SEND_API = "/auth/email-verifications";
-    const EMAIL_VERIFY_API = "/auth/email-verifications/confirm";
-    const SIGNUP_API = "/signup";
+    const LOGIN_ID_CHECK_API = "/api/members/exists";
+    const EMAIL_SEND_API = "/api/auth/email-verifications";
+    const EMAIL_VERIFY_API = "/api/auth/email-verifications/confirm";
+    const SIGNUP_API = "/api/signup";
 
     const VERIFICATION_TIMEOUT_SECONDS = 180;
 

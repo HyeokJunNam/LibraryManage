@@ -80,7 +80,7 @@ async function loadBorrowHistory(page = 0) {
             size: String(borrowHistoryState.size)
         });
 
-        const response = await fetch(`/members/${memberId}/borrows?${query.toString()}`, {
+        const response = await fetch(`/api/members/${memberId}/borrows?${query.toString()}`, {
             method: "GET",
             headers: {
                 Accept: "application/json"

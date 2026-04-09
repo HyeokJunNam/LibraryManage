@@ -18,7 +18,7 @@ public class BookItemService {
 
     @Transactional
     public void createBookItem(Long bookId, BookItemRequest.Create create) {
-        Book book = bookRepository.get(bookId);
+        Book book = bookRepository.getById(bookId);
 
         BookItem bookItem = BookItem.builder()
                 .book(book)

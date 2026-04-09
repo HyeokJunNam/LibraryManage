@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
-import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ public class BookService {
 
     @Transactional
     public BookResponse.Detail getBook(long id) {
-        return BookResponse.Detail.from(bookRepository.get(id));
+        return BookResponse.Detail.from(bookRepository.getById(id));
     }
 
     @Transactional
@@ -52,7 +52,7 @@ public class BookService {
 
     @Transactional
     public void updateBook(BookRequest.Update update) {
-        Book book = bookRepository.get(update.getId());
+        Book book = bookRepository.getById(update.getId());
 
         book.changeTitle(update.getName());
     }

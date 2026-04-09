@@ -409,13 +409,19 @@
             box-shadow 0.18s ease,
             background 0.18s ease,
             border-color 0.18s ease,
-            color 0.18s ease;
+            color 0.18s ease,
+            opacity 0.18s ease;
 }
 
 .book-detail .notify-btn__icon {
     font-size: 17px;
     line-height: 1;
     transform: translateY(-1px);
+}
+
+.book-detail .notify-btn__text {
+    display: inline-flex;
+    align-items: center;
 }
 
 .book-detail .notify-btn--enabled {
@@ -438,6 +444,28 @@
 
 .book-detail .notify-btn--enabled:active {
     transform: translateY(0);
+}
+
+.book-detail .notify-btn:disabled {
+    transform: none;
+}
+
+.book-detail .notify-btn--enabled:disabled {
+    cursor: default;
+    opacity: 0.92;
+}
+
+.book-detail .notify-btn--done {
+    background: linear-gradient(180deg, #f4fbf6 0%, #e3f4e9 100%);
+    color: #1d6a41;
+    border-color: #bfdcc9;
+    box-shadow:
+            0 10px 22px rgba(18, 28, 22, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.book-detail .notify-btn--done .notify-btn__icon {
+    transform: translateY(-1px);
 }
 
 .book-detail .notify-help {

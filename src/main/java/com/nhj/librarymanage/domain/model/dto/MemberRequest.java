@@ -25,14 +25,13 @@ public class MemberRequest {
         private String name;
         private String email;
         private String signupToken;
-
     }
 
     // 수정 요청
     @AllArgsConstructor
     @Getter
     public static class Update {
-        private long id;
+        private Long id;
         private String name;
 
     }

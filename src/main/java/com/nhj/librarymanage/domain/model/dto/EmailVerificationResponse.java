@@ -3,7 +3,9 @@ package com.nhj.librarymanage.domain.model.dto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EmailVerificationResponse {
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)

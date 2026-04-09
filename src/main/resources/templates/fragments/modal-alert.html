@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="alertModal">
+    <div class="alert-modal" data-role="alert-modal" hidden>
+        <div class="alert-modal__backdrop" data-role="alert-modal-backdrop"></div>
+
+        <div class="alert-modal__dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="alert-modal-title"
+             aria-describedby="alert-modal-message">
+            <div class="alert-modal__header">
+                <h2 class="alert-modal__title" id="alert-modal-title">안내</h2>
+            </div>
+
+            <div class="alert-modal__body">
+                <p class="alert-modal__message" id="alert-modal-message"></p>
+            </div>
+
+            <div class="alert-modal__footer">
+                <button type="button"
+                        class="alert-modal__button alert-modal__button--primary"
+                        data-role="alert-modal-confirm">
+                    확인
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

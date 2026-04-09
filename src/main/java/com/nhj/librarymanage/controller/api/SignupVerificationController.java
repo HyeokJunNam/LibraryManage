@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
+@RequestMapping("/api")
 @RestController
 public class SignupVerificationController {
 

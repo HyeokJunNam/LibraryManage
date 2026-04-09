@@ -1,7 +1,8 @@
 package com.nhj.librarymanage.security.config;
 
-import com.nhj.librarymanage.security.session.LoginFailureHandler;
-import com.nhj.librarymanage.security.session.LoginSuccessHandler;
+import com.nhj.librarymanage.security.authenticate.CustomAuthenticationEntryPoint;
+import com.nhj.librarymanage.security.authenticate.CustomRequestCache;
+import com.nhj.librarymanage.security.authorize.CustomAccessDeniedHandler;
 import com.nhj.librarymanage.security.test.AjaxAuthenticationFailureHandler;
 import com.nhj.librarymanage.security.test.AjaxAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,6 +36,7 @@ public class SecurityConfig {
     private static final RequestMatcher[] PERMIT_URLS = {
             PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/test"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/"),
+            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/login"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/members/exists"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/books/**"),
             PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/library/**"),
@@ -48,6 +51,9 @@ public class SecurityConfig {
             "/css/**", "/js/**", "/images/**"
     };
 
+    private static final RequestMatcher API_REQUESTS = new OrRequestMatcher(
+            PathPatternRequestMatcher.pathPattern("/api/**")
+    );
 
 
     private final List<String> ALLOWED_ORIGIN_PATTERN_LIST = List.of(
@@ -92,21 +98,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler = new AjaxAuthenticationSuccessHandler();
         AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler = new AjaxAuthenticationFailureHandler();
+        CustomRequestCache customRequestCache = new CustomRequestCache();
 
         httpSecurity
+                .requestCache(requestCache -> requestCache.requestCache(customRequestCache))
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
                         .configurationSource(corsConfigurationSource()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .headers(AbstractHttpConfigurer::disable)
                 // 임시 해제
                 .csrf(AbstractHttpConfigurer::disable)
-                /*.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer
-                        .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler))*/
+                                .defaultAuthenticationEntryPointFor(customAuthenticationEntryPoint, API_REQUESTS)
+                                .defaultAccessDeniedHandlerFor(customAccessDeniedHandler, API_REQUESTS)
+                )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")

@@ -71,6 +71,7 @@
                 <p id="loginError" class="alert alert--error" hidden></p>
 
                 <form id="loginForm" class="login-form" th:action="@{/login}" method="post">
+                    <input type="hidden" name="returnUrl" th:value="${param.returnUrl}">
                     <div class="form-group">
                         <label for="loginId" class="form-label">아이디</label>
                         <input

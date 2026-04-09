@@ -8,13 +8,15 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/book-detail.css}">
+    <link rel="stylesheet" th:href="@{/css/modal-alert.css}">
 </head>
 <body>
 <div class="app">
     <div th:replace="~{fragments/topbar :: topbar}"></div>
 
     <div class="book-detail">
-        <main class="page">
+        <main class="page"
+              th:attr="data-book-id=${book != null and book.id != null ? book.id : ''}">
             <div class="detail-toolbar">
                 <div class="detail-toolbar__spacer" aria-hidden="true"></div>
                 <a href="#" class="detail-back-btn" data-role="back-to-list-button">목록으로</a>
@@ -82,23 +84,23 @@
                 <aside class="detail-hero__side">
                     <div class="action-card">
                         <div class="action-card__section">
-                        <span class="action-card__label">현재 상태</span>
+                            <span class="action-card__label">현재 상태</span>
 
-                        <strong class="action-card__status action-card__status--signal action-card__status--unknown"
-                                th:if="${book == null or book.canBorrow == null}">
-                            상태 미확인
-                        </strong>
+                            <strong class="action-card__status action-card__status--signal action-card__status--unknown"
+                                    th:if="${book == null or book.canBorrow == null}">
+                                상태 미확인
+                            </strong>
 
-                        <strong class="action-card__status action-card__status--signal action-card__status--available"
-                                th:if="${book != null and book.canBorrow == true}">
-                            대출 가능
-                        </strong>
+                            <strong class="action-card__status action-card__status--signal action-card__status--available"
+                                    th:if="${book != null and book.canBorrow == true}">
+                                대출 가능
+                            </strong>
 
-                        <strong class="action-card__status action-card__status--signal action-card__status--unavailable"
-                                th:if="${book != null and book.canBorrow == false}">
-                            대출 불가
-                        </strong>
-                    </div>
+                            <strong class="action-card__status action-card__status--signal action-card__status--unavailable"
+                                    th:if="${book != null and book.canBorrow == false}">
+                                대출 불가
+                            </strong>
+                        </div>
 
                         <div class="action-card__section">
                             <span class="action-card__label">도서 위치</span>
@@ -109,17 +111,34 @@
                         </div>
 
                         <div class="action-card__section">
-                            <button type="button"
+                            <button
+                                    type="button"
                                     class="notify-btn"
                                     data-role="notify-button"
-                                    th:classappend="${book != null and book.canBorrow == false} ? ' notify-btn--enabled' : ''"
-                                    th:disabled="${book == null or book.canBorrow == null or book.canBorrow}">
-                                <span class="notify-btn__icon" aria-hidden="true">🔔</span>
-                                <span>알림 신청</span>
-                            </button>
+                                    th:classappend="
+                                    ${(book != null and book.canBorrow == false) ? ' notify-btn--enabled' : ''}
+                                    + ${(notification != null and notification.requested) ? ' notify-btn--done' : ''}
+                                "
+                                    th:disabled="
+                                    ${book == null
+                                    or book.canBorrow == null
+                                    or book.canBorrow
+                                    or (notification != null and notification.requested)}
+                                "
+                                    th:attr="data-completed=${notification != null and notification.requested}">
 
-                            <p class="notify-help">
-                                도서가 반납 될 경우 알림 이메일이 발송됩니다.
+                                <span class="notify-btn__icon" aria-hidden="true"
+                                      th:text="${notification != null and notification.requested} ? '✅' : '🔔'">
+                                    🔔
+                                </span>
+
+                                <span class="notify-btn__text"
+                                      th:text="${notification != null and notification.requested} ? '신청 완료' : '알림 신청'">
+                                    알림 신청
+                                </span>
+                            </button>
+                            <p class="notify-help" data-role="notify-help-text">
+                                도서가 대출 가능 상태가 될 경우 알림 이메일이 발송됩니다.
                             </p>
                         </div>
                     </div>
@@ -129,6 +148,10 @@
     </div>
 </div>
 
+<div th:replace="~{fragments/modal-alert :: alertModal}"></div>
+
+<script th:src="@{/js/api.js}"></script>
+<script th:src="@{/js/modal-alert.js}"></script>
 <script th:src="@{/js/book-detail.js}"></script>
 </body>
 </html>

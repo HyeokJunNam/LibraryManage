@@ -37,7 +37,7 @@ public class MemberService extends SecurityUserService<Member> {
         return memberRepository.findByLoginId(loginId);
     }
 
-    public MemberResponse.Info getMember(long id) {
+    public MemberResponse.Info getMember(Long id) {
         return MemberResponse.Info.from(memberRepository.getById(id));
     }
 

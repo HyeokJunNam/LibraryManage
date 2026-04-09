@@ -3,12 +3,9 @@ package com.nhj.librarymanage.domain.model.dto;
 import com.nhj.librarymanage.domain.code.BookItemStatus;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
-import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import lombok.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookResponse {

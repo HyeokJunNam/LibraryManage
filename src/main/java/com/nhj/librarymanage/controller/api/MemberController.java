@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 //TODO 관리자 권한으로 한정 시켜야 함 / 일부는 또 아닌데...?
 @RequiredArgsConstructor
+@RequestMapping("/api")
 @RestController
 public class MemberController {
 
