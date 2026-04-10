@@ -33,28 +33,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final RequestMatcher[] PERMIT_URLS = {
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/test"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/login"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/members/exists"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/books/**"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/library/**"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/signup"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/signup"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.POST, "/auth/**"),
-            PathPatternRequestMatcher.pathPattern(HttpMethod.GET, "/dashboard"),
-            PathPatternRequestMatcher.pathPattern(null, "/error")
-    };
-
     private static final String[] RESOURCE_URLS = {
             "/css/**", "/js/**", "/images/**"
+    };
+
+    private static final String[] PUBLIC_GET_URLS = {
+            "/",
+            "/login",
+            "/signup",
+            "/library/**",
+            "/api/books/**",  // public?
+            // "/api/auth/check-id",
+            "/admin/**" // TODO 추후 제거
+    };
+
+    private static final String[] PUBLIC_POST_URLS = {
+            "/test",
+            "/signup",
+            "/api/auth/**"
     };
 
     private static final RequestMatcher API_REQUESTS = new OrRequestMatcher(
             PathPatternRequestMatcher.pathPattern("/api/**")
     );
-
 
     private final List<String> ALLOWED_ORIGIN_PATTERN_LIST = List.of(
             CorsConfiguration.ALL
@@ -137,8 +138,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(PERMIT_URLS).permitAll();
                     request.requestMatchers(RESOURCE_URLS).permitAll();
+                    request.requestMatchers(HttpMethod.GET, PUBLIC_GET_URLS).permitAll();
+                    request.requestMatchers(HttpMethod.POST, PUBLIC_POST_URLS).permitAll();
                     request.anyRequest().authenticated();
                 });
                 //.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

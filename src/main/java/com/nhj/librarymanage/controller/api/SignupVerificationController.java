@@ -1,17 +1,17 @@
 package com.nhj.librarymanage.controller.api;
 
+import com.nhj.librarymanage.annotations.PermitAll;
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.model.dto.EmailVerificationRequest;
 import com.nhj.librarymanage.domain.model.dto.EmailVerificationResponse;
+import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.service.MemberService;
 import com.nhj.librarymanage.service.SignupEmailVerificationService;
 import com.nhj.librarymanage.service.SignupTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -20,6 +20,19 @@ public class SignupVerificationController {
 
     private final SignupEmailVerificationService signupEmailVerificationService;
     private final SignupTokenService signupTokenService;
+    private final MemberService memberService;
+
+    @PermitAll
+    @Description(value = "ID 중복 검사")
+    @GetMapping("/auth/check-id")
+    public ResponseEntity<ApiResponse> verifyDuplicateLoginId(@RequestParam String loginId) {
+        boolean duplicatedLoginId = memberService.isLoginIdDuplicated(loginId);
+        MemberResponse.LoginIdCheck loginIdCheck = MemberResponse.LoginIdCheck.of(loginId, !duplicatedLoginId);
+
+        ApiResponse apiResponse = ApiResponse.result(loginIdCheck);
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
 
     @Description(value = "이메일 유효성 검증 인증번호 발송")
     @PostMapping("/auth/email-verifications")

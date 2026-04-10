@@ -62,16 +62,4 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Description(value = "ID 중복 검사")
-    @GetMapping("/members/exists")
-    public ResponseEntity<ApiResponse> verifyDuplicateLoginId(@RequestParam String loginId) {
-        boolean duplicatedLoginId = memberService.isLoginIdDuplicated(loginId);
-        MemberResponse.LoginIdCheck loginIdCheck = MemberResponse.LoginIdCheck.of(loginId, !duplicatedLoginId);
-
-        ApiResponse apiResponse = ApiResponse.result(loginIdCheck);
-
-        return ResponseEntity.ok().body(apiResponse);
-    }
-
-
 }

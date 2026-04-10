@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
     const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
 
-    const LOGIN_ID_CHECK_API = "/api/members/exists";
+    const LOGIN_ID_CHECK_API = "/api/auth/check-id";
     const EMAIL_SEND_API = "/api/auth/email-verifications";
     const EMAIL_VERIFY_API = "/api/auth/email-verifications/confirm";
     const SIGNUP_API = "/api/signup";
@@ -61,9 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     function buildHeaders() {
-        const headers = {
-            "Content-Type": "application/json"
-        };
+        const headers = {};
 
         if (csrfTokenMeta && csrfHeaderMeta) {
             headers[csrfHeaderMeta.content] = csrfTokenMeta.content;
@@ -301,6 +299,24 @@ document.addEventListener("DOMContentLoaded", function () {
         showFormError(message);
     }
 
+    function handleApiError(error, fallbackMessage) {
+        if (error instanceof ApiError) {
+            const field = error?.data?.field || null;
+            const message = error?.message || fallbackMessage;
+
+            if (field) {
+                showFieldError(field, message);
+            } else {
+                showFormError(message);
+            }
+
+            return;
+        }
+
+        console.error(error);
+        showFormError(fallbackMessage);
+    }
+
     function stopVerificationTimer() {
         if (verificationTimerId) {
             clearInterval(verificationTimerId);
@@ -428,14 +444,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 1000);
     }
 
-    async function parseJsonResponse(response) {
-        try {
-            return await response.json();
-        } catch (error) {
-            return null;
-        }
-    }
-
     async function checkLoginIdDuplicate() {
         const loginId = loginIdElement.value.trim();
 
@@ -455,20 +463,12 @@ document.addEventListener("DOMContentLoaded", function () {
         loginIdCheckInProgress = true;
 
         try {
-            const response = await fetch(`${LOGIN_ID_CHECK_API}?loginId=${encodeURIComponent(loginId)}`, {
-                method: "GET",
-                headers: buildHeaders()
-            });
-
-            const data = await parseJsonResponse(response);
-
-            if (!response.ok) {
-                checkedLoginId = loginId;
-                isLoginIdAvailable = false;
-                loginIdModifiedSinceCheck = false;
-                showLoginIdError(data?.message || data?.detail || "아이디 중복 확인에 실패했습니다.");
-                return;
-            }
+            const data = await apiGet(
+                `${LOGIN_ID_CHECK_API}?loginId=${encodeURIComponent(loginId)}`,
+                {
+                    headers: buildHeaders()
+                }
+            );
 
             const responseLoginId = data?.result?.loginId ?? loginId;
             const available = Boolean(data?.result?.available);
@@ -483,11 +483,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 showLoginIdError("이미 사용 중인 아이디입니다.");
             }
         } catch (error) {
-            console.error(error);
-            checkedLoginId = "";
-            isLoginIdAvailable = false;
-            loginIdModifiedSinceCheck = true;
-            showLoginIdError("아이디 중복 확인 중 네트워크 오류가 발생했습니다.");
+            if (error instanceof ApiError) {
+                checkedLoginId = loginId;
+                isLoginIdAvailable = false;
+                loginIdModifiedSinceCheck = false;
+                showLoginIdError(error.message || "아이디 중복 확인에 실패했습니다.");
+            } else {
+                console.error(error);
+                checkedLoginId = "";
+                isLoginIdAvailable = false;
+                loginIdModifiedSinceCheck = true;
+                showLoginIdError("아이디 중복 확인 중 네트워크 오류가 발생했습니다.");
+            }
         } finally {
             loginIdCheckInProgress = false;
         }
@@ -563,28 +570,11 @@ document.addEventListener("DOMContentLoaded", function () {
         verifyCodeButton.disabled = true;
 
         try {
-            const response = await fetch(EMAIL_SEND_API, {
-                method: "POST",
-                headers: buildHeaders(),
-                body: JSON.stringify({ email: email })
-            });
-
-            if (!response.ok) {
-                const result = await parseJsonResponse(response);
-                const message = result?.detail || "인증코드 발송에 실패했습니다.";
-                const field = result?.field || "email";
-
-                unlockEmailSection();
-                setSendButtonDefaultState();
-                verifyCodeButton.disabled = false;
-
-                if (field === "email") {
-                    clearVerificationStatus();
-                }
-
-                showFieldError(field, message);
-                return;
-            }
+            await apiPost(
+                EMAIL_SEND_API,
+                { email: email },
+                { headers: buildHeaders() }
+            );
 
             clearEmailMessage();
             clearVerificationCodeMessage();
@@ -605,10 +595,22 @@ document.addEventListener("DOMContentLoaded", function () {
             startVerificationTimer();
             verificationCodeElement.focus();
         } catch (error) {
-            console.error(error);
             unlockEmailSection();
             setSendButtonDefaultState();
             verifyCodeButton.disabled = false;
+
+            if (error instanceof ApiError) {
+                const field = error?.data?.field || "email";
+
+                if (field === "email") {
+                    clearVerificationStatus();
+                }
+
+                showFieldError(field, error.message || "인증코드 발송에 실패했습니다.");
+                return;
+            }
+
+            console.error(error);
             showFormError("인증코드 발송 중 네트워크 오류가 발생했습니다.");
         }
     });
@@ -644,30 +646,14 @@ document.addEventListener("DOMContentLoaded", function () {
         verifyCodeButton.disabled = true;
 
         try {
-            const response = await fetch(EMAIL_VERIFY_API, {
-                method: "POST",
-                headers: buildHeaders(),
-                body: JSON.stringify({
+            const result = await apiPost(
+                EMAIL_VERIFY_API,
+                {
                     email: email,
                     code: verificationCode
-                })
-            });
-
-            const result = await parseJsonResponse(response);
-
-            if (!response.ok) {
-                const message = result?.detail || "인증코드 확인에 실패했습니다.";
-                const field = result?.field || "verificationCode";
-
-                verifyCodeButton.disabled = false;
-
-                if (field === "verificationCode") {
-                    clearVerificationStatus();
-                }
-
-                showFieldError(field, message);
-                return;
-            }
+                },
+                { headers: buildHeaders() }
+            );
 
             const verifyToken = result?.result?.token;
 
@@ -693,8 +679,20 @@ document.addEventListener("DOMContentLoaded", function () {
             setSendButtonCompleteState();
             showVerificationStatus("이메일 인증이 완료되었습니다.");
         } catch (error) {
-            console.error(error);
             verifyCodeButton.disabled = false;
+
+            if (error instanceof ApiError) {
+                const field = error?.data?.field || "verificationCode";
+
+                if (field === "verificationCode") {
+                    clearVerificationStatus();
+                }
+
+                showFieldError(field, error.message || "인증코드 확인에 실패했습니다.");
+                return;
+            }
+
+            console.error(error);
             showFormError("인증코드 확인 중 네트워크 오류가 발생했습니다.");
         }
     });
@@ -792,27 +790,25 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            const response = await fetch(SIGNUP_API, {
-                method: "POST",
-                headers: buildHeaders(),
-                body: JSON.stringify(payload)
+            await apiPost(SIGNUP_API, payload, {
+                headers: buildHeaders()
             });
 
-            if (response.ok) {
-                window.location.replace("/login");
+            window.location.replace("/login");
+        } catch (error) {
+            if (error instanceof ApiError) {
+                const field = error?.data?.field || null;
+                const message = error?.message || "회원가입 처리 중 오류가 발생했습니다.";
+
+                if (field) {
+                    showFieldError(field, message);
+                } else {
+                    showFormError(message);
+                }
+
                 return;
             }
 
-            const result = await parseJsonResponse(response);
-            const message = result?.detail || "회원가입 처리 중 오류가 발생했습니다.";
-            const field = result?.field || null;
-
-            if (field) {
-                showFieldError(field, message);
-            } else {
-                showFormError(message);
-            }
-        } catch (error) {
             console.error(error);
             showFormError("네트워크 오류가 발생했습니다.");
         } finally {
