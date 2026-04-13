@@ -1,20 +1,21 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.annotations.PermitAll;
 import com.nhj.librarymanage.domain.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.model.dto.EmailVerificationRequest;
 import com.nhj.librarymanage.domain.model.dto.EmailVerificationResponse;
+import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberService;
 import com.nhj.librarymanage.service.SignupEmailVerificationService;
 import com.nhj.librarymanage.service.SignupTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/public")
 @RestController
 public class SignupVerificationController {
 
@@ -22,7 +23,14 @@ public class SignupVerificationController {
     private final SignupTokenService signupTokenService;
     private final MemberService memberService;
 
-    @PermitAll
+    @Description(value = "회원가입")
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signup(@RequestBody MemberRequest.Create create) {
+        memberService.createMember(create);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @Description(value = "ID 중복 검사")
     @GetMapping("/auth/check-id")
     public ResponseEntity<ApiResponse> verifyDuplicateLoginId(@RequestParam String loginId) {

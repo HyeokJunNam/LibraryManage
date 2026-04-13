@@ -27,7 +27,7 @@ function bindDetailPageEvents() {
         return;
     }
 
-    notifyButton.addEventListener("click", async () => {
+    notifyButton.addEventListener("click", () => {
         if (notifyButton.disabled || notifyButton.dataset.completed === "true") {
             return;
         }
@@ -43,41 +43,74 @@ function bindDetailPageEvents() {
             return;
         }
 
-        const originalHtml = notifyButton.innerHTML;
+        openNotifyConfirmModal(notifyButton, bookId);
+    });
+}
 
-        try {
-            setNotifyButtonLoading(notifyButton);
-
-            await apiPost(`/api/books/${bookId}/notifications`, {
-                channel: "EMAIL",
-                type: "BORROW"
-            });
-
-            applyNotifyCompletedState(notifyButton);
-        } catch (error) {
-            console.error(error);
-            restoreNotifyButton(notifyButton, originalHtml);
-
-            const message = error?.message || "요청 처리 중 오류가 발생했습니다.";
-
-            if (error?.status === 401) {
-                openAlertModal({
-                    title: "회원만 신청 가능합니다.",
-                    message,
-                    confirmText: "로그인",
-                    onConfirm: () => {
-                        window.location.href = buildLoginUrl();
-                    }
-                });
-                return;
+function openNotifyConfirmModal(notifyButton, bookId) {
+    openAlertModal({
+        title: "알림 신청",
+        message: "알림을 신청하시겠습니까?",
+        confirmText: "신청",
+        cancelText: "취소",
+        onConfirm: async () => {
+            try {
+                await submitNotificationRequest(notifyButton, bookId);
+                showNotificationRequestSuccess();
+            } catch (error) {
+                showNotificationRequestError(error);
             }
-
-            openAlertModal({
-                title: "알림 신청 실패",
-                message,
-                confirmText: "확인"
-            });
         }
+    });
+}
+
+async function submitNotificationRequest(notifyButton, bookId) {
+    const originalHtml = notifyButton.innerHTML;
+
+    try {
+        setNotifyButtonLoading(notifyButton);
+
+        await apiPost(`/api/books/${bookId}/notifications`, {
+            channel: "EMAIL",
+            type: "BORROW"
+        });
+
+        applyNotifyCompletedState(notifyButton);
+    } catch (error) {
+        console.error(error);
+        restoreNotifyButton(notifyButton, originalHtml);
+        throw error;
+    }
+}
+
+function showNotificationRequestSuccess() {
+    openAlertModal({
+        title: "알림 신청 완료",
+        message: "신청이 완료되었습니다.",
+        confirmText: "확인"
+    });
+}
+
+function showNotificationRequestError(error) {
+    const message = error?.message || "요청 처리 중 오류가 발생했습니다.";
+
+    if (error?.status === 401) {
+        openAlertModal({
+            title: "회원만 신청 가능합니다.",
+            message,
+            confirmText: "로그인",
+            cancelText: "취소",
+            onConfirm: () => {
+                window.location.href = buildLoginUrl();
+            }
+        });
+        return;
+    }
+
+    openAlertModal({
+        title: "알림 신청 실패",
+        message,
+        confirmText: "확인"
     });
 }
 

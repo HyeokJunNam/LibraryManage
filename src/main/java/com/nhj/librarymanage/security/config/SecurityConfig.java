@@ -33,24 +33,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String[] RESOURCE_URLS = {
+    private static final String[] PUBLIC_RESOURCES = {
             "/css/**", "/js/**", "/images/**"
     };
 
-    private static final String[] PUBLIC_GET_URLS = {
-            "/",
-            "/login",
-            "/signup",
-            "/library/**",
-            "/api/books/**",  // public?
-            // "/api/auth/check-id",
-            "/admin/**" // TODO 추후 제거
-    };
+    private static final String PUBLIC_API = "/api/public/**";
 
-    private static final String[] PUBLIC_POST_URLS = {
-            "/test",
-            "/signup",
-            "/api/auth/**"
+    private static final String[] PUBLIC_VIEWS = {
+            "/", "/login", "/signup", "/library/**",
+            "/admin/**" // TODO 추후 제거
     };
 
     private static final RequestMatcher API_REQUESTS = new OrRequestMatcher(
@@ -138,9 +129,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(RESOURCE_URLS).permitAll();
-                    request.requestMatchers(HttpMethod.GET, PUBLIC_GET_URLS).permitAll();
-                    request.requestMatchers(HttpMethod.POST, PUBLIC_POST_URLS).permitAll();
+                    request.requestMatchers(PUBLIC_RESOURCES).permitAll();
+                    request.requestMatchers(PUBLIC_API).permitAll();
+                    request.requestMatchers(HttpMethod.GET, PUBLIC_VIEWS).permitAll();
                     request.anyRequest().authenticated();
                 });
                 //.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)

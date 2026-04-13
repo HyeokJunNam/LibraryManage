@@ -38,14 +38,6 @@ public class MemberController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
-    @Description(value = "회원 생성")
-    @PostMapping("/members")
-    public ResponseEntity<Void> createMember(@RequestBody MemberRequest.Create create) {
-        memberService.createMember(create);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @Description(value = "회원 수정")
     @PutMapping("/members")
     public ResponseEntity<Void> updateMember(@RequestBody MemberRequest.Update update) {

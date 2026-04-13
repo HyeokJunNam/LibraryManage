@@ -24,6 +24,7 @@ public class LibraryController {
     private final BookService bookService;
     private final NotificationService notificationService;
 
+    @Description("메인 검색 화면 (화면 이동)")
     @GetMapping("/")
     public String redirectToMain() {
         return "redirect:/library";
