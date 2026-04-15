@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대출 / 반납 처리</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin/fragments/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/borrows/process.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/fragments/sidebar :: sidebar('borrow-process')}"></aside>
+
+    <main class="admin-main">
+        <header class="page-hero">
+            <div class="page-hero__content">
+                <p class="page-hero__eyebrow">BORROW MANAGEMENT</p>
+                <h2 class="page-hero__title">대출 / 반납 처리</h2>
+                <p class="page-hero__desc">
+                    도서를 검색하고 대출 및 반납 처리를 진행합니다.
+                </p>
+            </div>
+        </header>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <p class="summary-card__label">오늘 대출</p>
+                <strong class="summary-card__value"
+                        th:text="${borrowSummary != null ? borrowSummary.todayBorrowCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">금일 대출 건수</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">오늘 반납</p>
+                <strong class="summary-card__value"
+                        th:text="${borrowSummary != null ? borrowSummary.todayReturnCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">금일 반납 건수</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">대출 중 도서</p>
+                <strong class="summary-card__value"
+                        th:text="${borrowSummary != null ? borrowSummary.borrowingCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">현재 대출 상태</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">연체 도서</p>
+                <strong class="summary-card__value"
+                        th:text="${borrowSummary != null ? borrowSummary.overdueCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">연체 관리 필요</p>
+            </article>
+        </section>
+
+        <section class="search-panel">
+            <form id="searchForm" class="search-form">
+                <div class="search-form__row">
+                    <div class="field field--select">
+                        <select id="condition" class="field__control">
+                            <option value="title">도서명</option>
+                            <option value="isbn">ISBN</option>
+                            <option value="author">저자</option>
+                            <option value="publisher">출판사</option>
+                        </select>
+                    </div>
+
+                    <div class="field field--input">
+                        <input
+                                id="keyword"
+                                type="text"
+                                class="field__control"
+                                placeholder="검색어 입력">
+                    </div>
+
+                    <div class="search-form__actions">
+                        <button type="submit" class="btn btn--primary">검색</button>
+                        <button type="button" id="resetBtn" class="btn btn--secondary">초기화</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="borrow-layout">
+            <div class="borrow-column borrow-column--left">
+                <section class="table-panel">
+                    <div class="table-panel__head">
+                        <div>
+                            <h3 class="table-panel__title">도서 목록</h3>
+                            <p class="table-panel__desc">검색된 도서를 선택하세요.</p>
+                        </div>
+
+                        <div class="table-panel__summary">
+                            <span>총</span>
+                            <strong id="bookCount">0</strong>
+                            <span>권</span>
+                        </div>
+                    </div>
+
+                    <div id="bookListContainer">
+                        <div class="empty-block">
+                            <div class="empty-block__icon">📚</div>
+                            <p class="empty-block__title">조회된 도서가 없습니다.</p>
+                            <p class="empty-block__desc">검색어를 입력해 주세요.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="borrow-column borrow-column--right">
+                <section class="table-panel detail-panel">
+                    <div class="table-panel__head">
+                        <div>
+                            <h3 class="table-panel__title">도서 상세 / 대출 처리</h3>
+                            <p class="table-panel__desc">도서를 선택하면 상세 정보와 회원 검색 영역이 표시됩니다.</p>
+                        </div>
+                    </div>
+
+                    <div id="selectedBookDetailContainer" class="detail-panel__body">
+                        <div class="empty-block">
+                            <div class="empty-block__icon">📝</div>
+                            <p class="empty-block__title">선택된 도서가 없습니다.</p>
+                            <p class="empty-block__desc">좌측 목록에서 도서를 선택해 주세요.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/admin/borrows/process.js}"></script>
+</body>
+</html>

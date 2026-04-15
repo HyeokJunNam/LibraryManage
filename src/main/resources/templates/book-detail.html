@@ -122,8 +122,7 @@
                                     th:disabled="
                                     ${book == null
                                     or book.canBorrow == null
-                                    or book.canBorrow
-                                    or (notification != null and notification.requested)}
+                                    or book.canBorrow}
                                 "
                                     th:attr="data-completed=${notification != null and notification.requested}">
 
@@ -137,6 +136,7 @@
                                     알림 신청
                                 </span>
                             </button>
+
                             <p class="notify-help" data-role="notify-help-text">
                                 도서가 대출 가능 상태가 될 경우 알림 이메일이 발송됩니다.
                             </p>

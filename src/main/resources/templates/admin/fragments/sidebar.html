@@ -31,17 +31,31 @@
             도서 관리
         </a>
 
-        <a th:href="@{/admin/loans}"
-           class="admin-nav__item"
-           th:classappend="${activeMenu == 'loans'} ? ' admin-nav__item--active' : ''">
-            대출 관리
-        </a>
+        <div class="admin-nav__group"
+             th:classappend="${activeMenu == 'borrow-process' or activeMenu == 'borrow-status'} ? ' admin-nav__group--open' : ''">
 
-        <a th:href="@{/admin/returns}"
-           class="admin-nav__item"
-           th:classappend="${activeMenu == 'returns'} ? ' admin-nav__item--active' : ''">
-            반납 관리
-        </a>
+            <button type="button"
+                    class="admin-nav__item admin-nav__toggle"
+                    th:classappend="${activeMenu == 'borrow-process' or activeMenu == 'borrow-status'} ? ' admin-nav__item--active' : ''"
+                    aria-expanded="false">
+                <span>대출 관리</span>
+                <span class="admin-nav__arrow" aria-hidden="true">▾</span>
+            </button>
+
+            <div class="admin-nav__sub">
+                <a th:href="@{/admin/borrows/process}"
+                   class="admin-nav__sub-item"
+                   th:classappend="${activeMenu == 'borrow-process'} ? ' admin-nav__sub-item--active' : ''">
+                    대출 / 반납 처리
+                </a>
+
+                <a th:href="@{/admin/borrows/status}"
+                   class="admin-nav__sub-item"
+                   th:classappend="${activeMenu == 'borrow-status'} ? ' admin-nav__sub-item--active' : ''">
+                    대출 현황
+                </a>
+            </div>
+        </div>
 
         <a th:href="@{/admin/settings}"
            class="admin-nav__item"
@@ -70,6 +84,8 @@
             </button>
         </form>
     </div>
+
+    <script th:src="@{/js/admin/fragments/sidebar.js}"></script>
 </aside>
 </body>
 </html>

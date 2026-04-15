@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>도서 대출 가능 안내</title>
+</head>
+<body style="margin:0; padding:0; background:#f4f6f8; font-family:Arial, 'Malgun Gothic', sans-serif;">
+<table width="100%" style="padding:20px 0;">
+    <tr>
+        <td align="center">
+            <table width="600" style="background:#ffffff; border-radius:10px; padding:30px;">
+
+                <tr>
+                    <td style="font-size:20px; font-weight:bold; color:#2f5bea;">
+                        신청하신 도서가 대출 가능해졌습니다
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top:20px; font-size:14px; color:#333;">
+                        아래 도서가 현재 대출 가능합니다.
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top:20px;">
+                        <table width="100%" style="border:1px solid #ddd; border-radius:8px;">
+                            <tr>
+                                <td style="padding:10px; font-weight:bold;">도서명</td>
+                                <td style="padding:10px;" th:text="${bookTitle}">도서명</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px; font-weight:bold;">저자</td>
+                                <td style="padding:10px;" th:text="${author}">저자</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px; font-weight:bold;">신청일</td>
+                                <td style="padding:10px;" th:text="${requestDate}">신청일</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding-top:20px; font-size:13px; color:#666;">
+                        빠른 시일 내에 방문하여 대출해 주세요.
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

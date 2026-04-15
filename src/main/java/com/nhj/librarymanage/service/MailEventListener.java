@@ -1,8 +1,7 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.model.event.BookBorrowableEvent;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -13,13 +12,21 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 public class MailEventListener {
 
-    private final MailSendHelper mailSendHelper;
+    private final EmailSender emailSender;
+    private final NotificationDispatchService notificationDispatchService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Async
     @EventListener
     public void handle(MailTemplate mailTemplate) {
-        mailSendHelper.send(mailTemplate);
+        emailSender.send(mailTemplate);
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Async
+    @EventListener
+    public void sendNotify(BookBorrowableEvent event) {
+        notificationDispatchService.dispatchBorrowableNotifications(event.bookId());
     }
 
 }

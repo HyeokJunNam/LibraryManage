@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin/fragments/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/books.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/fragments/sidebar :: sidebar('books')}"></aside>
+
+    <main class="admin-main">
+        <header class="page-hero">
+            <div class="page-hero__content">
+                <p class="page-hero__eyebrow">BOOK MANAGEMENT</p>
+                <h2 class="page-hero__title">도서 목록 관리</h2>
+                <p class="page-hero__desc">
+                    전체 도서를 조회하고 도서 정보 및 보관 위치를 확인할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="page-hero__actions">
+                <a th:href="@{/admin/books/new}" class="btn btn--primary">도서 추가</a>
+            </div>
+        </header>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <p class="summary-card__label">전체 도서 수</p>
+                <strong class="summary-card__value"
+                        th:text="${bookSummary != null ? bookSummary.totalCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">등록된 전체 도서 수</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">대출 도서 수</p>
+                <strong class="summary-card__value"
+                        th:text="${bookSummary != null ? bookSummary.borrowedCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">현재 대출 중인 도서 수</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">연체 도서 수</p>
+                <strong class="summary-card__value"
+                        th:text="${bookSummary != null ? bookSummary.overdueCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">반납 기한이 지난 도서 수</p>
+            </article>
+
+            <article class="summary-card">
+                <p class="summary-card__label">미재고 도서 수</p>
+                <strong class="summary-card__value"
+                        th:text="${bookSummary != null ? bookSummary.outOfStockCount : 0}">
+                    0
+                </strong>
+                <p class="summary-card__meta">현재 재고가 없는 도서 수</p>
+            </article>
+        </section>
+
+        <section class="filter-panel">
+            <form th:action="@{/admin/books}" method="get" class="filter-form" id="bookFilterForm">
+                <div class="filter-form__group filter-form__group--keyword">
+                    <label for="keyword" class="filter-form__label">검색어</label>
+                    <input id="keyword"
+                           name="keyword"
+                           type="text"
+                           class="filter-form__input"
+                           placeholder="ISBN, 도서명, 저자, 출판사로 검색"
+                           th:value="${param.keyword}">
+                </div>
+
+                <div class="filter-form__group">
+                    <label for="location" class="filter-form__label">보관 위치</label>
+                    <input id="location"
+                           name="location"
+                           type="text"
+                           class="filter-form__input"
+                           placeholder="예: A-01"
+                           th:value="${param.location}">
+                </div>
+
+                <div class="filter-form__group">
+                    <label for="sort" class="filter-form__label">정렬</label>
+                    <select id="sort" name="sort" class="filter-form__select">
+                        <option value="latest" th:selected="${param.sort == null or param.sort[0] == 'latest'}">최신 등록순</option>
+                        <option value="title" th:selected="${param.sort != null and param.sort[0] == 'title'}">도서명순</option>
+                        <option value="author" th:selected="${param.sort != null and param.sort[0] == 'author'}">저자순</option>
+                        <option value="oldest" th:selected="${param.sort != null and param.sort[0] == 'oldest'}">오래된 등록순</option>
+                    </select>
+                </div>
+
+                <div class="filter-form__actions">
+                    <button type="submit" class="btn btn--primary">검색</button>
+                    <a th:href="@{/admin/books}" class="btn btn--secondary">초기화</a>
+                </div>
+            </form>
+        </section>
+
+        <section class="table-panel">
+            <div class="table-panel__head">
+                <div>
+                    <h3 class="table-panel__title">도서 목록</h3>
+                    <p class="table-panel__desc">조건에 맞는 도서 목록을 확인할 수 있습니다.</p>
+                </div>
+
+                <div class="table-panel__summary">
+                    <span>총</span>
+                    <strong th:text="${books != null ? books.totalElements : 0}">0</strong>
+                    <span>권</span>
+                </div>
+            </div>
+
+            <div th:if="${books == null or books.content == null or #lists.isEmpty(books.content)}" class="empty-block">
+                <div class="empty-block__icon">📚</div>
+                <p class="empty-block__title">조회된 도서가 없습니다.</p>
+                <p class="empty-block__desc">검색 조건을 변경하거나 새로운 도서를 등록해보세요.</p>
+            </div>
+
+            <div th:if="${books != null and books.content != null and !#lists.isEmpty(books.content)}" class="book-table-wrap">
+                <div class="book-table">
+                    <div class="book-table__header">
+                        <div>도서명</div>
+                        <div>ISBN</div>
+                        <div>저자</div>
+                        <div>출판사</div>
+                        <div>보관 위치</div>
+                    </div>
+
+                    <div th:each="book : ${books.content}"
+                         class="book-row book-row--clickable"
+                         th:attr="data-book-url=@{/admin/books/{id}(id=${book.id})}, tabindex=0, role='link', aria-label=${book.title + ' 상세 정보 보기'}">
+                        <div class="book-row__cell book-row__cell--title">
+                            <div class="book-card">
+                                <div class="book-card__info">
+                                    <strong class="book-card__title" th:text="${book.title}">도서명</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="book-row__cell book-row__cell--isbn"
+                             th:text="${book.isbn != null ? book.isbn : '-'}">
+                            9781234567890
+                        </div>
+
+                        <div class="book-row__cell book-row__cell--author"
+                             th:text="${book.author != null ? book.author : '-'}">
+                            홍길동
+                        </div>
+
+                        <div class="book-row__cell book-row__cell--publisher"
+                             th:text="${book.publisher != null ? book.publisher : '-'}">
+                            오픈AI출판사
+                        </div>
+
+                        <div class="book-row__cell book-row__cell--location"
+                             th:text="${book.location != null ? book.location : '-'}">
+                            A-01
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav th:if="${books != null and books.totalPages > 0}" class="pagination">
+                <a th:if="${!books.first}"
+                   th:href="@{/admin/books(page=${books.number - 1}, keyword=${param.keyword}, location=${param.location}, sort=${param.sort})}"
+                   class="pagination__button">
+                    이전
+                </a>
+
+                <span th:if="${books.first}" class="pagination__button pagination__button--disabled">이전</span>
+
+                <a th:each="pageNumber : ${#numbers.sequence(0, books.totalPages - 1)}"
+                   th:href="@{/admin/books(page=${pageNumber}, keyword=${param.keyword}, location=${param.location}, sort=${param.sort})}"
+                   class="pagination__number"
+                   th:classappend="${pageNumber == books.number} ? ' pagination__number--active' : ''"
+                   th:text="${pageNumber + 1}">
+                    1
+                </a>
+
+                <a th:if="${!books.last}"
+                   th:href="@{/admin/books(page=${books.number + 1}, keyword=${param.keyword}, location=${param.location}, sort=${param.sort})}"
+                   class="pagination__button">
+                    다음
+                </a>
+
+                <span th:if="${books.last}" class="pagination__button pagination__button--disabled">다음</span>
+            </nav>
+        </section>
+    </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll(".book-row--clickable");
+
+        rows.forEach((row) => {
+            const moveToDetail = () => {
+                const url = row.dataset.bookUrl;
+                if (url) {
+                    window.location.href = url;
+                }
+            };
+
+            row.addEventListener("click", moveToDetail);
+
+            row.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    moveToDetail();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

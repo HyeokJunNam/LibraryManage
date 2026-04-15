@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const currentListUrl = window.location.pathname + window.location.search;
-    sessionStorage.setItem("bookListReturnUrl", currentListUrl);
-
     const searchForm = document.getElementById("searchForm");
     const conditionElement = document.getElementById("condition");
     const keywordElement = document.getElementById("keyword");
@@ -18,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function syncSearchFieldsFromQuery(conditionElement, keywordElement) {
     const searchParams = new URLSearchParams(window.location.search);
-    const searchKeys = ["title", "isbn", "author", "publisher"];
+    const searchKeys = ["title", "isbn", "author", "publisher", "location"];
 
     let selectedKey = "title";
     let selectedValue = "";
@@ -50,7 +47,7 @@ function bindSearchSubmit(searchForm, conditionElement, keywordElement) {
         }
 
         const queryString = params.toString();
-        window.location.href = queryString ? `/library/books?${queryString}` : "/library/books";
+        window.location.href = queryString ? `/admin/books?${queryString}` : "/admin/books";
     });
 }
 
@@ -62,5 +59,6 @@ function bindReset(resetButton, conditionElement, keywordElement) {
     resetButton.addEventListener("click", function () {
         conditionElement.value = "title";
         keywordElement.value = "";
+        keywordElement.focus();
     });
 }

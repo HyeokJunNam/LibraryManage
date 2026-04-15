@@ -1,7 +1,6 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.config.MailProperties;
-import com.nhj.librarymanage.domain.model.vo.MailContent;
 import com.nhj.librarymanage.error.code.MailErrorCode;
 import com.nhj.librarymanage.error.exception.mail.MailSendFailureException;
 import jakarta.mail.MessagingException;
@@ -16,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 @RequiredArgsConstructor
 @Component
-public class MailSendHelper {
+public class EmailSender {
 
     private final JavaMailSender javaMailSender;
     private final MailProperties mailProperties;

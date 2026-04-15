@@ -79,7 +79,7 @@ const dashboardData = {
 document.addEventListener("DOMContentLoaded", () => {
     renderTodayTaskCount();
     renderSummaries();
-    renderLoanStatuses();
+    renderBorrowStatuses();
     renderActivities();
     renderAlerts();
 });
@@ -112,7 +112,7 @@ function renderSummaries() {
         .join("");
 }
 
-function renderLoanStatuses() {
+function renderBorrowStatuses() {
     const loanStatusList = document.getElementById("loanStatusList");
     if (!loanStatusList) {
         return;
@@ -121,12 +121,12 @@ function renderLoanStatuses() {
     loanStatusList.innerHTML = dashboardData.loanStatuses
         .map(
             (status) => `
-                <article class="loan-status-item">
-                    <div class="loan-status-item__top">
-                        <p class="loan-status-item__label">${escapeHtml(status.label)}</p>
-                        <strong class="loan-status-item__value">${escapeHtml(status.value)}</strong>
+                <article class="borrow-status-item">
+                    <div class="borrow-status-item__top">
+                        <p class="borrow-status-item__label">${escapeHtml(status.label)}</p>
+                        <strong class="borrow-status-item__value">${escapeHtml(status.value)}</strong>
                     </div>
-                    <p class="loan-status-item__desc">${escapeHtml(status.desc)}</p>
+                    <p class="borrow-status-item__desc">${escapeHtml(status.desc)}</p>
                 </article>
             `
         )

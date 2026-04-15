@@ -459,6 +459,7 @@
     background: linear-gradient(180deg, #f4fbf6 0%, #e3f4e9 100%);
     color: #1d6a41;
     border-color: #bfdcc9;
+    cursor: pointer;
     box-shadow:
             0 10px 22px rgba(18, 28, 22, 0.06),
             inset 0 1px 0 rgba(255, 255, 255, 0.85);
@@ -466,6 +467,22 @@
 
 .book-detail .notify-btn--done .notify-btn__icon {
     transform: translateY(-1px);
+}
+
+.book-detail .notify-btn--done:hover,
+.book-detail .notify-btn--cancel {
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, #fff5f5 0%, #ffe3e3 100%);
+    color: #c92a2a;
+    border-color: #ffc9c9;
+    box-shadow:
+            0 16px 28px rgba(18, 28, 22, 0.10),
+            inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.book-detail .notify-btn--done:active,
+.book-detail .notify-btn--cancel:active {
+    transform: translateY(0);
 }
 
 .book-detail .notify-help {

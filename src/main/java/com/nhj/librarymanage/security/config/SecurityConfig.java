@@ -34,14 +34,13 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_RESOURCES = {
-            "/css/**", "/js/**", "/images/**"
+            "/css/**", "/js/**", "/images/**", "/favicon.ico"
     };
 
     private static final String PUBLIC_API = "/api/public/**";
 
     private static final String[] PUBLIC_VIEWS = {
-            "/", "/login", "/signup", "/library/**",
-            "/admin/**" // TODO 추후 제거
+            "/", "/login", "/signup", "/library/**"
     };
 
     private static final RequestMatcher API_REQUESTS = new OrRequestMatcher(

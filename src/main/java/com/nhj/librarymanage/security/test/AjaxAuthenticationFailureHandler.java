@@ -3,6 +3,7 @@ package com.nhj.librarymanage.security.test;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -21,7 +22,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(@NonNull HttpServletRequest request, HttpServletResponse response, @NonNull AuthenticationException exception) throws IOException, ServletException {
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json;charset=UTF-8");

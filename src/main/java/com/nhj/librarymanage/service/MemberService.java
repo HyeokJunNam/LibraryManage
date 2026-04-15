@@ -1,12 +1,11 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;
-import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;
-import com.nhj.librarymanage.security.member.SecurityUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,12 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MemberService extends SecurityUserService<Member> {
+public class MemberService {
 
     private final SignupTokenService signupTokenService;
 
@@ -30,11 +27,6 @@ public class MemberService extends SecurityUserService<Member> {
 
     public boolean isLoginIdDuplicated(String loginId) {
         return memberRepository.existsByLoginId(loginId);
-    }
-
-    @Override
-    public Optional<Member> findUser(String loginId) {
-        return memberRepository.findByLoginId(loginId);
     }
 
     public MemberResponse.Info getMember(Long id) {

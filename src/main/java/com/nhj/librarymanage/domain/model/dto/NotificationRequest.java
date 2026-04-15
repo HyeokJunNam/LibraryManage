@@ -14,4 +14,10 @@ public class NotificationRequest {
     ) {
     }
 
+    public record Delete(
+            NotificationChannel channel,
+            NotificationType type
+    ) {
+    }
+
 }

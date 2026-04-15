@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.controller;
+package com.nhj.librarymanage.controller.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;
@@ -15,16 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @Controller
-public class AdminController {
+public class MemberManageController {
 
     private final MemberService memberService;
-
-    @Description("대시보드")
-    @GetMapping("/dashboard")
-    public String dashboard() {
-
-        return "admin/dashboard";
-    }
 
     @Description("회원 관리 화면")
     @GetMapping("/members")

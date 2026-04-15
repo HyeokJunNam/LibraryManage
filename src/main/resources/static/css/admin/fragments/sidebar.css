@@ -146,8 +146,69 @@ button {
     box-shadow: 0 10px 20px rgba(37, 135, 76, 0.18);
 }
 
+.admin-nav__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-nav__toggle {
+    width: 100%;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.admin-nav__arrow {
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.admin-nav__group--open .admin-nav__arrow {
+    transform: rotate(180deg);
+}
+
+.admin-nav__sub {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 2px solid var(--gray-200);
+}
+
+.admin-nav__group--open .admin-nav__sub {
+    display: flex;
+}
+
+.admin-nav__sub-item {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-600);
+    transition: all 0.2s ease;
+}
+
+.admin-nav__sub-item:hover {
+    background: var(--green-50);
+    color: var(--green-700);
+}
+
+.admin-nav__sub-item--active {
+    background: var(--green-100);
+    color: var(--green-700);
+    font-weight: 700;
+}
+
 .admin-sidebar__footer {
     margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .admin-profile {
@@ -244,13 +305,6 @@ button {
     margin: 8px 0 0;
     font-size: 14px;
     color: var(--gray-500);
-}
-
-.admin-sidebar__footer {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
 }
 
 .admin-logout-form {

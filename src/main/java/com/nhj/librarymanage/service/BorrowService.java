@@ -1,11 +1,12 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
+import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowResponse;
-import com.nhj.librarymanage.domain.entity.BookItem;
-import com.nhj.librarymanage.domain.entity.Member;
+import com.nhj.librarymanage.domain.model.event.BookBorrowableEvent;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.NotBorrowableException;
 import com.nhj.librarymanage.error.exception.book.NotReturnableException;
@@ -13,6 +14,7 @@ import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;
 import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class BorrowService {
+
+    private final ApplicationEventPublisher eventPublisher;
+
 
     private final BookItemRepository bookItemRepository;
     private final MemberRepository memberRepository;
@@ -76,6 +81,7 @@ public class BorrowService {
         }
 
         bookItem.returnBook();
+        eventPublisher.publishEvent(new BookBorrowableEvent(bookItem.getBook().getId()));
     }
 
 }

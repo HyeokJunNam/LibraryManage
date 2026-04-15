@@ -13,6 +13,13 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "notification")
+// 추후 고유 객체를 판단 할 근거에 따라 수정 필요함 (오버 엔지니어링 방지)
+@Table(
+        name = "notification",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_notification_member_book", columnNames = {"member_id", "book_id"})
+        }
+)
 public class Notification extends BaseEntity {
 
     @Id
@@ -42,5 +49,9 @@ public class Notification extends BaseEntity {
         this.book = book;
         this.channel = channel;
         this.type = type;
+    }
+
+    public void markNotified() {
+        this.notifiedAt = LocalDateTime.now();
     }
 }

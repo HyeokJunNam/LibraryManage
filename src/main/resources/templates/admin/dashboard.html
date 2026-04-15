@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 대시보드</title>
-    <link rel="stylesheet" th:href="@{/css/admin/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/fragments/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
 </head>
 <body>
@@ -61,11 +61,11 @@
             <article class="summary-card">
                 <p class="summary-card__label">현재 대출 중</p>
                 <strong class="summary-card__value"
-                        th:text="${dashboard != null ? dashboard.activeLoanCount : 0}">
+                        th:text="${dashboard != null ? dashboard.activeBorrowCount : 0}">
                     0
                 </strong>
                 <p class="summary-card__meta"
-                   th:text="${dashboard != null ? dashboard.activeLoanMeta : '오늘 기준 변동 없음'}">
+                   th:text="${dashboard != null ? dashboard.activeBorrowMeta : '오늘 기준 변동 없음'}">
                     오늘 기준 변동 없음
                 </p>
             </article>
@@ -127,38 +127,38 @@
                     </div>
                 </div>
 
-                <div class="loan-status-list">
-                    <article class="loan-status-item">
-                        <div class="loan-status-item__top">
-                            <p class="loan-status-item__label">오늘 신규 대출</p>
-                            <strong class="loan-status-item__value"
-                                    th:text="${dashboard != null ? dashboard.todayLoanCount : 0}">
+                <div class="borrow-status-list">
+                    <article class="borrow-status-item">
+                        <div class="borrow-status-item__top">
+                            <p class="borrow-status-item__label">오늘 신규 대출</p>
+                            <strong class="borrow-status-item__value"
+                                    th:text="${dashboard != null ? dashboard.todayBorrowCount : 0}">
                                 0
                             </strong>
                         </div>
-                        <p class="loan-status-item__desc">오늘 승인된 대출 건수입니다.</p>
+                        <p class="borrow-status-item__desc">오늘 승인된 대출 건수입니다.</p>
                     </article>
 
-                    <article class="loan-status-item">
-                        <div class="loan-status-item__top">
-                            <p class="loan-status-item__label">오늘 반납 완료</p>
-                            <strong class="loan-status-item__value"
+                    <article class="borrow-status-item">
+                        <div class="borrow-status-item__top">
+                            <p class="borrow-status-item__label">오늘 반납 완료</p>
+                            <strong class="borrow-status-item__value"
                                     th:text="${dashboard != null ? dashboard.todayReturnCount : 0}">
                                 0
                             </strong>
                         </div>
-                        <p class="loan-status-item__desc">오늘 반납 처리된 도서 건수입니다.</p>
+                        <p class="borrow-status-item__desc">오늘 반납 처리된 도서 건수입니다.</p>
                     </article>
 
-                    <article class="loan-status-item">
-                        <div class="loan-status-item__top">
-                            <p class="loan-status-item__label">연장 요청</p>
-                            <strong class="loan-status-item__value"
+                    <article class="borrow-status-item">
+                        <div class="borrow-status-item__top">
+                            <p class="borrow-status-item__label">연장 요청</p>
+                            <strong class="borrow-status-item__value"
                                     th:text="${dashboard != null ? dashboard.extensionRequestCount : 0}">
                                 0
                             </strong>
                         </div>
-                        <p class="loan-status-item__desc">관리자 확인이 필요한 연장 요청입니다.</p>
+                        <p class="borrow-status-item__desc">관리자 확인이 필요한 연장 요청입니다.</p>
                     </article>
                 </div>
             </div>

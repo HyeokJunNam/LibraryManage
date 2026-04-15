@@ -174,7 +174,7 @@
     line-height: 1.6;
 }
 
-.loan-status-list,
+.borrow-status-list,
 .activity-list,
 .alert-list {
     display: flex;
@@ -182,7 +182,7 @@
     gap: 14px;
 }
 
-.loan-status-item,
+.borrow-status-item,
 .activity-item,
 .alert-item {
     padding: 16px 18px;
@@ -191,7 +191,7 @@
     border: 1px solid var(--gray-100);
 }
 
-.loan-status-item__top,
+.borrow-status-item__top,
 .activity-item__top,
 .alert-item__top {
     display: flex;
@@ -199,7 +199,7 @@
     gap: 12px;
 }
 
-.loan-status-item__label,
+.borrow-status-item__label,
 .activity-item__title,
 .alert-item__title {
     margin: 0;
@@ -208,13 +208,13 @@
     color: var(--gray-900);
 }
 
-.loan-status-item__value {
+.borrow-status-item__value {
     font-size: 22px;
     font-weight: 800;
     color: var(--green-800);
 }
 
-.loan-status-item__desc,
+.borrow-status-item__desc,
 .activity-item__meta,
 .alert-item__desc {
     margin: 8px 0 0;
@@ -302,7 +302,7 @@
     }
 
     .panel__head,
-    .loan-status-item__top,
+    .borrow-status-item__top,
     .activity-item__top,
     .alert-item__top {
         flex-direction: column;

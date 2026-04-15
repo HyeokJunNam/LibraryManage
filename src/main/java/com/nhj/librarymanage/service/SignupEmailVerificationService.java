@@ -52,7 +52,6 @@ public class SignupEmailVerificationService {
         return new String(result);
     }
 
-
     private MailTemplate composeMail(String toEmail, String verificationCode) {
         Context context = new Context(Locale.KOREAN);
         context.setVariable("appName", mailProperties.getAppName());
