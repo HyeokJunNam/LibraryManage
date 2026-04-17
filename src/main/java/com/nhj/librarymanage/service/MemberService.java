@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final SignupTokenService signupTokenService;
+    private final NumberSequenceService numberSequenceService;
 
     private final MemberRepository memberRepository;
 
@@ -34,8 +35,8 @@ public class MemberService {
     }
 
     @Transactional
-    public Page<MemberResponse.Info> getMembers(Pageable pageable) {
-        return memberRepository.findAll(pageable).map(MemberResponse.Info::from);
+    public Page<MemberResponse.Info> getMembers(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+        return memberRepository.findAll(searchCondition, pageable).map(MemberResponse.Info::from);
     }
 
     private void validateSignup(String email, String loginId, String token) {
@@ -56,6 +57,7 @@ public class MemberService {
                 .role(create.getRole())
                 .name(create.getName())
                 .email(create.getEmail())
+                .memberNo(numberSequenceService.nextMemberNumber())
                 .build();
 
         memberRepository.save(member);

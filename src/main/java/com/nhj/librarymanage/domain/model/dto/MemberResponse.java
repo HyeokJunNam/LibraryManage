@@ -2,6 +2,8 @@ package com.nhj.librarymanage.domain.model.dto;
 
 import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.time.LocalDateTime;
 
@@ -12,8 +14,10 @@ public class MemberResponse {
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
     public static class Info {
+        @JsonSerialize(using = ToStringSerializer.class)
         private Long id;
         private String loginId;
+        private String memberNo;
         private String name;
         private String email;
         private String phone;
@@ -24,6 +28,7 @@ public class MemberResponse {
             return Info.builder()
                     .id(member.getId())
                     .loginId(member.getLoginId())
+                    .memberNo(member.getMemberNo())
                     .name(member.getName())
                     .email(member.getEmail())
                     .phone("010-4582-8903")

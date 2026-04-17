@@ -31,8 +31,8 @@ public class MemberController {
 
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
-    public ResponseEntity<ApiResponse> getMembers(Pageable pageable) {
-        Page<MemberResponse.Info> infos = memberService.getMembers(pageable);
+    public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<MemberResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
         ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);

@@ -11,8 +11,10 @@ public class MemberRequest {
 
     @AllArgsConstructor
     @Getter
-    public static class Param {
-
+    public static class SearchCondition {
+        private String name;
+        private String memberNo;
+        private String email;
     }
 
     // 생성 요청

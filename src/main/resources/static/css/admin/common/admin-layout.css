@@ -1,0 +1,22 @@
+/* css/admin/admin-layout.css */
+.admin-page {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+.admin-main {
+    padding: 28px;
+}
+
+@media (max-width: 980px) {
+    .admin-page {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-main {
+        padding: 20px 14px 28px;
+    }
+}

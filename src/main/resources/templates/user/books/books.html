@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 목록</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/pagination.css}">
+    <link rel="stylesheet" th:href="@{/css/user/common/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/common/table-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/user/books.css}">
+</head>
+<body>
+<div class="app">
+    <div th:replace="~{user/common/fragments/topbar :: topbar}"></div>
+
+    <div class="book-list">
+        <main class="page" style="max-width: 1200px; margin: 0 auto; padding: 28px;">
+            <section class="search-panel">
+                <div class="search-panel__head">
+                    <div>
+                        <h1 class="search-panel__title">도서 검색</h1>
+                        <p class="search-panel__desc">전체 도서와 검색 결과를 이 화면에서 바로 확인할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <form id="searchForm" class="search-form">
+                    <div class="search-form__row">
+                        <div class="field field--select">
+                            <label for="condition" class="field__label">검색 조건</label>
+                            <select id="condition" class="field__control">
+                                <option value="title">도서명</option>
+                                <option value="isbn">ISBN</option>
+                                <option value="author">저자</option>
+                                <option value="publisher">출판사</option>
+                            </select>
+                        </div>
+
+                        <div class="field field--input">
+                            <label for="keyword" class="field__label">검색어</label>
+                            <input
+                                    id="keyword"
+                                    type="text"
+                                    class="field__control"
+                                    placeholder="검색어를 입력하세요"
+                            >
+                        </div>
+
+                        <div class="search-form__actions">
+                            <button type="submit" class="btn btn--primary btn--xl">검색</button>
+                            <button type="button" id="resetBtn" class="btn btn--ghost btn--xl">초기화</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="table-panel">
+                <div class="table-panel__head">
+                    <div>
+                        <h2 class="table-panel__title">도서 목록</h2>
+                        <p class="table-panel__desc">전체 도서 또는 검색된 도서를 확인할 수 있습니다.</p>
+                    </div>
+
+                    <div class="table-panel__summary">
+                        <span>총</span>
+                        <strong th:text="${books != null ? books.totalElements : 0}">0</strong>
+                        <span>권</span>
+                    </div>
+                </div>
+
+                <div
+                        th:if="${books == null or books.content == null or #lists.isEmpty(books.content)}"
+                        class="empty-block"
+                >
+                    <div class="empty-block__icon">📚</div>
+                    <div class="empty-block__title">조회된 도서가 없습니다.</div>
+                    <div class="empty-block__desc">검색 조건을 변경해서 다시 시도해보세요.</div>
+                </div>
+
+                <div
+                        th:if="${books != null and books.content != null and !#lists.isEmpty(books.content)}"
+                        class="ui-table-wrap"
+                >
+                    <div class="ui-table" style="--table-columns: 2fr 1.2fr 1fr 1fr;">
+                        <div class="ui-table__header">
+                            <div>도서명</div>
+                            <div>ISBN</div>
+                            <div>저자</div>
+                            <div>출판사</div>
+                        </div>
+
+                        <div
+                                th:each="book : ${books.content}"
+                                class="ui-table__row ui-table__row--clickable"
+                                tabindex="0"
+                                th:attr="data-book-url=@{/library/books/{bookId}(bookId=${book.id})}"
+                        >
+                            <div class="ui-table__cell ui-table__cell--primary">
+                                <a
+                                        th:href="@{/library/books/{bookId}(bookId=${book.id})}"
+                                        th:text="${book.title}"
+                                >
+                                    도서명
+                                </a>
+                            </div>
+
+                            <div class="ui-table__cell" th:text="${book.isbn}">9780000000000</div>
+                            <div class="ui-table__cell" th:text="${book.author}">저자</div>
+                            <div class="ui-table__cell" th:text="${book.publisher}">출판사</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                        class="table-panel__pagination"
+                        th:if="${books != null and books.content != null and !#lists.isEmpty(books.content)}"
+                >
+                    <div
+                            id="pagination"
+                            data-pagination
+                            th:data-current-page="${books.number}"
+                            th:data-total-pages="${books.totalPages}"
+                            data-base-url="/library/books"
+                    ></div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script type="module" th:src="@{/js/common/pagination.js}"></script>
+<script type="module" th:src="@{/js/user/books.js}"></script>
+</body>
+</html>

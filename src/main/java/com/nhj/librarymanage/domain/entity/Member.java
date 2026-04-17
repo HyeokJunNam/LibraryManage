@@ -2,10 +2,7 @@ package com.nhj.librarymanage.domain.entity;
 
 import com.nhj.librarymanage.security.member.Role;
 import io.hypersistence.utils.hibernate.id.Tsid;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -23,12 +20,19 @@ public class Member extends BaseEntity {
 
     private String password;
 
+    @Column(nullable = false, updatable = false)
+    private String memberNo;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     private String name;
 
     private String email;
+
+    private String phoneNumber;
+
+
 
 
     public void changeName(String name) {

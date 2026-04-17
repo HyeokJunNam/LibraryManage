@@ -1,0 +1,305 @@
+import { renderAsyncPagination } from "../common/async-pagination.js";
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("memberSearchModal");
+    if (!modal) return;
+
+    const openButtons = document.querySelectorAll('[data-role="open-member-search"]');
+    const closeButtons = document.querySelectorAll('[data-role="close-member-search"]');
+
+    const searchForm = document.getElementById("memberSearchForm");
+    const searchTypeSelect = searchForm?.querySelector('select[name="searchType"]');
+    const keywordInput = searchForm?.querySelector('input[name="keyword"]');
+
+    const emptyState = document.getElementById("memberSearchEmpty");
+    const loadingState = document.getElementById("memberSearchLoading");
+    const noResultPanel = document.getElementById("memberSearchNoResultPanel");
+    const resultPanel = document.getElementById("memberSearchResultPanel");
+    const resultCount = document.getElementById("memberSearchCount");
+    const resultRows = document.getElementById("memberSearchResultRows");
+    const paginationContainer = document.getElementById("memberSearchPagination");
+
+    const selectedMemberEmpty = document.getElementById("selectedMemberEmpty");
+    const selectedMemberResult = document.getElementById("selectedMemberResult");
+    const selectedMemberName = document.getElementById("selectedMemberName");
+    const selectedMemberMeta = document.getElementById("selectedMemberMeta");
+    const selectedMemberNo = document.getElementById("selectedMemberNo");
+    const selectedMemberEmail = document.getElementById("selectedMemberEmail");
+
+    const defaultSearchType = "name";
+
+    const searchState = {
+        searchType: defaultSearchType,
+        keyword: "",
+        page: 0,
+        size: 5
+    };
+
+    function openModal() {
+        modal.classList.remove("is-hidden");
+        modal.setAttribute("aria-hidden", "false");
+        window.setTimeout(() => keywordInput?.focus(), 0);
+    }
+
+    function hideAllSearchStates() {
+        emptyState?.classList.add("is-hidden");
+        loadingState?.classList.add("is-hidden");
+        noResultPanel?.classList.add("is-hidden");
+        resultPanel?.classList.add("is-hidden");
+    }
+
+    function clearResultRows() {
+        if (resultRows) {
+            resultRows.innerHTML = "";
+        }
+
+        if (resultCount) {
+            resultCount.textContent = "0";
+        }
+
+        if (paginationContainer) {
+            paginationContainer.innerHTML = "";
+            paginationContainer.classList.add("is-hidden");
+        }
+    }
+
+    function clearSelectedRows() {
+        resultRows?.querySelectorAll('[data-role="select-member"]').forEach((row) => {
+            row.classList.remove("is-selected");
+        });
+    }
+
+    function showInitialState() {
+        hideAllSearchStates();
+        clearResultRows();
+        emptyState?.classList.remove("is-hidden");
+    }
+
+    function showLoadingState() {
+        hideAllSearchStates();
+        clearResultRows();
+        loadingState?.classList.remove("is-hidden");
+    }
+
+    function showNoResultState() {
+        hideAllSearchStates();
+        clearResultRows();
+        noResultPanel?.classList.remove("is-hidden");
+    }
+
+    function resetSearchForm() {
+        if (searchForm) {
+            searchForm.reset();
+        }
+
+        if (searchTypeSelect) {
+            searchTypeSelect.value = defaultSearchType;
+        }
+
+        if (keywordInput) {
+            keywordInput.value = "";
+        }
+
+        searchState.searchType = defaultSearchType;
+        searchState.keyword = "";
+        searchState.page = 0;
+    }
+
+    function resetSearchModal() {
+        resetSearchForm();
+        showInitialState();
+    }
+
+    function closeModal() {
+        modal.classList.add("is-hidden");
+        modal.setAttribute("aria-hidden", "true");
+        resetSearchModal();
+    }
+
+    function showResultState(pageResult) {
+        hideAllSearchStates();
+        resultPanel?.classList.remove("is-hidden");
+
+        const members = Array.isArray(pageResult.content) ? pageResult.content : [];
+        const totalElements = Number(pageResult.totalElements ?? members.length);
+        const currentPage = Number(pageResult.page ?? 0);
+        const totalPages = Math.max(1, Number(pageResult.totalPages ?? 0));
+
+        if (resultCount) {
+            resultCount.textContent = String(totalElements);
+        }
+
+        renderResultRows(members);
+
+        if (paginationContainer) {
+            paginationContainer.classList.remove("is-hidden");
+
+            renderAsyncPagination(paginationContainer, {
+                currentPage,
+                totalPages,
+                visiblePages: 5,
+                onPageChange: (nextPage) => {
+                    loadMembers(nextPage);
+                }
+            });
+        }
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function renderResultRows(members) {
+        if (!resultRows) return;
+
+        resultRows.innerHTML = members.map((member) => {
+            const safeMember = {
+                id: member.id ?? "",
+                name: member.name ?? "",
+                memberNo: member.memberNo ?? "",
+                email: member.email ?? "",
+                phone: member.phone ?? "",
+                loginId: member.loginId ?? ""
+            };
+
+            const encoded = encodeURIComponent(JSON.stringify(safeMember));
+
+            return `
+                <button
+                    type="button"
+                    class="ui-table__row ui-table__row--clickable"
+                    data-role="select-member"
+                    data-member="${encoded}">
+                    <div class="ui-table__cell ui-table__cell--primary">${escapeHtml(safeMember.name || "-")}</div>
+                    <div class="ui-table__cell">${escapeHtml(safeMember.memberNo || "-")}</div>
+                    <div class="ui-table__cell">${escapeHtml(safeMember.email || "-")}</div>
+                </button>
+            `;
+        }).join("");
+    }
+
+    function applySelectedMember(member) {
+        if (!member) return;
+
+        selectedMemberEmpty?.classList.add("is-hidden");
+        selectedMemberResult?.classList.remove("is-hidden");
+
+        if (selectedMemberResult) {
+            selectedMemberResult.dataset.memberId = member.id || "";
+        }
+
+        if (selectedMemberName) {
+            selectedMemberName.textContent = member.name || "-";
+        }
+
+        if (selectedMemberMeta) {
+            const metaParts = [];
+            if (member.memberNo) metaParts.push(`회원번호 ${member.memberNo}`);
+            if (member.email) metaParts.push(member.email);
+            selectedMemberMeta.textContent = metaParts.length > 0 ? metaParts.join(" · ") : "-";
+        }
+
+        if (selectedMemberNo) {
+            selectedMemberNo.textContent = member.memberNo || "-";
+        }
+
+        if (selectedMemberEmail) {
+            selectedMemberEmail.textContent = member.email || "-";
+        }
+    }
+
+    async function fetchMembers({ searchType, keyword, page, size }) {
+        const params = new URLSearchParams();
+        params.set(searchType, keyword);
+        params.set("page", String(page));
+        params.set("size", String(size));
+
+        const payload = await apiGet(`/api/members?${params.toString()}`);
+        return payload?.result ?? {};
+    }
+
+    async function loadMembers(page = 0) {
+        try {
+            searchState.page = page;
+            showLoadingState();
+
+            const pageResult = await fetchMembers(searchState);
+            const members = Array.isArray(pageResult.content) ? pageResult.content : [];
+
+            if (members.length === 0) {
+                showNoResultState();
+                return;
+            }
+
+            showResultState(pageResult);
+        } catch (error) {
+            console.error(error);
+            alert(error?.message || "회원 조회 중 오류가 발생했습니다.");
+            showNoResultState();
+        }
+    }
+
+    function handleSearchSubmit(event) {
+        event.preventDefault();
+
+        const searchType = searchTypeSelect?.value ?? defaultSearchType;
+        const keyword = keywordInput?.value.trim() ?? "";
+
+        if (!keyword) {
+            alert("검색어를 입력해 주세요.");
+            keywordInput?.focus();
+            return;
+        }
+
+        searchState.searchType = searchType;
+        searchState.keyword = keyword;
+        searchState.page = 0;
+
+        loadMembers(0);
+    }
+
+    function handleRowSelection(row) {
+        const raw = row.dataset.member;
+        if (!raw) return;
+
+        try {
+            const member = JSON.parse(decodeURIComponent(raw));
+            clearSelectedRows();
+            row.classList.add("is-selected");
+            applySelectedMember(member);
+            closeModal();
+        } catch (error) {
+            console.error("선택한 회원 데이터 파싱 실패", error);
+        }
+    }
+
+    openButtons.forEach((button) => {
+        button.addEventListener("click", openModal);
+    });
+
+    closeButtons.forEach((button) => {
+        button.addEventListener("click", closeModal);
+    });
+
+    searchForm?.addEventListener("submit", handleSearchSubmit);
+
+    resultRows?.addEventListener("click", (event) => {
+        const row = event.target.closest('[data-role="select-member"]');
+        if (!row) return;
+
+        handleRowSelection(row);
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.classList.contains("is-hidden")) {
+            closeModal();
+        }
+    });
+
+    showInitialState();
+});

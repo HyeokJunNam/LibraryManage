@@ -1,0 +1,42 @@
+package com.nhj.librarymanage.controller.view.admin;
+
+import com.nhj.librarymanage.domain.annotations.Description;
+import com.nhj.librarymanage.domain.model.dto.MemberRequest;
+import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.service.MemberService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RequiredArgsConstructor
+@RequestMapping("/admin")
+@Controller
+public class MemberManageController {
+
+    private final MemberService memberService;
+
+    @Description("회원 관리 화면")
+    @GetMapping("/members")
+    public String members(Model model, @ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<MemberResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
+        model.addAttribute("members", infos);
+
+        return "admin/members/members";
+    }
+
+    @Description("회원 정보 조회 화면")
+    @GetMapping("/members/{id}")
+    public String memberDetail(Model model, @PathVariable Long id) {
+        MemberResponse.Info info = memberService.getMember(id);
+        model.addAttribute("member", info);
+
+        return "admin/members/member-detail";
+    }
+
+}

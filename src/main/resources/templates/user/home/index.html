@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 검색</title>
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" th:href="@{/css/user/common/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/user/home.css}">
+</head>
+<body>
+<div class="app">
+    <div th:replace="~{user/common/fragments/topbar :: topbar}"></div>
+
+    <main class="main">
+        <section class="hero">
+            <div class="hero__inner">
+                <p class="hero__eyebrow">도서 검색 서비스</p>
+                <h1 class="hero__title">찾고 싶은 책을 검색하세요</h1>
+                <p class="hero__desc">
+                    도서명, ISBN, 저자, 출판사 기준으로 원하는 도서를 빠르게 찾을 수 있습니다.
+                </p>
+
+                <form id="searchForm" class="search-card">
+                    <div class="search-card__row">
+                        <div class="field field--select">
+                            <label for="condition" class="field__label">검색 조건</label>
+                            <select id="condition" class="field__control">
+                                <option value="title">도서명</option>
+                                <option value="isbn">ISBN</option>
+                                <option value="author">저자</option>
+                                <option value="publisher">출판사</option>
+                            </select>
+                        </div>
+
+                        <div class="field field--input">
+                            <label for="keyword" class="field__label">검색어</label>
+                            <input id="keyword"
+                                   type="text"
+                                   class="field__control"
+                                   placeholder="검색어를 입력하세요">
+                        </div>
+
+                        <div class="search-card__submit">
+                            <button type="submit" class="btn btn--primary btn--xl">검색</button>
+                            <button type="button" id="resetBtn" class="btn btn--ghost btn--xl">초기화</button>
+                        </div>
+                    </div>
+
+                    <div class="search-card__actions">
+                        <a th:href="@{/library/books}" class="btn btn--secondary btn--xl">전체 도서 보기</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script th:src="@{/js/user/home.js}"></script>
+</body>
+</html>
