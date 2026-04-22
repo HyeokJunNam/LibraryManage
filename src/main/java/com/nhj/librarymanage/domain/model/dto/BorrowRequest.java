@@ -1,6 +1,9 @@
 package com.nhj.librarymanage.domain.model.dto;
 
+import com.nhj.librarymanage.domain.model.vo.BorrowBook;
 import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BorrowRequest {
@@ -26,8 +29,8 @@ public class BorrowRequest {
     @AllArgsConstructor
     @Getter
     public static class Borrow {
-        private long bookItemId;
-        private String loginId;
+        private long memberId;
+        private List<BorrowBook> borrowBooks;
     }
 
     @AllArgsConstructor

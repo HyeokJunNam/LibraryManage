@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="bookSearchModal">
+
+    <div class="book-search-modal is-hidden" id="bookSearchModal" aria-hidden="true">
+        <div class="book-search-modal__backdrop" data-role="close-book-search"></div>
+
+        <div
+                class="book-search-modal__dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="bookSearchModalTitle">
+
+            <div class="book-search-modal__header">
+                <div class="book-search-modal__header-main">
+                    <p class="book-search-modal__eyebrow">BOOK SEARCH</p>
+                    <h3 class="book-search-modal__title" id="bookSearchModalTitle">도서 검색</h3>
+                    <p class="book-search-modal__desc">
+                        도서명, ISBN, 저자, 출판사로 검색하여 대출할 도서를 선택할 수 있습니다.
+                    </p>
+                </div>
+
+                <button
+                        type="button"
+                        class="book-search-modal__close-btn"
+                        data-role="close-book-search"
+                        aria-label="도서 검색 닫기">
+                    ✕
+                </button>
+            </div>
+
+            <form class="book-search-modal__search" id="bookSearchForm">
+                <div class="book-search-modal__search-row">
+                    <select class="book-search-modal__select" name="searchType">
+                        <option value="title">도서명</option>
+                        <option value="isbn">ISBN</option>
+                        <option value="author">저자</option>
+                        <option value="publisher">출판사</option>
+                    </select>
+
+                    <input
+                            type="text"
+                            class="book-search-modal__input"
+                            name="keyword"
+                            placeholder="검색어를 입력하세요.">
+
+                    <button type="submit" class="book-search-modal__submit-btn">
+                        검색
+                    </button>
+                </div>
+            </form>
+
+            <div class="book-search-modal__body">
+                <section class="book-search-state" id="bookSearchEmpty">
+                    <div class="book-search-state__icon">📘</div>
+                    <h4 class="book-search-state__title">검색어를 입력해 주세요</h4>
+                    <p class="book-search-state__desc">
+                        검색 후 대출할 도서를 선택할 수 있습니다.
+                    </p>
+                </section>
+
+                <section class="book-search-state is-hidden" id="bookSearchLoading">
+                    <div class="book-search-state__icon">⏳</div>
+                    <h4 class="book-search-state__title">도서를 조회하고 있습니다</h4>
+                    <p class="book-search-state__desc">
+                        잠시만 기다려 주세요.
+                    </p>
+                </section>
+
+                <section class="book-search-state is-hidden" id="bookSearchNoResultPanel">
+                    <div class="book-search-state__icon">🔎</div>
+                    <h4 class="book-search-state__title">검색 결과가 없습니다</h4>
+                    <p class="book-search-state__desc">
+                        다른 검색 조건으로 다시 시도해 주세요.
+                    </p>
+                </section>
+
+                <section class="book-search-result is-hidden" id="bookSearchResultPanel">
+                    <div class="book-search-result__header">
+                        <p class="book-search-result__count">
+                            검색 결과 <strong id="bookSearchCount">0</strong>건
+                        </p>
+
+                        <p class="book-search-result__selected">
+                            선택 <strong id="bookSearchSelectedCount">0</strong>권
+                        </p>
+                    </div>
+
+                    <div class="book-search-result__table">
+                        <div class="book-search-result__head">
+                            <div class="book-search-result__col book-search-result__col--checkbox"></div>
+                            <div class="book-search-result__col book-search-result__col--title">도서명</div>
+                            <div class="book-search-result__col">ISBN</div>
+                            <div class="book-search-result__col">저자</div>
+                            <div class="book-search-result__col">재고</div>
+                            <div class="book-search-result__col">대여 가능</div>
+                        </div>
+
+                        <div class="book-search-result__rows" id="bookSearchResultRows">
+                            <!-- JS 렌더링 -->
+                        </div>
+                    </div>
+
+                    <div class="book-search-result__pagination is-hidden" id="bookSearchPagination"></div>
+                </section>
+            </div>
+
+            <div class="book-search-modal__footer">
+                <button
+                        type="button"
+                        class="book-search-modal__footer-btn book-search-modal__footer-btn--secondary"
+                        data-role="cancel-book-selection">
+                    취소
+                </button>
+                <button
+                        type="button"
+                        class="book-search-modal__footer-btn book-search-modal__footer-btn--primary"
+                        id="confirmBookSelectionButton"
+                        disabled>
+                    확인
+                </button>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

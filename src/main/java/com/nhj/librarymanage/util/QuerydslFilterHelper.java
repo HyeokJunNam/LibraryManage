@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuerydslFilterHelper {
 
@@ -37,6 +39,11 @@ public class QuerydslFilterHelper {
 
     public static BooleanExpression istNotNull(SimpleExpression<?> targetExpression) {
         return targetExpression.isNotNull();
+    }
+
+    public static <T> BooleanExpression in(SimpleExpression<T> targetExpression, List<T> searchTerms) {
+        return targetExpression.in(searchTerms);
+
     }
 
 

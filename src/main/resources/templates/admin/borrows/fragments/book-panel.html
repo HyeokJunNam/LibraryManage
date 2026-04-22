@@ -1,0 +1,84 @@
+<th:block th:fragment="bookPanel">
+
+    <section class="book-panel" data-mode="idle" id="bookPanel">
+
+        <div class="book-panel__header">
+            <div class="book-panel__header-main">
+
+                <div class="book-panel__title-row">
+                    <div class="book-panel__title-group">
+                        <h3 class="book-panel__title">신청 도서 목록</h3>
+                        <span class="book-panel__mode-badge is-hidden" id="bookPanelModeBadge">
+                        대출 모드
+                    </span>
+                    </div>
+
+                    <button
+                            type="button"
+                            class="book-panel__action-btn is-hidden"
+                            id="openBookSearchButton"
+                            data-role="open-book-search"
+                            disabled>
+                        + 도서 검색
+                    </button>
+                </div>
+
+                <p class="book-panel__desc" id="bookPanelDesc">
+                    대출 시에는 대출할 도서를 선택하세요.
+                </p>
+
+            </div>
+        </div>
+
+        <div class="book-panel__body">
+
+            <section class="book-empty-state" id="bookPanelEmpty">
+                <div class="book-empty-state__icon">📚</div>
+                <h4 class="book-empty-state__title">표시할 도서가 없습니다</h4>
+            </section>
+
+            <section class="book-selection-empty is-hidden" id="bookSelectionEmpty">
+                <div class="book-selection-empty__icon">➕</div>
+                <h4 class="book-selection-empty__title">도서를 선택하세요</h4>
+            </section>
+
+            <section class="book-result is-hidden" id="bookPanelResult">
+
+                <div class="book-result__summary">
+                    <p class="book-result__count-text">
+                        선택된 도서 <strong id="selectedBookCount">0</strong>권
+                    </p>
+                </div>
+
+                <div class="book-result__table-wrap">
+                    <div class="book-result__table-scroll">
+
+                        <table class="book-result__table">
+                            <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>도서명</th>
+                                <th>ISBN</th>
+                                <th>저자</th>
+                                <th>출판사</th>
+                                <th>위치</th>
+                                <th>재고</th>
+                                <th>대여 가능</th>
+                                <th>수량</th>
+                                <th>관리</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="selectedBookList"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</th:block>

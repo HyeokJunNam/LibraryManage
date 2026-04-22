@@ -13,10 +13,11 @@ public interface BookItemRepository extends JpaRepository<BookItem, Long> {
 
     Optional<BookItem> findById(long id);
 
-    default BookItem get(long id) {
+    default BookItem getById(long id) {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(BookErrorCode.BOOK_ITEM_NOT_FOUND));
     }
 
-    List<BookItem> findAllByBookIn(List<Book> books);
+    Optional<BookItem> findFirstByBookId(long bookId);
+
 
 }

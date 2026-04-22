@@ -1,5 +1,7 @@
 package com.nhj.librarymanage.repository;
 
+import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.nhj.librarymanage.domain.entity.QBook.book;
+import static com.nhj.librarymanage.domain.entity.QBookItem.bookItem;
 
 @RequiredArgsConstructor
 @Repository
@@ -54,4 +57,19 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
 
+
+    @Override
+    public List<Book> findBorrowableBook(List<Long> bookIds) {
+        BooleanExpression inBook = QuerydslFilterHelper.in(book.id, bookIds);
+        BooleanExpression likeAvailable = QuerydslFilterHelper.like(bookItem.status.stringValue(), BookItemStatus.AVAILABLE.getCode());
+        BooleanExpression isNullBorrowRecord = QuerydslFilterHelper.isNull(bookItem.borrowRecord);
+
+        return jpaQueryFactory
+                .selectFrom(book)
+                .join(book.bookItems, bookItem).fetchJoin()
+                .where(inBook, likeAvailable, isNullBorrowRecord)
+                .fetch();
+    }
+
 }
+

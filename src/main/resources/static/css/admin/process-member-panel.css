@@ -13,6 +13,10 @@
     overflow: hidden;
 }
 
+.is-hidden {
+    display: none !important;
+}
+
 /* =========================
    HEADER
 ========================= */
@@ -235,6 +239,56 @@
 }
 
 /* =========================
+   FOOTER ACTIONS
+========================= */
+.member-panel__footer {
+    padding: 18px 28px 22px;
+    border-top: 1px solid var(--gray-100);
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    background: #ffffff;
+}
+
+.member-action-btn {
+    min-width: 120px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.member-action-btn--borrow {
+    border: 1px solid var(--green-500);
+    background: var(--green-500);
+    color: #fff;
+}
+
+.member-action-btn--borrow:hover:not(:disabled) {
+    background: var(--green-600);
+}
+
+.member-action-btn--return {
+    border: 1px solid var(--gray-200);
+    background: #fff;
+    color: var(--gray-700);
+}
+
+.member-action-btn--return:hover:not(:disabled) {
+    background: var(--gray-50);
+}
+
+.member-action-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 1180px) {
@@ -275,5 +329,14 @@
         grid-template-columns: 1fr;
         gap: 6px;
         padding: 14px 0;
+    }
+
+    .member-panel__footer {
+        padding: 16px 20px 20px;
+        flex-wrap: wrap;
+    }
+
+    .member-action-btn {
+        flex: 1 1 140px;
     }
 }

@@ -14,7 +14,9 @@
 
     <link rel="stylesheet" th:href="@{/css/admin/process.css}">
     <link rel="stylesheet" th:href="@{/css/admin/process-member-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/process-book-panel.css}">
     <link rel="stylesheet" th:href="@{/css/admin/process-member-search-modal.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/process-book-search-modal.css}">
 </head>
 <body>
 <div class="admin-page">
@@ -33,27 +35,12 @@
 
         <section class="process-layout">
             <div th:replace="~{admin/borrows/fragments/member-panel :: memberPanel}"></div>
-
-            <section class="process-card">
-                <div class="process-card__header">
-                    <div>
-                        <h3 class="process-card__title">처리 영역</h3>
-                        <p class="process-card__desc">
-                            선택된 회원 기준으로 대출 / 반납 기능이 표시됩니다.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="process-card__body">
-                    <div class="process-card__placeholder">
-                        우측 기능 영역 (추후 구현)
-                    </div>
-                </div>
-            </section>
+            <div th:replace="~{admin/borrows/fragments/book-panel :: bookPanel}"></div>
         </section>
     </main>
 
     <div th:replace="~{admin/borrows/fragments/member-search-modal :: memberSearchModal}"></div>
+    <div th:replace="~{admin/borrows/fragments/book-search-modal :: bookSearchModal}"></div>
 </div>
 
 <script th:src="@{/js/common/api.js}"></script>

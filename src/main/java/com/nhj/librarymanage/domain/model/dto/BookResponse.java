@@ -55,16 +55,31 @@ public class BookResponse {
             String title,
             String author,
             String publisher,
-            String location
+            String location,
+            int stockQuantity,
+            int availableQuantity
     ) {
         public static Info from(Book book) {
+            int availableQuantity = 0;
+            int stockQuantity = 0;
+
+            for (BookItem bookItem : book.getBookItems()) {
+                stockQuantity++;
+
+                if (bookItem.getStatus() == BookItemStatus.AVAILABLE && bookItem.getBorrowRecord() == null) {
+                    availableQuantity++;
+                }
+            }
+
             return new Info(
                     book.getId(),
                     book.getIsbn(),
                     book.getTitle(),
                     book.getAuthor(),
                     book.getPublisher(),
-                    book.getLocation()
+                    book.getLocation(),
+                    stockQuantity,
+                    availableQuantity
             );
         }
     }
