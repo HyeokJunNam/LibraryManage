@@ -1,0 +1,94 @@
+.table-block {
+    overflow: hidden;
+    background: var(--white);
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ui-table-wrap {
+    overflow-x: auto;
+
+    flex: 1;
+    min-height: 0;
+}
+
+.ui-table {
+    min-width: 720px;
+    background: var(--white);
+    --table-columns: 1fr 1fr 1fr;
+}
+
+.ui-table__header,
+.ui-table__row {
+    display: grid;
+    grid-template-columns: var(--table-columns);
+    gap: 0;
+    align-items: center;
+}
+
+/* 모달 테이블 헤더 기준 */
+.ui-table__header {
+    padding: 14px 18px;
+    background: #f8faf9;
+    border-bottom: 1px solid var(--gray-100);
+
+    color: var(--gray-500);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+/* 모달 테이블 row 기준 */
+.ui-table__row {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--gray-100);
+    background: #fff;
+    transition: background 0.15s ease;
+}
+
+.ui-table__row:hover {
+    background: #f9fbfa;
+}
+
+.ui-table__cell {
+    min-width: 0;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+
+    color: var(--gray-700);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ui-table__cell--primary {
+    color: var(--gray-900);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ui-table__cell--center {
+    justify-content: center;
+    text-align: center;
+}
+
+.ui-table__cell--right {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.table-block__pagination {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    padding: 10px 18px 12px;
+    border-top: 1px solid var(--gray-100);
+    background: #fcfefd;
+}

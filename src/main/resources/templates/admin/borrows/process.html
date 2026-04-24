@@ -6,8 +6,9 @@
     <title>대출 / 반납 처리</title>
 
     <link rel="stylesheet" th:href="@{/css/common/common.css}">
-    <link rel="stylesheet" th:href="@{/css/common/table-theme.css}">
+    <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
     <link rel="stylesheet" th:href="@{/css/common/pagination.css}">
+    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
 
     <link rel="stylesheet" th:href="@{/css/admin/common/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/admin/common/admin-layout.css}">
@@ -39,11 +40,13 @@
         </section>
     </main>
 
+    <div th:replace="~{common/modal-alert :: alertModal}"></div>
     <div th:replace="~{admin/borrows/fragments/member-search-modal :: memberSearchModal}"></div>
     <div th:replace="~{admin/borrows/fragments/book-search-modal :: bookSearchModal}"></div>
 </div>
 
 <script th:src="@{/js/common/api.js}"></script>
+<script th:src="@{/js/common/modal-alert.js}"></script>
 <script type="module" th:src="@{/js/admin/process.js}"></script>
 </body>
 </html>

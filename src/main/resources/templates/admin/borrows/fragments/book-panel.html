@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
 <th:block th:fragment="bookPanel">
 
     <section class="book-panel" data-mode="idle" id="bookPanel">
@@ -9,8 +12,8 @@
                     <div class="book-panel__title-group">
                         <h3 class="book-panel__title">신청 도서 목록</h3>
                         <span class="book-panel__mode-badge is-hidden" id="bookPanelModeBadge">
-                        대출 모드
-                    </span>
+                            대출 모드
+                        </span>
                     </div>
 
                     <button
@@ -44,34 +47,36 @@
 
             <section class="book-result is-hidden" id="bookPanelResult">
 
-                <div class="book-result__summary">
-                    <p class="book-result__count-text">
-                        선택된 도서 <strong id="selectedBookCount">0</strong>권
-                    </p>
-                </div>
+                <div class="table-block book-result__table-block">
+                    <div class="ui-table-wrap">
+                        <div
+                                class="ui-table book-result__table"
+                                style="--table-columns: 56px 180px 180px 140px 130px 110px 88px 88px 168px 92px;">
 
-                <div class="book-result__table-wrap">
-                    <div class="book-result__table-scroll">
+                            <div class="ui-table__header">
+                                <div class="ui-table__cell">No</div>
+                                <div class="ui-table__cell">도서명</div>
+                                <div class="ui-table__cell">ISBN</div>
+                                <div class="ui-table__cell">저자</div>
+                                <div class="ui-table__cell">출판사</div>
+                                <div class="ui-table__cell">위치</div>
+                                <div class="ui-table__cell ui-table__cell--center">재고</div>
+                                <div class="ui-table__cell ui-table__cell--center">대여 가능</div>
+                                <div class="ui-table__cell ui-table__cell--center">수량</div>
+                                <div class="ui-table__cell ui-table__cell--center">관리</div>
+                            </div>
 
-                        <table class="book-result__table">
-                            <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>도서명</th>
-                                <th>ISBN</th>
-                                <th>저자</th>
-                                <th>출판사</th>
-                                <th>위치</th>
-                                <th>재고</th>
-                                <th>대여 가능</th>
-                                <th>수량</th>
-                                <th>관리</th>
-                            </tr>
-                            </thead>
+                            <div id="selectedBookList">
+                                <div id="selectedBookEmptyRow" class="empty-block book-result__empty-row">
+                                    선택된 도서가 없습니다.
+                                </div>
+                            </div>
 
-                            <tbody id="selectedBookList"></tbody>
-                        </table>
+                        </div>
+                    </div>
 
+                    <div class="table-block__pagination" id="selectedBookPaginationWrap">
+                        <div id="selectedBookPagination" data-pagination></div>
                     </div>
                 </div>
 
@@ -79,6 +84,58 @@
 
         </div>
 
+        <div class="book-panel__footer is-hidden" id="bookPanelFooter">
+            <button
+                    type="button"
+                    class="book-panel__footer-btn book-panel__footer-btn--secondary"
+                    id="resetBorrowButton"
+                    disabled>
+                초기화
+            </button>
+
+            <button
+                    type="button"
+                    class="book-panel__footer-btn book-panel__footer-btn--primary"
+                    id="confirmBorrowButton"
+                    disabled>
+                확인
+            </button>
+        </div>
+
+        <template id="selectedBookRowTemplate">
+            <div class="ui-table__row book-result__row">
+                <div class="ui-table__cell book-result__cell--index" data-field="index"></div>
+
+                <div class="ui-table__cell ui-table__cell--primary">
+                    <span class="book-result__title-text" data-field="title"></span>
+                </div>
+
+                <div class="ui-table__cell book-result__muted" data-field="isbn"></div>
+                <div class="ui-table__cell" data-field="author"></div>
+                <div class="ui-table__cell" data-field="publisher"></div>
+                <div class="ui-table__cell" data-field="location"></div>
+
+                <div class="ui-table__cell ui-table__cell--center" data-field="stockQuantity"></div>
+                <div class="ui-table__cell ui-table__cell--center" data-field="availableQuantity"></div>
+
+                <div class="ui-table__cell ui-table__cell--center">
+                    <div class="book-result__quantity-box">
+                        <button type="button" class="book-result__quantity-btn" data-role="decrease-book-quantity">−</button>
+                        <input type="number" class="book-result__quantity-input" data-role="book-quantity-input" min="1">
+                        <button type="button" class="book-result__quantity-btn" data-role="increase-book-quantity">+</button>
+                    </div>
+                </div>
+
+                <div class="ui-table__cell ui-table__cell--center">
+                    <button type="button" class="book-result__remove-btn" data-role="remove-selected-book">
+                        삭제
+                    </button>
+                </div>
+            </div>
+        </template>
+
     </section>
 
 </th:block>
+</body>
+</html>

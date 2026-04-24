@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="tableBlock(columns, rowsFragment, page, baseUrl)">
+
+    <div class="table-block">
+
+        <div class="ui-table-wrap">
+            <div class="ui-table">
+
+                <div class="ui-table__header">
+                    <div class="ui-table__cell"
+                         th:each="column : ${columns}"
+                         th:text="${column}">
+                        컬럼
+                    </div>
+                </div>
+
+                <th:block th:replace="${rowsFragment}">
+                    <!-- rows -->
+                </th:block>
+
+            </div>
+        </div>
+
+        <div class="table-block__pagination">
+            <div
+                    data-pagination
+                    th:data-current-page="${page.number}"
+                    th:data-total-pages="${page.totalPages}"
+                    th:data-base-url="${baseUrl}">
+            </div>
+        </div>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

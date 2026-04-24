@@ -2,8 +2,13 @@ import { createMemberProcess } from "./process-member.js";
 import { createBookProcess } from "./process-book.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-    const bookProcess = createBookProcess();
-    const memberProcess = createMemberProcess({
+    let memberProcess;
+
+    const bookProcess = createBookProcess({
+        getSelectedMemberId: () => memberProcess?.getSelectedMemberId()
+    });
+
+    memberProcess = createMemberProcess({
         onMemberSelected: () => {
             bookProcess.reset();
         },

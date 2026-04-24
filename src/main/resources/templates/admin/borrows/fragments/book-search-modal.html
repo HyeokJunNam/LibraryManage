@@ -97,9 +97,7 @@
                             <div class="book-search-result__col">대여 가능</div>
                         </div>
 
-                        <div class="book-search-result__rows" id="bookSearchResultRows">
-                            <!-- JS 렌더링 -->
-                        </div>
+                        <div class="book-search-result__rows" id="bookSearchResultRows"></div>
                     </div>
 
                     <div class="book-search-result__pagination is-hidden" id="bookSearchPagination"></div>
@@ -122,6 +120,43 @@
                 </button>
             </div>
         </div>
+
+        <template id="bookSearchRowTemplate">
+            <div
+                    class="book-search-result__row"
+                    data-role="select-book"
+                    role="button"
+                    tabindex="0">
+
+                <div class="book-search-result__checkbox-wrap">
+                    <input
+                            type="checkbox"
+                            class="book-search-result__checkbox"
+                            tabindex="-1"
+                            aria-hidden="true">
+                </div>
+
+                <div
+                        class="book-search-result__cell book-search-result__cell--primary"
+                        data-field="title"></div>
+
+                <div
+                        class="book-search-result__cell"
+                        data-field="isbn"></div>
+
+                <div
+                        class="book-search-result__cell"
+                        data-field="author"></div>
+
+                <div
+                        class="book-search-result__cell book-search-result__stock"
+                        data-field="stockQuantity"></div>
+
+                <div
+                        class="book-search-result__cell book-search-result__available"
+                        data-field="availableQuantity"></div>
+            </div>
+        </template>
     </div>
 
 </th:block>

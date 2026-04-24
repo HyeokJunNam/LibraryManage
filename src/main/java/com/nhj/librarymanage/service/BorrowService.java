@@ -60,7 +60,7 @@ public class BorrowService {
     // TODO LOCK 처리
     @Transactional
     public void borrow(BorrowRequest.Borrow borrow) {
-        List<Long> bookIds = borrow.getBorrowBooks().stream().map(BorrowBook::bookId).toList();
+         List<Long> bookIds = borrow.getBorrowBooks().stream().map(BorrowBook::bookId).toList();
         List<Book> books = bookRepository.findBorrowableBook(bookIds);
 
         Map<Long, Long> borrowRequestMap = borrow.getBorrowBooks().stream()
@@ -82,9 +82,11 @@ public class BorrowService {
                 throw new NotBorrowableException(BookErrorCode.BOOK_NOT_BORROWABLE);
             }
 
-            for (BookItem bookItem : bookItems) {
+            for (int i = 0 ; i < requestQuantity ; i++) {
+                BookItem bookItem = bookItems.get(i);
                 bookItem.startBorrow(member, BORROW_DAY);
             }
+
         }
     }
 
