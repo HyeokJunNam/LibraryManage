@@ -11,44 +11,41 @@
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="memberSearchModalTitle">
+
             <div class="member-search-modal__header">
-                <div class="member-search-modal__title-wrap">
+                <div class="member-search-modal__header-main">
+                    <p class="member-search-modal__eyebrow">MEMBER SEARCH</p>
                     <h3 class="member-search-modal__title" id="memberSearchModalTitle">회원 조회</h3>
                     <p class="member-search-modal__desc">
-                        회원명, 회원번호, 이메일로 회원을 검색할 수 있습니다.
+                        회원명, 회원번호, 이메일로 검색하여 대출을 진행할 회원을 선택할 수 있습니다.
                     </p>
                 </div>
 
                 <button
                         type="button"
                         class="member-search-modal__close"
-                        aria-label="닫기"
+                        aria-label="회원 조회 닫기"
                         data-role="close-member-search">
                     ✕
                 </button>
             </div>
 
             <div class="member-search-modal__body">
+
                 <form class="member-search-form" id="memberSearchForm">
                     <div class="member-search-form__row">
-                        <label class="member-search-form__field">
-                            <span class="member-search-form__label">조회 조건</span>
-                            <select class="member-search-form__select" name="searchType">
-                                <option value="name">회원명</option>
-                                <option value="memberNo">회원번호</option>
-                                <option value="email">이메일</option>
-                            </select>
-                        </label>
+                        <select class="member-search-form__select" name="searchType">
+                            <option value="name">회원명</option>
+                            <option value="memberNo">회원번호</option>
+                            <option value="email">이메일</option>
+                        </select>
 
-                        <label class="member-search-form__field member-search-form__field--keyword">
-                            <span class="member-search-form__label">검색어</span>
-                            <input
-                                    type="text"
-                                    name="keyword"
-                                    class="member-search-form__input"
-                                    placeholder="검색어를 입력하세요."
-                                    autocomplete="off">
-                        </label>
+                        <input
+                                type="text"
+                                name="keyword"
+                                class="member-search-form__input"
+                                placeholder="검색어를 입력하세요."
+                                autocomplete="off">
 
                         <button type="submit" class="member-search-form__submit">
                             검색
@@ -57,68 +54,72 @@
                 </form>
 
                 <div class="member-search-modal__content">
-                    <section class="member-search-empty" id="memberSearchEmpty">
-                        <div class="member-search-empty__icon" aria-hidden="true">🔎</div>
-                        <h4 class="member-search-empty__title">회원을 검색해 주세요</h4>
-                        <p class="member-search-empty__desc">
-                            조회 조건과 검색어를 입력한 뒤 검색 버튼을 눌러 주세요.
+
+                    <section class="member-search-state" id="memberSearchEmpty">
+                        <div class="member-search-state__icon" aria-hidden="true">🔎</div>
+                        <h4 class="member-search-state__title">검색어를 입력해 주세요</h4>
+                        <p class="member-search-state__desc">
+                            검색 후 대출을 진행할 회원을 선택할 수 있습니다.
                         </p>
                     </section>
 
-                    <section class="member-search-empty is-hidden" id="memberSearchLoading">
-                        <div class="member-search-empty__icon" aria-hidden="true">⏳</div>
-                        <h4 class="member-search-empty__title">회원을 조회하고 있습니다</h4>
-                        <p class="member-search-empty__desc">
+                    <section class="member-search-state is-hidden" id="memberSearchLoading">
+                        <div class="member-search-state__icon" aria-hidden="true">⏳</div>
+                        <h4 class="member-search-state__title">회원을 조회하고 있습니다</h4>
+                        <p class="member-search-state__desc">
                             잠시만 기다려 주세요.
                         </p>
                     </section>
 
-                    <section class="table-panel is-hidden" id="memberSearchNoResultPanel">
-                        <div class="table-panel__head">
-                            <div>
-                                <h4 class="table-panel__title">검색 결과</h4>
-                                <p class="table-panel__desc">조건에 맞는 회원을 찾지 못했습니다.</p>
-                            </div>
-                        </div>
-
-                        <div class="empty-block">
-                            <div class="empty-block__icon" aria-hidden="true">📭</div>
-                            <div class="empty-block__title">검색 결과가 없습니다</div>
-                            <div class="empty-block__desc">
-                                다른 검색 조건 또는 검색어로 다시 시도해 주세요.
-                            </div>
-                        </div>
+                    <section class="member-search-state is-hidden" id="memberSearchNoResultPanel">
+                        <div class="member-search-state__icon" aria-hidden="true">🔎</div>
+                        <h4 class="member-search-state__title">검색 결과가 없습니다</h4>
+                        <p class="member-search-state__desc">
+                            다른 검색 조건으로 다시 시도해 주세요.
+                        </p>
                     </section>
 
-                    <section class="table-panel is-hidden" id="memberSearchResultPanel">
-                        <div class="table-panel__head">
-                            <div>
-                                <h4 class="table-panel__title">검색 결과</h4>
-                                <p class="table-panel__desc">조회된 회원 목록입니다.</p>
-                            </div>
+                    <section class="member-search-result is-hidden" id="memberSearchResultPanel">
+                        <div class="table-block table-block--reserve-space member-search-result__table-block">
+                            <div class="ui-table-wrap">
+                                <div class="ui-table member-search-result__table">
+                                    <div class="ui-table__header">
+                                        <div class="ui-table__cell ui-table__cell--checkbox"></div>
+                                        <div class="ui-table__cell">회원번호</div>
+                                        <div class="ui-table__cell">회원명</div>
+                                        <div class="ui-table__cell">이메일</div>
+                                    </div>
 
-                            <div class="table-panel__summary">
-                                총 <strong id="memberSearchCount">0</strong>건
-                            </div>
-                        </div>
-
-                        <div class="ui-table-wrap">
-                            <div class="ui-table member-search-table" style="--table-columns: 1.1fr 1.2fr 1.6fr;">
-                                <div class="ui-table__header">
-                                    <div class="ui-table__cell">회원명</div>
-                                    <div class="ui-table__cell">회원번호</div>
-                                    <div class="ui-table__cell">이메일</div>
+                                    <div id="memberSearchResultRows"></div>
                                 </div>
-
-                                <div id="memberSearchResultRows"></div>
                             </div>
-                        </div>
 
-                        <div class="table-panel__pagination is-hidden" id="memberSearchPagination"></div>
+                            <div class="table-block__pagination is-hidden" id="memberSearchPagination"></div>
+                        </div>
                     </section>
+
                 </div>
             </div>
         </section>
+
+        <template id="memberSearchRowTemplate">
+            <div
+                    class="ui-table__row ui-table__row--clickable"
+                    data-role="select-member"
+                    role="button"
+                    tabindex="0">
+
+                <div class="ui-table__cell ui-table__cell--checkbox"></div>
+
+                <div class="ui-table__cell" data-field="memberNo"></div>
+
+                <div class="ui-table__cell ui-table__cell--primary">
+                    <span class="ui-table__text" data-field="name"></span>
+                </div>
+
+                <div class="ui-table__cell" data-field="email"></div>
+            </div>
+        </template>
     </div>
 
 </th:block>

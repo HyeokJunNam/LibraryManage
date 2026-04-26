@@ -47,11 +47,9 @@
 
             <section class="book-result is-hidden" id="bookPanelResult">
 
-                <div class="table-block book-result__table-block">
+                <div class="table-block table-block--reserve-space book-result__table-block">
                     <div class="ui-table-wrap">
-                        <div
-                                class="ui-table book-result__table"
-                                style="--table-columns: 56px 180px 180px 140px 130px 110px 88px 88px 168px 92px;">
+                        <div class="ui-table book-result__table">
 
                             <div class="ui-table__header">
                                 <div class="ui-table__cell">No</div>
@@ -67,7 +65,7 @@
                             </div>
 
                             <div id="selectedBookList">
-                                <div id="selectedBookEmptyRow" class="empty-block book-result__empty-row">
+                                <div id="selectedBookEmptyRow" class="empty-block ui-table__empty-row">
                                     선택된 도서가 없습니다.
                                 </div>
                             </div>
@@ -107,10 +105,10 @@
                 <div class="ui-table__cell book-result__cell--index" data-field="index"></div>
 
                 <div class="ui-table__cell ui-table__cell--primary">
-                    <span class="book-result__title-text" data-field="title"></span>
+                    <span class="ui-table__text" data-field="title"></span>
                 </div>
 
-                <div class="ui-table__cell book-result__muted" data-field="isbn"></div>
+                <div class="ui-table__cell ui-table__cell--muted" data-field="isbn"></div>
                 <div class="ui-table__cell" data-field="author"></div>
                 <div class="ui-table__cell" data-field="publisher"></div>
                 <div class="ui-table__cell" data-field="location"></div>

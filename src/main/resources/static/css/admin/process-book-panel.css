@@ -153,30 +153,6 @@
     --table-columns: 56px 180px 180px 140px 130px 110px 88px 88px 168px 92px;
 }
 
-/* 공통 ui-table__cell 폰트/높이를 그대로 상속 */
-.book-result__title-text {
-    display: block;
-    overflow: hidden;
-    color: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.book-result__muted {
-    color: var(--gray-500);
-}
-
-.book-result__empty-row {
-    padding: 56px 24px 64px;
-    text-align: center;
-    color: var(--gray-500);
-    font-size: 14px;
-    font-weight: 700;
-}
-
 /* =========================
    QUANTITY / REMOVE
 ========================= */

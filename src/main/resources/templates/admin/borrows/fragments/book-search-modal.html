@@ -77,30 +77,26 @@
                 </section>
 
                 <section class="book-search-result is-hidden" id="bookSearchResultPanel">
-                    <div class="book-search-result__header">
-                        <p class="book-search-result__count">
-                            검색 결과 <strong id="bookSearchCount">0</strong>건
-                        </p>
+                    <div class="table-block table-block--reserve-space book-search-result__table-block">
+                        <div class="ui-table-wrap">
+                            <div class="ui-table book-search-result__table">
 
-                        <p class="book-search-result__selected">
-                            선택 <strong id="bookSearchSelectedCount">0</strong>권
-                        </p>
-                    </div>
+                                <div class="ui-table__header">
+                                    <div class="ui-table__cell ui-table__cell--center"></div>
+                                    <div class="ui-table__cell">도서명</div>
+                                    <div class="ui-table__cell">ISBN</div>
+                                    <div class="ui-table__cell">저자</div>
+                                    <div class="ui-table__cell ui-table__cell--center">재고</div>
+                                    <div class="ui-table__cell ui-table__cell--center">대여 가능</div>
+                                </div>
 
-                    <div class="book-search-result__table">
-                        <div class="book-search-result__head">
-                            <div class="book-search-result__col book-search-result__col--checkbox"></div>
-                            <div class="book-search-result__col book-search-result__col--title">도서명</div>
-                            <div class="book-search-result__col">ISBN</div>
-                            <div class="book-search-result__col">저자</div>
-                            <div class="book-search-result__col">재고</div>
-                            <div class="book-search-result__col">대여 가능</div>
+                                <div id="bookSearchResultRows"></div>
+
+                            </div>
                         </div>
 
-                        <div class="book-search-result__rows" id="bookSearchResultRows"></div>
+                        <div class="table-block__pagination is-hidden" id="bookSearchPagination"></div>
                     </div>
-
-                    <div class="book-search-result__pagination is-hidden" id="bookSearchPagination"></div>
                 </section>
             </div>
 
@@ -123,12 +119,12 @@
 
         <template id="bookSearchRowTemplate">
             <div
-                    class="book-search-result__row"
+                    class="ui-table__row book-search-result__row"
                     data-role="select-book"
                     role="button"
                     tabindex="0">
 
-                <div class="book-search-result__checkbox-wrap">
+                <div class="ui-table__cell ui-table__cell--center">
                     <input
                             type="checkbox"
                             class="book-search-result__checkbox"
@@ -136,24 +132,20 @@
                             aria-hidden="true">
                 </div>
 
-                <div
-                        class="book-search-result__cell book-search-result__cell--primary"
-                        data-field="title"></div>
+                <div class="ui-table__cell ui-table__cell--primary">
+                    <span class="ui-table__text" data-field="title"></span>
+                </div>
+
+                <div class="ui-table__cell" data-field="isbn"></div>
+
+                <div class="ui-table__cell" data-field="author"></div>
 
                 <div
-                        class="book-search-result__cell"
-                        data-field="isbn"></div>
-
-                <div
-                        class="book-search-result__cell"
-                        data-field="author"></div>
-
-                <div
-                        class="book-search-result__cell book-search-result__stock"
+                        class="ui-table__cell ui-table__cell--center book-search-result__stock"
                         data-field="stockQuantity"></div>
 
                 <div
-                        class="book-search-result__cell book-search-result__available"
+                        class="ui-table__cell ui-table__cell--center book-search-result__available"
                         data-field="availableQuantity"></div>
             </div>
         </template>

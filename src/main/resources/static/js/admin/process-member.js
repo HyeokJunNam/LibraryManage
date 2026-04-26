@@ -26,6 +26,7 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
     const resultPanel = document.getElementById("memberSearchResultPanel");
     const resultCount = document.getElementById("memberSearchCount");
     const resultRows = document.getElementById("memberSearchResultRows");
+    const rowTemplate = document.getElementById("memberSearchRowTemplate");
     const paginationContainer = document.getElementById("memberSearchPagination");
 
     const selectedMemberEmpty = document.getElementById("selectedMemberEmpty");
@@ -39,7 +40,7 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
     const borrowActionButton = document.querySelector('[data-role="borrow-action"]');
     const returnActionButton = document.querySelector('[data-role="return-action"]');
 
-    const defaultSearchType = "name";
+    const defaultSearchType = "memberNo";
 
     const searchState = {
         searchType: defaultSearchType,
@@ -47,6 +48,46 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         page: 0,
         size: 5
     };
+
+    function normalizeMember(rawMember) {
+        return {
+            id: String(rawMember.id ?? ""),
+            name: rawMember.name ?? "",
+            memberNo: rawMember.memberNo ?? "",
+            email: rawMember.email ?? "",
+            phone: rawMember.phone ?? "",
+            loginId: rawMember.loginId ?? ""
+        };
+    }
+
+    function bindFields(root, data, fallback = "-") {
+        root.querySelectorAll("[data-field]").forEach((element) => {
+            const fieldName = element.dataset.field;
+            const value = data[fieldName];
+
+            element.textContent = value === null || value === undefined || value === ""
+                ? fallback
+                : String(value);
+        });
+    }
+
+    function renderRows(container, items, createRow) {
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        const fragment = document.createDocumentFragment();
+
+        items.forEach((item, index) => {
+            const row = createRow(item, index);
+
+            if (row) {
+                fragment.appendChild(row);
+            }
+        });
+
+        container.appendChild(fragment);
+    }
 
     function setActionButtonsEnabled(enabled) {
         [borrowActionButton, returnActionButton].forEach((button) => {
@@ -181,6 +222,24 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         resetSearchModal();
     }
 
+    function createMemberSearchRowElement(rawMember) {
+        if (!rowTemplate) return null;
+
+        const member = normalizeMember(rawMember);
+        const row = rowTemplate.content.firstElementChild.cloneNode(true);
+
+        row.dataset.memberId = member.id;
+        row.dataset.member = encodeURIComponent(JSON.stringify(member));
+
+        bindFields(row, member);
+
+        return row;
+    }
+
+    function renderResultRows(members) {
+        renderRows(resultRows, members, createMemberSearchRowElement);
+    }
+
     function showResultState(pageResult) {
         hideAllSearchStates();
         resultPanel?.classList.remove("is-hidden");
@@ -210,44 +269,6 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         }
     }
 
-    function escapeHtml(value) {
-        return String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#39;");
-    }
-
-    function renderResultRows(members) {
-        if (!resultRows) return;
-
-        resultRows.innerHTML = members.map((member) => {
-            const safeMember = {
-                id: member.id ?? "",
-                name: member.name ?? "",
-                memberNo: member.memberNo ?? "",
-                email: member.email ?? "",
-                phone: member.phone ?? "",
-                loginId: member.loginId ?? ""
-            };
-
-            const encoded = encodeURIComponent(JSON.stringify(safeMember));
-
-            return `
-                <button
-                    type="button"
-                    class="ui-table__row ui-table__row--clickable"
-                    data-role="select-member"
-                    data-member="${encoded}">
-                    <div class="ui-table__cell ui-table__cell--primary">${escapeHtml(safeMember.name || "-")}</div>
-                    <div class="ui-table__cell">${escapeHtml(safeMember.memberNo || "-")}</div>
-                    <div class="ui-table__cell">${escapeHtml(safeMember.email || "-")}</div>
-                </button>
-            `;
-        }).join("");
-    }
-
     function applySelectedMember(member) {
         if (!member) return;
 
@@ -264,8 +285,15 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
 
         if (selectedMemberMeta) {
             const metaParts = [];
-            if (member.memberNo) metaParts.push(`회원번호 ${member.memberNo}`);
-            if (member.email) metaParts.push(member.email);
+
+            if (member.memberNo) {
+                metaParts.push(`회원번호 ${member.memberNo}`);
+            }
+
+            if (member.email) {
+                metaParts.push(member.email);
+            }
+
             selectedMemberMeta.textContent = metaParts.length > 0 ? metaParts.join(" · ") : "-";
         }
 
@@ -284,11 +312,13 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
 
     async function fetchMembers({ searchType, keyword, page, size }) {
         const params = new URLSearchParams();
+
         params.set(searchType, keyword);
         params.set("page", String(page));
         params.set("size", String(size));
 
         const payload = await apiGet(`/api/members?${params.toString()}`);
+
         return payload?.result ?? {};
     }
 
@@ -337,7 +367,8 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         if (!raw) return;
 
         try {
-            const member = JSON.parse(decodeURIComponent(raw));
+            const member = normalizeMember(JSON.parse(decodeURIComponent(raw)));
+
             clearSelectedRows();
             row.classList.add("is-selected");
             applySelectedMember(member);
@@ -361,6 +392,16 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         const row = event.target.closest('[data-role="select-member"]');
         if (!row) return;
 
+        handleRowSelection(row);
+    });
+
+    resultRows?.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        const row = event.target.closest('[data-role="select-member"]');
+        if (!row) return;
+
+        event.preventDefault();
         handleRowSelection(row);
     });
 

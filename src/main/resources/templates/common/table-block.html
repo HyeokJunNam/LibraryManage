@@ -2,12 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<th:block th:fragment="tableBlock(columns, rowsFragment, page, baseUrl)">
+<th:block th:fragment="tableBlock(columns, rowsFragment, page, baseUrl, tableClass, reserveSpace)">
 
-    <div class="table-block">
+    <div class="table-block"
+         th:classappend="${reserveSpace} ? ' table-block--reserve-space' : ''">
 
         <div class="ui-table-wrap">
-            <div class="ui-table">
+            <div class="ui-table"
+                 th:classappend="${tableClass}">
 
                 <div class="ui-table__header">
                     <div class="ui-table__cell"
