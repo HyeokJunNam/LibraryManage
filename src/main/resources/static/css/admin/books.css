@@ -139,6 +139,72 @@
     background: #f2f6f3;
 }
 
+/* =========================
+   BOOKS TABLE CARD
+========================= */
+.books-table-card {
+    overflow: hidden;
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+}
+
+.books-table-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--gray-100);
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+}
+
+.books-table-card__title {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.books-table-card__desc {
+    margin: 8px 0 0;
+    color: var(--gray-500);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.books-table-card__summary {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--green-100);
+    border-radius: 999px;
+    background: var(--green-50);
+    color: var(--green-800);
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.books-table-card__body {
+    background: var(--white);
+}
+
+/* 도서 목록은 실제 컬럼 너비만 지역에서 정의 */
+.books-table {
+    min-width: 920px;
+    --table-columns: 2.5fr 2fr 1.6fr 1.8fr 1.2fr;
+}
+
+.books-table-block .ui-table__row--clickable {
+    cursor: pointer;
+}
+
 @media (max-width: 1400px) {
     .filter-form {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -151,14 +217,23 @@
 }
 
 @media (max-width: 980px) {
-    .page-hero {
+    .page-hero,
+    .books-table-card__head {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .books-table-card__summary {
+        width: fit-content;
     }
 }
 
 @media (max-width: 520px) {
     .filter-form {
         grid-template-columns: 1fr;
+    }
+
+    .books-table-card__head {
+        padding: 22px 20px 18px;
     }
 }

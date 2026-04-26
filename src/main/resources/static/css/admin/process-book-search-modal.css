@@ -184,14 +184,14 @@
     min-width: 0;
 }
 
-/* 검색 모달은 컬럼 너비만 정의 */
+/* 체크박스 56px 영역은 공통 table-block.css의 left padding을 사용 */
 .book-search-result__table {
     min-width: 820px;
-    --table-columns: 56px minmax(220px, 2fr) minmax(160px, 1.2fr) minmax(120px, 1fr) 100px 120px;
+    --table-columns: minmax(220px, 2fr) minmax(160px, 1.2fr) minmax(120px, 1fr) 100px 120px;
 }
 
-/* 검색 모달 고유 상태만 정의 */
 .book-search-result__row {
+    position: relative;
     cursor: pointer;
 }
 
@@ -206,6 +206,11 @@
 }
 
 .book-search-result__checkbox {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+
     width: 18px;
     height: 18px;
     accent-color: var(--green-600);
@@ -295,7 +300,7 @@
 
     .book-search-result__table {
         min-width: 720px;
-        --table-columns: 48px minmax(180px, 1.6fr) minmax(140px, 1.1fr) minmax(100px, 1fr) 80px 100px;
+        --table-columns: minmax(180px, 1.6fr) minmax(140px, 1.1fr) minmax(100px, 1fr) 80px 100px;
     }
 
     .book-search-modal__footer {

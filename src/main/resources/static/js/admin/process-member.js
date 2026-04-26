@@ -40,7 +40,7 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
     const borrowActionButton = document.querySelector('[data-role="borrow-action"]');
     const returnActionButton = document.querySelector('[data-role="return-action"]');
 
-    const defaultSearchType = "memberNo";
+    const defaultSearchType = searchTypeSelect?.options[0]?.value ?? "";
 
     const searchState = {
         searchType: defaultSearchType,

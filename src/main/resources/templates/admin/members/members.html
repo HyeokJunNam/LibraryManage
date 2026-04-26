@@ -1,9 +1,11 @@
+<!-- members.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 관리</title>
+
     <link rel="stylesheet" th:href="@{/css/common/common.css}">
     <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
     <link rel="stylesheet" th:href="@{/css/common/pagination.css}">
@@ -14,15 +16,18 @@
 </head>
 <body>
 <div class="admin-page">
+
     <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('members')}"></aside>
 
     <main class="admin-main">
+
+        <!-- HERO -->
         <header class="page-hero">
             <div class="page-hero__content">
                 <p class="page-hero__eyebrow">MEMBER MANAGEMENT</p>
                 <h2 class="page-hero__title">회원 목록 관리</h2>
                 <p class="page-hero__desc">
-                    전체 회원을 조회하고 회원 정보를 확인할 수 있습니다.
+                    전체 회원을 조회하고 회원 정보 및 상태를 확인할 수 있습니다.
                 </p>
             </div>
 
@@ -31,7 +36,9 @@
             </div>
         </header>
 
+        <!-- SUMMARY -->
         <section class="summary-grid">
+
             <article class="summary-card">
                 <p class="summary-card__label">전체 회원</p>
                 <strong class="summary-card__value"
@@ -47,7 +54,7 @@
                         th:text="${memberSummary != null ? memberSummary.activeCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">정상 이용 가능한 회원</p>
+                <p class="summary-card__meta">정상 이용 가능 회원</p>
             </article>
 
             <article class="summary-card">
@@ -56,150 +63,207 @@
                         th:text="${memberSummary != null ? memberSummary.inactiveCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">최근 이용 기록이 적은 회원</p>
+                <p class="summary-card__meta">최근 활동 이력이 적은 회원</p>
             </article>
 
             <article class="summary-card">
-                <p class="summary-card__label">제재 회원</p>
+                <p class="summary-card__label">정지 회원</p>
                 <strong class="summary-card__value"
                         th:text="${memberSummary != null ? memberSummary.suspendedCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">이용 제한 또는 정지 상태</p>
+                <p class="summary-card__meta">이용 제한 상태 회원</p>
             </article>
+
         </section>
 
+        <!-- FILTER -->
         <section class="filter-panel">
-            <form th:action="@{/admin/members}" method="get" class="filter-form" id="memberFilterForm">
-                <div class="field filter-form__group filter-form__group--keyword">
-                    <label for="keyword" class="field__label">검색어</label>
-                    <input id="keyword"
-                           name="keyword"
-                           type="text"
-                           class="field__control"
-                           placeholder="이름, 이메일, 전화번호로 검색"
-                           th:value="${param.keyword}">
+            <form th:action="@{/admin/members}" method="get" class="filter-form">
+
+                <div class="filter-form__group">
+                    <label for="keyword" class="filter-form__label">검색어</label>
+                    <input
+                            id="keyword"
+                            name="keyword"
+                            type="text"
+                            class="filter-form__input"
+                            placeholder="이름, 이메일, 전화번호 검색"
+                            th:value="${param.keyword}">
                 </div>
 
-                <div class="field filter-form__group">
-                    <label for="status" class="field__label">회원 상태</label>
-                    <select id="status" name="status" class="field__control">
+                <div class="filter-form__group">
+                    <label for="status" class="filter-form__label">회원 상태</label>
+                    <select id="status" name="status" class="filter-form__select">
                         <option value="">전체</option>
-                        <option value="ACTIVE" th:selected="${param.status != null and param.status[0] == 'ACTIVE'}">활성</option>
-                        <option value="INACTIVE" th:selected="${param.status != null and param.status[0] == 'INACTIVE'}">휴면</option>
-                        <option value="SUSPENDED" th:selected="${param.status != null and param.status[0] == 'SUSPENDED'}">정지</option>
+                        <option value="ACTIVE"
+                                th:selected="${param.status != null and param.status[0] == 'ACTIVE'}">
+                            활성
+                        </option>
+                        <option value="INACTIVE"
+                                th:selected="${param.status != null and param.status[0] == 'INACTIVE'}">
+                            휴면
+                        </option>
+                        <option value="SUSPENDED"
+                                th:selected="${param.status != null and param.status[0] == 'SUSPENDED'}">
+                            정지
+                        </option>
                     </select>
                 </div>
 
-                <div class="field filter-form__group">
-                    <label for="role" class="field__label">권한</label>
-                    <select id="role" name="role" class="field__control">
+                <div class="filter-form__group">
+                    <label for="role" class="filter-form__label">권한</label>
+                    <select id="role" name="role" class="filter-form__select">
                         <option value="">전체</option>
-                        <option value="USER" th:selected="${param.role != null and param.role[0] == 'USER'}">일반 회원</option>
-                        <option value="ADMIN" th:selected="${param.role != null and param.role[0] == 'ADMIN'}">관리자</option>
+                        <option value="USER"
+                                th:selected="${param.role != null and param.role[0] == 'USER'}">
+                            일반 회원
+                        </option>
+                        <option value="ADMIN"
+                                th:selected="${param.role != null and param.role[0] == 'ADMIN'}">
+                            관리자
+                        </option>
                     </select>
                 </div>
 
-                <div class="field filter-form__group">
-                    <label for="sort" class="field__label">정렬</label>
-                    <select id="sort" name="sort" class="field__control">
-                        <option value="latest" th:selected="${param.sort == null or param.sort[0] == 'latest'}">최신 가입순</option>
-                        <option value="name" th:selected="${param.sort != null and param.sort[0] == 'name'}">이름순</option>
-                        <option value="oldest" th:selected="${param.sort != null and param.sort[0] == 'oldest'}">오래된 가입순</option>
+                <div class="filter-form__group">
+                    <label for="sort" class="filter-form__label">정렬</label>
+                    <select id="sort" name="sort" class="filter-form__select">
+                        <option value="latest"
+                                th:selected="${param.sort == null or param.sort[0] == 'latest'}">
+                            최신 가입순
+                        </option>
+                        <option value="name"
+                                th:selected="${param.sort != null and param.sort[0] == 'name'}">
+                            이름순
+                        </option>
+                        <option value="oldest"
+                                th:selected="${param.sort != null and param.sort[0] == 'oldest'}">
+                            오래된 가입순
+                        </option>
                     </select>
                 </div>
 
                 <div class="filter-form__actions">
                     <button type="submit" class="btn btn--primary">검색</button>
-                    <a th:href="@{/admin/members}" class="btn btn--ghost">초기화</a>
+                    <a th:href="@{/admin/members}" class="btn btn--secondary">초기화</a>
                 </div>
+
             </form>
         </section>
 
-        <section class="table-panel">
-            <div class="table-panel__head">
+        <!-- TABLE CARD -->
+        <section class="members-table-card">
+
+            <div class="members-table-card__head">
                 <div>
-                    <h3 class="table-panel__title">회원 목록</h3>
-                    <p class="table-panel__desc">조건에 맞는 회원 목록을 확인할 수 있습니다.</p>
+                    <h3 class="members-table-card__title">회원 목록</h3>
+                    <p class="members-table-card__desc">
+                        조건에 맞는 회원 목록을 확인할 수 있습니다.
+                    </p>
                 </div>
 
-                <div class="table-panel__summary">
+                <div class="members-table-card__summary">
                     <span>총</span>
                     <strong th:text="${members != null ? members.totalElements : 0}">0</strong>
                     <span>명</span>
                 </div>
             </div>
 
-            <div th:if="${members == null or members.content == null or #lists.isEmpty(members.content)}" class="empty-block">
-                <div class="empty-block__icon">👤</div>
-                <p class="empty-block__title">조회된 회원이 없습니다.</p>
-                <p class="empty-block__desc">검색 조건을 변경하거나 새로운 회원을 등록해보세요.</p>
-            </div>
-
-            <div th:if="${members != null and members.content != null and !#lists.isEmpty(members.content)}" class="ui-table-wrap">
-                <div class="ui-table member-table">
-                    <div class="ui-table__header member-table__header">
-                        <div>이름</div>
-                        <div>이메일</div>
-                        <div>연락처</div>
-                        <div>권한</div>
-                        <div>가입일</div>
-                    </div>
-
-                    <div th:each="member : ${members.content}"
-                         class="ui-table__row ui-table__row--clickable member-row"
-                         th:attr="data-member-url=@{/admin/members/{id}(id=${member.id})}, tabindex=0, role='link', aria-label=${member.name + ' 상세 정보 보기'}">
-                        <div class="ui-table__cell ui-table__cell--primary member-row__cell member-row__cell--member">
-                            <div class="member-card">
-                                <div class="member-card__info">
-                                    <strong class="member-card__name" th:text="${member.name}">홍길동</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="ui-table__cell member-row__cell member-row__cell--email"
-                             th:text="${member.email != null ? member.email : '-'}">
-                            hong@example.com
-                        </div>
-
-                        <div class="ui-table__cell member-row__cell member-row__cell--phone"
-                             th:text="${member.phone != null ? member.phone : '-'}">
-                            010-1234-5678
-                        </div>
-
-                        <div class="ui-table__cell member-row__cell member-row__cell--role">
-                            <span class="role-badge"
-                                  th:classappend="${member.role == 'ROLE_ADMIN'} ? ' role-badge--admin' : ' role-badge--user'"
-                                  th:text="${member.role == 'ROLE_ADMIN'} ? '관리자' : '일반 회원'">
-                                일반 회원
-                            </span>
-                        </div>
-
-                        <div class="ui-table__cell member-row__cell member-row__cell--date"
-                             th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm')}">
-                            2026-04-07
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- EMPTY -->
             <div
-                    class="table-panel__pagination"
-                    th:if="${members != null and members.content != null and !#lists.isEmpty(members.content)}"
-            >
-                <div
-                        id="pagination"
-                        data-pagination
-                        th:data-current-page="${members.number}"
-                        th:data-total-pages="${members.totalPages}"
-                        data-base-url="/admin/members">
+                    th:if="${members == null or members.content == null or #lists.isEmpty(members.content)}"
+                    class="empty-block">
+                <div class="empty-block__icon">👤</div>
+                <div class="empty-block__title">조회된 회원이 없습니다.</div>
+                <div class="empty-block__desc">
+                    검색 조건을 변경해서 다시 시도해보세요.
                 </div>
             </div>
+
+            <!-- TABLE -->
+            <div
+                    th:if="${members != null and members.content != null and !#lists.isEmpty(members.content)}"
+                    class="members-table-card__body">
+
+                <div class="table-block members-table-block">
+
+                    <div class="ui-table-wrap">
+
+                        <div class="ui-table members-table">
+
+                            <div class="ui-table__header">
+                                <div class="ui-table__cell">이름</div>
+                                <div class="ui-table__cell">이메일</div>
+                                <div class="ui-table__cell">연락처</div>
+                                <div class="ui-table__cell">권한</div>
+                                <div class="ui-table__cell">가입일</div>
+                            </div>
+
+                            <div
+                                    th:each="member : ${members.content}"
+                                    class="ui-table__row ui-table__row--clickable"
+                                    th:attr="data-member-url=@{/admin/members/{id}(id=${member.id})},
+                                    tabindex=0,
+                                    role='link',
+                                    aria-label=${member.name + ' 상세 정보 보기'}">
+
+                                <div class="ui-table__cell ui-table__cell--primary">
+                                    <span class="ui-table__text"
+                                          th:text="${member.name}">
+                                        홍길동
+                                    </span>
+                                </div>
+
+                                <div class="ui-table__cell"
+                                     th:text="${member.email != null ? member.email : '-'}">
+                                    hong@example.com
+                                </div>
+
+                                <div class="ui-table__cell"
+                                     th:text="${member.phone != null ? member.phone : '-'}">
+                                    010-1234-5678
+                                </div>
+
+                                <div class="ui-table__cell">
+                                    <span class="role-badge"
+                                          th:classappend="${member.role == 'ROLE_ADMIN'} ?
+                                          ' role-badge--admin' : ' role-badge--user'"
+                                          th:text="${member.role == 'ROLE_ADMIN'} ?
+                                          '관리자' : '일반 회원'">
+                                        일반 회원
+                                    </span>
+                                </div>
+
+                                <div class="ui-table__cell"
+                                     th:text="${#temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm')}">
+                                    2026-04-27 10:00
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="table-block__pagination">
+                        <div
+                                id="pagination"
+                                data-pagination
+                                th:data-current-page="${members.number}"
+                                th:data-total-pages="${members.totalPages}"
+                                data-base-url="/admin/members">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </section>
+
     </main>
 </div>
 
-<script type="module" th:src="@{/js/common/pagination.js}"></script>
 <script th:src="@{/js/admin/members.js}"></script>
+<script type="module" th:src="@{/js/common/pagination.js}"></script>
 </body>
 </html>

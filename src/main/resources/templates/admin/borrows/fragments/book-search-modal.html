@@ -82,7 +82,6 @@
                             <div class="ui-table book-search-result__table">
 
                                 <div class="ui-table__header">
-                                    <div class="ui-table__cell ui-table__cell--center"></div>
                                     <div class="ui-table__cell">도서명</div>
                                     <div class="ui-table__cell">ISBN</div>
                                     <div class="ui-table__cell">저자</div>
@@ -107,6 +106,7 @@
                         data-role="cancel-book-selection">
                     취소
                 </button>
+
                 <button
                         type="button"
                         class="book-search-modal__footer-btn book-search-modal__footer-btn--primary"
@@ -124,13 +124,11 @@
                     role="button"
                     tabindex="0">
 
-                <div class="ui-table__cell ui-table__cell--center">
-                    <input
-                            type="checkbox"
-                            class="book-search-result__checkbox"
-                            tabindex="-1"
-                            aria-hidden="true">
-                </div>
+                <input
+                        type="checkbox"
+                        class="book-search-result__checkbox"
+                        tabindex="-1"
+                        aria-hidden="true">
 
                 <div class="ui-table__cell ui-table__cell--primary">
                     <span class="ui-table__text" data-field="title"></span>
@@ -140,13 +138,11 @@
 
                 <div class="ui-table__cell" data-field="author"></div>
 
-                <div
-                        class="ui-table__cell ui-table__cell--center book-search-result__stock"
-                        data-field="stockQuantity"></div>
+                <div class="ui-table__cell ui-table__cell--center book-search-result__stock"
+                     data-field="stockQuantity"></div>
 
-                <div
-                        class="ui-table__cell ui-table__cell--center book-search-result__available"
-                        data-field="availableQuantity"></div>
+                <div class="ui-table__cell ui-table__cell--center book-search-result__available"
+                     data-field="availableQuantity"></div>
             </div>
         </template>
     </div>

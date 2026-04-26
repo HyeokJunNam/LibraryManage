@@ -24,7 +24,9 @@
 .ui-table {
     min-width: 720px;
     background: var(--white);
+
     --table-columns: 1fr 1fr 1fr;
+    --table-first-space: 56px;
 }
 
 .ui-table__header,
@@ -36,7 +38,7 @@
 }
 
 .ui-table__header {
-    padding: 14px 18px;
+    padding: 14px 18px 14px calc(18px + var(--table-first-space));
     border-bottom: 1px solid var(--gray-100);
     background: #f8faf9;
 
@@ -47,7 +49,7 @@
 }
 
 .ui-table__row {
-    padding: 16px 18px;
+    padding: 16px 18px 16px calc(18px + var(--table-first-space));
     border-bottom: 1px solid var(--gray-100);
     background: var(--white);
     transition: background 0.15s ease;
@@ -119,7 +121,6 @@
 ========================= */
 .table-block__pagination {
     flex-shrink: 0;
-    margin-top: 18px;
     padding: 18px 18px 18px;
     background: var(--white);
 }

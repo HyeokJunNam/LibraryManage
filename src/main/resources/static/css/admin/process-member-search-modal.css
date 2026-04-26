@@ -215,7 +215,7 @@
 /* 회원 검색은 컬럼 너비만 지역에서 정의 */
 .member-search-result__table {
     min-width: 720px;
-    --table-columns: 56px 1.2fr 1.1fr 1.6fr;
+    --table-columns: 1.2fr 1.1fr 1.6fr;
 }
 
 /* 회원 검색 고유 상태만 지역에서 정의 */
@@ -257,6 +257,6 @@
 
     .member-search-result__table {
         min-width: 720px;
-        --table-columns: 56px 1.2fr 1.1fr 1.6fr;
+        --table-columns: 1.2fr 1.1fr 1.6fr;
     }
 }

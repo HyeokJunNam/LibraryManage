@@ -38,7 +38,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     const bookSearchRowTemplate = document.getElementById("bookSearchRowTemplate");
     const bookSearchPagination = document.getElementById("bookSearchPagination");
 
-    const defaultBookSearchType = "title";
+    const defaultBookSearchType = bookSearchTypeSelect?.options[0]?.value ?? "";
 
     const selectedBookState = {
         page: 0,
