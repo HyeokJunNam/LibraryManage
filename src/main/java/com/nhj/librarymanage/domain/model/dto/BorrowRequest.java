@@ -36,7 +36,7 @@ public class BorrowRequest {
     @AllArgsConstructor
     @Getter
     public static class ReturnBook {
-        private long bookItemId;
+        private List<Long> bookRecordIds;
     }
 
 }

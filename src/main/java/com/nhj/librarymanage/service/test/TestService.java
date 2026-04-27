@@ -12,10 +12,10 @@ public class TestService {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    @Transactional
+    /*@Transactional
     public void push() {
         eventPublisher.publishEvent(new BorrowRequest.ReturnBook(1L));
-    }
+    }*/
 
 
 }

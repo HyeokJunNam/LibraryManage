@@ -25,20 +25,23 @@
     min-width: 720px;
     background: var(--white);
 
+    --table-leading-column: 72px;
     --table-columns: 1fr 1fr 1fr;
-    --table-first-space: 56px;
 }
 
 .ui-table__header,
 .ui-table__row {
     display: grid;
-    grid-template-columns: var(--table-columns);
+    grid-template-columns: var(--table-leading-column) var(--table-columns);
     gap: 0;
     align-items: center;
+    padding-right: 18px;
+    padding-left: 18px;
 }
 
 .ui-table__header {
-    padding: 14px 18px 14px calc(18px + var(--table-first-space));
+    padding-top: 14px;
+    padding-bottom: 14px;
     border-bottom: 1px solid var(--gray-100);
     background: #f8faf9;
 
@@ -49,7 +52,8 @@
 }
 
 .ui-table__row {
-    padding: 16px 18px 16px calc(18px + var(--table-first-space));
+    padding-top: 16px;
+    padding-bottom: 16px;
     border-bottom: 1px solid var(--gray-100);
     background: var(--white);
     transition: background 0.15s ease;
@@ -59,6 +63,7 @@
     background: #f9fbfa;
 }
 
+.ui-table__leading-cell,
 .ui-table__cell {
     min-width: 0;
     overflow: hidden;
@@ -73,6 +78,11 @@
 
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.ui-table__leading-cell {
+    justify-content: center;
+    text-align: center;
 }
 
 .ui-table__cell--primary {
@@ -116,12 +126,9 @@
     font-weight: 700;
 }
 
-/* =========================
-   PAGINATION
-========================= */
 .table-block__pagination {
     flex-shrink: 0;
-    padding: 18px 18px 18px;
+    padding: 18px;
     background: var(--white);
 }
 

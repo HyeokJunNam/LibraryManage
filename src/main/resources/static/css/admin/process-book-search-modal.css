@@ -184,14 +184,12 @@
     min-width: 0;
 }
 
-/* 체크박스 56px 영역은 공통 table-block.css의 left padding을 사용 */
 .book-search-result__table {
     min-width: 820px;
     --table-columns: minmax(220px, 2fr) minmax(160px, 1.2fr) minmax(120px, 1fr) 100px 120px;
 }
 
 .book-search-result__row {
-    position: relative;
     cursor: pointer;
 }
 
@@ -206,11 +204,6 @@
 }
 
 .book-search-result__checkbox {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-
     width: 18px;
     height: 18px;
     accent-color: var(--green-600);

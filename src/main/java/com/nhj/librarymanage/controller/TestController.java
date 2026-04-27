@@ -14,7 +14,7 @@ public class TestController {
     @PostMapping("/test")
     public void test() {
 
-        testService.push();
+        //testService.push();
 
     }
 }

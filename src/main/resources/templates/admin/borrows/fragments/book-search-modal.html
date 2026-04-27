@@ -82,6 +82,7 @@
                             <div class="ui-table book-search-result__table">
 
                                 <div class="ui-table__header">
+                                    <div class="ui-table__leading-cell"></div>
                                     <div class="ui-table__cell">도서명</div>
                                     <div class="ui-table__cell">ISBN</div>
                                     <div class="ui-table__cell">저자</div>
@@ -124,11 +125,13 @@
                     role="button"
                     tabindex="0">
 
-                <input
-                        type="checkbox"
-                        class="book-search-result__checkbox"
-                        tabindex="-1"
-                        aria-hidden="true">
+                <div class="ui-table__leading-cell">
+                    <input
+                            type="checkbox"
+                            class="book-search-result__checkbox"
+                            tabindex="-1"
+                            aria-hidden="true">
+                </div>
 
                 <div class="ui-table__cell ui-table__cell--primary">
                     <span class="ui-table__text" data-field="title"></span>

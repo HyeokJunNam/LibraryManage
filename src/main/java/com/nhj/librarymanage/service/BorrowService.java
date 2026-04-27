@@ -97,14 +97,23 @@ public class BorrowService {
 
     @Transactional
     public void returnBook(BorrowRequest.ReturnBook returnBook) {
-        BookItem bookItem = bookItemRepository.getById(returnBook.getBookItemId());
+        List<BorrowRecord> borrowRecords = borrowRecordRepository.findAllById(returnBook.getBookRecordIds());
 
-        if (!isBorrowed(bookItem)) {
-            throw new NotReturnableException(BookErrorCode.BOOK_NOT_RETURNABLE);
+
+        for (BorrowRecord borrowRecord : borrowRecords) {
+            /*if (!isBorrowed(bookItem)) {
+                throw new NotReturnableException(BookErrorCode.BOOK_NOT_RETURNABLE);
+            }*/
+
+            BookItem bookItem = borrowRecord.getBookitem();
+            bookItem.returnBook();
         }
 
-        bookItem.returnBook();
-        eventPublisher.publishEvent(new BookBorrowableEvent(bookItem.getBook().getId()));
+
+
+
+
+        //eventPublisher.publishEvent(new BookBorrowableEvent(bookItem.getBook().getId()));
     }
 
 }

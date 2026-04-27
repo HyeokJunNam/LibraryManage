@@ -1,5 +1,5 @@
-import { createMemberProcess } from "./process-member.js";
-import { createBookProcess } from "./process-book.js";
+import { createMemberProcess } from "./fragments/process-member.js";
+import { createBookProcess } from "./fragments/process-book.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     let memberProcess;
@@ -28,6 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const memberId = memberProcess.getSelectedMemberId();
         if (!memberId) return;
 
-        bookProcess.reset();
+        bookProcess.activateReturnMode();
     });
 });

@@ -1,6 +1,3 @@
-/* =========================
-   BOOK PANEL
-========================= */
 .book-panel {
     min-width: 0;
     min-height: 560px;
@@ -13,9 +10,6 @@
     box-shadow: var(--shadow);
 }
 
-/* =========================
-   HEADER
-========================= */
 .book-panel__header {
     padding: 28px 28px 20px;
     border-bottom: 1px solid var(--gray-100);
@@ -84,20 +78,25 @@
     cursor: pointer;
 }
 
-.book-panel__action-btn:disabled {
+.book-panel__action-btn:disabled,
+.book-panel__footer-btn:disabled,
+.book-result__quantity-btn:disabled {
     opacity: 0.45;
     cursor: not-allowed;
 }
 
-/* =========================
-   BODY / EMPTY
-========================= */
-.book-panel__body {
+.book-panel__body,
+.book-panel__mode-panel,
+.book-result,
+.book-result__table-block {
     flex: 1;
     min-width: 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
+}
+
+.book-panel__body {
     background: var(--white);
 }
 
@@ -108,6 +107,8 @@
 .book-empty-state,
 .book-selection-empty {
     flex: 1;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -130,32 +131,16 @@
     color: var(--gray-900);
 }
 
-/* =========================
-   RESULT
-========================= */
-.book-result {
-    flex: 1;
-    min-width: 0;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.book-result__table-block {
-    flex: 1;
-    min-width: 0;
-    min-height: 0;
-}
-
-/* 북패널은 컬럼 너비만 정의 */
 .book-result__table {
-    min-width: 1140px;
-    --table-columns: 56px 180px 180px 140px 130px 110px 88px 88px 168px 92px;
+    min-width: 1084px;
+    --table-columns: 180px 180px 140px 130px 110px 88px 88px 168px 92px;
 }
 
-/* =========================
-   QUANTITY / REMOVE
-========================= */
+.book-return-result__table {
+    min-width: 968px;
+    --table-columns: 110px 110px 260px 160px 160px 120px;
+}
+
 .book-result__quantity-box {
     display: inline-flex;
     align-items: center;
@@ -176,11 +161,6 @@
     font-size: 14px;
     font-weight: 800;
     cursor: pointer;
-}
-
-.book-result__quantity-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
 }
 
 .book-result__quantity-input {
@@ -212,9 +192,53 @@
     color: #c24141;
 }
 
-/* =========================
-   FOOTER
-========================= */
+.book-return-result__row {
+    cursor: pointer;
+}
+
+.book-return-result__row:hover {
+    background: #f9fbfa;
+}
+
+.book-return-result__row.is-selected {
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.book-return-result__row.is-selected .ui-table__cell--primary {
+    color: var(--green-800);
+}
+
+.book-return-result__checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--green-600);
+    cursor: pointer;
+}
+
+.book-return-result__overdue-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.book-return-result__overdue-badge.is-normal {
+    border: 1px solid var(--green-100);
+    background: var(--green-50);
+    color: var(--green-800);
+}
+
+.book-return-result__overdue-badge.is-overdue {
+    border: 1px solid #ffd6d6;
+    background: #fff5f5;
+    color: #c24141;
+}
+
 .book-panel__footer {
     display: flex;
     justify-content: flex-end;
@@ -223,6 +247,17 @@
     padding: 18px 28px 24px;
     border-top: 1px solid var(--gray-100);
     background: #fcfefd;
+}
+
+.book-panel__footer-info {
+    margin-right: auto;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-600);
+}
+
+.book-panel__footer-info strong {
+    color: var(--gray-900);
 }
 
 .book-panel__footer-btn {
@@ -245,9 +280,4 @@
     border: 1px solid #1f6b45;
     background: #1f6b45;
     color: var(--white);
-}
-
-.book-panel__footer-btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="bookPanelReturnMode">
+
+    <section class="book-panel__mode-panel is-hidden" id="bookReturnModePanel">
+
+        <section class="book-selection-empty is-hidden" id="returnBookEmpty">
+            <div class="book-selection-empty__icon">↩️</div>
+            <h4 class="book-selection-empty__title">반납할 도서가 없습니다</h4>
+        </section>
+
+        <section class="book-selection-empty is-hidden" id="returnBookLoading">
+            <div class="book-selection-empty__icon">⏳</div>
+            <h4 class="book-selection-empty__title">대출 도서를 불러오는 중입니다</h4>
+        </section>
+
+        <section class="book-result is-hidden" id="returnBookResult">
+
+            <div class="table-block table-block--reserve-space book-result__table-block">
+                <div class="ui-table-wrap">
+                    <div class="ui-table book-return-result__table">
+
+                        <div class="ui-table__header">
+                            <div class="ui-table__leading-cell"></div>
+                            <div class="ui-table__cell">대출 ID</div>
+                            <div class="ui-table__cell">재고 ID</div>
+                            <div class="ui-table__cell">도서명</div>
+                            <div class="ui-table__cell">대출일</div>
+                            <div class="ui-table__cell">반납 예정일</div>
+                            <div class="ui-table__cell ui-table__cell--center">연체여부</div>
+                        </div>
+
+                        <div id="returnBookList">
+                            <div id="returnBookEmptyRow" class="empty-block ui-table__empty-row">
+                                대출 중인 도서가 없습니다.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="table-block__pagination" id="returnBookPaginationWrap">
+                    <div id="returnBookPagination" data-pagination></div>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="book-panel__footer is-hidden" id="returnBookPanelFooter">
+            <div class="book-panel__footer-info">
+                선택한 도서 <strong id="selectedReturnBookCount">0</strong>권
+            </div>
+
+            <button
+                    type="button"
+                    class="book-panel__footer-btn book-panel__footer-btn--secondary"
+                    id="resetReturnBookButton"
+                    disabled>
+                선택 해제
+            </button>
+
+            <button
+                    type="button"
+                    class="book-panel__footer-btn book-panel__footer-btn--primary"
+                    id="confirmReturnBookButton"
+                    disabled>
+                반납 확인
+            </button>
+        </div>
+
+        <template id="returnBookRowTemplate">
+            <div
+                    class="ui-table__row book-result__row book-return-result__row"
+                    data-role="select-return-book"
+                    role="button"
+                    tabindex="0">
+
+                <div class="ui-table__leading-cell">
+                    <input
+                            type="checkbox"
+                            class="book-return-result__checkbox"
+                            data-role="return-book-checkbox"
+                            tabindex="-1"
+                            aria-hidden="true">
+                </div>
+
+                <div class="ui-table__cell" data-field="borrowRecordId"></div>
+                <div class="ui-table__cell" data-field="bookItemId"></div>
+
+                <div class="ui-table__cell ui-table__cell--primary">
+                    <span class="ui-table__text" data-field="bookTitle"></span>
+                </div>
+
+                <div class="ui-table__cell" data-field="borrowedAt"></div>
+                <div class="ui-table__cell" data-field="dueAt"></div>
+
+                <div class="ui-table__cell ui-table__cell--center">
+                    <span class="book-return-result__overdue-badge" data-field="overdueText"></span>
+                </div>
+            </div>
+        </template>
+
+    </section>
+
+</th:block>
+</body>
+</html>

@@ -61,12 +61,13 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     public Page<BorrowRecord> searchByMemberId(Long memberId, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
         BooleanExpression eqMemberId = QuerydslFilterHelper.eq(borrowRecord.member.id, memberId);
+        BooleanExpression isBorrowed = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);
 
         List<BorrowRecord> query = jpaQueryFactory
                 .selectFrom(borrowRecord)
                 .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
                 .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(eqMemberId)
+                .where(eqMemberId, isBorrowed)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(order)
@@ -77,7 +78,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 .from(borrowRecord)
                 .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
                 .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(eqMemberId);
+                .where(eqMemberId, isBorrowed);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }

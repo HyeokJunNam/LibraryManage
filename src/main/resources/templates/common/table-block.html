@@ -12,6 +12,8 @@
                  th:classappend="${tableClass}">
 
                 <div class="ui-table__header">
+                    <div class="ui-table__leading-cell"></div>
+
                     <div class="ui-table__cell"
                          th:each="column : ${columns}"
                          th:text="${column}">
