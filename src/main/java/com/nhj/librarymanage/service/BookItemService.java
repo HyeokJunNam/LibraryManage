@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.model.dto.BookItemRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
+import com.nhj.librarymanage.domain.model.dto.BookItemRequest;
 import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ public class BookItemService {
 
         BookItem bookItem = BookItem.builder()
                 .book(book)
-                .status(create.getStatus())
                 .build();
 
         bookItemRepository.save(bookItem);

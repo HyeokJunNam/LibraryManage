@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder
 @Entity(name = "book_item")
 public class BookItem extends BaseEntity {
 
@@ -27,6 +25,11 @@ public class BookItem extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private BorrowRecord borrowRecord;
 
+    @Builder
+    public BookItem(Book book) {
+        this.book = book;
+        this.status = BookItemStatus.AVAILABLE;
+    }
 
     public void startBorrow(Member member, long borrowDay) {
         LocalDateTime now = LocalDateTime.now();

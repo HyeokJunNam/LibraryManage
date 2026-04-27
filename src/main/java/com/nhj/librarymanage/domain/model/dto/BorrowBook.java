@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.domain.model.vo;
+package com.nhj.librarymanage.domain.model.dto;
 
 public record BorrowBook(
         long bookId,

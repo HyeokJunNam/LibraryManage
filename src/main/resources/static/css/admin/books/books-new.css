@@ -1,0 +1,424 @@
+.page-hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 32px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, #f7fff9 0%, #e7f7ec 55%, #d9f0e0 100%);
+    border: 1px solid var(--green-100);
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+
+.page-hero--book-create::after {
+    content: "ISBN";
+    position: absolute;
+    right: 34px;
+    bottom: -18px;
+    color: rgba(31, 107, 69, 0.08);
+    font-size: 110px;
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.page-hero__content,
+.page-hero__actions {
+    position: relative;
+    z-index: 1;
+}
+
+.page-hero__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-hero__eyebrow {
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--green-700);
+}
+
+.page-hero__title {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--green-800);
+}
+
+.page-hero__desc {
+    margin: 16px 0 0;
+    max-width: 760px;
+    font-size: 16px;
+    color: var(--gray-700);
+    line-height: 1.7;
+}
+
+.page-hero__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+.book-create-layout {
+    display: grid;
+    grid-template-columns: minmax(360px, 4fr) minmax(0, 6fr);
+    gap: 24px;
+    align-items: stretch;
+}
+
+.book-create-left {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.isbn-lookup-card,
+.book-input-card,
+.book-draft-panel {
+    min-width: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.isbn-lookup-card {
+    background:
+            radial-gradient(circle at top right, rgba(47, 158, 91, 0.12), transparent 36%),
+            var(--color-surface);
+}
+
+.isbn-lookup-card__head,
+.book-input-card__head,
+.book-draft-panel__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--gray-100);
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-soft) 100%);
+}
+
+.isbn-lookup-card__eyebrow {
+    margin: 0 0 8px;
+    color: var(--green-700);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+}
+
+.isbn-lookup-card__title,
+.book-input-card__title,
+.book-draft-panel__title {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+}
+
+.isbn-lookup-card__desc,
+.book-input-card__desc,
+.book-draft-panel__desc {
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.isbn-lookup-card__icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    font-size: 23px;
+}
+
+.isbn-lookup-card__body {
+    padding: 22px 28px 24px;
+}
+
+.isbn-lookup-card__control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 132px;
+    gap: 10px;
+}
+
+.isbn-lookup-card__button {
+    min-height: 52px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.book-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px 28px 28px;
+}
+
+.book-required {
+    color: var(--green-700);
+}
+
+.book-help-text {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.book-image-row {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 16px;
+    align-items: stretch;
+    padding: 16px;
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-lg);
+    background:
+            radial-gradient(circle at top left, rgba(47, 158, 91, 0.08), transparent 34%),
+            var(--color-surface-soft);
+}
+
+.book-image-preview {
+    min-height: 170px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--green-100);
+}
+
+.book-image-preview__dummy {
+    height: 100%;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px;
+    background:
+            linear-gradient(160deg, var(--green-600), var(--green-500)),
+            var(--green-500);
+    color: var(--white);
+}
+
+.book-image-preview__mark {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+}
+
+.book-image-preview__text {
+    font-size: 12px;
+    font-weight: 800;
+    opacity: 0.88;
+}
+
+.book-image-row__fields {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.book-field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.book-description {
+    min-height: 132px;
+}
+
+.book-input-form__actions {
+    padding-top: 4px;
+}
+
+.book-input-form__actions .btn {
+    width: 100%;
+}
+
+.book-draft-panel {
+    min-height: 720px;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-draft-panel__summary {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--green-100);
+    border-radius: 999px;
+    background: var(--green-50);
+    color: var(--green-800);
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.book-draft-panel__body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+}
+
+.book-draft-empty {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 24px 64px;
+    text-align: center;
+}
+
+.book-draft-empty__icon {
+    font-size: 42px;
+    line-height: 1;
+}
+
+.book-draft-empty__title {
+    margin: 14px 0 0;
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.book-draft-empty__desc {
+    margin: 8px 0 0;
+    max-width: 380px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.book-draft-table-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-draft-table-block {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+}
+
+.book-draft-table {
+    min-width: 1040px;
+    --table-columns: 240px 170px 130px 140px 110px 72px 84px;
+}
+
+.book-draft-row__remove {
+    height: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--gray-500);
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.book-draft-row__remove:hover {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    border-color: var(--color-danger-line);
+}
+
+.book-draft-panel__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 18px 28px 24px;
+    border-top: 1px solid var(--gray-100);
+    background: var(--color-surface-soft);
+}
+
+@media (max-width: 1280px) {
+    .book-create-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .book-draft-panel {
+        min-height: 560px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-hero {
+        padding: 28px 24px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-hero__title {
+        font-size: 30px;
+    }
+
+    .isbn-lookup-card__head,
+    .book-input-card__head,
+    .book-draft-panel__head {
+        padding: 22px 20px 18px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .isbn-lookup-card__body,
+    .book-input-form {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .isbn-lookup-card__control,
+    .book-field-grid,
+    .book-image-row {
+        grid-template-columns: 1fr;
+    }
+
+    .book-image-preview,
+    .book-image-preview__dummy {
+        min-height: 220px;
+    }
+
+    .book-draft-panel__footer {
+        padding-left: 20px;
+        padding-right: 20px;
+        flex-direction: column-reverse;
+    }
+
+    .book-draft-panel__footer .btn {
+        width: 100%;
+    }
+}

@@ -44,8 +44,8 @@ public class BookController {
 
     @Description(value = "도서 생성")
     @PostMapping("/books")
-    public ResponseEntity<Void> createBook(@RequestBody List<BookRequest.Create> creates) {
-        bookService.createBook(creates);
+    public ResponseEntity<Void> createBook(@RequestBody BookRequest.Create create) {
+        bookService.createBooks(create);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

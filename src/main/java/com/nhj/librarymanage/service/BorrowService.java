@@ -1,17 +1,14 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.code.BookItemStatus;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowResponse;
-import com.nhj.librarymanage.domain.model.event.BookBorrowableEvent;
-import com.nhj.librarymanage.domain.model.vo.BorrowBook;
+import com.nhj.librarymanage.domain.model.dto.BorrowBook;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.NotBorrowableException;
-import com.nhj.librarymanage.error.exception.book.NotReturnableException;
 import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;

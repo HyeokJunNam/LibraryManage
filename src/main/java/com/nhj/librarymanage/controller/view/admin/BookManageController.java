@@ -30,11 +30,11 @@ public class BookManageController {
         return "admin/books/books";
     }
 
-    @Description("회원 정보 조회 화면")
-    @GetMapping("/books/{id}")
-    public String bookDetail(Model model, @PathVariable Long id) {
+    @Description("도서 추가 화면")
+    @GetMapping("/books/new")
+    public String newBook() {
 
-        return null;
+        return "admin/books/books-new";
     }
 
 }

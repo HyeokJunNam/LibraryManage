@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 등록</title>
+
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
+    <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/common/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/common/admin-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/books/books-new.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('books')}"></aside>
+
+    <main class="admin-main">
+
+        <header class="page-hero page-hero--book-create">
+            <div class="page-hero__content">
+                <p class="page-hero__eyebrow">BOOK REGISTRATION</p>
+                <h2 class="page-hero__title">도서 일괄 등록</h2>
+                <p class="page-hero__desc">
+                    ISBN으로 도서 정보를 불러오거나 직접 입력한 뒤, 등록 예정 목록에 추가하여 한 번에 저장할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="page-hero__actions">
+                <a th:href="@{/admin/books}" class="btn btn--ghost">목록으로</a>
+            </div>
+        </header>
+
+        <section class="book-create-layout">
+
+            <section class="book-create-left">
+
+                <section class="isbn-lookup-card">
+                    <div class="isbn-lookup-card__head">
+                        <div>
+                            <p class="isbn-lookup-card__eyebrow">ISBN LOOKUP</p>
+                            <h3 class="isbn-lookup-card__title">ISBN으로 도서 정보 불러오기</h3>
+                            <p class="isbn-lookup-card__desc">
+                                ISBN을 입력하면 외부 도서 정보를 조회해 입력 폼에 채울 수 있습니다.
+                            </p>
+                        </div>
+
+                        <div class="isbn-lookup-card__icon">🔎</div>
+                    </div>
+
+                    <div class="isbn-lookup-card__body">
+                        <div class="field">
+                            <label for="isbnLookupKeyword" class="field__label">조회할 ISBN</label>
+
+                            <div class="isbn-lookup-card__control">
+                                <input
+                                        id="isbnLookupKeyword"
+                                        type="text"
+                                        class="field__control"
+                                        placeholder="예: 9788966260959"
+                                        autocomplete="off">
+
+                                <button
+                                        type="button"
+                                        class="btn btn--primary isbn-lookup-card__button"
+                                        id="lookupBookByIsbnButton">
+                                    정보 불러오기
+                                </button>
+                            </div>
+
+                            <p class="book-help-text">
+                                현재는 더미 데이터로 채워두고, 이후 ISBN 조회 API와 연결하면 됩니다.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="book-input-card">
+                    <div class="book-input-card__head">
+                        <div>
+                            <h3 class="book-input-card__title">도서 정보 입력</h3>
+                            <p class="book-input-card__desc">
+                                등록 예정 목록에 추가할 도서 정보를 확인하거나 직접 입력하세요.
+                            </p>
+                        </div>
+                    </div>
+
+                    <form class="book-input-form" id="bookDraftForm">
+
+                        <div class="book-image-row">
+                            <div class="book-image-preview" id="bookImagePreview">
+                                <div class="book-image-preview__dummy">
+                                    <span class="book-image-preview__mark">BOOK</span>
+                                    <span class="book-image-preview__text">도서 이미지</span>
+                                </div>
+                            </div>
+
+                            <div class="book-image-row__fields">
+                                <div class="field">
+                                    <label for="imageUrl" class="field__label">도서 이미지</label>
+                                    <input
+                                            id="imageUrl"
+                                            name="imageUrl"
+                                            type="text"
+                                            class="field__control"
+                                            placeholder="이미지 URL"
+                                            autocomplete="off">
+                                </div>
+
+                                <p class="book-help-text">
+                                    도서 이미지는 우선 더미로 표시됩니다. ISBN 조회 연동 후 이미지 URL을 자동 입력할 수 있습니다.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="isbn" class="field__label">
+                                ISBN <span class="book-required">*</span>
+                            </label>
+                            <input
+                                    id="isbn"
+                                    name="isbn"
+                                    type="text"
+                                    class="field__control"
+                                    placeholder="등록할 도서의 ISBN"
+                                    autocomplete="off">
+                        </div>
+
+                        <div class="field">
+                            <label for="title" class="field__label">
+                                도서명 <span class="book-required">*</span>
+                            </label>
+                            <input
+                                    id="title"
+                                    name="title"
+                                    type="text"
+                                    class="field__control"
+                                    placeholder="도서명을 입력하세요"
+                                    autocomplete="off">
+                        </div>
+
+                        <div class="book-field-grid">
+                            <div class="field">
+                                <label for="author" class="field__label">
+                                    저자 <span class="book-required">*</span>
+                                </label>
+                                <input
+                                        id="author"
+                                        name="author"
+                                        type="text"
+                                        class="field__control"
+                                        placeholder="저자"
+                                        autocomplete="off">
+                            </div>
+
+                            <div class="field">
+                                <label for="publisher" class="field__label">
+                                    출판사 <span class="book-required">*</span>
+                                </label>
+                                <input
+                                        id="publisher"
+                                        name="publisher"
+                                        type="text"
+                                        class="field__control"
+                                        placeholder="출판사"
+                                        autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="book-field-grid">
+                            <div class="field">
+                                <label for="location" class="field__label">
+                                    보관 위치 <span class="book-required">*</span>
+                                </label>
+                                <input
+                                        id="location"
+                                        name="location"
+                                        type="text"
+                                        class="field__control"
+                                        placeholder="예: A-01"
+                                        autocomplete="off">
+                            </div>
+
+                            <div class="field">
+                                <label for="stockQuantity" class="field__label">
+                                    재고 수량 <span class="book-required">*</span>
+                                </label>
+                                <input
+                                        id="stockQuantity"
+                                        name="stockQuantity"
+                                        type="number"
+                                        class="field__control"
+                                        min="1"
+                                        step="1"
+                                        value="1">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="description" class="field__label">도서 설명</label>
+                            <textarea
+                                    id="description"
+                                    name="description"
+                                    class="field__control book-description"
+                                    placeholder="도서 설명을 입력하세요"></textarea>
+                        </div>
+
+                        <div class="book-input-form__actions">
+                            <button
+                                    type="button"
+                                    class="btn btn--primary btn--xl"
+                                    id="addBookDraftButton">
+                                등록 예정 목록에 추가
+                            </button>
+                        </div>
+
+                    </form>
+                </section>
+
+            </section>
+
+            <section class="book-draft-panel">
+
+                <div class="book-draft-panel__head">
+                    <div>
+                        <h3 class="book-draft-panel__title">등록 될 책 목록</h3>
+                        <p class="book-draft-panel__desc">
+                            왼쪽에서 추가한 도서들을 확인하고 한 번에 저장합니다.
+                        </p>
+                    </div>
+
+                    <div class="book-draft-panel__summary">
+                        <span>총</span>
+                        <strong id="bookDraftCount">0</strong>
+                        <span>권</span>
+                    </div>
+                </div>
+
+                <div class="book-draft-panel__body">
+
+                    <div class="book-draft-empty" id="bookDraftEmpty">
+                        <div class="book-draft-empty__icon">📚</div>
+                        <h4 class="book-draft-empty__title">등록 예정 도서가 없습니다</h4>
+                        <p class="book-draft-empty__desc">
+                            ISBN으로 정보를 불러오거나 직접 입력한 뒤, 왼쪽의 추가 버튼을 눌러주세요.
+                        </p>
+                    </div>
+
+                    <div class="book-draft-table-wrap is-hidden" id="bookDraftTableWrap">
+                        <div class="table-block table-block--reserve-space book-draft-table-block">
+                            <div class="ui-table-wrap">
+                                <div class="ui-table book-draft-table">
+
+                                    <div class="ui-table__header">
+                                        <div class="ui-table__leading-cell">No</div>
+                                        <div class="ui-table__cell">도서명</div>
+                                        <div class="ui-table__cell">ISBN</div>
+                                        <div class="ui-table__cell">저자</div>
+                                        <div class="ui-table__cell">출판사</div>
+                                        <div class="ui-table__cell">위치</div>
+                                        <div class="ui-table__cell ui-table__cell--center">수량</div>
+                                        <div class="ui-table__cell ui-table__cell--center">관리</div>
+                                    </div>
+
+                                    <div id="bookDraftRows"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="book-draft-panel__footer">
+                    <button
+                            type="button"
+                            class="btn btn--ghost"
+                            id="clearBookDraftButton"
+                            disabled>
+                        전체 비우기
+                    </button>
+
+                    <button
+                            type="button"
+                            class="btn btn--primary"
+                            id="saveBookBatchButton"
+                            disabled>
+                        저장
+                    </button>
+                </div>
+
+                <template id="bookDraftRowTemplate">
+                    <div class="ui-table__row book-draft-row">
+                        <div class="ui-table__leading-cell" data-field="index"></div>
+
+                        <div class="ui-table__cell ui-table__cell--primary">
+                            <span class="ui-table__text" data-field="title"></span>
+                        </div>
+
+                        <div class="ui-table__cell ui-table__cell--muted" data-field="isbn"></div>
+                        <div class="ui-table__cell" data-field="author"></div>
+                        <div class="ui-table__cell" data-field="publisher"></div>
+                        <div class="ui-table__cell" data-field="location"></div>
+                        <div class="ui-table__cell ui-table__cell--center" data-field="stockQuantity"></div>
+
+                        <div class="ui-table__cell ui-table__cell--center">
+                            <button
+                                    type="button"
+                                    class="book-draft-row__remove"
+                                    data-role="remove-book-draft">
+                                삭제
+                            </button>
+                        </div>
+                    </div>
+                </template>
+
+            </section>
+
+        </section>
+
+    </main>
+</div>
+<th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
+
+<script th:src="@{/js/common/api.js}"></script>
+<script th:src="@{/js/common/modal-alert.js}"></script>
+<script type="module" th:src="@{/js/admin/books/books-new.js}"></script>
+</body>
+</html>

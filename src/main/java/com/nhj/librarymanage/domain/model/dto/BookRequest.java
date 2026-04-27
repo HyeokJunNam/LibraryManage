@@ -2,6 +2,8 @@ package com.nhj.librarymanage.domain.model.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookRequest {
 
@@ -26,11 +28,7 @@ public class BookRequest {
     @NoArgsConstructor
     @Getter
     public static class Create {
-        private String isbn;
-        private String title;
-        private String author;
-        private String publisher;
-        private String location;
+        private List<BookCreateEntry> bookCreateEntries;
     }
 
     // 수정 요청

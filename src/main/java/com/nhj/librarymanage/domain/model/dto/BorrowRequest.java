@@ -1,6 +1,5 @@
 package com.nhj.librarymanage.domain.model.dto;
 
-import com.nhj.librarymanage.domain.model.vo.BorrowBook;
 import lombok.*;
 
 import java.util.List;
