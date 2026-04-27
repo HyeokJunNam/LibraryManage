@@ -134,6 +134,7 @@
                     <div class="ui-table-wrap">
                         <div class="ui-table books-table">
                             <div class="ui-table__header">
+                                <div class="ui-table__leading-cell"></div>
                                 <div class="ui-table__cell">도서명</div>
                                 <div class="ui-table__cell">ISBN</div>
                                 <div class="ui-table__cell">저자</div>
@@ -144,6 +145,8 @@
                             <div th:each="book : ${books.content}"
                                  class="ui-table__row ui-table__row--clickable"
                                  th:attr="data-book-url=@{/admin/books/{id}(id=${book.id})}, tabindex=0, role='link', aria-label=${book.title + ' 상세 정보 보기'}">
+                                <div class="ui-table__leading-cell"></div>
+
                                 <div class="ui-table__cell ui-table__cell--primary">
                                     <span class="ui-table__text" th:text="${book.title}">도서명</span>
                                 </div>

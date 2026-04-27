@@ -21,7 +21,6 @@
 
     <main class="admin-main">
 
-        <!-- HERO -->
         <header class="page-hero">
             <div class="page-hero__content">
                 <p class="page-hero__eyebrow">MEMBER MANAGEMENT</p>
@@ -36,7 +35,6 @@
             </div>
         </header>
 
-        <!-- SUMMARY -->
         <section class="summary-grid">
 
             <article class="summary-card">
@@ -77,7 +75,6 @@
 
         </section>
 
-        <!-- FILTER -->
         <section class="filter-panel">
             <form th:action="@{/admin/members}" method="get" class="filter-form">
 
@@ -152,7 +149,6 @@
             </form>
         </section>
 
-        <!-- TABLE CARD -->
         <section class="members-table-card">
 
             <div class="members-table-card__head">
@@ -170,7 +166,6 @@
                 </div>
             </div>
 
-            <!-- EMPTY -->
             <div
                     th:if="${members == null or members.content == null or #lists.isEmpty(members.content)}"
                     class="empty-block">
@@ -181,7 +176,6 @@
                 </div>
             </div>
 
-            <!-- TABLE -->
             <div
                     th:if="${members != null and members.content != null and !#lists.isEmpty(members.content)}"
                     class="members-table-card__body">
@@ -193,6 +187,7 @@
                         <div class="ui-table members-table">
 
                             <div class="ui-table__header">
+                                <div class="ui-table__leading-cell"></div>
                                 <div class="ui-table__cell">이름</div>
                                 <div class="ui-table__cell">이메일</div>
                                 <div class="ui-table__cell">연락처</div>
@@ -207,6 +202,8 @@
                                     tabindex=0,
                                     role='link',
                                     aria-label=${member.name + ' 상세 정보 보기'}">
+
+                                <div class="ui-table__leading-cell"></div>
 
                                 <div class="ui-table__cell ui-table__cell--primary">
                                     <span class="ui-table__text"
