@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.domain.model.dto;
 
-public record BorrowBook(
+// TODO 네이밍?...
+public record BorrowBookEntry(
         long bookId,
         long quantity
 

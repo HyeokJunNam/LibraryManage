@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+import static com.nhj.librarymanage.domain.entity.QBook.book;
 import static com.nhj.librarymanage.domain.entity.QBookItem.bookItem;
 import static com.nhj.librarymanage.domain.entity.QBorrowRecord.borrowRecord;
 import static com.nhj.librarymanage.domain.entity.QMember.member;
@@ -61,13 +62,13 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     public Page<BorrowRecord> searchByMemberId(Long memberId, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
         BooleanExpression eqMemberId = QuerydslFilterHelper.eq(borrowRecord.member.id, memberId);
-        BooleanExpression isBorrowed = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);
+        BooleanExpression notReturned = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);
 
         List<BorrowRecord> query = jpaQueryFactory
                 .selectFrom(borrowRecord)
                 .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
                 .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(eqMemberId, isBorrowed)
+                .where(eqMemberId, notReturned)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(order)
@@ -78,7 +79,28 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 .from(borrowRecord)
                 .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
                 .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(eqMemberId, isBorrowed);
+                .where(eqMemberId, notReturned);
+
+        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<BorrowRecord> searchByBookId(Long bookId, Pageable pageable) {
+        OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
+        BooleanExpression eqBookId = QuerydslFilterHelper.eq(borrowRecord.bookitem.book.id, bookId);
+
+        List<BorrowRecord> query = jpaQueryFactory
+                .selectFrom(borrowRecord)
+                .where(eqBookId)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(order)
+                .fetch();
+
+        JPAQuery<Long> countQuery = jpaQueryFactory
+                .select(borrowRecord.id.count())
+                .from(borrowRecord)
+                .where(eqBookId);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }

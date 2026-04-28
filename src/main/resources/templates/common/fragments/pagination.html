@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="pagination(pageMetadata)">
+
+    <div class="pagination"
+         th:if="${pageMetadata != null and pageMetadata.totalPages > 1}">
+
+        <button
+                type="button"
+                class="pagination__button"
+                th:classappend="${pageMetadata.first} ? ' pagination__button--disabled' : ''"
+                th:disabled="${pageMetadata.first}"
+                th:data-page="${pageMetadata.page - 1}">
+            이전
+        </button>
+
+        <button
+                type="button"
+                class="pagination__number"
+                th:each="pageNumber : ${#numbers.sequence(0, pageMetadata.totalPages - 1)}"
+                th:classappend="${pageNumber == pageMetadata.page} ? ' pagination__number--active' : ''"
+                th:data-page="${pageNumber}"
+                th:text="${pageNumber + 1}">
+            1
+        </button>
+
+        <button
+                type="button"
+                class="pagination__button"
+                th:classappend="${pageMetadata.last} ? ' pagination__button--disabled' : ''"
+                th:disabled="${pageMetadata.last}"
+                th:data-page="${pageMetadata.page + 1}">
+            다음
+        </button>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

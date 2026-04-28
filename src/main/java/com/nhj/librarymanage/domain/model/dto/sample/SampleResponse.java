@@ -9,12 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SampleResponse {
 
-    @AllArgsConstructor
-    @Getter
-    public static class QueryResult {
-
-    }
-
     // Service → Controller
     @AllArgsConstructor
     @Getter
@@ -25,12 +19,6 @@ public class SampleResponse {
     @AllArgsConstructor
     @Getter
     public static class Detail {
-
-    }
-
-    @AllArgsConstructor
-    @Getter
-    public static class Created {
 
     }
 

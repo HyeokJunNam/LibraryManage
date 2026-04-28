@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 상세</title>
+
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/books/books-detail.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('books')}"></aside>
+
+    <main class="admin-main">
+
+        <header class="page-hero page-hero--book-detail">
+            <div class="page-hero__content">
+                <p class="page-hero__eyebrow">BOOK DETAIL</p>
+
+                <h2 class="page-hero__title"
+                    th:text="${book.title}">
+                    도서 상세
+                </h2>
+
+                <p class="page-hero__desc">
+                    도서 기본 정보와 현재 대출 현황을 확인할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="page-hero__actions">
+                <a th:href="@{/admin/books}" class="btn btn--ghost">목록으로</a>
+            </div>
+        </header>
+
+        <section class="book-detail-layout">
+
+            <section class="book-detail-info-card">
+
+                <div class="book-detail-info-card__head">
+                    <div>
+                        <h3 class="book-detail-info-card__title">도서 정보</h3>
+                        <p class="book-detail-info-card__desc">
+                            등록된 도서의 기본 정보와 재고 정보를 확인합니다.
+                        </p>
+                    </div>
+
+                    <span class="book-detail-info-card__badge">BOOK</span>
+                </div>
+
+                <div class="book-detail-info-card__body">
+
+                    <div class="book-profile">
+                        <div class="book-profile__cover">
+                            <img
+                                    th:if="${book.thumbnailUrl != null and !#strings.isEmpty(book.thumbnailUrl)}"
+                                    th:src="${book.thumbnailUrl}"
+                                    th:alt="${book.title}"
+                                    class="book-profile__image">
+
+                            <div
+                                    th:unless="${book.thumbnailUrl != null and !#strings.isEmpty(book.thumbnailUrl)}"
+                                    class="book-profile__dummy">
+                                <span class="book-profile__dummy-mark">BOOK</span>
+                                <span class="book-profile__dummy-text">도서 이미지</span>
+                            </div>
+                        </div>
+
+                        <div class="book-profile__main">
+                            <p class="book-profile__eyebrow">TITLE</p>
+
+                            <h3 class="book-profile__title"
+                                th:text="${book.title}">
+                                클린 코드
+                            </h3>
+
+                            <p class="book-profile__meta">
+                                <span th:text="${book.author != null ? book.author : '-'}">저자</span>
+                                <span class="book-profile__dot">·</span>
+                                <span th:text="${book.publisher != null ? book.publisher : '-'}">출판사</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="book-stock-summary">
+                        <article class="book-stock-summary__item">
+                            <span class="book-stock-summary__label">전체 재고</span>
+                            <strong class="book-stock-summary__value"
+                                    th:text="${book.stockQuantity}">
+                                0
+                            </strong>
+                        </article>
+
+                        <article class="book-stock-summary__item">
+                            <span class="book-stock-summary__label">대출 중</span>
+                            <strong class="book-stock-summary__value"
+                                    th:text="${book.borrowedQuantity}">
+                                0
+                            </strong>
+                        </article>
+
+                        <article class="book-stock-summary__item">
+                            <span class="book-stock-summary__label">대출 가능</span>
+                            <strong class="book-stock-summary__value book-stock-summary__value--available"
+                                    th:text="${book.availableQuantity}">
+                                0
+                            </strong>
+                        </article>
+                    </div>
+
+                    <div class="book-info-list">
+
+                        <div class="book-info-list__row">
+                            <span class="book-info-list__label">ISBN</span>
+                            <strong class="book-info-list__value"
+                                    th:text="${book.isbn != null ? book.isbn : '-'}">
+                                9788966260959
+                            </strong>
+                        </div>
+
+                        <div class="book-info-list__row">
+                            <span class="book-info-list__label">저자</span>
+                            <strong class="book-info-list__value"
+                                    th:text="${book.author != null ? book.author : '-'}">
+                                로버트 C. 마틴
+                            </strong>
+                        </div>
+
+                        <div class="book-info-list__row">
+                            <span class="book-info-list__label">출판사</span>
+                            <strong class="book-info-list__value"
+                                    th:text="${book.publisher != null ? book.publisher : '-'}">
+                                인사이트
+                            </strong>
+                        </div>
+
+                        <div class="book-info-list__row">
+                            <span class="book-info-list__label">보관 위치</span>
+                            <strong class="book-info-list__value"
+                                    th:text="${book.location != null ? book.location : '-'}">
+                                A-01
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <section class="book-description-box">
+                        <h4 class="book-description-box__title">도서 설명</h4>
+
+                        <p class="book-description-box__content"
+                           th:text="${book.description != null and !#strings.isEmpty(book.description)
+                           ? book.description
+                           : '등록된 도서 설명이 없습니다.'}">
+                            등록된 도서 설명이 없습니다.
+                        </p>
+                    </section>
+
+                </div>
+
+            </section>
+
+            <section
+                    class="book-borrow-area"
+                    id="bookBorrowArea"
+                    th:data-borrows-url="@{/admin/books/{bookId}/borrows(bookId=${book.id})}">
+
+                <section class="book-borrow-card">
+                    <div class="book-borrow-card__head">
+                        <div>
+                            <h3 class="book-borrow-card__title">대출 현황</h3>
+                            <p class="book-borrow-card__desc">
+                                대출 현황을 불러오는 중입니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="book-borrow-loading">
+                        <div class="book-borrow-loading__icon">⏳</div>
+                        <h4 class="book-borrow-loading__title">대출 현황을 불러오고 있습니다</h4>
+                    </div>
+                </section>
+
+            </section>
+
+        </section>
+
+    </main>
+</div>
+
+<script type="module" th:src="@{/js/admin/books/books-detail.js}"></script>
+</body>
+</html>

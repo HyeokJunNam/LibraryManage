@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리</title>
-    <link rel="stylesheet" th:href="@{/css/common/common.css}">
-    <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/common/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/common/admin-layout.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/common/summary-card.css}">
+
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/books/books.css}">
 </head>
 <body>
@@ -93,10 +90,22 @@
                 <div class="filter-form__group">
                     <label for="sort" class="filter-form__label">정렬</label>
                     <select id="sort" name="sort" class="filter-form__select">
-                        <option value="latest" th:selected="${param.sort == null or param.sort[0] == 'latest'}">최신 등록순</option>
-                        <option value="title" th:selected="${param.sort != null and param.sort[0] == 'title'}">도서명순</option>
-                        <option value="author" th:selected="${param.sort != null and param.sort[0] == 'author'}">저자순</option>
-                        <option value="oldest" th:selected="${param.sort != null and param.sort[0] == 'oldest'}">오래된 등록순</option>
+                        <option value="latest"
+                                th:selected="${param.sort == null or param.sort[0] == 'latest'}">
+                            최신 등록순
+                        </option>
+                        <option value="title"
+                                th:selected="${param.sort != null and param.sort[0] == 'title'}">
+                            도서명순
+                        </option>
+                        <option value="author"
+                                th:selected="${param.sort != null and param.sort[0] == 'author'}">
+                            저자순
+                        </option>
+                        <option value="oldest"
+                                th:selected="${param.sort != null and param.sort[0] == 'oldest'}">
+                            오래된 등록순
+                        </option>
                     </select>
                 </div>
 
@@ -116,20 +125,27 @@
 
                 <div class="books-table-card__summary">
                     <span>총</span>
-                    <strong th:text="${books != null ? books.totalElements : 0}">0</strong>
+                    <strong th:text="${bookPageContent != null ? bookPageContent.pageMetadata.totalElements : 0}">
+                        0
+                    </strong>
                     <span>권</span>
                 </div>
             </div>
 
-            <div th:if="${books == null or books.content == null or #lists.isEmpty(books.content)}"
+            <div th:if="${bookPageContent == null
+                    or bookPageContent.content == null
+                    or #lists.isEmpty(bookPageContent.content)}"
                  class="empty-block">
                 <div class="empty-block__icon">📚</div>
                 <div class="empty-block__title">조회된 도서가 없습니다.</div>
                 <div class="empty-block__desc">검색 조건을 변경해서 다시 시도해보세요.</div>
             </div>
 
-            <div th:if="${books != null and books.content != null and !#lists.isEmpty(books.content)}"
+            <div th:if="${bookPageContent != null
+                    and bookPageContent.content != null
+                    and !#lists.isEmpty(bookPageContent.content)}"
                  class="books-table-card__body">
+
                 <div class="table-block books-table-block">
                     <div class="ui-table-wrap">
                         <div class="ui-table books-table">
@@ -142,13 +158,20 @@
                                 <div class="ui-table__cell">보관 위치</div>
                             </div>
 
-                            <div th:each="book : ${books.content}"
+                            <div th:each="book : ${bookPageContent.content}"
                                  class="ui-table__row ui-table__row--clickable"
-                                 th:attr="data-book-url=@{/admin/books/{id}(id=${book.id})}, tabindex=0, role='link', aria-label=${book.title + ' 상세 정보 보기'}">
+                                 th:attr="data-book-url=@{/admin/books/{id}(id=${book.id})},
+                                 tabindex=0,
+                                 role='link',
+                                 aria-label=${book.title + ' 상세 정보 보기'}">
+
                                 <div class="ui-table__leading-cell"></div>
 
                                 <div class="ui-table__cell ui-table__cell--primary">
-                                    <span class="ui-table__text" th:text="${book.title}">도서명</span>
+                                    <span class="ui-table__text"
+                                          th:text="${book.title}">
+                                        도서명
+                                    </span>
                                 </div>
 
                                 <div class="ui-table__cell"
@@ -174,14 +197,12 @@
                         </div>
                     </div>
 
-                    <div class="table-block__pagination">
-                        <div
-                                id="pagination"
-                                data-pagination
-                                th:data-current-page="${books.number}"
-                                th:data-total-pages="${books.totalPages}"
-                                data-base-url="/admin/books">
-                        </div>
+                    <div class="table-block__pagination"
+                         data-pagination-mode="link"
+                         data-base-url="/admin/books"
+                         th:data-page-size="${bookPageContent.pageMetadata.size}">
+
+                        <th:block th:replace="~{common/fragments/pagination :: pagination(${bookPageContent.pageMetadata})}"></th:block>
                     </div>
                 </div>
             </div>
@@ -213,6 +234,5 @@
         });
     });
 </script>
-<script type="module" th:src="@{/js/common/pagination.js}"></script>
 </body>
 </html>

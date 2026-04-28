@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="ajaxError">
+
+    <section class="ajax-error-card">
+        <div class="ajax-error-card__icon">⚠️</div>
+
+        <h4 class="ajax-error-card__title"
+            th:text="${errorTitle != null ? errorTitle : '요청 처리 중 오류가 발생했습니다'}">
+            요청 처리 중 오류가 발생했습니다
+        </h4>
+
+        <p class="ajax-error-card__desc"
+           th:text="${errorMessage != null ? errorMessage : '잠시 후 다시 시도해 주세요.'}">
+            잠시 후 다시 시도해 주세요.
+        </p>
+    </section>
+
+</th:block>
+</body>
+</html>

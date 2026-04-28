@@ -1,11 +1,8 @@
-package com.nhj.librarymanage.domain.model.dto;
+package com.nhj.librarymanage.domain.model;
 
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
-public record PageResponse<T>(
-        List<T> content,
+public record PageMetadata(
         int page,
         int size,
         long totalElements,
@@ -13,9 +10,8 @@ public record PageResponse<T>(
         boolean first,
         boolean last
 ) {
-    public static <T> PageResponse<T> from(Page<T> page) {
-        return new PageResponse<>(
-                page.getContent(),
+    public static PageMetadata from(Page<?> page) {
+        return new PageMetadata(
                 page.getNumber(),
                 page.getSize(),
                 page.getTotalElements(),

@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.domain;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.nhj.librarymanage.domain.model.dto.PageResponse;
+import com.nhj.librarymanage.domain.model.PageContent;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
@@ -27,7 +27,7 @@ public class ApiResponse {
     }
 
     public static <T> ApiResponse result(Page<T> result) {
-        return new ApiResponse(null, null, PageResponse.from(result));
+        return new ApiResponse(null, null, PageContent.from(result));
     }
 
     public static Builder code(String code) {

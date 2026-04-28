@@ -16,6 +16,13 @@ public class SampleRequest {
 
     }
 
+    // 검색 요청
+    @AllArgsConstructor
+    @Getter
+    public static class SearchCondition {
+
+    }
+
     // 생성 요청
     @AllArgsConstructor
     @Getter
@@ -23,12 +30,6 @@ public class SampleRequest {
 
     }
 
-    // 조회 요청
-    @AllArgsConstructor
-    @Getter
-    public static class Read {
-
-    }
 
     // 수정 요청
     @AllArgsConstructor

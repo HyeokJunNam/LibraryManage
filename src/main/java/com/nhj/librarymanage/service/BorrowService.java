@@ -4,9 +4,8 @@ import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.entity.Member;
+import com.nhj.librarymanage.domain.model.dto.BorrowBookEntry;
 import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
-import com.nhj.librarymanage.domain.model.dto.BorrowResponse;
-import com.nhj.librarymanage.domain.model.dto.BorrowBook;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.NotBorrowableException;
 import com.nhj.librarymanage.repository.BookItemRepository;
@@ -15,12 +14,11 @@ import com.nhj.librarymanage.repository.BorrowRecordRepository;
 import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -36,34 +34,17 @@ public class BorrowService {
 
     private static final long BORROW_DAY = 7;
 
-    @Transactional
-    public Page<BorrowResponse.Info> getBorrowHistory(BorrowRequest.Param param, Pageable pageable) {
-        boolean onlyBorrowed = param.isBorrowed();
-        BorrowRequest.SearchCondition searchCondition = BorrowRequest.SearchCondition.of(onlyBorrowed);
-
-        Page<BorrowRecord> borrows = borrowRecordRepository.search(searchCondition, pageable);
-
-        return borrows.map(BorrowResponse.Info::toDto);
-    }
-
-    @Transactional
-    public Page<BorrowResponse.Info> getMemberBorrowHistory(Long memberId, Pageable pageable) {
-        Page<BorrowRecord> borrows = borrowRecordRepository.searchByMemberId(memberId, pageable);
-
-        return borrows.map(BorrowResponse.Info::toDto);
-    }
-
 
     // TODO LOCK 처리
     @Transactional
     public void borrow(BorrowRequest.Borrow borrow) {
-         List<Long> bookIds = borrow.getBorrowBooks().stream().map(BorrowBook::bookId).toList();
+         List<Long> bookIds = borrow.getBorrowBookEntries().stream().map(BorrowBookEntry::bookId).toList();
         List<Book> books = bookRepository.findBorrowableBook(bookIds);
 
-        Map<Long, Long> borrowRequestMap = borrow.getBorrowBooks().stream()
+        Map<Long, Long> borrowRequestMap = borrow.getBorrowBookEntries().stream()
                 .collect(Collectors.toMap(
-                        BorrowBook::bookId,
-                        BorrowBook::quantity,
+                        BorrowBookEntry::bookId,
+                        BorrowBookEntry::quantity,
                         Long::sum
                 ));
 

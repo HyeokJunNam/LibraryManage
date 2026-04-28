@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 등록</title>
 
-    <link rel="stylesheet" th:href="@{/css/common/common.css}">
-    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
-    <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/common/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/common/admin-layout.css}">
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/books/books-new.css}">
 </head>
 <body>
@@ -323,8 +319,6 @@
 </div>
 <th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
 
-<script th:src="@{/js/common/api.js}"></script>
-<script th:src="@{/js/common/modal-alert.js}"></script>
 <script type="module" th:src="@{/js/admin/books/books-new.js}"></script>
 </body>
 </html>

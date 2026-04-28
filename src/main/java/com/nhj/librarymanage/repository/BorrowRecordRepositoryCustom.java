@@ -11,4 +11,6 @@ public interface BorrowRecordRepositoryCustom {
 
     Page<BorrowRecord> searchByMemberId(Long memberId, Pageable pageable);
 
+    Page<BorrowRecord> searchByBookId(Long bookId, Pageable pageable);
+
 }

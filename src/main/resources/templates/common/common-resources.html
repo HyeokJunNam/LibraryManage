@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="commonStyles">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
+    <link rel="stylesheet" th:href="@{/css/common/pagination.css}">
+    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
+</head>
+
+<body>
+<div th:fragment="commonScripts">
+    <script th:src="@{/js/common/api.js}"></script>
+    <script th:src="@{/js/common/modal-alert.js}"></script>
+    <script type="module" th:src="@{/js/common/pagination.js}"></script>
+</div>
+</body>
+
+</html>

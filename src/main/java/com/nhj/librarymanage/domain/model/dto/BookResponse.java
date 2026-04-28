@@ -5,34 +5,44 @@ import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookResponse {
 
     @Builder(access = AccessLevel.PRIVATE)
-    public record Detail(
-            Long id,
-            String isbn,
-            String title,
-            String author,
-            String publisher,
-            String description,
-            String location,
-            String thumbnailUrl,
-            int availableCount,
-            boolean canBorrow
-    ) {
+    @Getter
+    public static class Detail {
+        private Long id;
+        private String isbn;
+        private String title;
+        private String author;
+        private String publisher;
+        private String location;
+        private String description;
+        private String thumbnailUrl;
+
+        private int stockQuantity;
+        private int borrowedQuantity;
+        private int availableQuantity;
+
         public static Detail from(Book book) {
-            int availableCount = 0;
+            int stockQuantity = 0;
+            int borrowedQuantity = 0;
+            int availableQuantity = 0;
 
             for (BookItem bookItem : book.getBookItems()) {
-                if (bookItem.getStatus() == BookItemStatus.AVAILABLE && bookItem.getBorrowRecord() == null) {
-                    availableCount++;
+                stockQuantity++;
+                if (bookItem.getStatus() == BookItemStatus.AVAILABLE) {
+                    if (bookItem.getBorrowRecord() != null) {
+                        borrowedQuantity++;
+                    }
+                    else {
+                        availableQuantity++;
+                    }
                 }
             }
-
-            boolean canBorrow = availableCount >= 1;
 
             return Detail.builder()
                     .id(book.getId())
@@ -43,13 +53,15 @@ public class BookResponse {
                     .description(book.getDescription())
                     .location(book.getLocation())
                     .thumbnailUrl(book.getThumbnailUrl())
-                    .availableCount(availableCount)
-                    .canBorrow(canBorrow)
+                    .stockQuantity(stockQuantity)
+                    .borrowedQuantity(borrowedQuantity)
+                    .availableQuantity(availableQuantity)
                     .build();
+
         }
     }
 
-    public record Info(
+    public record Summary(
             Long id,
             String isbn,
             String title,
@@ -59,7 +71,7 @@ public class BookResponse {
             int stockQuantity,
             int availableQuantity
     ) {
-        public static Info from(Book book) {
+        public static Summary from(Book book) {
             int availableQuantity = 0;
             int stockQuantity = 0;
 
@@ -71,7 +83,7 @@ public class BookResponse {
                 }
             }
 
-            return new Info(
+            return new Summary(
                     book.getId(),
                     book.getIsbn(),
                     book.getTitle(),

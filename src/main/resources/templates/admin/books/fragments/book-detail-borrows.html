@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="bookBorrows">
+
+    <section class="book-borrow-card">
+
+        <div class="book-borrow-card__head">
+            <div>
+                <h3 class="book-borrow-card__title">대출 현황</h3>
+                <p class="book-borrow-card__desc">
+                    이 도서의 재고별 대출 상태와 반납 여부를 확인합니다.
+                </p>
+            </div>
+
+            <div class="book-borrow-card__summary">
+                <span>총</span>
+                <strong th:text="${borrowPageContent != null ? borrowPageContent.pageMetadata.totalElements : 0}">
+                    0
+                </strong>
+                <span>건</span>
+            </div>
+        </div>
+
+        <div
+                th:if="${borrowPageContent == null
+                or borrowPageContent.content == null
+                or #lists.isEmpty(borrowPageContent.content)}"
+                class="book-borrow-empty">
+            <div class="book-borrow-empty__icon">📖</div>
+            <h4 class="book-borrow-empty__title">대출 이력이 없습니다</h4>
+            <p class="book-borrow-empty__desc">
+                아직 이 도서로 등록된 대출 기록이 없습니다.
+            </p>
+        </div>
+
+        <div
+                th:if="${borrowPageContent != null
+                and borrowPageContent.content != null
+                and !#lists.isEmpty(borrowPageContent.content)}"
+                class="book-borrow-card__body">
+
+            <div class="table-block table-block--reserve-space book-borrow-table-block">
+                <div class="ui-table-wrap">
+                    <div class="ui-table book-borrow-table">
+
+                        <div class="ui-table__header">
+                            <div class="ui-table__leading-cell">No</div>
+                            <div class="ui-table__cell">대출 ID</div>
+                            <div class="ui-table__cell">재고 ID</div>
+                            <div class="ui-table__cell">회원명</div>
+                            <div class="ui-table__cell">대출일</div>
+                            <div class="ui-table__cell">반납 예정일</div>
+                            <div class="ui-table__cell">반납일</div>
+                            <div class="ui-table__cell ui-table__cell--center">상태</div>
+                        </div>
+
+                        <div>
+                            <div
+                                    th:each="borrowRecord, stat : ${borrowPageContent.content}"
+                                    class="ui-table__row book-borrow-table__row">
+
+                                <div
+                                        class="ui-table__leading-cell"
+                                        th:text="${borrowPageContent.pageMetadata.page * borrowPageContent.pageMetadata.size + stat.index + 1}">
+                                    1
+                                </div>
+
+                                <div
+                                        class="ui-table__cell"
+                                        th:text="${borrowRecord.borrowRecordId}">
+                                    18
+                                </div>
+
+                                <div
+                                        class="ui-table__cell"
+                                        th:text="${borrowRecord.bookItemId}">
+                                    7
+                                </div>
+
+                                <div class="ui-table__cell ui-table__cell--primary">
+                                    <span
+                                            class="ui-table__text"
+                                            th:text="${borrowRecord.memberName != null ? borrowRecord.memberName : '-'}">
+                                        남혁준
+                                    </span>
+                                </div>
+
+                                <div
+                                        class="ui-table__cell"
+                                        th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">
+                                    2026-04-28
+                                </div>
+
+                                <div
+                                        class="ui-table__cell"
+                                        th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">
+                                    2026-05-05
+                                </div>
+
+                                <div
+                                        class="ui-table__cell"
+                                        th:text="${borrowRecord.returnedAt != null ? #temporals.format(borrowRecord.returnedAt, 'yyyy-MM-dd') : '-'}">
+                                    -
+                                </div>
+
+                                <div class="ui-table__cell ui-table__cell--center">
+                                    <span
+                                            class="borrow-status-badge"
+                                            th:classappend="${borrowRecord.returnedAt != null}
+                                            ? ' borrow-status-badge--returned'
+                                            : (${borrowRecord.dueAt != null and borrowRecord.dueAt.isBefore(T(java.time.LocalDateTime).now())}
+                                                ? ' borrow-status-badge--overdue'
+                                                : ' borrow-status-badge--borrowed')"
+                                            th:text="${borrowRecord.returnedAt != null}
+                                            ? '반납완료'
+                                            : (${borrowRecord.dueAt != null and borrowRecord.dueAt.isBefore(T(java.time.LocalDateTime).now())}
+                                                ? '연체'
+                                                : '대출중')">
+                                        대출중
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div
+                    class="book-borrow-pagination"
+                    th:if="${borrowPageContent.pageMetadata.totalPages > 1}">
+
+                <button
+                        type="button"
+                        class="book-borrow-pagination__button"
+                        th:classappend="${borrowPageContent.pageMetadata.first} ? ' is-disabled' : ''"
+                        th:disabled="${borrowPageContent.pageMetadata.first}"
+                        th:data-page="${borrowPageContent.pageMetadata.page - 1}">
+                    이전
+                </button>
+
+                <button
+                        type="button"
+                        class="book-borrow-pagination__number"
+                        th:each="pageNumber : ${#numbers.sequence(0, borrowPageContent.pageMetadata.totalPages - 1)}"
+                        th:classappend="${pageNumber == borrowPageContent.pageMetadata.page} ? ' is-active' : ''"
+                        th:data-page="${pageNumber}"
+                        th:text="${pageNumber + 1}">
+                    1
+                </button>
+
+                <button
+                        type="button"
+                        class="book-borrow-pagination__button"
+                        th:classappend="${borrowPageContent.pageMetadata.last} ? ' is-disabled' : ''"
+                        th:disabled="${borrowPageContent.pageMetadata.last}"
+                        th:data-page="${borrowPageContent.pageMetadata.page + 1}">
+                    다음
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</th:block>
+</body>
+</html>
