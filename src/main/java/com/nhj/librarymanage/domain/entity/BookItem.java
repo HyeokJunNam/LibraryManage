@@ -19,6 +19,8 @@ public class BookItem extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
+    private String location;
+
     @Enumerated(EnumType.STRING)
     private BookItemStatus status;
 
@@ -26,9 +28,15 @@ public class BookItem extends BaseEntity {
     private BorrowRecord borrowRecord;
 
     @Builder
-    public BookItem(Book book) {
+    public BookItem(Book book, BookItemStatus status, String location) {
         this.book = book;
-        this.status = BookItemStatus.AVAILABLE;
+        this.status = status;
+        this.location = location;
+    }
+
+    public void update(BookItemStatus status, String location) {
+        this.status = status;
+        this.location = location;
     }
 
     public void startBorrow(Member member, long borrowDay) {

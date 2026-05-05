@@ -41,7 +41,6 @@ public class BookService {
     @Transactional
     public void createBooks(BookRequest.Create create) {
         List<Book> books = new ArrayList<>();
-        List<BookItem> bookItems = new ArrayList<>();
 
         for (BookCreateEntry entry : create.getBookCreateEntries()) {
         Book book = Book.builder()
@@ -49,26 +48,14 @@ public class BookService {
                 .title(entry.getTitle())
                 .author(entry.getAuthor())
                 .publisher(entry.getPublisher())
-                .location(entry.getLocation())
                 .description(entry.getDescription())
                 .thumbnailUrl(entry.getThumbnailUrl())
                 .build();
 
             books.add(book);
-
-            int quantity = entry.getStockQuantity();
-            while (quantity > 0)  {
-                BookItem bookItem = BookItem.builder()
-                        .book(book)
-                        .build();
-
-                bookItems.add(bookItem);
-                quantity--;
-            }
         }
 
         bookRepository.saveAll(books);
-        bookItemRepository.saveAll(bookItems);
     }
 
     @Transactional

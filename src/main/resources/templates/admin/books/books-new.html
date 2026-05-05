@@ -17,7 +17,7 @@
         <header class="page-hero page-hero--book-create">
             <div class="page-hero__content">
                 <p class="page-hero__eyebrow">BOOK REGISTRATION</p>
-                <h2 class="page-hero__title">도서 일괄 등록</h2>
+                <h2 class="page-hero__title">도서 등록</h2>
                 <p class="page-hero__desc">
                     ISBN으로 도서 정보를 불러오거나 직접 입력한 뒤, 등록 예정 목록에 추가하여 한 번에 저장할 수 있습니다.
                 </p>
@@ -64,10 +64,6 @@
                                     정보 불러오기
                                 </button>
                             </div>
-
-                            <p class="book-help-text">
-                                현재는 더미 데이터로 채워두고, 이후 ISBN 조회 API와 연결하면 됩니다.
-                            </p>
                         </div>
                     </div>
                 </section>
@@ -164,35 +160,6 @@
                             </div>
                         </div>
 
-                        <div class="book-field-grid">
-                            <div class="field">
-                                <label for="location" class="field__label">
-                                    보관 위치 <span class="book-required">*</span>
-                                </label>
-                                <input
-                                        id="location"
-                                        name="location"
-                                        type="text"
-                                        class="field__control"
-                                        placeholder="예: A-01"
-                                        autocomplete="off">
-                            </div>
-
-                            <div class="field">
-                                <label for="stockQuantity" class="field__label">
-                                    재고 수량 <span class="book-required">*</span>
-                                </label>
-                                <input
-                                        id="stockQuantity"
-                                        name="stockQuantity"
-                                        type="number"
-                                        class="field__control"
-                                        min="1"
-                                        step="1"
-                                        value="1">
-                            </div>
-                        </div>
-
                         <div class="field">
                             <label for="description" class="field__label">도서 설명</label>
                             <textarea
@@ -239,7 +206,7 @@
                         <div class="book-draft-empty__icon">📚</div>
                         <h4 class="book-draft-empty__title">등록 예정 도서가 없습니다</h4>
                         <p class="book-draft-empty__desc">
-                            ISBN으로 정보를 불러오거나 직접 입력한 뒤, 왼쪽의 추가 버튼을 눌러주세요.
+                            ISBN으로 정보를 불러오거나 직접 입력한 뒤, 왼쪽의 등록 예정 목록에 추가 버튼을 눌러주세요.
                         </p>
                     </div>
 
@@ -254,8 +221,6 @@
                                         <div class="ui-table__cell">ISBN</div>
                                         <div class="ui-table__cell">저자</div>
                                         <div class="ui-table__cell">출판사</div>
-                                        <div class="ui-table__cell">위치</div>
-                                        <div class="ui-table__cell ui-table__cell--center">수량</div>
                                         <div class="ui-table__cell ui-table__cell--center">관리</div>
                                     </div>
 
@@ -297,8 +262,6 @@
                         <div class="ui-table__cell ui-table__cell--muted" data-field="isbn"></div>
                         <div class="ui-table__cell" data-field="author"></div>
                         <div class="ui-table__cell" data-field="publisher"></div>
-                        <div class="ui-table__cell" data-field="location"></div>
-                        <div class="ui-table__cell ui-table__cell--center" data-field="stockQuantity"></div>
 
                         <div class="ui-table__cell ui-table__cell--center">
                             <button

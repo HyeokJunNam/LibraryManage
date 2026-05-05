@@ -1,6 +1,5 @@
 package com.nhj.librarymanage.controller;
 
-import com.nhj.librarymanage.service.test.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    private final TestService testService;
 
     @PostMapping("/test")
     public void test() {

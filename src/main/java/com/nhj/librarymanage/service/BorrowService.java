@@ -38,10 +38,10 @@ public class BorrowService {
     // TODO LOCK 처리
     @Transactional
     public void borrow(BorrowRequest.Borrow borrow) {
-         List<Long> bookIds = borrow.getBorrowBookEntries().stream().map(BorrowBookEntry::bookId).toList();
+        List<Long> bookIds = borrow.getBorrowBooks().stream().map(BorrowBookEntry::bookId).toList();
         List<Book> books = bookRepository.findBorrowableBook(bookIds);
 
-        Map<Long, Long> borrowRequestMap = borrow.getBorrowBookEntries().stream()
+        Map<Long, Long> borrowRequestMap = borrow.getBorrowBooks().stream()
                 .collect(Collectors.toMap(
                         BorrowBookEntry::bookId,
                         BorrowBookEntry::quantity,

@@ -29,7 +29,7 @@ public class BorrowRequest {
     @Getter
     public static class Borrow {
         private long memberId;
-        private List<BorrowBookEntry> borrowBookEntries;
+        private List<BorrowBookEntry> borrowBooks;
     }
 
     @AllArgsConstructor

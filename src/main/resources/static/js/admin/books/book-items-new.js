@@ -12,6 +12,7 @@ const tableWrap = document.getElementById('bookItemEditorTableWrap');
 const rowCountElement = document.getElementById('bookItemRowCount');
 
 let tempRowSequence = 1;
+let saving = false;
 
 initBookItemEditor();
 
@@ -23,8 +24,8 @@ function initBookItemEditor() {
 
 function bindEvents() {
     addButton?.addEventListener('click', addNewRow);
-    saveHeaderButton?.addEventListener('click', saveBookItemsDummy);
-    saveFooterButton?.addEventListener('click', saveBookItemsDummy);
+    saveHeaderButton?.addEventListener('click', saveBookItems);
+    saveFooterButton?.addEventListener('click', saveBookItems);
 
     rowsContainer?.addEventListener('input', handleRowChange);
     rowsContainer?.addEventListener('change', handleRowChange);
@@ -138,17 +139,70 @@ function refreshViewState() {
     tableWrap?.classList.toggle('is-hidden', rowCount === 0);
 }
 
-function saveBookItemsDummy() {
-    const bookId = page?.dataset.bookId || null;
+async function saveBookItems() {
+    if (saving) {
+        return;
+    }
 
-    const createdItems = getRows()
+    const bookId = page?.dataset.bookId;
+
+    if (!bookId) {
+        showMessage('도서 ID를 찾을 수 없습니다.');
+        return;
+    }
+
+    const validationResult = validateChangedRows();
+
+    if (!validationResult.valid) {
+        showMessage(validationResult.message);
+        validationResult.row?.querySelector('[data-field="location"]')?.focus();
+        return;
+    }
+
+    const payload = buildUpsertPayload();
+
+    if (payload.createItems.length === 0 && payload.updateItems.length === 0) {
+        showMessage('저장할 추가/수정 내용이 없습니다.');
+        return;
+    }
+
+    try {
+        setSaving(true);
+
+        const response = await fetch(`/api/books/${bookId}/items/batch`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getCsrfHeaders()
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorMessage = await readErrorMessage(response);
+            throw new Error(errorMessage || '재고 저장에 실패했습니다.');
+        }
+
+        showMessage('재고 정보가 저장되었습니다.');
+
+        window.location.reload();
+    } catch (error) {
+        console.error(error);
+        showMessage(error.message || '재고 저장 중 오류가 발생했습니다.');
+    } finally {
+        setSaving(false);
+    }
+}
+
+function buildUpsertPayload() {
+    const createItems = getRows()
         .filter((row) => row.dataset.rowMode === 'created')
         .map((row) => ({
             status: getRowStatus(row),
             location: getRowLocation(row)
         }));
 
-    const updatedItems = getRows()
+    const updateItems = getRows()
         .filter((row) => row.dataset.rowMode === 'updated')
         .map((row) => ({
             bookItemId: Number(row.dataset.bookItemId),
@@ -156,33 +210,100 @@ function saveBookItemsDummy() {
             location: getRowLocation(row)
         }));
 
-    const invalidRow = getRows().find((row) => {
-        const mode = row.dataset.rowMode;
+    return {
+        createItems,
+        updateItems
+    };
+}
 
-        if (mode !== 'created' && mode !== 'updated') {
+function validateChangedRows() {
+    const changedRows = getRows().filter((row) => {
+        const mode = row.dataset.rowMode;
+        return mode === 'created' || mode === 'updated';
+    });
+
+    const invalidLocationRow = changedRows.find((row) => getRowLocation(row).length === 0);
+
+    if (invalidLocationRow) {
+        return {
+            valid: false,
+            message: '재고 위치를 입력해 주세요.',
+            row: invalidLocationRow
+        };
+    }
+
+    const invalidUpdateRow = changedRows.find((row) => {
+        if (row.dataset.rowMode !== 'updated') {
             return false;
         }
 
-        return getRowLocation(row).length === 0;
+        return !row.dataset.bookItemId || Number.isNaN(Number(row.dataset.bookItemId));
     });
 
-    if (invalidRow) {
-        showMessage('재고 위치를 입력해 주세요.');
-        invalidRow.querySelector('[data-field="location"]')?.focus();
-        return;
+    if (invalidUpdateRow) {
+        return {
+            valid: false,
+            message: '수정할 재고 ID를 찾을 수 없습니다.',
+            row: invalidUpdateRow
+        };
     }
 
-    const payload = {
-        bookId,
-        createdItems,
-        updatedItems
+    return {
+        valid: true,
+        message: '',
+        row: null
     };
+}
 
-    console.log('[더미 저장] 재고 저장 payload:', payload);
+function setSaving(value) {
+    saving = value;
 
-    showMessage(
-        `더미 저장입니다.\n추가 ${createdItems.length}건, 수정 ${updatedItems.length}건이 콘솔에 출력되었습니다.`
-    );
+    saveHeaderButton?.toggleAttribute('disabled', value);
+    saveFooterButton?.toggleAttribute('disabled', value);
+    addButton?.toggleAttribute('disabled', value);
+
+    if (saveHeaderButton) {
+        saveHeaderButton.textContent = value ? '저장 중...' : '저장';
+    }
+
+    if (saveFooterButton) {
+        saveFooterButton.textContent = value ? '저장 중...' : '저장';
+    }
+}
+
+async function readErrorMessage(response) {
+    const contentType = response.headers.get('content-type') || '';
+
+    try {
+        if (contentType.includes('application/json')) {
+            const body = await response.json();
+
+            return body.message
+                || body.error
+                || body.result?.message
+                || body.data?.message
+                || `재고 저장에 실패했습니다. (${response.status})`;
+        }
+
+        const text = await response.text();
+
+        return text || `재고 저장에 실패했습니다. (${response.status})`;
+    } catch {
+        return `재고 저장에 실패했습니다. (${response.status})`;
+    }
+}
+
+function getCsrfHeaders() {
+    const token = document.querySelector('meta[name="_csrf"]')?.content;
+    const header = document.querySelector('meta[name="_csrf_header"]')?.content;
+
+    if (!token || !header) {
+        return {};
+    }
+
+    return {
+        [header]: token
+    };
 }
 
 function getRows() {

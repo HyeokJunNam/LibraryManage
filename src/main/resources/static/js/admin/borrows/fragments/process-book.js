@@ -56,10 +56,37 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         return Math.max(0, Math.floor(number));
     }
 
+    function toIdString(value) {
+        if (value === null || value === undefined) return "";
+
+        return String(value).trim();
+    }
+
+    function isPositiveLongId(value) {
+        const id = toIdString(value);
+
+        return /^\d+$/.test(id) && id !== "0";
+    }
+
     function clampBorrowQuantity(book, quantity) {
         const max = Math.max(1, toPositiveInt(book.availableQuantity, 0));
         const next = toPositiveInt(quantity, 1);
+
         return Math.min(Math.max(next, 1), max);
+    }
+
+    function normalizeBorrowBook(book) {
+        const id = toIdString(book.id ?? book.bookId);
+
+        if (!isPositiveLongId(id)) {
+            return null;
+        }
+
+        return {
+            ...book,
+            id,
+            quantity: clampBorrowQuantity(book, book.quantity ?? 1)
+        };
     }
 
     function formatDate(value) {
@@ -102,7 +129,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
 
     function setBookIdToRoleElements(root, bookId, roles) {
         roles.forEach((role) => {
-            root.querySelector(`[data-role="${role}"]`)?.setAttribute("data-book-id", bookId);
+            root.querySelector(`[data-role="${role}"]`)?.setAttribute("data-book-id", toIdString(bookId));
         });
     }
 
@@ -205,7 +232,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         const { max, quantity, canDecrease, canIncrease } = getQuantityState(book);
         const quantityInput = row.querySelector('[data-role="book-quantity-input"]');
 
-        row.dataset.bookId = book.id;
+        row.dataset.bookId = toIdString(book.id);
 
         bindFields(row, {
             ...book,
@@ -215,7 +242,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         });
 
         if (quantityInput) {
-            quantityInput.dataset.bookId = book.id;
+            quantityInput.dataset.bookId = toIdString(book.id);
             quantityInput.min = "1";
             quantityInput.max = String(max);
             quantityInput.value = String(quantity);
@@ -309,17 +336,21 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     }
 
     function removeConfirmedBook(bookId) {
-        if (!bookId) return;
+        const id = toIdString(bookId);
 
-        confirmedSelectedBooks.delete(bookId);
+        if (!id) return;
+
+        confirmedSelectedBooks.delete(id);
         updateBookPanelResult();
     }
 
     function updateConfirmedBookQuantity(bookId, nextQuantity) {
-        const targetBook = confirmedSelectedBooks.get(bookId);
+        const id = toIdString(bookId);
+        const targetBook = confirmedSelectedBooks.get(id);
+
         if (!targetBook) return;
 
-        confirmedSelectedBooks.set(bookId, {
+        confirmedSelectedBooks.set(id, {
             ...targetBook,
             quantity: clampBorrowQuantity(targetBook, nextQuantity)
         });
@@ -328,11 +359,13 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     }
 
     function normalizeReturnBook(rawBook) {
+        const borrowRecordId = toIdString(rawBook.borrowRecordId);
+        const bookItemId = toIdString(rawBook.bookItemId);
         const overdue = isOverdueByDueAt(rawBook.dueAt, rawBook.returnedAt);
 
         return {
-            borrowRecordId: String(rawBook.borrowRecordId ?? ""),
-            bookItemId: String(rawBook.bookItemId ?? ""),
+            borrowRecordId,
+            bookItemId,
             bookTitle: rawBook.bookTitle ?? "",
             borrowedAt: formatDate(rawBook.borrowedAt),
             dueAt: formatDate(rawBook.dueAt),
@@ -395,7 +428,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         setElementDisabled(confirmReturnBookButton, !hasSelectedBooks);
 
         returnBookList?.querySelectorAll('[data-role="select-return-book"]').forEach((row) => {
-            const borrowRecordId = row.dataset.borrowRecordId;
+            const borrowRecordId = toIdString(row.dataset.borrowRecordId);
             const checkbox = row.querySelector('[data-role="return-book-checkbox"]');
             const isSelected = selectedReturnBooks.has(borrowRecordId);
 
@@ -414,7 +447,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         const checkbox = row.querySelector('[data-role="return-book-checkbox"]');
         const overdueBadge = row.querySelector(".book-return-result__overdue-badge");
 
-        row.dataset.borrowRecordId = book.borrowRecordId;
+        row.dataset.borrowRecordId = toIdString(book.borrowRecordId);
         row.dataset.returnBook = encodeURIComponent(JSON.stringify(book));
 
         bindFields(row, book);
@@ -508,7 +541,9 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     }
 
     function getSelectedReturnBookIds() {
-        return Array.from(selectedReturnBooks.keys()).map(Number);
+        return Array.from(selectedReturnBooks.keys())
+            .map(toIdString)
+            .filter(isPositiveLongId);
     }
 
     function createReturnRequestBody() {
@@ -518,8 +553,9 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     }
 
     async function fetchReturnBooks(memberId) {
-        const payload = await apiGet(`/api/members/${memberId}/borrows`);
-        return payload?.result ?? {};
+        const id = toIdString(memberId);
+
+        return apiGet(`/api/members/${id}/borrows`);
     }
 
     async function postReturn(requestBody) {
@@ -527,9 +563,9 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     }
 
     async function loadReturnBooks() {
-        const memberId = resolveSelectedMemberId();
+        const memberId = toIdString(resolveSelectedMemberId());
 
-        if (!memberId) {
+        if (!isPositiveLongId(memberId)) {
             clearReturnBooks();
             alert("반납할 회원을 먼저 선택해 주세요.");
             return;
@@ -538,7 +574,8 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         try {
             showReturnLoadingState();
 
-            const result = await fetchReturnBooks(memberId);
+            const payload = await fetchReturnBooks(memberId);
+            const result = payload?.result ?? {};
             const content = Array.isArray(result)
                 ? result
                 : Array.isArray(result.content)
@@ -551,7 +588,7 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
 
             content
                 .map(normalizeReturnBook)
-                .filter((book) => book.borrowRecordId)
+                .filter((book) => isPositiveLongId(book.borrowRecordId))
                 .forEach((book) => {
                     returnBooks.set(book.borrowRecordId, book);
                 });
@@ -566,9 +603,9 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
 
     function toggleReturnBookSelection(row) {
         const raw = row.dataset.returnBook;
-        const borrowRecordId = row.dataset.borrowRecordId;
+        const borrowRecordId = toIdString(row.dataset.borrowRecordId);
 
-        if (!raw || !borrowRecordId) return;
+        if (!raw || !isPositiveLongId(borrowRecordId)) return;
 
         try {
             const book = normalizeReturnBook(JSON.parse(decodeURIComponent(raw)));
@@ -693,12 +730,12 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     function replaceConfirmedBooks(books) {
         confirmedSelectedBooks.clear();
 
-        books.forEach((book) => {
-            confirmedSelectedBooks.set(book.id, {
-                ...book,
-                quantity: clampBorrowQuantity(book, book.quantity ?? 1)
+        books
+            .map(normalizeBorrowBook)
+            .filter(Boolean)
+            .forEach((book) => {
+                confirmedSelectedBooks.set(book.id, book);
             });
-        });
 
         selectedBookState.page = 0;
         activateBorrowMode();
@@ -721,16 +758,16 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
 
     function resolveSelectedMemberId() {
         return typeof getSelectedMemberId === "function"
-            ? getSelectedMemberId()
+            ? toIdString(getSelectedMemberId())
             : "";
     }
 
     function createBorrowRequestBody() {
         return {
-            memberId: resolveSelectedMemberId(),
+            memberId: toIdString(resolveSelectedMemberId()),
             borrowBooks: Array.from(confirmedSelectedBooks.values()).map((book) => ({
-                bookId: Number(book.id),
-                quantity: Number(book.quantity)
+                bookId: toIdString(book.id),
+                quantity: toPositiveInt(book.quantity, 1)
             }))
         };
     }
@@ -789,14 +826,25 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
     function requestBorrow() {
         const requestBody = createBorrowRequestBody();
 
-        if (!requestBody.memberId) {
+        if (!isPositiveLongId(requestBody.memberId)) {
             alert("대출할 회원을 먼저 선택해 주세요.");
             return;
         }
 
-        if (requestBody.borrowBooks.length === 0) {
+        if (confirmedSelectedBooks.size === 0) {
             alert("대출할 도서를 선택해 주세요.");
             updateBorrowActionButtons();
+            return;
+        }
+
+        const hasInvalidBorrowBook = requestBody.borrowBooks.some((book) => {
+            return !isPositiveLongId(book.bookId)
+                || !Number.isFinite(book.quantity)
+                || book.quantity <= 0;
+        });
+
+        if (hasInvalidBorrowBook) {
+            alert("선택한 도서의 ID 또는 수량 정보가 올바르지 않습니다.");
             return;
         }
 
@@ -817,10 +865,10 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         const decreaseButton = event.target.closest('[data-role="decrease-book-quantity"]');
 
         if (decreaseButton) {
-            const book = confirmedSelectedBooks.get(decreaseButton.dataset.bookId);
+            const book = confirmedSelectedBooks.get(toIdString(decreaseButton.dataset.bookId));
 
             if (book) {
-                updateConfirmedBookQuantity(book.id, Number(book.quantity ?? 1) - 1);
+                updateConfirmedBookQuantity(book.id, toPositiveInt(book.quantity, 1) - 1);
             }
 
             return;
@@ -829,10 +877,10 @@ export function createBookProcess({ getSelectedMemberId } = {}) {
         const increaseButton = event.target.closest('[data-role="increase-book-quantity"]');
 
         if (increaseButton) {
-            const book = confirmedSelectedBooks.get(increaseButton.dataset.bookId);
+            const book = confirmedSelectedBooks.get(toIdString(increaseButton.dataset.bookId));
 
             if (book) {
-                updateConfirmedBookQuantity(book.id, Number(book.quantity ?? 1) + 1);
+                updateConfirmedBookQuantity(book.id, toPositiveInt(book.quantity, 1) + 1);
             }
         }
     });

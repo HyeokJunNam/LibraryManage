@@ -9,7 +9,6 @@ import com.nhj.librarymanage.domain.model.dto.BookResponse;
 import com.nhj.librarymanage.service.BookItemService;
 import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,12 +64,12 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Description(value = "도서 재고 정보 등록")
-    @PostMapping("/books/{bookId}/items")
-    public ResponseEntity<Void> createBookItem(@PathVariable Long bookId, @RequestBody BookItemRequest.Create create) {
-        bookItemService.createBookItem(bookId, create);
+    @Description(value = "도서 재고 정보 등록 및 수정 ")
+    @PostMapping("/books/{bookId}/items/batch")
+    public ResponseEntity<Void> createBookItem(@PathVariable Long bookId, @RequestBody BookItemRequest.Upsert upsert) {
+        bookItemService.upsetBookItem(bookId, upsert);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

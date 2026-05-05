@@ -57,7 +57,7 @@
 
 .filter-form {
     display: grid;
-    grid-template-columns: minmax(320px, 1.8fr) minmax(180px, 1fr) minmax(180px, 1fr) auto;
+    grid-template-columns: minmax(320px, 1.8fr) minmax(180px, 1fr) auto;
     gap: 16px;
     align-items: end;
 }
@@ -195,10 +195,9 @@
     background: var(--white);
 }
 
-/* 도서 목록은 실제 컬럼 너비만 지역에서 정의 */
 .books-table {
-    min-width: 920px;
-    --table-columns: 2.5fr 2fr 1.6fr 1.8fr 1.2fr;
+    min-width: 760px;
+    --table-columns: 2.5fr 2fr 1.6fr 1.8fr;
 }
 
 .books-table-block .ui-table__row--clickable {

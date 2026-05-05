@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.service;
 
 
-import com.nhj.librarymanage.config.MailProperties;
-import com.nhj.librarymanage.config.SignupProperties;
+import com.nhj.librarymanage.config.properties.MailProperties;
+import com.nhj.librarymanage.config.properties.SignupProperties;
 import com.nhj.librarymanage.error.code.MailErrorCode;
 import com.nhj.librarymanage.error.exception.mail.MailVerificationFailureException;
 import com.nhj.librarymanage.repository.MemberRepository;

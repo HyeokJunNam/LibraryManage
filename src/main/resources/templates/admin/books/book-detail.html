@@ -24,12 +24,16 @@
                 </h2>
 
                 <p class="page-hero__desc">
-                    도서 기본 정보와 현재 대출 현황을 확인할 수 있습니다.
+                    도서 기본 정보, 재고 현황, 현재 대출 현황을 확인할 수 있습니다.
                 </p>
             </div>
 
             <div class="page-hero__actions">
                 <a th:href="@{/admin/books}" class="btn btn--ghost">목록으로</a>
+
+                <a th:href="@{/admin/books/{bookId}/edit(bookId=${book.id})}" class="btn btn--primary">도서 수정</a>
+
+                <a th:href="@{/admin/books/{bookId}/items/new(bookId=${book.id})}" class="btn btn--secondary">재고 추가</a>
             </div>
         </header>
 
@@ -41,7 +45,7 @@
                     <div>
                         <h3 class="book-detail-info-card__title">도서 정보</h3>
                         <p class="book-detail-info-card__desc">
-                            등록된 도서의 기본 정보와 재고 정보를 확인합니다.
+                            등록된 도서의 기본 정보와 재고 요약을 확인합니다.
                         </p>
                     </div>
 
@@ -134,14 +138,6 @@
                             </strong>
                         </div>
 
-                        <div class="book-info-list__row">
-                            <span class="book-info-list__label">보관 위치</span>
-                            <strong class="book-info-list__value"
-                                    th:text="${book.location != null ? book.location : '-'}">
-                                A-01
-                            </strong>
-                        </div>
-
                     </div>
 
                     <section class="book-description-box">
@@ -159,25 +155,127 @@
 
             </section>
 
-            <section
-                    class="book-borrow-area"
-                    id="bookBorrowArea"
-                    th:data-borrows-url="@{/admin/books/{bookId}/borrows(bookId=${book.id})}">
+            <section class="book-detail-right-panel">
 
-                <section class="book-borrow-card">
-                    <div class="book-borrow-card__head">
+                <section class="book-item-card">
+                    <div class="book-item-card__head">
                         <div>
-                            <h3 class="book-borrow-card__title">대출 현황</h3>
-                            <p class="book-borrow-card__desc">
-                                대출 현황을 불러오는 중입니다.
+                            <h3 class="book-item-card__title">도서 재고 현황</h3>
+                            <p class="book-item-card__desc">
+                                이 도서에 등록된 개별 재고의 상태를 확인합니다.
                             </p>
+                        </div>
+
+                        <div class="book-item-card__summary">
+                            <span>총</span>
+                            <strong th:text="${book.bookItems != null ? #lists.size(book.bookItems) : 0}">
+                                0
+                            </strong>
+                            <span>권</span>
                         </div>
                     </div>
 
-                    <div class="book-borrow-loading">
-                        <div class="book-borrow-loading__icon">⏳</div>
-                        <h4 class="book-borrow-loading__title">대출 현황을 불러오고 있습니다</h4>
+                    <div
+                            th:if="${book.bookItems == null or #lists.isEmpty(book.bookItems)}"
+                            class="book-item-empty">
+                        <div class="book-item-empty__icon">📦</div>
+                        <h4 class="book-item-empty__title">등록된 재고가 없습니다</h4>
+                        <p class="book-item-empty__desc">
+                            이 도서에 연결된 개별 재고가 아직 없습니다.
+                        </p>
                     </div>
+
+                    <div
+                            th:if="${book.bookItems != null and !#lists.isEmpty(book.bookItems)}"
+                            class="book-item-card__body">
+
+                        <div class="table-block table-block--reserve-space book-item-table-block">
+                            <div class="ui-table-wrap">
+                                <div class="ui-table book-item-table">
+
+                                    <div class="ui-table__header">
+                                        <div class="ui-table__leading-cell">No</div>
+                                        <div class="ui-table__cell">재고 ID</div>
+                                        <div class="ui-table__cell ui-table__cell--center">도서 상태</div>
+                                        <div class="ui-table__cell">등록일</div>
+                                        <div class="ui-table__cell ui-table__cell--center">대출 상태</div>
+                                    </div>
+
+                                    <div
+                                            th:each="bookItem, stat : ${book.bookItems}"
+                                            class="ui-table__row book-item-table__row">
+
+                                        <div class="ui-table__leading-cell"
+                                             th:text="${stat.index + 1}">
+                                            1
+                                        </div>
+
+                                        <div class="ui-table__cell"
+                                             th:text="${bookItem.bookItemId != null ? bookItem.bookItemId : '-'}">
+                                            1
+                                        </div>
+
+                                        <div class="ui-table__cell ui-table__cell--center">
+                                            <span
+                                                    class="book-item-status-badge"
+                                                    th:classappend="${bookItem.status != null and bookItem.status.name() == 'AVAILABLE'}
+                                                        ? ' book-item-status-badge--available'
+                                                        : (${bookItem.status != null and bookItem.status.name() == 'DAMAGED'}
+                                                            ? ' book-item-status-badge--damaged'
+                                                            : (${bookItem.status != null and bookItem.status.name() == 'LOST'}
+                                                                ? ' book-item-status-badge--lost'
+                                                                : ' book-item-status-badge--default'))"
+                                                    th:text="${bookItem.status != null ? bookItem.status : '-'}">
+                                                AVAILABLE
+                                            </span>
+                                        </div>
+
+                                        <div class="ui-table__cell"
+                                             th:text="${bookItem.createdAt != null ? #temporals.format(bookItem.createdAt, 'yyyy-MM-dd') : '-'}">
+                                            2026-04-30
+                                        </div>
+
+                                        <div class="ui-table__cell ui-table__cell--center">
+                                            <span
+                                                    class="book-item-borrow-badge"
+                                                    th:classappend="${bookItem.borrowed}
+                                                        ? ' book-item-borrow-badge--borrowed'
+                                                        : ' book-item-borrow-badge--available'"
+                                                    th:text="${bookItem.borrowed ? '대출중' : '대출가능'}">
+                                                대출가능
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section
+                        class="book-borrow-area"
+                        id="bookBorrowArea"
+                        th:data-borrows-url="@{/admin/books/{bookId}/borrows(bookId=${book.id})}">
+
+                    <section class="book-borrow-card">
+                        <div class="book-borrow-card__head">
+                            <div>
+                                <h3 class="book-borrow-card__title">대출 현황</h3>
+                                <p class="book-borrow-card__desc">
+                                    대출 현황을 불러오는 중입니다.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="book-borrow-loading">
+                            <div class="book-borrow-loading__icon">⏳</div>
+                            <h4 class="book-borrow-loading__title">대출 현황을 불러오고 있습니다</h4>
+                        </div>
+                    </section>
+
                 </section>
 
             </section>

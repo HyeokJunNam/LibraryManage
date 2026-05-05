@@ -27,8 +27,6 @@ public class Book extends BaseEntity {
 
     private String publisher;
 
-    private String location;
-
     private String description;
 
     private String thumbnailUrl;

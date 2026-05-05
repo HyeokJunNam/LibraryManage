@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookResponse {
 
@@ -19,7 +23,6 @@ public class BookResponse {
         private String title;
         private String author;
         private String publisher;
-        private String location;
         private String description;
         private String thumbnailUrl;
 
@@ -27,21 +30,48 @@ public class BookResponse {
         private int borrowedQuantity;
         private int availableQuantity;
 
+        private List<BookItemEntry> bookItems;
+
+        @Builder(access = AccessLevel.PRIVATE)
+        @Getter
+        private static class BookItemEntry {
+            private Long bookItemId;
+            private String location;
+            private boolean borrowed;
+            private BookItemStatus status;
+            private LocalDateTime createdAt;
+        }
+
         public static Detail from(Book book) {
             int stockQuantity = 0;
             int borrowedQuantity = 0;
             int availableQuantity = 0;
 
+            List<BookItemEntry> bookItemEntries = new ArrayList<>();
+
             for (BookItem bookItem : book.getBookItems()) {
                 stockQuantity++;
+
+                boolean isBorrowed = bookItem.getBorrowRecord() != null;
+
                 if (bookItem.getStatus() == BookItemStatus.AVAILABLE) {
-                    if (bookItem.getBorrowRecord() != null) {
+                    if (isBorrowed) {
                         borrowedQuantity++;
                     }
                     else {
                         availableQuantity++;
                     }
                 }
+
+                BookItemEntry bookItemEntry = BookItemEntry.builder()
+                        .bookItemId(bookItem.getId())
+                        .location(bookItem.getLocation())
+                        .borrowed(isBorrowed)
+                        .status(bookItem.getStatus())
+                        .createdAt(bookItem.getCreatedAt())
+                        .build();
+
+                bookItemEntries.add(bookItemEntry);
             }
 
             return Detail.builder()
@@ -51,13 +81,12 @@ public class BookResponse {
                     .author(book.getAuthor())
                     .publisher(book.getPublisher())
                     .description(book.getDescription())
-                    .location(book.getLocation())
                     .thumbnailUrl(book.getThumbnailUrl())
                     .stockQuantity(stockQuantity)
                     .borrowedQuantity(borrowedQuantity)
                     .availableQuantity(availableQuantity)
+                    .bookItems(bookItemEntries)
                     .build();
-
         }
     }
 
@@ -67,7 +96,6 @@ public class BookResponse {
             String title,
             String author,
             String publisher,
-            String location,
             int stockQuantity,
             int availableQuantity
     ) {
@@ -89,7 +117,6 @@ public class BookResponse {
                     book.getTitle(),
                     book.getAuthor(),
                     book.getPublisher(),
-                    book.getLocation(),
                     stockQuantity,
                     availableQuantity
             );

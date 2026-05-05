@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.config;
+package com.nhj.librarymanage.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;

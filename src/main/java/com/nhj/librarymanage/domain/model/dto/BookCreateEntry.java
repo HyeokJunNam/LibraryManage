@@ -11,8 +11,6 @@ public class BookCreateEntry {
     private String title;
     private String author;
     private String publisher;
-    private String location;
-    private int stockQuantity;
     private String description;
     private String thumbnailUrl;
 

@@ -6,15 +6,28 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookItemRequest {
 
-    // 생성 요청
-    @AllArgsConstructor
-    @Getter
-    public static class Create {
-        private BookItemStatus status;
-        private String location;
+    // 생성 + 수정
+    public record Upsert (
+            List<CreateEntry> createItems,
+            List<UpdateEntry> updateItems
+    ) {
+        public record CreateEntry(
+                BookItemStatus status,
+                String location
+        ) {
+        }
+
+        public record UpdateEntry(
+                Long bookItemId,
+                BookItemStatus status,
+                String location
+        ) {
+        }
     }
 
 }

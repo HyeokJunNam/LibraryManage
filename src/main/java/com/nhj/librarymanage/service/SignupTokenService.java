@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.config.SignupProperties;
+import com.nhj.librarymanage.config.properties.SignupProperties;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.ValidationFailureException;
 import com.nhj.librarymanage.util.RedisUtils;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @Controller
-public class BorrowManageController {
+public class BorrowPageController {
 
     private final BorrowRecordService borrowRecordService;
 
@@ -26,8 +26,8 @@ public class BorrowManageController {
     }
 
     @Description(value = "도서 별 도서 대여 현황 조회")
-    @GetMapping("/members/{id}/borrows")
-    public String memberBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
+    @GetMapping("/books/{id}/borrows")
+    public String bookBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
         PageContent<BorrowRecordResponse.BookSummary> pageContent = borrowRecordService.getBorrowRecordsByBook(id, pageable);
         model.addAttribute("borrowPageContent", pageContent);
 

@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.error;
 
+import com.nhj.librarymanage.error.exception.AjaxException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class AjaxExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(AjaxException.class)
     public String handle(Exception exception, HttpServletRequest request, Model model) {
         if (!isAjaxFragmentRequest(request)) {
             throw new RuntimeException(exception);

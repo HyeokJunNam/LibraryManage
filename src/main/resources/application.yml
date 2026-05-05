@@ -1,8 +1,7 @@
 spring:
-  profiles:
-    include:
-      - app
-      - secret
+  config:
+    import:
+      - optional:classpath:application-secret.yml
 
   security:
     oauth2:
@@ -21,28 +20,57 @@ spring:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
+
   jpa:
-    # JPA ??? ???? ?? ??
     open-in-view: false
-    # DataBase DDL ?? ??,??,?? ??
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        # SQL ??
         show_sql: true
-        # ?? SQL ??? ??? ??
         format_sql: true
-        # ?? SQL ?? ??
         highlight_sql: true
         default_batch_fetch_size: 100
         query:
           fail_on_pagination_over_collection_fetch: true
+
   data:
     web:
       pageable:
         default-page-size: 5
         max-page-size: 50
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${app.mail.username}
+    password: ${app.mail.password}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+
 logging:
   config: classpath:log4j2/log4j2-local.xml
+
+app:
+  mail:
+    personal: '관리자'
+    app-name: '도서 관리 시스템'
+    from-name: '도서 관리 시스템'
+    subject: '[도서 관리 시스템] 이메일 인증 요청 입니다.'
+    default-user-name: '회원'
+
+  signup:
+    verification:
+      expire-email-minutes: 3
+      expire-signup-minutes: 10
+
+external:
+  nl-library:
+    base-url: https://www.nl.go.kr
+    api-key: ${external.nl-library.api-key}
+    api-path:
+      isbn: /seoji/SearchApi.do

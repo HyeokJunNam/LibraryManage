@@ -18,12 +18,12 @@
                 <p class="page-hero__eyebrow">BOOK MANAGEMENT</p>
                 <h2 class="page-hero__title">도서 목록 관리</h2>
                 <p class="page-hero__desc">
-                    전체 도서를 조회하고 도서 정보 및 보관 위치를 확인할 수 있습니다.
+                    전체 도서를 조회하고 도서 정보를 확인할 수 있습니다.
                 </p>
             </div>
 
             <div class="page-hero__actions">
-                <a th:href="@{/admin/books/new}" class="btn btn--primary">도서 추가</a>
+                <a th:href="@{/admin/books/new}" class="btn btn--primary">도서 등록</a>
             </div>
         </header>
 
@@ -75,16 +75,6 @@
                            class="filter-form__input"
                            placeholder="ISBN, 도서명, 저자, 출판사로 검색"
                            th:value="${param.keyword}">
-                </div>
-
-                <div class="filter-form__group">
-                    <label for="location" class="filter-form__label">보관 위치</label>
-                    <input id="location"
-                           name="location"
-                           type="text"
-                           class="filter-form__input"
-                           placeholder="예: A-01"
-                           th:value="${param.location}">
                 </div>
 
                 <div class="filter-form__group">
@@ -155,7 +145,6 @@
                                 <div class="ui-table__cell">ISBN</div>
                                 <div class="ui-table__cell">저자</div>
                                 <div class="ui-table__cell">출판사</div>
-                                <div class="ui-table__cell">보관 위치</div>
                             </div>
 
                             <div th:each="book : ${bookPageContent.content}"
@@ -187,11 +176,6 @@
                                 <div class="ui-table__cell"
                                      th:text="${book.publisher != null ? book.publisher : '-'}">
                                     오픈AI출판사
-                                </div>
-
-                                <div class="ui-table__cell"
-                                     th:text="${book.location != null ? book.location : '-'}">
-                                    A-01
                                 </div>
                             </div>
                         </div>
