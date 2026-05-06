@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<section th:fragment="itemPanel(book)"
+         class="book-detail-items-card"
+         id="bookDetailItemsCard"
+         th:data-book-id="${book.id}">
+
+    <div class="book-detail-items-card__head">
+        <div>
+            <h3 class="book-detail-items-card__title">도서 재고 현황</h3>
+            <p class="book-detail-items-card__desc">
+                이 도서에 등록된 개별 재고의 상태를 확인합니다.
+            </p>
+        </div>
+
+        <div class="book-detail-items-card__actions">
+            <button type="button"
+                    class="btn btn--primary book-detail-items-card__edit-button"
+                    id="editBookItemsButton">
+                재고 수정
+            </button>
+
+            <div class="book-detail-items-card__edit-actions is-hidden"
+                 id="bookItemEditActions">
+                <button type="button"
+                        class="btn btn--primary book-detail-items-card__save-button"
+                        id="saveBookItemsButton">
+                    저장
+                </button>
+
+                <button type="button"
+                        class="btn btn--ghost book-detail-items-card__cancel-button"
+                        id="cancelBookItemsButton">
+                    취소
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-detail-items-card__body">
+
+        <div th:if="${book.bookItems == null or #lists.isEmpty(book.bookItems)}"
+             class="book-detail-items-empty"
+             id="bookDetailItemsEmpty">
+            <div class="book-detail-items-empty__icon">📦</div>
+            <h4 class="book-detail-items-empty__title">등록된 재고가 없습니다</h4>
+            <p class="book-detail-items-empty__desc">
+                이 도서에 연결된 개별 재고가 아직 없습니다.
+            </p>
+        </div>
+
+        <div class="table-block table-block--reserve-space book-detail-items-table-block"
+             id="bookDetailItemsTableBlock"
+             th:classappend="${book.bookItems == null or #lists.isEmpty(book.bookItems)} ? ' is-hidden' : ''">
+            <div class="ui-table-wrap">
+                <div class="ui-table book-detail-items-table">
+
+                    <div class="ui-table__header">
+                        <div class="ui-table__leading-cell">No</div>
+                        <div class="ui-table__cell">재고 ID</div>
+                        <div class="ui-table__cell ui-table__cell--center">도서 상태</div>
+                        <div class="ui-table__cell">재고 위치</div>
+                        <div class="ui-table__cell">등록일</div>
+                        <div class="ui-table__cell ui-table__cell--center">대출 상태</div>
+                        <div class="ui-table__cell ui-table__cell--center">관리</div>
+                    </div>
+
+                    <div id="bookDetailItemRows">
+
+                        <div th:each="bookItem, stat : ${book.bookItems}"
+                             class="ui-table__row book-detail-items-table__row"
+                             data-row-mode="clean"
+                             th:data-book-item-id="${bookItem.bookItemId}"
+                             th:data-borrowed="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}"
+                             th:data-original-status="${bookItem.bookItemStatus != null ? bookItem.bookItemStatus.value.name() : ''}"
+                             th:data-original-location="${bookItem.location != null ? bookItem.location : ''}">
+
+                            <div class="ui-table__leading-cell">
+                                <span class="book-detail-item-row__index"
+                                      th:text="${stat.index + 1}">
+                                    1
+                                </span>
+                            </div>
+
+                            <div class="ui-table__cell"
+                                 th:text="${bookItem.bookItemId != null ? bookItem.bookItemId : '-'}">
+                                1
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center">
+                                <span class="book-detail-item-status-view status-badge"
+                                      th:classappend="${bookItem.bookItemStatus != null
+                                          ? ' status-badge--' + #strings.toLowerCase(bookItem.bookItemStatus.value.name())
+                                          : ' status-badge--default'}"
+                                      th:text="${bookItem.bookItemStatus != null
+                                          and bookItem.bookItemStatus.label != null
+                                          and !#strings.isEmpty(bookItem.bookItemStatus.label)
+                                              ? bookItem.bookItemStatus.label
+                                              : '-'}">
+                                    상태
+                                </span>
+
+                                <select class="book-detail-item-control book-detail-item-status-edit is-hidden"
+                                        data-field="status"
+                                        th:disabled="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}"
+                                        th:classappend="${bookItem.bookItemStatus != null
+                                            ? ' book-detail-item-status-edit--' + #strings.toLowerCase(bookItem.bookItemStatus.value.name())
+                                            : ''}">
+                                    <option th:each="statusOption : ${options.bookItemStatuses}"
+                                            th:value="${statusOption.value}"
+                                            th:text="${statusOption.label}"
+                                            th:selected="${bookItem.bookItemStatus != null and bookItem.bookItemStatus.value.name() == statusOption.value}">
+                                        상태
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="ui-table__cell">
+                                <span class="book-detail-item-location-view"
+                                      th:text="${bookItem.location != null and !#strings.isEmpty(bookItem.location) ? bookItem.location : '-'}">
+                                    A-01
+                                </span>
+
+                                <input type="text"
+                                       class="book-detail-item-control book-detail-item-location-edit is-hidden"
+                                       data-field="location"
+                                       placeholder="예: A-01"
+                                       autocomplete="off"
+                                       th:value="${bookItem.location != null ? bookItem.location : ''}"
+                                       th:disabled="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}">
+                            </div>
+
+                            <div class="ui-table__cell"
+                                 th:text="${bookItem.createdAt != null ? #temporals.format(bookItem.createdAt, 'yyyy-MM-dd') : '-'}">
+                                2026-04-30
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center">
+                                <span class="status-badge"
+                                      th:classappend="${bookItem.borrowStatus != null
+                                          ? ' status-badge--' + #strings.toLowerCase(bookItem.borrowStatus.value.name())
+                                          : ' status-badge--default'}"
+                                      th:text="${bookItem.borrowStatus != null
+                                          and bookItem.borrowStatus.label != null
+                                          and !#strings.isEmpty(bookItem.borrowStatus.label)
+                                              ? bookItem.borrowStatus.label
+                                              : '-'}">
+                                    대출 상태
+                                </span>
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center">
+                                <span class="book-detail-item-row__state">기존</span>
+
+                                <button type="button"
+                                        class="book-detail-item-row__delete is-hidden"
+                                        data-role="mark-delete-row"
+                                        th:disabled="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}">
+                                    삭제
+                                </button>
+
+                                <button type="button"
+                                        class="book-detail-item-row__cancel-delete is-hidden"
+                                        data-role="cancel-delete-row">
+                                    취소
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <button type="button"
+                            class="book-detail-items-add-row is-hidden"
+                            id="addBookItemRowButton">
+                        <span class="book-detail-items-add-row__icon">+</span>
+                        <span class="book-detail-items-add-row__text">재고 행 추가</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <template id="bookDetailItemRowTemplate">
+        <div class="ui-table__row book-detail-items-table__row book-detail-items-table__row--created"
+             data-row-mode="created"
+             data-borrowed="false">
+
+            <div class="ui-table__leading-cell">
+                <span class="book-detail-item-row__index"></span>
+            </div>
+
+            <div class="ui-table__cell">
+                <span class="book-detail-item-row__new-label">신규</span>
+            </div>
+
+            <div class="ui-table__cell ui-table__cell--center">
+                <select class="book-detail-item-control book-detail-item-status-edit book-detail-item-status-edit--available"
+                        data-field="status">
+                    <option th:each="statusOption : ${options.bookItemStatuses}"
+                            th:value="${statusOption.value}"
+                            th:text="${statusOption.label}"
+                            th:selected="${statusOption.value == 'AVAILABLE'}">
+                        상태
+                    </option>
+                </select>
+            </div>
+
+            <div class="ui-table__cell">
+                <input type="text"
+                       class="book-detail-item-control book-detail-item-location-edit"
+                       data-field="location"
+                       placeholder="예: A-01"
+                       autocomplete="off">
+            </div>
+
+            <div class="ui-table__cell">
+                -
+            </div>
+
+            <div class="ui-table__cell ui-table__cell--center">
+                <span class="book-detail-item-row__empty-value">-</span>
+            </div>
+
+            <div class="ui-table__cell ui-table__cell--center">
+                <button type="button"
+                        class="book-detail-item-row__remove"
+                        data-role="remove-created-row">
+                    삭제
+                </button>
+            </div>
+
+        </div>
+    </template>
+
+</section>
+
+</body>
+</html>

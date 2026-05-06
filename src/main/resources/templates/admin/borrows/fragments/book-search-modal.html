@@ -83,11 +83,30 @@
 
                                 <div class="ui-table__header">
                                     <div class="ui-table__leading-cell"></div>
-                                    <div class="ui-table__cell">도서명</div>
-                                    <div class="ui-table__cell">ISBN</div>
-                                    <div class="ui-table__cell">저자</div>
-                                    <div class="ui-table__cell ui-table__cell--center">재고</div>
-                                    <div class="ui-table__cell ui-table__cell--center">대여 가능</div>
+
+                                    <div class="ui-table__cell ui-table__cell--fill-start">
+                                        <span class="ui-table__text">도서명</span>
+                                    </div>
+
+                                    <div class="ui-table__cell ui-table__cell--center-start"
+                                         >
+                                        <span class="ui-table__text">ISBN</span>
+                                    </div>
+
+                                    <div class="ui-table__cell ui-table__cell--center-start"
+                                         >
+                                        <span class="ui-table__text">저자</span>
+                                    </div>
+
+                                    <div class="ui-table__cell ui-table__cell--center-start"
+                                         >
+                                        <span class="ui-table__text">재고</span>
+                                    </div>
+
+                                    <div class="ui-table__cell ui-table__cell--center-start"
+                                         >
+                                        <span class="ui-table__text">대여 가능</span>
+                                    </div>
                                 </div>
 
                                 <div id="bookSearchResultRows"></div>
@@ -133,19 +152,29 @@
                             aria-hidden="true">
                 </div>
 
-                <div class="ui-table__cell ui-table__cell--primary">
+                <div class="ui-table__cell ui-table__cell--primary ui-table__cell--fill-start">
                     <span class="ui-table__text" data-field="title"></span>
                 </div>
 
-                <div class="ui-table__cell" data-field="isbn"></div>
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="isbn"></span>
+                </div>
 
-                <div class="ui-table__cell" data-field="author"></div>
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="author"></span>
+                </div>
 
-                <div class="ui-table__cell ui-table__cell--center book-search-result__stock"
-                     data-field="stockQuantity"></div>
+                <div class="ui-table__cell ui-table__cell--center-start book-search-result__stock"
+                     >
+                    <span class="ui-table__text" data-field="stockQuantity"></span>
+                </div>
 
-                <div class="ui-table__cell ui-table__cell--center book-search-result__available"
-                     data-field="availableQuantity"></div>
+                <div class="ui-table__cell ui-table__cell--center-start book-search-result__available"
+                     >
+                    <span class="ui-table__text" data-field="availableQuantity"></span>
+                </div>
             </div>
         </template>
     </div>

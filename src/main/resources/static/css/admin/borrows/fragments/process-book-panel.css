@@ -131,14 +131,42 @@
     color: var(--gray-900);
 }
 
+/*
+ * 신청 도서 목록 테이블
+ *
+ * No 컬럼은 공용 table-block에서 56px 고정.
+ * 나머지 컬럼은 비율 기반으로 분배하되,
+ * 너무 좁아지지 않도록 minmax()로 최소 폭을 보장.
+ */
 .book-result__table {
-    min-width: 1084px;
-    --table-columns: 180px 180px 140px 130px 110px 88px 88px 168px 92px;
+    min-width: 1120px;
+    --table-columns:
+            minmax(190px, 2fr)      /* 도서명 */
+            minmax(150px, 1.45fr)   /* ISBN */
+            minmax(130px, 1.2fr)    /* 저자 */
+            minmax(120px, 1.1fr)    /* 출판사 */
+            minmax(90px, 0.8fr)     /* 위치 */
+            minmax(76px, 0.7fr)     /* 재고 */
+            minmax(92px, 0.8fr)     /* 대여 가능 */
+            minmax(104px, 0.9fr)    /* 수량 */
+            minmax(76px, 0.7fr);    /* 관리 */
 }
 
+/*
+ * 반납 도서 목록 테이블
+ *
+ * No/체크박스 영역은 공용 leading column 56px.
+ * 나머지 컬럼만 비율 기반으로 분배.
+ */
 .book-return-result__table {
-    min-width: 968px;
-    --table-columns: 110px 110px 260px 160px 160px 120px;
+    min-width: 960px;
+    --table-columns:
+            minmax(90px, 0.8fr)
+            minmax(90px, 0.8fr)
+            minmax(240px, 2.2fr)
+            minmax(130px, 1.2fr)
+            minmax(130px, 1.2fr)
+            minmax(100px, 0.9fr);
 }
 
 .book-result__quantity-box {

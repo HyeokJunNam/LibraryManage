@@ -8,21 +8,19 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public enum BookItemStatus implements LabelEnum {
+public enum BorrowStatus implements LabelEnum {
 
-    AVAILABLE("정상"),
-    DAMAGED("파손"),
-    LOST("분실"),
-    DISCARDED("폐기"),
+    AVAILABLE("대출 가능"),
+    BORROWED("대출 중"),
+    UNAVAILABLE("대출 불가"),
+    RETURNED("반납 완료"),
+    OVERDUE("연체"),
     ;
 
     private final String label;
 
-    public String getCode() {
-        return name();
-    }
 
-    public static List<EnumOption<BookItemStatus>> options() {
+    public static List<EnumOption<BorrowStatus>> options() {
         return Arrays.stream(values())
                 .map(status -> new EnumOption<>(status, status.getLabel()))
                 .toList();

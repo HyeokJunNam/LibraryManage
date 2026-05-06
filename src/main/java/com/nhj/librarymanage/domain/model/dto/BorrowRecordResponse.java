@@ -1,5 +1,8 @@
 package com.nhj.librarymanage.domain.model.dto;
 
+import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.code.BorrowStatus;
+import com.nhj.librarymanage.domain.code.EnumOption;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
@@ -7,7 +10,6 @@ import com.nhj.librarymanage.domain.entity.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BorrowRecordResponse {
@@ -48,9 +50,10 @@ public class BorrowRecordResponse {
     public static class BookSummary {
         private long borrowRecordId;
         private long bookItemId;
-        private long memberId;
-        private String memberName;
         private String bookTitle;
+        private long memberId; // 이건 나중에 연동할 수도 있음 (클릭 시 회원 정보로 전환)
+        private String memberName;
+        private EnumOption<BorrowStatus> borrowStatus;
         private LocalDateTime borrowedAt;
         private LocalDateTime dueAt;
         private LocalDateTime returnedAt;
@@ -60,12 +63,19 @@ public class BorrowRecordResponse {
             Book book = bookItem.getBook();
             Member member = borrowRecord.getMember();
 
+            EnumOption<BorrowStatus> borrowStatus = EnumOption.from(bookItem.getBorrowStatus());
+
+            if (borrowStatus.value() == BorrowStatus.AVAILABLE && borrowRecord.getReturnedAt() != null) {
+                borrowStatus = EnumOption.from(BorrowStatus.RETURNED);
+            }
+
             return BookSummary.builder()
                     .borrowRecordId(borrowRecord.getId())
                     .bookItemId(bookItem.getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())
                     .memberName(member.getName())
+                    .borrowStatus(borrowStatus)
                     .borrowedAt(borrowRecord.getBorrowedAt())
                     .dueAt(borrowRecord.getDueAt())
                     .returnedAt(borrowRecord.getReturnedAt())

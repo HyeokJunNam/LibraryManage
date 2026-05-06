@@ -1,6 +1,8 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
+import com.nhj.librarymanage.domain.code.AdminPageOptions;
+import com.nhj.librarymanage.domain.code.BookItemStatus;
 import com.nhj.librarymanage.domain.model.PageContent;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
@@ -30,11 +32,13 @@ public class BookPageController {
         return "admin/books/books";
     }
 
-    @Description("도서 관리 화면")
+    @Description("도서 상세 화면")
     @GetMapping("/books/{id}")
     public String bookDetail(Model model, @PathVariable Long id) {
         BookResponse.Detail detail = bookService.getBook(id);
+
         model.addAttribute("book", detail);
+        model.addAttribute("options", AdminPageOptions.options());
 
         return "admin/books/book-detail";
     }
@@ -53,15 +57,6 @@ public class BookPageController {
         model.addAttribute("book", detail);
 
         return "admin/books/books-edit";
-    }
-
-    @Description("도서 재고 추가 화면")
-    @GetMapping("/books/{id}/items/new")
-    public String newBookItem(Model model, @PathVariable Long id) {
-        BookResponse.Detail detail = bookService.getBook(id);
-        model.addAttribute("book", detail);
-
-        return "admin/books/book-items-new";
     }
 
 }

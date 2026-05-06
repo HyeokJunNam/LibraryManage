@@ -85,9 +85,21 @@
                                 <div class="ui-table member-search-result__table">
                                     <div class="ui-table__header">
                                         <div class="ui-table__leading-cell"></div>
-                                        <div class="ui-table__cell">회원번호</div>
-                                        <div class="ui-table__cell">회원명</div>
-                                        <div class="ui-table__cell">이메일</div>
+
+                                        <div class="ui-table__cell ui-table__cell--center-start"
+                                             >
+                                            <span class="ui-table__text">회원번호</span>
+                                        </div>
+
+                                        <div class="ui-table__cell ui-table__cell--center-start"
+                                             >
+                                            <span class="ui-table__text">회원명</span>
+                                        </div>
+
+                                        <div class="ui-table__cell ui-table__cell--center-start"
+                                             >
+                                            <span class="ui-table__text">이메일</span>
+                                        </div>
                                     </div>
 
                                     <div id="memberSearchResultRows"></div>
@@ -111,13 +123,20 @@
 
                 <div class="ui-table__leading-cell"></div>
 
-                <div class="ui-table__cell" data-field="memberNo"></div>
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="memberNo"></span>
+                </div>
 
-                <div class="ui-table__cell ui-table__cell--primary">
+                <div class="ui-table__cell ui-table__cell--primary ui-table__cell--center-start"
+                     >
                     <span class="ui-table__text" data-field="name"></span>
                 </div>
 
-                <div class="ui-table__cell" data-field="email"></div>
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="email"></span>
+                </div>
             </div>
         </template>
     </div>

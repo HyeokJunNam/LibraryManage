@@ -42,7 +42,7 @@ public class BookController {
 
     @Description(value = "도서 생성")
     @PostMapping("/books")
-    public ResponseEntity<Void> createBook(@RequestBody BookRequest.Create create) {
+    public ResponseEntity<HttpStatus> createBook(@RequestBody BookRequest.Create create) {
         bookService.createBooks(create);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -50,7 +50,7 @@ public class BookController {
 
     @Description(value = "도서 수정")
     @PutMapping("/books")
-    public ResponseEntity<Void> updateBook(@RequestBody BookRequest.Update update) {
+    public ResponseEntity<HttpStatus> updateBook(@RequestBody BookRequest.Update update) {
         bookService.updateBook(update);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -58,15 +58,15 @@ public class BookController {
 
     @Description(value = "도서 삭제")
     @DeleteMapping("/books/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Description(value = "도서 재고 정보 등록 및 수정 ")
+    @Description(value = "도서 재고 정보 등록 및 수정, 삭제 ")
     @PostMapping("/books/{bookId}/items/batch")
-    public ResponseEntity<Void> createBookItem(@PathVariable Long bookId, @RequestBody BookItemRequest.Upsert upsert) {
+    public ResponseEntity<HttpStatus> createBookItem(@PathVariable Long bookId, @RequestBody BookItemRequest.Upsert upsert) {
         bookItemService.upsetBookItem(bookId, upsert);
 
         return ResponseEntity.status(HttpStatus.OK).build();

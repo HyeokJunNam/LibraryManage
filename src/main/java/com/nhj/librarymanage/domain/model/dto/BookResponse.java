@@ -1,11 +1,11 @@
 package com.nhj.librarymanage.domain.model.dto;
 
 import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.code.BorrowStatus;
+import com.nhj.librarymanage.domain.code.EnumOption;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -15,31 +15,29 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookResponse {
 
-    @Builder(access = AccessLevel.PRIVATE)
-    @Getter
-    public static class Detail {
-        private Long id;
-        private String isbn;
-        private String title;
-        private String author;
-        private String publisher;
-        private String description;
-        private String thumbnailUrl;
+    public record Detail(
+            Long id,
+            String isbn,
+            String title,
+            String author,
+            String publisher,
+            String description,
+            String thumbnailUrl,
 
-        private int stockQuantity;
-        private int borrowedQuantity;
-        private int availableQuantity;
+            int stockQuantity,
+            int borrowedQuantity,
+            int availableQuantity,
 
-        private List<BookItemEntry> bookItems;
+            List<BookItemEntry> bookItems
+    ) {
 
-        @Builder(access = AccessLevel.PRIVATE)
-        @Getter
-        private static class BookItemEntry {
-            private Long bookItemId;
-            private String location;
-            private boolean borrowed;
-            private BookItemStatus status;
-            private LocalDateTime createdAt;
+        public record BookItemEntry(
+                Long bookItemId,
+                String location,
+                EnumOption<BorrowStatus> borrowStatus,
+                EnumOption<BookItemStatus> bookItemStatus,
+                LocalDateTime createdAt
+        ) {
         }
 
         public static Detail from(Book book) {
@@ -52,41 +50,35 @@ public class BookResponse {
             for (BookItem bookItem : book.getBookItems()) {
                 stockQuantity++;
 
-                boolean isBorrowed = bookItem.getBorrowRecord() != null;
-
-                if (bookItem.getStatus() == BookItemStatus.AVAILABLE) {
-                    if (isBorrowed) {
-                        borrowedQuantity++;
-                    }
-                    else {
-                        availableQuantity++;
-                    }
+                switch (bookItem.getBorrowStatus()) {
+                    case AVAILABLE -> availableQuantity++;
+                    case BORROWED -> borrowedQuantity++;
                 }
 
-                BookItemEntry bookItemEntry = BookItemEntry.builder()
-                        .bookItemId(bookItem.getId())
-                        .location(bookItem.getLocation())
-                        .borrowed(isBorrowed)
-                        .status(bookItem.getStatus())
-                        .createdAt(bookItem.getCreatedAt())
-                        .build();
+                BookItemEntry bookItemEntry = new BookItemEntry(
+                        bookItem.getId(),
+                        bookItem.getLocation(),
+                        EnumOption.from(bookItem.getBorrowStatus()),
+                        EnumOption.from(bookItem.getStatus()),
+                        bookItem.getCreatedAt()
+                );
 
                 bookItemEntries.add(bookItemEntry);
             }
 
-            return Detail.builder()
-                    .id(book.getId())
-                    .isbn(book.getIsbn())
-                    .title(book.getTitle())
-                    .author(book.getAuthor())
-                    .publisher(book.getPublisher())
-                    .description(book.getDescription())
-                    .thumbnailUrl(book.getThumbnailUrl())
-                    .stockQuantity(stockQuantity)
-                    .borrowedQuantity(borrowedQuantity)
-                    .availableQuantity(availableQuantity)
-                    .bookItems(bookItemEntries)
-                    .build();
+            return new Detail(
+                    book.getId(),
+                    book.getIsbn(),
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getPublisher(),
+                    book.getDescription(),
+                    book.getThumbnailUrl(),
+                    stockQuantity,
+                    borrowedQuantity,
+                    availableQuantity,
+                    bookItemEntries
+            );
         }
     }
 
@@ -106,7 +98,8 @@ public class BookResponse {
             for (BookItem bookItem : book.getBookItems()) {
                 stockQuantity++;
 
-                if (bookItem.getStatus() == BookItemStatus.AVAILABLE && bookItem.getBorrowRecord() == null) {
+                if (bookItem.getStatus() == BookItemStatus.AVAILABLE
+                        && bookItem.getBorrowRecord() == null) {
                     availableQuantity++;
                 }
             }
@@ -122,5 +115,4 @@ public class BookResponse {
             );
         }
     }
-
 }

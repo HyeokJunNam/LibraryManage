@@ -22,11 +22,13 @@
 }
 
 .ui-table {
+    width: 100%;
     min-width: 720px;
     background: var(--white);
 
-    --table-leading-column: 72px;
-    --table-columns: 1fr 1fr 1fr;
+    --table-leading-column: 56px;
+    --table-columns: repeat(3, minmax(120px, 1fr));
+    --table-cell-text-width: 140px;
 }
 
 .ui-table__header,
@@ -70,6 +72,8 @@
 
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
 
     color: var(--gray-700);
     font-size: 14px;
@@ -93,7 +97,6 @@
     color: var(--gray-500);
 }
 
-.ui-table__cell--center,
 .ui-table__cell--checkbox {
     justify-content: center;
     text-align: center;
@@ -102,6 +105,44 @@
 .ui-table__cell--right {
     justify-content: flex-end;
     text-align: right;
+}
+
+/*
+ * 셀 안의 내용 덩어리는 가운데 배치하되,
+ * 텍스트 시작 위치는 동일하게 맞추는 용도.
+ *
+ * 예:
+ * <div class="ui-table__cell ui-table__cell--center-start">
+ *     <span class="ui-table__text">대출 가능</span>
+ * </div>
+ */
+.ui-table__cell--center-start {
+    justify-content: center;
+    text-align: left;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.ui-table__cell--center-start .ui-table__text {
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    text-align: left;
+}
+
+/*
+ * 도서명, 설명처럼 긴 텍스트가 들어가는 컬럼용.
+ * 가운데 고정폭 박스가 아니라 셀 전체를 사용하면서 왼쪽 정렬.
+ */
+.ui-table__cell--fill-start {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.ui-table__cell--fill-start .ui-table__text {
+    width: 100%;
+    max-width: none;
+    text-align: left;
 }
 
 .ui-table__text {
@@ -133,67 +174,5 @@
 }
 
 .table-block__pagination .pagination {
-    margin: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.table-block__pagination .pagination__button,
-.table-block__pagination .pagination__number,
-.table-block__pagination .pagination__ellipsis {
-    min-width: 44px;
-    height: 44px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.table-block__pagination .pagination__button,
-.table-block__pagination .pagination__number {
-    padding: 0 14px;
-    border: 1px solid var(--gray-200);
-    border-radius: 14px;
-    background: var(--white);
-
-    color: var(--gray-700);
-    text-decoration: none;
-
-    transition: all 0.2s ease;
-}
-
-.table-block__pagination .pagination__button:hover,
-.table-block__pagination .pagination__number:hover {
-    border-color: var(--green-300);
-    background: #fbfefc;
-    color: var(--green-700);
-}
-
-.table-block__pagination .pagination__number--active {
-    border-color: var(--green-600);
-    background: linear-gradient(135deg, var(--green-500), var(--green-600));
-    color: var(--white);
-    box-shadow: 0 10px 20px rgba(37, 135, 76, 0.2);
-}
-
-.table-block__pagination .pagination__number--active:hover {
-    color: var(--white);
-}
-
-.table-block__pagination .pagination__button--disabled {
-    background: var(--gray-50);
-    color: #b1bbb4;
-    cursor: default;
-    pointer-events: none;
-}
-
-.table-block__pagination .pagination__ellipsis {
-    color: var(--gray-500);
+    margin-top: 0;
 }

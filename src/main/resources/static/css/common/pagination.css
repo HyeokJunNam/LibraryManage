@@ -31,18 +31,23 @@
     background: #fbfefc;
 }
 
-.pagination__number--active {
+.pagination__number--active,
+.pagination__number.is-active {
     background: linear-gradient(135deg, var(--green-500), var(--green-600));
     border-color: var(--green-600);
     color: var(--white);
     box-shadow: 0 10px 20px rgba(37, 135, 76, 0.2);
 }
 
-.pagination__number--active:hover {
+.pagination__number--active:hover,
+.pagination__number.is-active:hover {
+    background: linear-gradient(135deg, var(--green-500), var(--green-600));
+    border-color: var(--green-600);
     color: var(--white);
 }
 
-.pagination__button--disabled {
+.pagination__button--disabled,
+.pagination__button.is-disabled {
     background: var(--gray-50);
     color: #b1bbb4;
     cursor: default;

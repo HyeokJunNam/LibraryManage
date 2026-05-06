@@ -4,19 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>대출 / 반납 처리</title>
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
 
-    <link rel="stylesheet" th:href="@{/css/common/common.css}">
-    <link rel="stylesheet" th:href="@{/css/common/table-block.css}">
-    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
-
-    <link rel="stylesheet" th:href="@{/css/admin/common/sidebar.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/common/admin-layout.css}">
-
-    <link rel="stylesheet" th:href="@{/css/admin/borrows/process.css}">
     <link rel="stylesheet" th:href="@{/css/admin/borrows/fragments/process-member-panel.css}">
     <link rel="stylesheet" th:href="@{/css/admin/borrows/fragments/process-book-panel.css}">
     <link rel="stylesheet" th:href="@{/css/admin/borrows/fragments/process-member-search-modal.css}">
     <link rel="stylesheet" th:href="@{/css/admin/borrows/fragments/process-book-search-modal.css}">
+
+    <link rel="stylesheet" th:href="@{/css/admin/borrows/process.css}">
 </head>
 <body>
 <div class="admin-page">
@@ -44,8 +39,6 @@
     <div th:replace="~{admin/borrows/fragments/book-search-modal :: bookSearchModal}"></div>
 </div>
 
-<script th:src="@{/js/common/api.js}"></script>
-<script th:src="@{/js/common/modal-alert.js}"></script>
 <script type="module" th:src="@{/js/admin/borrows/process.js}"></script>
 </body>
 </html>

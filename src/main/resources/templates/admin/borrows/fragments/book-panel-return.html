@@ -23,12 +23,34 @@
 
                         <div class="ui-table__header">
                             <div class="ui-table__leading-cell"></div>
-                            <div class="ui-table__cell">대출 ID</div>
-                            <div class="ui-table__cell">재고 ID</div>
-                            <div class="ui-table__cell">도서명</div>
-                            <div class="ui-table__cell">대출일</div>
-                            <div class="ui-table__cell">반납 예정일</div>
-                            <div class="ui-table__cell ui-table__cell--center">연체여부</div>
+
+                            <div class="ui-table__cell ui-table__cell--center-start">
+                                <span class="ui-table__text">대출 ID</span>
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center-start"
+                                 >
+                                <span class="ui-table__text">재고 ID</span>
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--fill-start">
+                                <span class="ui-table__text">도서명</span>
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center-start"
+                                 >
+                                <span class="ui-table__text">대출일</span>
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center-start"
+                                 >
+                                <span class="ui-table__text">반납 예정일</span>
+                            </div>
+
+                            <div class="ui-table__cell ui-table__cell--center-start"
+                                 >
+                                <span class="ui-table__text">연체여부</span>
+                            </div>
                         </div>
 
                         <div id="returnBookList">
@@ -85,17 +107,32 @@
                             aria-hidden="true">
                 </div>
 
-                <div class="ui-table__cell" data-field="borrowRecordId"></div>
-                <div class="ui-table__cell" data-field="bookItemId"></div>
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="borrowRecordId"></span>
+                </div>
 
-                <div class="ui-table__cell ui-table__cell--primary">
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="bookItemId"></span>
+                </div>
+
+                <div class="ui-table__cell ui-table__cell--primary ui-table__cell--fill-start">
                     <span class="ui-table__text" data-field="bookTitle"></span>
                 </div>
 
-                <div class="ui-table__cell" data-field="borrowedAt"></div>
-                <div class="ui-table__cell" data-field="dueAt"></div>
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="borrowedAt"></span>
+                </div>
 
-                <div class="ui-table__cell ui-table__cell--center">
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
+                    <span class="ui-table__text" data-field="dueAt"></span>
+                </div>
+
+                <div class="ui-table__cell ui-table__cell--center-start"
+                     >
                     <span class="book-return-result__overdue-badge" data-field="overdueText"></span>
                 </div>
             </div>

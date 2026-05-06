@@ -14,7 +14,9 @@ public class BookItemRequest {
     // 생성 + 수정
     public record Upsert (
             List<CreateEntry> createItems,
-            List<UpdateEntry> updateItems
+            List<UpdateEntry> updateItems,
+            List<Long> deleteItemIds
+
     ) {
         public record CreateEntry(
                 BookItemStatus status,

@@ -186,7 +186,12 @@
 
 .book-search-result__table {
     min-width: 820px;
-    --table-columns: minmax(220px, 2fr) minmax(160px, 1.2fr) minmax(120px, 1fr) 100px 120px;
+    --table-columns:
+            minmax(0, 2.4fr)
+            minmax(0, 1.3fr)
+            minmax(0, 1.1fr)
+            minmax(0, 0.55fr)
+            minmax(0, 0.7fr);
 }
 
 .book-search-result__row {
@@ -293,7 +298,12 @@
 
     .book-search-result__table {
         min-width: 720px;
-        --table-columns: minmax(180px, 1.6fr) minmax(140px, 1.1fr) minmax(100px, 1fr) 80px 100px;
+        --table-columns:
+                minmax(0, 2.2fr)
+                minmax(0, 1.2fr)
+                minmax(0, 1fr)
+                minmax(0, 0.55fr)
+                minmax(0, 0.7fr);
     }
 
     .book-search-modal__footer {

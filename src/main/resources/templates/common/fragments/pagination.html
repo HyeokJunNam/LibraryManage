@@ -5,7 +5,7 @@
 <th:block th:fragment="pagination(pageMetadata)">
 
     <div class="pagination"
-         th:if="${pageMetadata != null and pageMetadata.totalPages > 1}">
+         th:if="${pageMetadata != null}">
 
         <button
                 type="button"

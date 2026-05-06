@@ -12,14 +12,6 @@
                     이 도서의 재고별 대출 상태와 반납 여부를 확인합니다.
                 </p>
             </div>
-
-            <div class="book-borrow-card__summary">
-                <span>총</span>
-                <strong th:text="${borrowPageContent != null ? borrowPageContent.pageMetadata.totalElements : 0}">
-                    0
-                </strong>
-                <span>건</span>
-            </div>
         </div>
 
         <div
@@ -52,7 +44,7 @@
                             <div class="ui-table__cell">대출일</div>
                             <div class="ui-table__cell">반납 예정일</div>
                             <div class="ui-table__cell">반납일</div>
-                            <div class="ui-table__cell ui-table__cell--center">상태</div>
+                            <div class="ui-table__cell ui-table__cell--center">대출 상태</div>
                         </div>
 
                         <div>
@@ -105,19 +97,16 @@
                                 </div>
 
                                 <div class="ui-table__cell ui-table__cell--center">
-                                    <span
-                                            class="borrow-status-badge"
-                                            th:classappend="${borrowRecord.returnedAt != null}
-                                            ? ' borrow-status-badge--returned'
-                                            : (${borrowRecord.dueAt != null and borrowRecord.dueAt.isBefore(T(java.time.LocalDateTime).now())}
-                                                ? ' borrow-status-badge--overdue'
-                                                : ' borrow-status-badge--borrowed')"
-                                            th:text="${borrowRecord.returnedAt != null}
-                                            ? '반납완료'
-                                            : (${borrowRecord.dueAt != null and borrowRecord.dueAt.isBefore(T(java.time.LocalDateTime).now())}
-                                                ? '연체'
-                                                : '대출중')">
-                                        대출중
+                                    <span class="status-badge"
+                                          th:classappend="${borrowRecord.borrowStatus != null
+                                              ? ' status-badge--' + #strings.toLowerCase(borrowRecord.borrowStatus.value.name())
+                                              : ' status-badge--default'}"
+                                          th:text="${borrowRecord.borrowStatus != null
+                                              and borrowRecord.borrowStatus.label != null
+                                              and !#strings.isEmpty(borrowRecord.borrowStatus.label)
+                                                  ? borrowRecord.borrowStatus.label
+                                                  : '-'}">
+                                        대출 상태
                                     </span>
                                 </div>
 
@@ -126,40 +115,14 @@
 
                     </div>
                 </div>
-            </div>
 
-            <div
-                    class="book-borrow-pagination"
-                    th:if="${borrowPageContent.pageMetadata.totalPages > 1}">
+                <div
+                        class="table-block__pagination"
+                        th:if="${borrowPageContent.pageMetadata != null}"
+                        th:data-page-size="${borrowPageContent.pageMetadata.size}">
 
-                <button
-                        type="button"
-                        class="book-borrow-pagination__button"
-                        th:classappend="${borrowPageContent.pageMetadata.first} ? ' is-disabled' : ''"
-                        th:disabled="${borrowPageContent.pageMetadata.first}"
-                        th:data-page="${borrowPageContent.pageMetadata.page - 1}">
-                    이전
-                </button>
-
-                <button
-                        type="button"
-                        class="book-borrow-pagination__number"
-                        th:each="pageNumber : ${#numbers.sequence(0, borrowPageContent.pageMetadata.totalPages - 1)}"
-                        th:classappend="${pageNumber == borrowPageContent.pageMetadata.page} ? ' is-active' : ''"
-                        th:data-page="${pageNumber}"
-                        th:text="${pageNumber + 1}">
-                    1
-                </button>
-
-                <button
-                        type="button"
-                        class="book-borrow-pagination__button"
-                        th:classappend="${borrowPageContent.pageMetadata.last} ? ' is-disabled' : ''"
-                        th:disabled="${borrowPageContent.pageMetadata.last}"
-                        th:data-page="${borrowPageContent.pageMetadata.page + 1}">
-                    다음
-                </button>
-
+                    <th:block th:replace="~{common/fragments/pagination :: pagination(${borrowPageContent.pageMetadata})}"></th:block>
+                </div>
             </div>
 
         </div>

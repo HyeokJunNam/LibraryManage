@@ -3,6 +3,8 @@ package com.nhj.librarymanage.service;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.domain.model.dto.BookItemRequest;
+import com.nhj.librarymanage.error.code.BookErrorCode;
+import com.nhj.librarymanage.error.exception.book.BookItemAlreadyBorrowedException;
 import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +28,12 @@ public class BookItemService {
     public void upsetBookItem(Long bookId, BookItemRequest.Upsert upsert) {
         createBookItem(bookId, upsert.createItems());
         updateBookItem(bookId, upsert.updateItems());
+        deleteBookItem(upsert.deleteItemIds());
     }
 
     @Transactional
     public void createBookItem(Long bookId, List<BookItemRequest.Upsert.CreateEntry> creates) {
         Book book = bookRepository.getById(bookId);
-
         List<BookItem> bookItems = new ArrayList<>();
 
         for (BookItemRequest.Upsert.CreateEntry entry : creates) {
@@ -61,10 +63,29 @@ public class BookItemService {
 
         for (BookItemRequest.Upsert.UpdateEntry entry : updates) {
             BookItem bookItem = bookItemMap.get(entry.bookItemId());
+            validateNotBorrowed(bookItem);
+
             bookItem.update(entry.status(), entry.location());
         }
     }
 
+    @Transactional
+    public void deleteBookItem(List<Long> bookItemIds) {
+        List<BookItem> bookItems = bookItemRepository.findAllById(bookItemIds);
+
+        for (BookItem bookItem : bookItems) {
+            validateNotBorrowed(bookItem);
+        }
+
+        bookItemRepository.deleteAllByIdInBatch(bookItemIds);
+    }
+
+
+    private void validateNotBorrowed(BookItem bookItem) {
+        if (bookItem.getBorrowRecord() != null) {
+            throw new BookItemAlreadyBorrowedException(BookErrorCode.BOOK_ITEM_ALREADY_BORROWED);
+        }
+    }
 
 
 }
