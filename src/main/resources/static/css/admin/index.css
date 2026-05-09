@@ -297,7 +297,7 @@
 
 @media (max-width: 520px) {
     .panel,
-    .summary-card {
+    .statistics-card {
         padding: 18px;
     }
 

@@ -22,50 +22,9 @@ public class BookResponse {
             String author,
             String publisher,
             String description,
-            String thumbnailUrl,
-
-            int stockQuantity,
-            int borrowedQuantity,
-            int availableQuantity,
-
-            List<BookItemEntry> bookItems
+            String thumbnailUrl
     ) {
-
-        public record BookItemEntry(
-                Long bookItemId,
-                String location,
-                EnumOption<BorrowStatus> borrowStatus,
-                EnumOption<BookItemStatus> bookItemStatus,
-                LocalDateTime createdAt
-        ) {
-        }
-
         public static Detail from(Book book) {
-            int stockQuantity = 0;
-            int borrowedQuantity = 0;
-            int availableQuantity = 0;
-
-            List<BookItemEntry> bookItemEntries = new ArrayList<>();
-
-            for (BookItem bookItem : book.getBookItems()) {
-                stockQuantity++;
-
-                switch (bookItem.getBorrowStatus()) {
-                    case AVAILABLE -> availableQuantity++;
-                    case BORROWED -> borrowedQuantity++;
-                }
-
-                BookItemEntry bookItemEntry = new BookItemEntry(
-                        bookItem.getId(),
-                        bookItem.getLocation(),
-                        EnumOption.from(bookItem.getBorrowStatus()),
-                        EnumOption.from(bookItem.getStatus()),
-                        bookItem.getCreatedAt()
-                );
-
-                bookItemEntries.add(bookItemEntry);
-            }
-
             return new Detail(
                     book.getId(),
                     book.getIsbn(),
@@ -73,11 +32,7 @@ public class BookResponse {
                     book.getAuthor(),
                     book.getPublisher(),
                     book.getDescription(),
-                    book.getThumbnailUrl(),
-                    stockQuantity,
-                    borrowedQuantity,
-                    availableQuantity,
-                    bookItemEntries
+                    book.getThumbnailUrl()
             );
         }
     }

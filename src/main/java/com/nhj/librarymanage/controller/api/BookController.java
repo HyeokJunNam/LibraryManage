@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.ApiResponse;
+import com.nhj.librarymanage.domain.model.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.PageContent;
+import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.BookItemRequest;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
@@ -34,7 +34,7 @@ public class BookController {
     @Description(value = "도서 목록 조회")
     @GetMapping("/books")
     public ResponseEntity<ApiResponse> getBooks(@ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageContent<BookResponse.Summary> queryInfos = bookService.getBooks(searchCondition, pageable);
+        PageResponse<BookResponse.Summary> queryInfos = bookService.getBooks(searchCondition, pageable);
         ApiResponse apiResponse = ApiResponse.result(queryInfos);
 
         return ResponseEntity.ok().body(apiResponse);

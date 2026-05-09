@@ -1,8 +1,7 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.entity.BookItem;
-import com.nhj.librarymanage.domain.model.PageContent;
+import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.BookCreateEntry;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
@@ -30,11 +29,11 @@ public class BookService {
     }
 
     @Transactional
-    public PageContent<BookResponse.Summary> getBooks(BookRequest.SearchCondition searchCondition, Pageable pageable) {
+    public PageResponse<BookResponse.Summary> getBooks(BookRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<Book> books = bookRepository.findAll(searchCondition, pageable);
         Page<BookResponse.Summary> summaries = books.map(BookResponse.Summary::from);
 
-        return PageContent.from(summaries);
+        return PageResponse.from(summaries);
     }
 
 

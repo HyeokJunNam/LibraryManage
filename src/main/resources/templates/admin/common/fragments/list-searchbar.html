@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="listToolbar(searchFragment, actionFragment)">
+
+    <div class="list-toolbar">
+
+        <div class="list-toolbar__search">
+            <th:block th:replace="${searchFragment}">
+                <!-- search form -->
+            </th:block>
+        </div>
+
+        <div class="list-toolbar__actions"
+             th:if="${actionFragment != null}">
+            <th:block th:replace="${actionFragment}">
+                <!-- action buttons -->
+            </th:block>
+        </div>
+
+    </div>
+
+</th:block>
+
+</body>
+</html>

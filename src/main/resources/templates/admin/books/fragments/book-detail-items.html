@@ -2,10 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<section th:fragment="itemPanel(book)"
+<section th:fragment="bookItems"
          class="book-detail-items-card"
          id="bookDetailItemsCard"
-         th:data-book-id="${book.id}">
+         th:data-book-id="${bookId}">
 
     <div class="book-detail-items-card__head">
         <div>
@@ -41,7 +41,9 @@
 
     <div class="book-detail-items-card__body">
 
-        <div th:if="${book.bookItems == null or #lists.isEmpty(book.bookItems)}"
+        <div th:if="${itemPageResponse == null
+                or itemPageResponse.content == null
+                or #lists.isEmpty(itemPageResponse.content)}"
              class="book-detail-items-empty"
              id="bookDetailItemsEmpty">
             <div class="book-detail-items-empty__icon">📦</div>
@@ -53,7 +55,10 @@
 
         <div class="table-block table-block--reserve-space book-detail-items-table-block"
              id="bookDetailItemsTableBlock"
-             th:classappend="${book.bookItems == null or #lists.isEmpty(book.bookItems)} ? ' is-hidden' : ''">
+             th:classappend="${itemPageResponse == null
+                    or itemPageResponse.content == null
+                    or #lists.isEmpty(itemPageResponse.content)} ? ' is-hidden' : ''">
+
             <div class="ui-table-wrap">
                 <div class="ui-table book-detail-items-table">
 
@@ -67,9 +72,13 @@
                         <div class="ui-table__cell ui-table__cell--center">관리</div>
                     </div>
 
-                    <div id="bookDetailItemRows">
+                    <div id="bookDetailItemRows"
+                         th:data-page-start-index="${itemPageResponse != null
+                            and itemPageResponse.pageMetadata != null
+                                ? itemPageResponse.pageMetadata.page * itemPageResponse.pageMetadata.size
+                                : 0}">
 
-                        <div th:each="bookItem, stat : ${book.bookItems}"
+                        <div th:each="bookItem, stat : ${itemPageResponse.content}"
                              class="ui-table__row book-detail-items-table__row"
                              data-row-mode="clean"
                              th:data-book-item-id="${bookItem.bookItemId}"
@@ -79,7 +88,7 @@
 
                             <div class="ui-table__leading-cell">
                                 <span class="book-detail-item-row__index"
-                                      th:text="${stat.index + 1}">
+                                      th:text="${itemPageResponse.pageMetadata.page * itemPageResponse.pageMetadata.size + stat.index + 1}">
                                     1
                                 </span>
                             </div>
@@ -181,6 +190,15 @@
 
                 </div>
             </div>
+
+            <div class="table-block__pagination book-detail-items-pagination"
+                 id="bookDetailItemsPagination"
+                 th:if="${itemPageResponse != null and itemPageResponse.pageMetadata != null}"
+                 th:data-page-size="${itemPageResponse.pageMetadata.size}"
+                 th:data-total-pages="${itemPageResponse.pageMetadata.totalPages}">
+
+                <th:block th:replace="~{common/fragments/pagination :: pagination(${itemPageResponse.pageMetadata})}"></th:block>
+            </div>
         </div>
 
     </div>
@@ -191,7 +209,7 @@
              data-borrowed="false">
 
             <div class="ui-table__leading-cell">
-                <span class="book-detail-item-row__index"></span>
+                <span class="book-detail-item-row__index">신규</span>
             </div>
 
             <div class="ui-table__cell">

@@ -102,10 +102,10 @@ function renderSummaries() {
     summaryGrid.innerHTML = dashboardData.summaries
         .map(
             (summary) => `
-                <article class="summary-card">
-                    <p class="summary-card__label">${escapeHtml(summary.label)}</p>
-                    <strong class="summary-card__value">${escapeHtml(summary.value)}</strong>
-                    <p class="summary-card__meta">${escapeHtml(summary.meta)}</p>
+                <article class="statistics-card">
+                    <p class="statistics-card__label">${escapeHtml(summary.label)}</p>
+                    <strong class="statistics-card__value">${escapeHtml(summary.value)}</strong>
+                    <p class="statistics-card__meta">${escapeHtml(summary.meta)}</p>
                 </article>
             `
         )

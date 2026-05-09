@@ -144,7 +144,7 @@
     letter-spacing: 0.14em;
 }
 
-.book-detail .book-summary-wrap {
+.book-detail .book-statistics-wrap {
     min-width: 0;
     display: flex;
     align-items: stretch;

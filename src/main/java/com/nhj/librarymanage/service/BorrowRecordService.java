@@ -1,9 +1,9 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowRecordResponse;
-import com.nhj.librarymanage.domain.model.PageContent;
+import com.nhj.librarymanage.domain.model.PageResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
 import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -41,20 +39,25 @@ public class BorrowRecordService {
     */
 
     @Transactional
-    public PageContent<BorrowRecordResponse.MemberSummary> getBorrowRecordsByMember(Long memberId, Pageable pageable) {
+    public PageResponse<BorrowRecordResponse.MemberSummary> getBorrowRecordsByMember(Long memberId, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, pageable);
         Page<BorrowRecordResponse.MemberSummary> summaries = borrowRecords.map(BorrowRecordResponse.MemberSummary::from);
 
-        return PageContent.from(summaries);
+        return PageResponse.from(summaries);
     }
 
     @Transactional
-    public PageContent<BorrowRecordResponse.BookSummary> getBorrowRecordsByBook(Long bookId, Pageable pageable) {
+    public PageResponse<BorrowRecordResponse.BookSummary> getBorrowRecordsByBook(Long bookId, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByBookId(bookId, pageable);
         Page<BorrowRecordResponse.BookSummary> summaries = borrowRecords.map(BorrowRecordResponse.BookSummary::from);
 
-        return PageContent.from(summaries);
+        return PageResponse.from(summaries);
     }
+
+
+    public BorrowStatistics getBorrowStatistics() {
+        return borrowRecordRepository.getBorrowStatistics();
+    };
 
 
 }

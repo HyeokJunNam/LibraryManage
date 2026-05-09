@@ -26,9 +26,17 @@
     min-width: 720px;
     background: var(--white);
 
+    /*
+     * 사용처에서 필요한 값만 덮어쓴다.
+     *
+     * 예:
+     * .books-table {
+     *     min-width: 760px;
+     *     --table-columns: 2.5fr 2fr 1.6fr 1.8fr;
+     * }
+     */
     --table-leading-column: 56px;
     --table-columns: repeat(3, minmax(120px, 1fr));
-    --table-cell-text-width: 140px;
 }
 
 .ui-table__header,
@@ -37,25 +45,46 @@
     grid-template-columns: var(--table-leading-column) var(--table-columns);
     gap: 0;
     align-items: center;
+
     padding-right: 18px;
     padding-left: 18px;
 }
 
+/* =========================
+   TABLE HEADER
+========================= */
 .ui-table__header {
-    padding-top: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--gray-100);
-    background: #f8faf9;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--gray-200);
+    background: #fbfcfb;
 
-    color: var(--gray-500);
-    font-size: 12px;
+    color: var(--gray-800);
+    font-size: 13px;
     font-weight: 800;
     line-height: 1.2;
+    letter-spacing: 0.01em;
 }
 
+/*
+ * 헤더 안의 cell이 본문 cell 기본 스타일을 다시 먹지 않도록
+ * 헤더 스타일을 상속시킨다.
+ */
+.ui-table__header .ui-table__leading-cell,
+.ui-table__header .ui-table__cell {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+}
+
+/* =========================
+   TABLE ROW
+========================= */
 .ui-table__row {
-    padding-top: 16px;
-    padding-bottom: 16px;
+    padding-top: 17px;
+    padding-bottom: 17px;
     border-bottom: 1px solid var(--gray-100);
     background: var(--white);
     transition: background 0.15s ease;
@@ -65,6 +94,9 @@
     background: #f9fbfa;
 }
 
+/* =========================
+   TABLE CELL
+========================= */
 .ui-table__leading-cell,
 .ui-table__cell {
     min-width: 0;
@@ -75,10 +107,10 @@
     justify-content: center;
     text-align: center;
 
-    color: var(--gray-700);
+    color: var(--gray-600);
     font-size: 14px;
-    font-weight: 700;
-    line-height: 1.2;
+    font-weight: 500;
+    line-height: 1.35;
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -90,11 +122,13 @@
 }
 
 .ui-table__cell--primary {
-    color: var(--gray-900);
+    color: var(--gray-800);
+    font-weight: 600;
 }
 
 .ui-table__cell--muted {
     color: var(--gray-500);
+    font-weight: 500;
 }
 
 .ui-table__cell--checkbox {
@@ -145,6 +179,9 @@
     text-align: left;
 }
 
+/*
+ * 셀 내부 텍스트 말줄임 공통 처리.
+ */
 .ui-table__text {
     display: block;
     overflow: hidden;
@@ -158,15 +195,21 @@
     white-space: nowrap;
 }
 
+/* =========================
+   EMPTY
+========================= */
 .ui-table__empty-row {
     padding: 56px 24px 64px;
     text-align: center;
 
     color: var(--gray-500);
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 500;
 }
 
+/* =========================
+   PAGINATION
+========================= */
 .table-block__pagination {
     flex-shrink: 0;
     padding: 18px;

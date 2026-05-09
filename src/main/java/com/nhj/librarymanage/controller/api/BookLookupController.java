@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.ApiResponse;
+import com.nhj.librarymanage.domain.model.ApiResponse;
 import com.nhj.librarymanage.domain.model.dto.BookLookupResponse;
 import com.nhj.librarymanage.service.BookMetadataLookupService;
 import lombok.RequiredArgsConstructor;

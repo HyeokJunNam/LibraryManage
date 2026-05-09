@@ -33,50 +33,50 @@
             </div>
         </header>
 
-        <section class="summary-grid">
-            <article class="summary-card">
-                <p class="summary-card__label">전체 회원 수</p>
-                <strong class="summary-card__value"
+        <section class="statistics-grid">
+            <article class="statistics-card">
+                <p class="statistics-card__label">전체 회원 수</p>
+                <strong class="statistics-card__value"
                         th:text="${dashboard != null ? dashboard.memberCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta"
+                <p class="statistics-card__meta"
                    th:text="${dashboard != null ? dashboard.memberMeta : '이번 주 신규 가입 0명'}">
                     이번 주 신규 가입 0명
                 </p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">전체 도서 수</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">전체 도서 수</p>
+                <strong class="statistics-card__value"
                         th:text="${dashboard != null ? dashboard.bookCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta"
+                <p class="statistics-card__meta"
                    th:text="${dashboard != null ? dashboard.bookMeta : '이번 달 신규 등록 0권'}">
                     이번 달 신규 등록 0권
                 </p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">현재 대출 중</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">현재 대출 중</p>
+                <strong class="statistics-card__value"
                         th:text="${dashboard != null ? dashboard.activeBorrowCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta"
+                <p class="statistics-card__meta"
                    th:text="${dashboard != null ? dashboard.activeBorrowMeta : '오늘 기준 변동 없음'}">
                     오늘 기준 변동 없음
                 </p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">연체 건수</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">연체 건수</p>
+                <strong class="statistics-card__value"
                         th:text="${dashboard != null ? dashboard.overdueCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta"
+                <p class="statistics-card__meta"
                    th:text="${dashboard != null ? dashboard.overdueMeta : '확인이 필요한 항목입니다'}">
                     확인이 필요한 항목입니다
                 </p>

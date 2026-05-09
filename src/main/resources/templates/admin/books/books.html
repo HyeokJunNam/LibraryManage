@@ -6,6 +6,7 @@
     <title>도서 관리</title>
 
     <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/common/list-searchbar.css}">
     <link rel="stylesheet" th:href="@{/css/admin/books/books.css}">
 </head>
 <body>
@@ -27,91 +28,114 @@
             </div>
         </header>
 
-        <section class="summary-grid">
-            <article class="summary-card">
-                <p class="summary-card__label">전체 도서 수</p>
-                <strong class="summary-card__value"
-                        th:text="${bookSummary != null ? bookSummary.totalCount : 0}">
+        <section class="statistics-grid">
+            <article class="statistics-card">
+                <p class="statistics-card__label">전체 도서 재고 수</p>
+                <strong class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.totalBookItemCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">등록된 전체 도서 수</p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">대출 도서 수</p>
-                <strong class="summary-card__value"
-                        th:text="${bookSummary != null ? bookSummary.borrowedCount : 0}">
+            <article class="statistics-card">
+                <p class="statistics-card__label">대출 가능 도서 수</p>
+                <strong class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.totalBorrowCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">현재 대출 중인 도서 수</p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">연체 도서 수</p>
-                <strong class="summary-card__value"
-                        th:text="${bookSummary != null ? bookSummary.overdueCount : 0}">
+            <article class="statistics-card">
+                <p class="statistics-card__label">현재 대출 도서 수</p>
+                <strong class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.currentBorrowCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">반납 기한이 지난 도서 수</p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">미재고 도서 수</p>
-                <strong class="summary-card__value"
-                        th:text="${bookSummary != null ? bookSummary.outOfStockCount : 0}">
+            <article class="statistics-card">
+                <p class="statistics-card__label">연체 도서 수</p>
+                <strong class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.overdueBorrowCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">현재 재고가 없는 도서 수</p>
             </article>
-        </section>
-
-        <section class="filter-panel">
-            <form th:action="@{/admin/books}" method="get" class="filter-form" id="bookFilterForm">
-                <div class="filter-form__group filter-form__group--keyword">
-                    <label for="keyword" class="filter-form__label">검색어</label>
-                    <input id="keyword"
-                           name="keyword"
-                           type="text"
-                           class="filter-form__input"
-                           placeholder="ISBN, 도서명, 저자, 출판사로 검색"
-                           th:value="${param.keyword}">
-                </div>
-
-                <div class="filter-form__group">
-                    <label for="sort" class="filter-form__label">정렬</label>
-                    <select id="sort" name="sort" class="filter-form__select">
-                        <option value="latest"
-                                th:selected="${param.sort == null or param.sort[0] == 'latest'}">
-                            최신 등록순
-                        </option>
-                        <option value="title"
-                                th:selected="${param.sort != null and param.sort[0] == 'title'}">
-                            도서명순
-                        </option>
-                        <option value="author"
-                                th:selected="${param.sort != null and param.sort[0] == 'author'}">
-                            저자순
-                        </option>
-                        <option value="oldest"
-                                th:selected="${param.sort != null and param.sort[0] == 'oldest'}">
-                            오래된 등록순
-                        </option>
-                    </select>
-                </div>
-
-                <div class="filter-form__actions">
-                    <button type="submit" class="btn btn--primary">검색</button>
-                    <a th:href="@{/admin/books}" class="btn btn--secondary">초기화</a>
-                </div>
-            </form>
         </section>
 
         <section class="books-table-card">
             <div class="books-table-card__head">
-                <div>
-                    <h3 class="books-table-card__title">도서 목록</h3>
-                    <p class="books-table-card__desc">조건에 맞는 도서 목록을 확인할 수 있습니다.</p>
-                </div>
+                <h3 class="books-table-card__title">도서 목록</h3>
+
+                <form th:action="@{/admin/books}"
+                      method="get"
+                      class="list-search books-list-search"
+                      id="bookSearchForm">
+
+                    <select id="bookSearchTarget"
+                            class="list-search__select"
+                            aria-label="검색 조건">
+                        <option value="title"
+                                th:selected="${searchCondition == null
+                                    or (
+                                        (searchCondition.title != null and !#strings.isEmpty(searchCondition.title))
+                                        or (
+                                            (searchCondition.isbn == null or #strings.isEmpty(searchCondition.isbn))
+                                            and (searchCondition.author == null or #strings.isEmpty(searchCondition.author))
+                                            and (searchCondition.publisher == null or #strings.isEmpty(searchCondition.publisher))
+                                        )
+                                    )}">
+                            도서명
+                        </option>
+                        <option value="isbn"
+                                th:selected="${searchCondition != null
+                                    and searchCondition.isbn != null
+                                    and !#strings.isEmpty(searchCondition.isbn)}">
+                            ISBN
+                        </option>
+                        <option value="author"
+                                th:selected="${searchCondition != null
+                                    and searchCondition.author != null
+                                    and !#strings.isEmpty(searchCondition.author)}">
+                            저자
+                        </option>
+                        <option value="publisher"
+                                th:selected="${searchCondition != null
+                                    and searchCondition.publisher != null
+                                    and !#strings.isEmpty(searchCondition.publisher)}">
+                            출판사
+                        </option>
+                    </select>
+
+                    <input id="bookSearchKeyword"
+                           type="text"
+                           class="list-search__input"
+                           placeholder="검색어를 입력하세요"
+                           aria-label="검색어"
+                           th:value="${searchCondition != null
+                                ? (
+                                    searchCondition.isbn != null and !#strings.isEmpty(searchCondition.isbn)
+                                        ? searchCondition.isbn
+                                        : (
+                                            searchCondition.author != null and !#strings.isEmpty(searchCondition.author)
+                                                ? searchCondition.author
+                                                : (
+                                                    searchCondition.publisher != null and !#strings.isEmpty(searchCondition.publisher)
+                                                        ? searchCondition.publisher
+                                                        : searchCondition.title
+                                                )
+                                        )
+                                )
+                                : ''}">
+
+                    <input type="hidden" name="title" id="bookSearchTitle">
+                    <input type="hidden" name="isbn" id="bookSearchIsbn">
+                    <input type="hidden" name="author" id="bookSearchAuthor">
+                    <input type="hidden" name="publisher" id="bookSearchPublisher">
+
+                    <button type="submit" class="list-search__button">
+                        검색
+                    </button>
+                </form>
             </div>
 
             <div th:if="${bookPageContent == null
@@ -167,24 +191,21 @@
                                     </span>
                                 </div>
 
-                                <div class="ui-table__cell ui-table__cell--center-start"
-                                     >
+                                <div class="ui-table__cell ui-table__cell--center-start">
                                     <span class="ui-table__text"
                                           th:text="${book.isbn != null ? book.isbn : '-'}">
                                         9781234567890
                                     </span>
                                 </div>
 
-                                <div class="ui-table__cell ui-table__cell--center-start"
-                                     >
+                                <div class="ui-table__cell ui-table__cell--center-start">
                                     <span class="ui-table__text"
                                           th:text="${book.author != null ? book.author : '-'}">
                                         홍길동
                                     </span>
                                 </div>
 
-                                <div class="ui-table__cell ui-table__cell--center-start"
-                                     >
+                                <div class="ui-table__cell ui-table__cell--center-start">
                                     <span class="ui-table__text"
                                           th:text="${book.publisher != null ? book.publisher : '-'}">
                                         오픈AI출판사
@@ -229,6 +250,42 @@
                 }
             });
         });
+
+        const searchForm = document.getElementById("bookSearchForm");
+        const searchTarget = document.getElementById("bookSearchTarget");
+        const searchKeyword = document.getElementById("bookSearchKeyword");
+
+        const hiddenFields = {
+            title: document.getElementById("bookSearchTitle"),
+            isbn: document.getElementById("bookSearchIsbn"),
+            author: document.getElementById("bookSearchAuthor"),
+            publisher: document.getElementById("bookSearchPublisher")
+        };
+
+        if (searchForm && searchTarget && searchKeyword) {
+            searchForm.addEventListener("submit", function () {
+                Object.values(hiddenFields).forEach((field) => {
+                    if (field) {
+                        field.value = "";
+                        field.disabled = true;
+                    }
+                });
+
+                const target = searchTarget.value;
+                const keyword = searchKeyword.value.trim();
+
+                if (!keyword) {
+                    return;
+                }
+
+                const selectedField = hiddenFields[target];
+
+                if (selectedField) {
+                    selectedField.disabled = false;
+                    selectedField.value = keyword;
+                }
+            });
+        }
     });
 </script>
 </body>

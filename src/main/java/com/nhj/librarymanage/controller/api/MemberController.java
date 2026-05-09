@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.ApiResponse;
+import com.nhj.librarymanage.domain.model.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;

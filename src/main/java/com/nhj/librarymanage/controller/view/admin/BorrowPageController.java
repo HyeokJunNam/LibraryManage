@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.PageContent;
+import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.BorrowRecordResponse;
 import com.nhj.librarymanage.service.BorrowRecordService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class BorrowPageController {
     @Description(value = "도서 별 도서 대여 현황 조회")
     @GetMapping("/books/{id}/borrows")
     public String bookBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
-        PageContent<BorrowRecordResponse.BookSummary> pageContent = borrowRecordService.getBorrowRecordsByBook(id, pageable);
-        model.addAttribute("borrowPageContent", pageContent);
+        PageResponse<BorrowRecordResponse.BookSummary> pageResponse = borrowRecordService.getBorrowRecordsByBook(id, pageable);
+        model.addAttribute("borrowPageContent", pageResponse);
 
         return "admin/books/fragments/book-detail-borrows :: bookBorrows";
     }

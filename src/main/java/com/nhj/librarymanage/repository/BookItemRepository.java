@@ -1,9 +1,10 @@
 package com.nhj.librarymanage.repository;
 
-import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,7 +18,6 @@ public interface BookItemRepository extends JpaRepository<BookItem, Long> {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(BookErrorCode.BOOK_ITEM_NOT_FOUND));
     }
 
-    Optional<BookItem> findFirstByBookId(long bookId);
-
+    List<BookItem> findAllByBookId(long bookId);
 
 }

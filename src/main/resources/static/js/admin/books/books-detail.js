@@ -58,27 +58,7 @@ function initBookBorrowArea() {
             bookBorrowArea.innerHTML = html;
         } catch (error) {
             console.error(error);
-
-            bookBorrowArea.innerHTML = `
-                <section class="book-borrow-card">
-                    <div class="book-borrow-card__head">
-                        <div>
-                            <h3 class="book-borrow-card__title">대출 현황</h3>
-                            <p class="book-borrow-card__desc">
-                                대출 현황을 불러오지 못했습니다.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="book-borrow-empty">
-                        <div class="book-borrow-empty__icon">⚠️</div>
-                        <h4 class="book-borrow-empty__title">대출 현황 조회 실패</h4>
-                        <p class="book-borrow-empty__desc">
-                            잠시 후 다시 시도해주세요.
-                        </p>
-                    </div>
-                </section>
-            `;
+            await showSimpleAlert("대출 현황을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
         }
     }
 
@@ -109,4 +89,67 @@ function initBookBorrowArea() {
     });
 
     renderBorrows(0);
+}
+
+function showSimpleAlert(message, title = "안내") {
+    const modal = document.querySelector('[data-role="alert-modal"]');
+    const titleElement = document.querySelector("#alert-modal-title");
+    const messageElement = document.querySelector("#alert-modal-message");
+    const confirmButton = document.querySelector('[data-role="alert-modal-confirm"]');
+    const cancelButton = document.querySelector('[data-role="alert-modal-cancel"]');
+    const backdrop = document.querySelector('[data-role="alert-modal-backdrop"]');
+
+    if (!modal || !titleElement || !messageElement || !confirmButton || !cancelButton) {
+        window.alert(message);
+        return Promise.resolve();
+    }
+
+    titleElement.textContent = title;
+    messageElement.textContent = message;
+    confirmButton.textContent = "확인";
+    cancelButton.hidden = true;
+
+    modal.hidden = false;
+    document.body.classList.add("modal-open");
+
+    return new Promise(resolve => {
+        let resolved = false;
+
+        function close() {
+            if (resolved) {
+                return;
+            }
+
+            resolved = true;
+
+            modal.hidden = true;
+            document.body.classList.remove("modal-open");
+
+            confirmButton.removeEventListener("click", handleConfirm);
+            backdrop?.removeEventListener("click", handleBackdrop);
+            document.removeEventListener("keydown", handleKeydown);
+
+            resolve();
+        }
+
+        function handleConfirm() {
+            close();
+        }
+
+        function handleBackdrop() {
+            close();
+        }
+
+        function handleKeydown(event) {
+            if (event.key === "Escape") {
+                close();
+            }
+        }
+
+        confirmButton.addEventListener("click", handleConfirm);
+        backdrop?.addEventListener("click", handleBackdrop);
+        document.addEventListener("keydown", handleKeydown);
+
+        confirmButton.focus();
+    });
 }

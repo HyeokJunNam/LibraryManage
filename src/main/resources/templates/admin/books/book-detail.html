@@ -87,7 +87,7 @@
                         </div>
                     </div>
 
-                    <div class="book-stock-summary">
+                    <!--<div class="book-stock-summary">
                         <article class="book-stock-summary__item">
                             <span class="book-stock-summary__label">전체 재고</span>
                             <strong class="book-stock-summary__value"
@@ -106,12 +106,12 @@
 
                         <article class="book-stock-summary__item">
                             <span class="book-stock-summary__label">대출 가능</span>
-                            <strong class="book-stock-summary__value book-stock-summary__value--available"
+                            <strong class="book-stock-summary__value book-stock-summary__value&#45;&#45;available"
                                     th:text="${book.availableQuantity}">
                                 0
                             </strong>
                         </article>
-                    </div>
+                    </div>-->
 
                     <div class="book-info-list">
 
@@ -156,7 +156,11 @@
 
             </section>
 
-            <th:block th:replace="~{admin/books/fragments/book-detail-items :: itemPanel(${book})}"></th:block>
+            <section
+                    class="book-detail-items-area"
+                    id="bookDetailItemsArea"
+                    th:data-items-url="@{/admin/books/{bookId}/items(bookId=${book.id})}">
+            </section>
 
             <section
                     class="book-borrow-area"

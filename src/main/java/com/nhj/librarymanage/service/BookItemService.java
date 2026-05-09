@@ -2,12 +2,17 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookItem;
+import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.BookItemRequest;
+import com.nhj.librarymanage.domain.model.dto.BookItemResponse;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.BookItemAlreadyBorrowedException;
 import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +28,51 @@ public class BookItemService {
 
     private final BookRepository bookRepository;
     private final BookItemRepository bookItemRepository;
+
+    @Transactional
+    public PageResponse<BookItemResponse.Summary> getBookItems(Long bookId, Pageable pageable) {
+        List<BookItem> bookItems = bookItemRepository.findAllByBookId(bookId);
+
+        int stockQuantity = 0;
+        int borrowedQuantity = 0;
+        int availableQuantity = 0;
+
+        List<BookItemResponse.Summary> summaries = new ArrayList<>();
+
+        for (BookItem bookItem : bookItems) {
+            stockQuantity++;
+
+            switch (bookItem.getBorrowStatus()) {
+                case AVAILABLE -> availableQuantity++;
+                case BORROWED -> borrowedQuantity++;
+            }
+
+            summaries.add(BookItemResponse.Summary.from(bookItem));
+        }
+
+        BookItemResponse.Attribute attribute = new BookItemResponse.Attribute(
+                stockQuantity,
+                borrowedQuantity,
+                availableQuantity
+        );
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), summaries.size());
+
+        List<BookItemResponse.Summary> pageContent =
+                start >= summaries.size()
+                        ? List.of()
+                        : summaries.subList(start, end);
+
+        Page<BookItemResponse.Summary> page = new PageImpl<>(
+                pageContent,
+                pageable,
+                summaries.size()
+        );
+
+        return PageResponse.of(page, attribute);
+
+    }
 
     @Transactional
     public void upsetBookItem(Long bookId, BookItemRequest.Upsert upsert) {

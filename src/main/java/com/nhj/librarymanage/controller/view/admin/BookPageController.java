@@ -2,11 +2,14 @@ package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.code.AdminPageOptions;
-import com.nhj.librarymanage.domain.code.BookItemStatus;
-import com.nhj.librarymanage.domain.model.PageContent;
+import com.nhj.librarymanage.domain.model.PageResponse;
+import com.nhj.librarymanage.domain.model.dto.BookItemResponse;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
+import com.nhj.librarymanage.service.BookItemService;
 import com.nhj.librarymanage.service.BookService;
+import com.nhj.librarymanage.service.BorrowRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -22,12 +25,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BookPageController {
 
     private final BookService bookService;
+    private final BookItemService bookItemService;
+    private final BorrowRecordService borrowRecordService;
 
     @Description("도서 관리 화면")
     @GetMapping("/books")
     public String books(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageContent<BookResponse.Summary> pageContent = bookService.getBooks(searchCondition, pageable);
-        model.addAttribute("bookPageContent", pageContent);
+        PageResponse<BookResponse.Summary> pageResponse = bookService.getBooks(searchCondition, pageable);
+        BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
+
+        model.addAttribute("bookPageContent", pageResponse);
+        model.addAttribute("borrowStatistics", borrowStatistics);
 
         return "admin/books/books";
     }
@@ -38,7 +46,7 @@ public class BookPageController {
         BookResponse.Detail detail = bookService.getBook(id);
 
         model.addAttribute("book", detail);
-        model.addAttribute("options", AdminPageOptions.options());
+
 
         return "admin/books/book-detail";
     }
@@ -57,6 +65,18 @@ public class BookPageController {
         model.addAttribute("book", detail);
 
         return "admin/books/books-edit";
+    }
+
+    @Description(value = "도서 재고 현황 조회")
+    @GetMapping("/books/{id}/items")
+    public String bookItemFragment(Model model, @PathVariable Long id, Pageable pageable) {
+        PageResponse<BookItemResponse.Summary> pageResponse = bookItemService.getBookItems(id, pageable);
+
+        model.addAttribute("bookId", id);
+        model.addAttribute("itemPageResponse", pageResponse);
+        model.addAttribute("options", AdminPageOptions.options());
+
+        return "admin/books/fragments/book-detail-items :: bookItems";
     }
 
 }

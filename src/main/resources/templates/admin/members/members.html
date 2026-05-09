@@ -29,42 +29,42 @@
             </div>
         </header>
 
-        <section class="summary-grid">
+        <section class="statistics-grid">
 
-            <article class="summary-card">
-                <p class="summary-card__label">전체 회원</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">전체 회원</p>
+                <strong class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.totalCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">등록된 전체 회원 수</p>
+                <p class="statistics-card__meta">등록된 전체 회원 수</p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">활성 회원</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">활성 회원</p>
+                <strong class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.activeCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">정상 이용 가능 회원</p>
+                <p class="statistics-card__meta">정상 이용 가능 회원</p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">휴면 회원</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">휴면 회원</p>
+                <strong class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.inactiveCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">최근 활동 이력이 적은 회원</p>
+                <p class="statistics-card__meta">최근 활동 이력이 적은 회원</p>
             </article>
 
-            <article class="summary-card">
-                <p class="summary-card__label">정지 회원</p>
-                <strong class="summary-card__value"
+            <article class="statistics-card">
+                <p class="statistics-card__label">정지 회원</p>
+                <strong class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.suspendedCount : 0}">
                     0
                 </strong>
-                <p class="summary-card__meta">이용 제한 상태 회원</p>
+                <p class="statistics-card__meta">이용 제한 상태 회원</p>
             </article>
 
         </section>
