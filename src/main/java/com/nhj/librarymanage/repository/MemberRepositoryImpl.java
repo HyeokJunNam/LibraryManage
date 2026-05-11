@@ -33,9 +33,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     public Page<Member> findAll(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(member.id, ORDER_COLUMN_MAP, pageable);
 
-        BooleanExpression likeName = QuerydslFilterHelper.like(member.name, searchCondition.getName());
-        BooleanExpression likeMemberNo = QuerydslFilterHelper.like(member.memberNo, searchCondition.getMemberNo());
-        BooleanExpression likeEmail = QuerydslFilterHelper.like(member.email, searchCondition.getEmail());
+        BooleanExpression likeName = QuerydslFilterHelper.like(member.name, searchCondition.name());
+        BooleanExpression likeMemberNo = QuerydslFilterHelper.like(member.memberNo, searchCondition.memberNo());
+        BooleanExpression likeEmail = QuerydslFilterHelper.like(member.email, searchCondition.email());
 
         List<Member> query = jpaQueryFactory
                 .selectFrom(member)

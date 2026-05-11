@@ -1,22 +1,14 @@
 package com.nhj.librarymanage.domain.model;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
+import java.util.function.Function;
 
-public record PageResponse<T>(
-        List<T> content,
-        PageMetadata pageMetadata
+public record PageResponseTest<T>(
+        T content,
+        PageMetadata page
 ) {
-    public static <T> PageResponse<T> from(Page<T> page) {
-        return new PageResponse<>(
-                page.getContent(),
-                PageMetadata.from(page)
-        );
-    }
-
-    // 스프링이나.. 그런 형태에 종속되지 않기 위함.. 이라고 한다면...
     public record PageMetadata(
             int page,
             int size,
@@ -37,4 +29,13 @@ public record PageResponse<T>(
         }
     }
 
+    public static <E, C> PageResponseTest<C> from(
+            Page<E> page,
+            Function<List<E>, C> converter
+    ) {
+        return new PageResponseTest<>(
+                converter.apply(page.getContent()),
+                PageMetadata.from(page)
+        );
+    }
 }

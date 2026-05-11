@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public enum BookItemStatus implements LabelEnum {
+public enum BookCopyStatus implements LabelEnum {
 
     AVAILABLE("정상"),
     DAMAGED("파손"),
@@ -22,7 +22,7 @@ public enum BookItemStatus implements LabelEnum {
         return name();
     }
 
-    public static List<EnumOption<BookItemStatus>> options() {
+    public static List<EnumOption<BookCopyStatus>> options() {
         return Arrays.stream(values())
                 .map(status -> new EnumOption<>(status, status.getLabel()))
                 .toList();

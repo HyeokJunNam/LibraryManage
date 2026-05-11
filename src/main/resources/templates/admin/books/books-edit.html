@@ -180,7 +180,7 @@
                 <div class="book-stock-panel__body">
 
                     <div
-                            th:if="${bookItems == null or #lists.isEmpty(bookItems)}"
+                            th:if="${bookCopies == null or #lists.isEmpty(bookCopies)}"
                             class="book-stock-empty">
                         <div class="book-stock-empty__icon">📦</div>
                         <h4 class="book-stock-empty__title">등록된 재고가 없습니다</h4>
@@ -190,7 +190,7 @@
                     </div>
 
                     <div
-                            th:if="${bookItems != null and !#lists.isEmpty(bookItems)}"
+                            th:if="${bookCopies != null and !#lists.isEmpty(bookCopies)}"
                             class="book-stock-content">
 
                         <div class="book-stock-list-card">
@@ -214,22 +214,22 @@
                                         </div>
 
                                         <div
-                                                th:each="bookItem, stat : ${bookItems}"
+                                                th:each="bookCopy, stat : ${bookCopies}"
                                                 class="ui-table__row book-stock-row"
                                                 data-role="select-book-item"
                                                 role="button"
                                                 tabindex="0"
-                                                th:attr="data-book-item-id=${bookItem.bookItemId},
-                                                data-location=${bookItem.location},
-                                                data-status=${bookItem.status},
-                                                data-note=${bookItem.note}">
+                                                th:attr="data-book-item-id=${bookCopy.bookItemId},
+                                                data-location=${bookCopy.location},
+                                                data-status=${bookCopy.status},
+                                                data-note=${bookCopy.note}">
 
                                             <div class="ui-table__leading-cell">
                                                 <input
                                                         type="radio"
                                                         name="selectedBookItem"
                                                         class="book-stock-row__radio"
-                                                        th:value="${bookItem.bookItemId}"
+                                                        th:value="${bookCopy.bookItemId}"
                                                         th:checked="${stat.first}"
                                                         tabindex="-1"
                                                         aria-hidden="true">
@@ -237,31 +237,31 @@
 
                                             <div
                                                     class="ui-table__cell"
-                                                    th:text="${bookItem.bookItemId}">
+                                                    th:text="${bookCopy.bookItemId}">
                                                 1
                                             </div>
 
                                             <div
                                                     class="ui-table__cell"
-                                                    th:text="${bookItem.location != null ? bookItem.location : '-'}">
+                                                    th:text="${bookCopy.location != null ? bookCopy.location : '-'}">
                                                 A-01
                                             </div>
 
                                             <div class="ui-table__cell ui-table__cell--center">
                                                 <span
                                                         class="book-stock-status"
-                                                        th:classappend="${bookItem.status == 'AVAILABLE'}
+                                                        th:classappend="${bookCopy.status == 'AVAILABLE'}
                                                         ? ' book-stock-status--available'
-                                                        : (${bookItem.status == 'BORROWED'}
+                                                        : (${bookCopy.status == 'BORROWED'}
                                                             ? ' book-stock-status--borrowed'
                                                             : ' book-stock-status--unavailable')"
-                                                        th:text="${bookItem.statusText != null ? bookItem.statusText : bookItem.status}">
+                                                        th:text="${bookCopy.statusText != null ? bookCopy.statusText : bookCopy.status}">
                                                     대출 가능
                                                 </span>
                                             </div>
 
                                             <div class="ui-table__cell ui-table__cell--muted"
-                                                 th:text="${bookItem.note != null and !#strings.isEmpty(bookItem.note) ? bookItem.note : '-'}">
+                                                 th:text="${bookCopy.note != null and !#strings.isEmpty(bookCopy.note) ? bookCopy.note : '-'}">
                                                 -
                                             </div>
                                         </div>
@@ -291,7 +291,7 @@
                                         type="hidden"
                                         id="selectedBookItemId"
                                         name="bookItemId"
-                                        th:value="${bookItems != null and !#lists.isEmpty(bookItems) ? bookItems[0].bookItemId : ''}">
+                                        th:value="${bookCopies != null and !#lists.isEmpty(bookCopies) ? bookCopies[0].bookItemId : ''}">
 
                                 <div class="book-field-grid">
                                     <div class="field">
@@ -305,7 +305,7 @@
                                                 class="field__control"
                                                 placeholder="예: A-01"
                                                 autocomplete="off"
-                                                th:value="${bookItems != null and !#lists.isEmpty(bookItems) ? bookItems[0].location : ''}">
+                                                th:value="${bookCopies != null and !#lists.isEmpty(bookCopies) ? bookCopies[0].location : ''}">
                                     </div>
 
                                     <div class="field">
@@ -317,19 +317,19 @@
                                                 name="status"
                                                 class="field__control">
                                             <option value="AVAILABLE"
-                                                    th:selected="${bookItems != null and !#lists.isEmpty(bookItems) and bookItems[0].status == 'AVAILABLE'}">
+                                                    th:selected="${bookCopies != null and !#lists.isEmpty(bookCopies) and bookCopies[0].status == 'AVAILABLE'}">
                                                 대출 가능
                                             </option>
                                             <option value="BORROWED"
-                                                    th:selected="${bookItems != null and !#lists.isEmpty(bookItems) and bookItems[0].status == 'BORROWED'}">
+                                                    th:selected="${bookCopies != null and !#lists.isEmpty(bookCopies) and bookCopies[0].status == 'BORROWED'}">
                                                 대출 중
                                             </option>
                                             <option value="UNAVAILABLE"
-                                                    th:selected="${bookItems != null and !#lists.isEmpty(bookItems) and bookItems[0].status == 'UNAVAILABLE'}">
+                                                    th:selected="${bookCopies != null and !#lists.isEmpty(bookCopies) and bookCopies[0].status == 'UNAVAILABLE'}">
                                                 이용 불가
                                             </option>
                                             <option value="LOST"
-                                                    th:selected="${bookItems != null and !#lists.isEmpty(bookItems) and bookItems[0].status == 'LOST'}">
+                                                    th:selected="${bookCopies != null and !#lists.isEmpty(bookCopies) and bookCopies[0].status == 'LOST'}">
                                                 분실
                                             </option>
                                         </select>
@@ -343,7 +343,7 @@
                                             name="note"
                                             class="field__control book-item-note"
                                             placeholder="재고별 특이사항을 입력하세요"
-                                            th:text="${bookItems != null and !#lists.isEmpty(bookItems) ? bookItems[0].note : ''}"></textarea>
+                                            th:text="${bookCopies != null and !#lists.isEmpty(bookCopies) ? bookCopies[0].note : ''}"></textarea>
                                 </div>
 
                                 <div class="book-item-edit-form__actions">

@@ -2,40 +2,35 @@ package com.nhj.librarymanage.domain.model.dto;
 
 import com.nhj.librarymanage.security.member.Role;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberRequest {
 
-    @AllArgsConstructor
-    @Getter
-    public static class SearchCondition {
-        private String name;
-        private String memberNo;
-        private String email;
+    public record SearchCondition(
+            String name,
+            String memberNo,
+            String email
+    ) {
     }
 
     // 생성 요청
-    @AllArgsConstructor
-    @Getter
-    public static class Create {
-        private String loginId;
-        private String password;
-        private Role role;
-        private String name;
-        private String email;
-        private String signupToken;
+    public record Create(
+            String loginId,
+            String password,
+            Role role,
+            String name,
+            String email,
+            String signupToken
+    ) {
     }
 
     // 수정 요청
-    @AllArgsConstructor
-    @Getter
-    public static class Update {
-        private Long id;
-        private String name;
 
+    public record Update(
+            Long id,
+            String name
+    ) {
     }
 
 }

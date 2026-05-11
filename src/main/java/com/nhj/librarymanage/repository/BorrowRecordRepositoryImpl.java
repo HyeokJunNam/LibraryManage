@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowHistoryRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
@@ -19,12 +19,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import static com.nhj.librarymanage.domain.entity.QBook.book;
-import static com.nhj.librarymanage.domain.entity.QBookItem.bookItem;
+import static com.nhj.librarymanage.domain.entity.QBookCopy.bookCopy;
 import static com.nhj.librarymanage.domain.entity.QBorrowRecord.borrowRecord;
 import static com.nhj.librarymanage.domain.entity.QMember.member;
 
@@ -37,28 +38,33 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     private static final Map<String, Expression<? extends Comparable<?>>> ORDER_COLUMN_MAP =
             QuerydslSortHelper.buildOrderColumnMap(List.of());
 
-    @Override
-    public Page<BorrowRecord> search(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
-        //BooleanExpression onlyBorrowed = searchConditionDto.isOnlyBorrowed() ? QuerydslFilterHelper.istNotNull(book.borrowRecord) : null;
 
+    private JPAQuery<BorrowRecord> searchQuery(Pageable pageable) {
+        return jpaQueryFactory
+                .selectFrom(borrowRecord)
+                .innerJoin(borrowRecord.bookCopy, bookCopy).fetchJoin()
+                .innerJoin(bookCopy.book, book).fetchJoin()
+                .innerJoin(borrowRecord.member, member).fetchJoin()
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize());
+    }
+
+    @Override
+    public Page<BorrowRecord> search(BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
 
-        List<BorrowRecord> query = jpaQueryFactory
-                .selectFrom(borrowRecord)
-                .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
-                .innerJoin(borrowRecord.member, member).fetchJoin()
-                //.where(onlyBorrowed)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+        BooleanExpression likeMemberName = QuerydslFilterHelper.like(borrowRecord.member.name, searchCondition.memberName());
+        BooleanExpression likeBookTitle = QuerydslFilterHelper.like(book.title, searchCondition.bookTitle());
+
+        List<BorrowRecord> query = searchQuery(pageable)
+                .where(likeMemberName, likeBookTitle)
                 .orderBy(order)
                 .fetch();
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(borrowRecord.id.count())
                 .from(borrowRecord)
-                .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
-                .innerJoin(borrowRecord.member, member).fetchJoin();
-                //.where(onlyBorrowed);
+                .where(likeMemberName, likeBookTitle);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
@@ -67,24 +73,16 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     public Page<BorrowRecord> searchByMemberId(Long memberId, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
         BooleanExpression eqMemberId = QuerydslFilterHelper.eq(borrowRecord.member.id, memberId);
-        BooleanExpression notReturned = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);
 
-        List<BorrowRecord> query = jpaQueryFactory
-                .selectFrom(borrowRecord)
-                .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
-                .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(eqMemberId, notReturned)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+        List<BorrowRecord> query = searchQuery(pageable)
+                .where(eqMemberId)
                 .orderBy(order)
                 .fetch();
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(borrowRecord.id.count())
                 .from(borrowRecord)
-                .innerJoin(borrowRecord.bookitem, bookItem).fetchJoin()
-                .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(eqMemberId, notReturned);
+                .where(eqMemberId);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
@@ -92,33 +90,29 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     @Override
     public Page<BorrowRecord> searchByBookId(Long bookId, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
-        BooleanExpression eqBookId = QuerydslFilterHelper.eq(borrowRecord.bookitem.book.id, bookId);
+        BooleanExpression eqBookId = QuerydslFilterHelper.eq(borrowRecord.bookCopy.book.id, bookId); // 얘때문??
 
-        List<BorrowRecord> query = jpaQueryFactory
-                .selectFrom(borrowRecord)
+        List<BorrowRecord> query = searchQuery(pageable)
                 .where(eqBookId)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .orderBy(order)
                 .fetch();
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(borrowRecord.id.count())
                 .from(borrowRecord)
+                .innerJoin(borrowRecord.bookCopy, bookCopy)
+                .innerJoin(bookCopy.book, book)
                 .where(eqBookId);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
 
-    // 구할 것
-    // 총 도서 수 / 대출 가능 도서 수 / 대출 중 도서 수 / 연체 중 도서 수
-    // 하지만 "재고" 기준으로 따져야 하긴 함.
     public BorrowStatistics getBorrowStatistics() {
         LocalDateTime now = LocalDateTime.now();
 
         Long totalBookItemCount = jpaQueryFactory
-                .select(bookItem.id.count())
-                .from(bookItem)
+                .select(bookCopy.id.count())
+                .from(bookCopy)
                 .fetchOne();
 
         totalBookItemCount = totalBookItemCount != null ? totalBookItemCount : 0L;
@@ -150,6 +144,28 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 ))
                 .from(borrowRecord)
                 .fetchOne();
+    }
+
+    public Page<BorrowRecord> searchOverdueBorrowRecords(BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+        OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
+
+        BooleanExpression notReturned = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);
+        BooleanExpression overdue = QuerydslFilterHelper.before(borrowRecord.dueAt, LocalDate.now());
+
+        BooleanExpression likeMemberName = QuerydslFilterHelper.like(borrowRecord.member.name, searchCondition.memberName());
+        BooleanExpression likeBookTitle = QuerydslFilterHelper.like(book.title, searchCondition.bookTitle());
+
+        List<BorrowRecord> query = searchQuery(pageable)
+                .where(notReturned, overdue, likeMemberName, likeBookTitle)
+                .orderBy(order)
+                .fetch();
+
+        JPAQuery<Long> countQuery = jpaQueryFactory
+                .select(borrowRecord.id.count())
+                .from(borrowRecord)
+                .where(notReturned, overdue, likeMemberName, likeBookTitle);
+
+        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
 
 }

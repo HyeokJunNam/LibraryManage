@@ -585,7 +585,7 @@ function initBookItemsArea() {
         }
 
         const editButton = itemsCard.querySelector("#editBookItemsButton");
-        const editActions = itemsCard.querySelector("#bookItemEditActions");
+        const editActions = itemsCard.querySelector("#bookCopyEditActions");
         const emptyArea = itemsCard.querySelector("#bookDetailItemsEmpty");
         const tableBlock = itemsCard.querySelector("#bookDetailItemsTableBlock");
 
@@ -871,7 +871,7 @@ function initBookItemsArea() {
         setSaving(true);
 
         try {
-            const response = await fetch(`/api/books/${bookId}/items/batch`, {
+            const response = await fetch(`/api/books/${bookId}/copies/batch`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

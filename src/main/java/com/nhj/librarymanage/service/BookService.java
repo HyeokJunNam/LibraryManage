@@ -2,10 +2,9 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.BookCreateEntry;
+import com.nhj.librarymanage.domain.model.PageResponseTest;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.model.dto.BookResponse;
-import com.nhj.librarymanage.repository.BookItemRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final BookItemRepository bookItemRepository;
 
     @Transactional
     public BookResponse.Detail getBook(long id) {
@@ -29,11 +27,9 @@ public class BookService {
     }
 
     @Transactional
-    public PageResponse<BookResponse.Summary> getBooks(BookRequest.SearchCondition searchCondition, Pageable pageable) {
+    public PageResponse<BookResponse.Info> getBooks(BookRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<Book> books = bookRepository.findAll(searchCondition, pageable);
-        Page<BookResponse.Summary> summaries = books.map(BookResponse.Summary::from);
-
-        return PageResponse.from(summaries);
+        return PageResponse.from(books.map(BookResponse.Info::from));
     }
 
 
@@ -41,14 +37,14 @@ public class BookService {
     public void createBooks(BookRequest.Create create) {
         List<Book> books = new ArrayList<>();
 
-        for (BookCreateEntry entry : create.getBookCreateEntries()) {
+        for (BookRequest.Create.Item item : create.items()) {
         Book book = Book.builder()
-                .isbn(entry.getIsbn())
-                .title(entry.getTitle())
-                .author(entry.getAuthor())
-                .publisher(entry.getPublisher())
-                .description(entry.getDescription())
-                .thumbnailUrl(entry.getThumbnailUrl())
+                .isbn(item.isbn())
+                .title(item.title())
+                .author(item.author())
+                .publisher(item.publisher())
+                .description(item.description())
+                .thumbnailUrl(item.thumbnailUrl())
                 .build();
 
             books.add(book);

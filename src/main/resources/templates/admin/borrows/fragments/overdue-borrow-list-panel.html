@@ -1,0 +1,199 @@
+<th:block th:fragment="overdueBorrowListPanel"
+          xmlns:th="http://www.thymeleaf.org">
+
+    <section class="borrow-panel borrow-panel--overdue"
+             data-fragment-url="/admin/borrows/overdue">
+
+        <div class="borrow-panel__header">
+            <div>
+                <h2 class="borrow-panel__title">연체 목록</h2>
+                <p class="borrow-panel__description">
+                    반납 예정일이 지난 현재 대출 건을 빠르게 확인할 수 있습니다.
+                </p>
+            </div>
+        </div>
+
+        <form class="borrow-panel__search"
+              method="get"
+              action="/admin/borrows/overdue"
+              data-table-search-form>
+
+            <div class="borrow-panel__search-grid borrow-panel__search-grid--overdue">
+
+                <select class="borrow-search-field__select"
+                        data-borrow-search-target
+                        aria-label="검색 조건">
+                    <option value="bookTitle"
+                            th:selected="${searchCondition == null
+                                or (
+                                    searchCondition.bookTitle != null
+                                    and !#strings.isEmpty(searchCondition.bookTitle)
+                                )
+                                or (
+                                    (searchCondition.bookTitle == null or #strings.isEmpty(searchCondition.bookTitle))
+                                    and (searchCondition.memberName == null or #strings.isEmpty(searchCondition.memberName))
+                                )}">
+                        도서명
+                    </option>
+
+                    <option value="memberName"
+                            th:selected="${searchCondition != null
+                                and searchCondition.memberName != null
+                                and !#strings.isEmpty(searchCondition.memberName)}">
+                        회원명
+                    </option>
+                </select>
+
+                <input type="text"
+                       class="borrow-search-field__input"
+                       data-borrow-search-keyword
+                       placeholder="검색어를 입력하세요"
+                       aria-label="검색어"
+                       th:value="${searchCondition != null
+                            ? (
+                                searchCondition.memberName != null and !#strings.isEmpty(searchCondition.memberName)
+                                    ? searchCondition.memberName
+                                    : searchCondition.bookTitle
+                            )
+                            : ''}">
+
+                <input type="hidden"
+                       name="bookTitle"
+                       data-borrow-search-book-title>
+
+                <input type="hidden"
+                       name="memberName"
+                       data-borrow-search-member-name>
+
+                <div class="borrow-panel__search-actions">
+                    <button type="submit" class="borrow-panel__search-button">
+                        검색
+                    </button>
+
+                    <a href="/admin/borrows/overdue"
+                       class="borrow-panel__reset-button"
+                       data-table-reset-link>
+                        초기화
+                    </a>
+                </div>
+
+            </div>
+        </form>
+
+        <div class="table-block table-block--reserve-space borrow-table-block">
+
+            <div class="borrow-table borrow-table--overdue">
+
+                <div class="borrow-table__row borrow-table__row--head">
+                    <div class="borrow-table__cell">No</div>
+                    <div class="borrow-table__cell">대출 ID</div>
+                    <div class="borrow-table__cell">재고 ID</div>
+                    <div class="borrow-table__cell borrow-table__cell--title">도서명</div>
+                    <div class="borrow-table__cell">위치</div>
+                    <div class="borrow-table__cell">회원명</div>
+                    <div class="borrow-table__cell">대출일</div>
+                    <div class="borrow-table__cell">반납 예정일</div>
+                    <div class="borrow-table__cell">연체일</div>
+                    <div class="borrow-table__cell">상태</div>
+                </div>
+
+                <th:block th:if="${pageContent != null
+                    and pageContent.content != null
+                    and !#lists.isEmpty(pageContent.content)}">
+
+                    <div class="borrow-table__row"
+                         th:each="borrowRecord, stat : ${pageContent.content}">
+
+                        <div class="borrow-table__cell"
+                             th:text="${pageContent.pageMetadata.page * pageContent.pageMetadata.size + stat.index + 1}">
+                            1
+                        </div>
+
+                        <div class="borrow-table__cell"
+                             th:text="${borrowRecord.borrowRecordId}">
+                            1
+                        </div>
+
+                        <div class="borrow-table__cell"
+                             th:text="${borrowRecord.bookItemId}">
+                            1
+                        </div>
+
+                        <div class="borrow-table__cell borrow-table__cell--title"
+                             th:text="${borrowRecord.bookTitle}">
+                            도서명
+                        </div>
+
+                        <div class="borrow-table__cell"
+                             th:text="${borrowRecord.location != null and !#strings.isEmpty(borrowRecord.location)
+                                ? borrowRecord.location
+                                : '-'}">
+                            A-1
+                        </div>
+
+                        <div class="borrow-table__cell"
+                             th:text="${borrowRecord.memberName}">
+                            홍길동
+                        </div>
+
+                        <div class="borrow-table__cell"
+                             th:text="${borrowRecord.borrowedAt != null
+                                ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd')
+                                : '-'}">
+                            2026-05-01
+                        </div>
+
+                        <div class="borrow-table__cell borrow-table__cell--danger"
+                             th:text="${borrowRecord.dueAt != null
+                                ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd')
+                                : '-'}">
+                            2026-05-10
+                        </div>
+
+                        <div class="borrow-table__cell borrow-table__cell--danger"
+                             th:text="${borrowRecord.dueAt != null
+                                ? T(java.time.temporal.ChronoUnit).DAYS.between(
+                                    borrowRecord.dueAt.toLocalDate(),
+                                    T(java.time.LocalDate).now()
+                                  ) + '일'
+                                : '-'}">
+                            3일
+                        </div>
+
+                        <div class="borrow-table__cell">
+                            <span class="status-badge status-badge--overdue"
+                                  th:text="${borrowRecord.borrowStatusLabel != null
+                                    and !#strings.isEmpty(borrowRecord.borrowStatusLabel)
+                                        ? borrowRecord.borrowStatusLabel
+                                        : '연체'}">
+                                연체
+                            </span>
+                        </div>
+
+                    </div>
+                </th:block>
+
+                <div class="borrow-table__empty"
+                     th:if="${pageContent == null
+                        or pageContent.content == null
+                        or #lists.isEmpty(pageContent.content)}">
+                    연체 중인 대출 내역이 없습니다.
+                </div>
+
+            </div>
+
+            <div class="table-block__pagination"
+                 data-pagination-mode="ajax"
+                 data-base-url="/admin/borrows/overdue"
+                 th:if="${pageContent != null and pageContent.pageMetadata != null}"
+                 th:data-page-size="${pageContent.pageMetadata.size}">
+
+                <th:block th:replace="~{common/fragments/pagination :: pagination(${pageContent.pageMetadata})}"></th:block>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</th:block>

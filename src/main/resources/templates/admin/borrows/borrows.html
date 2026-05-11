@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대출 관리</title>
+
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/admin/borrows/borrows.css}">
+</head>
+
+<body>
+<div class="admin-page">
+
+    <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('borrows')}"></aside>
+
+    <main class="admin-main">
+
+        <header class="page-hero page-hero--borrows">
+            <div class="page-hero__content">
+                <p class="page-hero__eyebrow">BORROW MANAGEMENT</p>
+
+                <h2 class="page-hero__title">
+                    대출 관리
+                </h2>
+
+                <p class="page-hero__desc">
+                    전체 대출 이력과 연체 현황을 한 화면에서 확인합니다.
+                </p>
+            </div>
+        </header>
+
+        <section class="borrow-page">
+
+            <div class="borrow-page__content">
+
+                <section class="borrow-page__section borrow-page__section--overdue">
+                    <div id="overdueBorrowListPanel"
+                         class="borrow-page__panel"
+                         th:data-fragment-url="@{/admin/borrows/overdue}">
+                        <div class="borrow-page__loading">
+                            연체 목록을 불러오는 중입니다.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="borrow-page__section">
+                    <div id="borrowListPanel"
+                         class="borrow-page__panel"
+                         th:data-fragment-url="@{/admin/borrows/list}">
+                        <div class="borrow-page__loading">
+                            대출 목록을 불러오는 중입니다.
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
+
+<script type="module" th:src="@{/js/admin/borrows/borrows.js}"></script>
+</body>
+</html>

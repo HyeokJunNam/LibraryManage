@@ -1,15 +1,13 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.model.dto.BorrowRecordResponse;
 import com.nhj.librarymanage.domain.model.PageResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowHistoryRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowHistoryResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
-import com.nhj.librarymanage.repository.BookItemRepository;
-import com.nhj.librarymanage.repository.BookRepository;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;
-import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,45 +17,44 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BorrowRecordService {
 
-    private final ApplicationEventPublisher eventPublisher;
-
-    private final BookRepository bookRepository;
-    private final BookItemRepository bookItemRepository;
-    private final MemberRepository memberRepository;
     private final BorrowRecordRepository borrowRecordRepository;
 
+    @Transactional
+    public PageResponse<BorrowHistoryResponse.Info> getBorrowHistory(BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<BorrowRecord> borrowRecords = borrowRecordRepository.search(searchCondition, pageable);
+        Page<BorrowHistoryResponse.Info> infos = borrowRecords.map(BorrowHistoryResponse.Info::from);
 
-    /*@Transactional
-    public Page<BorrowRecordResponse.InfoList> getBorrowRecords(BorrowRequest.Param param, Pageable pageable) {
-        boolean onlyBorrowed = param.isBorrowed();
-        BorrowRequest.SearchCondition searchCondition = BorrowRequest.SearchCondition.of(onlyBorrowed);
-
-        Page<BorrowRecord> borrows = borrowRecordRepository.search(searchCondition, pageable);
-
-        return borrows.map(BorrowRecordResponse.InfoList::toDto);
+        return PageResponse.from(infos);
     }
-    */
 
     @Transactional
-    public PageResponse<BorrowRecordResponse.MemberSummary> getBorrowRecordsByMember(Long memberId, Pageable pageable) {
+    public PageResponse<BorrowHistoryResponse.InfoByMember> getBorrowHistoryByMember(Long memberId, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, pageable);
-        Page<BorrowRecordResponse.MemberSummary> summaries = borrowRecords.map(BorrowRecordResponse.MemberSummary::from);
+        Page<BorrowHistoryResponse.InfoByMember> infos = borrowRecords.map(BorrowHistoryResponse.InfoByMember::from);
 
-        return PageResponse.from(summaries);
+        return PageResponse.from(infos);
     }
 
     @Transactional
-    public PageResponse<BorrowRecordResponse.BookSummary> getBorrowRecordsByBook(Long bookId, Pageable pageable) {
+    public PageResponse<BorrowHistoryResponse.InfoByBook> getBorrowHistoryByBook(Long bookId, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByBookId(bookId, pageable);
-        Page<BorrowRecordResponse.BookSummary> summaries = borrowRecords.map(BorrowRecordResponse.BookSummary::from);
+        Page<BorrowHistoryResponse.InfoByBook> infos = borrowRecords.map(BorrowHistoryResponse.InfoByBook::from);
 
-        return PageResponse.from(summaries);
+        return PageResponse.from(infos);
     }
 
 
     public BorrowStatistics getBorrowStatistics() {
         return borrowRecordRepository.getBorrowStatistics();
-    };
+    }
+
+    public PageResponse<BorrowHistoryResponse.Info> getOverdueBorrowRecords(BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchOverdueBorrowRecords(searchCondition, pageable);
+        Page<BorrowHistoryResponse.Info> infos = borrowRecords.map(BorrowHistoryResponse.Info::from);
+
+        return PageResponse.from(infos);
+
+    }
 
 
 }

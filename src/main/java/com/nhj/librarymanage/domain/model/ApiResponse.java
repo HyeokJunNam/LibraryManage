@@ -25,9 +25,9 @@ public class ApiResponse {
         return new ApiResponse(null, null, result);
     }
 
-    public static <T> ApiResponse result(Page<T> result) {
+    /*public static <T> ApiResponse result(Page<T> result) {
         return new ApiResponse(null, null, PageResponse.from(result));
-    }
+    }*/
 
     public static Builder code(String code) {
         return new Builder().code(code);

@@ -37,7 +37,6 @@ public class LibraryController {
         return "user/home/index";
     }
 
-    // TODO 유저용을 같이쓰고 있었네...
     @Description("도서 목록 화면")
     @GetMapping("/library/books")
     public String bookList(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {

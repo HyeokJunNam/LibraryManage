@@ -7,13 +7,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookRequest {
 
-    // 수행 할 작업에 필요한 파라미터 (CRUD 제외)
-    @AllArgsConstructor
-    @Getter
-    public static class Param {
-
-    }
-
     @Builder(access = AccessLevel.PRIVATE)
     @Getter
     public static class SearchCondition {
@@ -23,15 +16,20 @@ public class BookRequest {
         private String publisher;
     }
 
-    // 생성 요청
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    public static class Create {
-        private List<BookCreateEntry> bookCreateEntries;
+    public record Create(
+            List<Item> items
+    ) {
+        public record Item(
+                String isbn,
+                String title,
+                String author,
+                String publisher,
+                String description,
+                String thumbnailUrl
+        ) {
+        }
     }
 
-    // 수정 요청
     @AllArgsConstructor
     @Getter
     public static class Update {

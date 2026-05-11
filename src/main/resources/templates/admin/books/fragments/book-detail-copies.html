@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<section th:fragment="bookItems"
+<section th:fragment="bookCopies"
          class="book-detail-items-card"
          id="bookDetailItemsCard"
          th:data-book-id="${bookId}">
@@ -23,7 +23,7 @@
             </button>
 
             <div class="book-detail-items-card__edit-actions is-hidden"
-                 id="bookItemEditActions">
+                 id="bookCopyEditActions">
                 <button type="button"
                         class="btn btn--primary book-detail-items-card__save-button"
                         id="saveBookItemsButton">
@@ -41,9 +41,9 @@
 
     <div class="book-detail-items-card__body">
 
-        <div th:if="${itemPageResponse == null
-                or itemPageResponse.content == null
-                or #lists.isEmpty(itemPageResponse.content)}"
+        <div th:if="${pageContent == null
+                or pageContent.content == null
+                or #lists.isEmpty(pageContent.content)}"
              class="book-detail-items-empty"
              id="bookDetailItemsEmpty">
             <div class="book-detail-items-empty__icon">📦</div>
@@ -55,9 +55,9 @@
 
         <div class="table-block table-block--reserve-space book-detail-items-table-block"
              id="bookDetailItemsTableBlock"
-             th:classappend="${itemPageResponse == null
-                    or itemPageResponse.content == null
-                    or #lists.isEmpty(itemPageResponse.content)} ? ' is-hidden' : ''">
+             th:classappend="${pageContent == null
+                    or pageContent.content == null
+                    or #lists.isEmpty(pageContent.content)} ? ' is-hidden' : ''">
 
             <div class="ui-table-wrap">
                 <div class="ui-table book-detail-items-table">
@@ -73,54 +73,54 @@
                     </div>
 
                     <div id="bookDetailItemRows"
-                         th:data-page-start-index="${itemPageResponse != null
-                            and itemPageResponse.pageMetadata != null
-                                ? itemPageResponse.pageMetadata.page * itemPageResponse.pageMetadata.size
+                         th:data-page-start-index="${pageContent != null
+                            and pageContent.pageMetadata != null
+                                ? pageContent.pageMetadata.page * pageContent.pageMetadata.size
                                 : 0}">
 
-                        <div th:each="bookItem, stat : ${itemPageResponse.content}"
+                        <div th:each="bookCopy, stat : ${pageContent.content}"
                              class="ui-table__row book-detail-items-table__row"
                              data-row-mode="clean"
-                             th:data-book-item-id="${bookItem.bookItemId}"
-                             th:data-borrowed="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}"
-                             th:data-original-status="${bookItem.bookItemStatus != null ? bookItem.bookItemStatus.value.name() : ''}"
-                             th:data-original-location="${bookItem.location != null ? bookItem.location : ''}">
+                             th:data-book-item-id="${bookCopy.bookCopyId}"
+                             th:data-borrowed="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value.name() == 'BORROWED'}"
+                             th:data-original-status="${bookCopy.bookCopyStatus != null ? bookCopy.bookCopyStatus.value.name() : ''}"
+                             th:data-original-location="${bookCopy.location != null ? bookCopy.location : ''}">
 
                             <div class="ui-table__leading-cell">
                                 <span class="book-detail-item-row__index"
-                                      th:text="${itemPageResponse.pageMetadata.page * itemPageResponse.pageMetadata.size + stat.index + 1}">
+                                      th:text="${pageContent.pageMetadata.page * pageContent.pageMetadata.size + stat.index + 1}">
                                     1
                                 </span>
                             </div>
 
                             <div class="ui-table__cell"
-                                 th:text="${bookItem.bookItemId != null ? bookItem.bookItemId : '-'}">
+                                 th:text="${bookCopy.bookCopyId != null ? bookCopy.bookCopyId : '-'}">
                                 1
                             </div>
 
                             <div class="ui-table__cell ui-table__cell--center">
                                 <span class="book-detail-item-status-view status-badge"
-                                      th:classappend="${bookItem.bookItemStatus != null
-                                          ? ' status-badge--' + #strings.toLowerCase(bookItem.bookItemStatus.value.name())
+                                      th:classappend="${bookCopy.bookCopyStatus != null
+                                          ? ' status-badge--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value.name())
                                           : ' status-badge--default'}"
-                                      th:text="${bookItem.bookItemStatus != null
-                                          and bookItem.bookItemStatus.label != null
-                                          and !#strings.isEmpty(bookItem.bookItemStatus.label)
-                                              ? bookItem.bookItemStatus.label
+                                      th:text="${bookCopy.bookCopyStatus != null
+                                          and bookCopy.bookCopyStatus.label != null
+                                          and !#strings.isEmpty(bookCopy.bookCopyStatus.label)
+                                              ? bookCopy.bookCopyStatus.label
                                               : '-'}">
                                     상태
                                 </span>
 
                                 <select class="book-detail-item-control book-detail-item-status-edit is-hidden"
                                         data-field="status"
-                                        th:disabled="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}"
-                                        th:classappend="${bookItem.bookItemStatus != null
-                                            ? ' book-detail-item-status-edit--' + #strings.toLowerCase(bookItem.bookItemStatus.value.name())
+                                        th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value.name() == 'BORROWED'}"
+                                        th:classappend="${bookCopy.bookCopyStatus != null
+                                            ? ' book-detail-item-status-edit--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value.name())
                                             : ''}">
-                                    <option th:each="statusOption : ${options.bookItemStatuses}"
+                                    <option th:each="statusOption : ${options.bookCopyStatuses}"
                                             th:value="${statusOption.value}"
                                             th:text="${statusOption.label}"
-                                            th:selected="${bookItem.bookItemStatus != null and bookItem.bookItemStatus.value.name() == statusOption.value}">
+                                            th:selected="${bookCopy.bookCopyStatus != null and bookCopy.bookCopyStatus.value.name() == statusOption.value}">
                                         상태
                                     </option>
                                 </select>
@@ -128,7 +128,7 @@
 
                             <div class="ui-table__cell">
                                 <span class="book-detail-item-location-view"
-                                      th:text="${bookItem.location != null and !#strings.isEmpty(bookItem.location) ? bookItem.location : '-'}">
+                                      th:text="${bookCopy.location != null and !#strings.isEmpty(bookCopy.location) ? bookCopy.location : '-'}">
                                     A-01
                                 </span>
 
@@ -137,24 +137,24 @@
                                        data-field="location"
                                        placeholder="예: A-01"
                                        autocomplete="off"
-                                       th:value="${bookItem.location != null ? bookItem.location : ''}"
-                                       th:disabled="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}">
+                                       th:value="${bookCopy.location != null ? bookCopy.location : ''}"
+                                       th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value.name() == 'BORROWED'}">
                             </div>
 
                             <div class="ui-table__cell"
-                                 th:text="${bookItem.createdAt != null ? #temporals.format(bookItem.createdAt, 'yyyy-MM-dd') : '-'}">
+                                 th:text="${bookCopy.createdAt != null ? #temporals.format(bookCopy.createdAt, 'yyyy-MM-dd') : '-'}">
                                 2026-04-30
                             </div>
 
                             <div class="ui-table__cell ui-table__cell--center">
                                 <span class="status-badge"
-                                      th:classappend="${bookItem.borrowStatus != null
-                                          ? ' status-badge--' + #strings.toLowerCase(bookItem.borrowStatus.value.name())
+                                      th:classappend="${bookCopy.borrowStatus != null
+                                          ? ' status-badge--' + #strings.toLowerCase(bookCopy.borrowStatus.value.name())
                                           : ' status-badge--default'}"
-                                      th:text="${bookItem.borrowStatus != null
-                                          and bookItem.borrowStatus.label != null
-                                          and !#strings.isEmpty(bookItem.borrowStatus.label)
-                                              ? bookItem.borrowStatus.label
+                                      th:text="${bookCopy.borrowStatus != null
+                                          and bookCopy.borrowStatus.label != null
+                                          and !#strings.isEmpty(bookCopy.borrowStatus.label)
+                                              ? bookCopy.borrowStatus.label
                                               : '-'}">
                                     대출 상태
                                 </span>
@@ -166,7 +166,7 @@
                                 <button type="button"
                                         class="book-detail-item-row__delete is-hidden"
                                         data-role="mark-delete-row"
-                                        th:disabled="${bookItem.borrowStatus != null and bookItem.borrowStatus.value.name() == 'BORROWED'}">
+                                        th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value.name() == 'BORROWED'}">
                                     삭제
                                 </button>
 
@@ -193,11 +193,11 @@
 
             <div class="table-block__pagination book-detail-items-pagination"
                  id="bookDetailItemsPagination"
-                 th:if="${itemPageResponse != null and itemPageResponse.pageMetadata != null}"
-                 th:data-page-size="${itemPageResponse.pageMetadata.size}"
-                 th:data-total-pages="${itemPageResponse.pageMetadata.totalPages}">
+                 th:if="${pageContent != null and pageContent.pageMetadata != null}"
+                 th:data-page-size="${pageContent.pageMetadata.size}"
+                 th:data-total-pages="${pageContent.pageMetadata.totalPages}">
 
-                <th:block th:replace="~{common/fragments/pagination :: pagination(${itemPageResponse.pageMetadata})}"></th:block>
+                <th:block th:replace="~{common/fragments/pagination :: pagination(${pageContent.pageMetadata})}"></th:block>
             </div>
         </div>
 
@@ -219,7 +219,7 @@
             <div class="ui-table__cell ui-table__cell--center">
                 <select class="book-detail-item-control book-detail-item-status-edit book-detail-item-status-edit--available"
                         data-field="status">
-                    <option th:each="statusOption : ${options.bookItemStatuses}"
+                    <option th:each="statusOption : ${options.bookCopyStatuses}"
                             th:value="${statusOption.value}"
                             th:text="${statusOption.label}"
                             th:selected="${statusOption.value == 'AVAILABLE'}">

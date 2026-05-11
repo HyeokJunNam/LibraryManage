@@ -49,14 +49,14 @@ public class MemberService {
 
     @Transactional
     public void createMember(MemberRequest.Create create) {
-        validateSignup(create.getEmail(), create.getLoginId(), create.getSignupToken());
+        validateSignup(create.email(), create.loginId(), create.signupToken());
 
         Member member = Member.builder()
-                .loginId(create.getLoginId())
-                .password(passwordEncoder.encode(create.getPassword()))
-                .role(create.getRole())
-                .name(create.getName())
-                .email(create.getEmail())
+                .loginId(create.loginId())
+                .password(passwordEncoder.encode(create.password()))
+                .role(create.role())
+                .name(create.name())
+                .email(create.email())
                 .memberNo(numberSequenceService.nextMemberNumber())
                 .build();
 
@@ -65,9 +65,9 @@ public class MemberService {
 
     @Transactional
     public void updateMember(MemberRequest.Update update) {
-        Member member = memberRepository.getById(update.getId());
+        Member member = memberRepository.getById(update.id());
 
-        member.changeName(update.getName());
+        member.changeName(update.name());
     }
 
     @Transactional

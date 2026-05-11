@@ -1,15 +1,16 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
+import com.nhj.librarymanage.domain.code.AdminPageOptions;
 import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.BorrowRecordResponse;
+import com.nhj.librarymanage.domain.model.dto.BorrowHistoryRequest;
+import com.nhj.librarymanage.domain.model.dto.BorrowHistoryResponse;
 import com.nhj.librarymanage.service.BorrowRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
@@ -25,13 +26,33 @@ public class BorrowPageController {
         return "admin/borrows/process";
     }
 
-    @Description(value = "도서 별 도서 대여 현황 조회")
-    @GetMapping("/books/{id}/borrows")
-    public String bookBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
-        PageResponse<BorrowRecordResponse.BookSummary> pageResponse = borrowRecordService.getBorrowRecordsByBook(id, pageable);
-        model.addAttribute("borrowPageContent", pageResponse);
 
-        return "admin/books/fragments/book-detail-borrows :: bookBorrows";
+    @Description("도서 대출 목록 View")
+    @GetMapping("/borrows")
+    public String borrowHistory() {
+        return "admin/borrows/borrows";
     }
+
+    @Description("도서 대출 목록")
+    @GetMapping("/borrows/list")
+    public String borrowList(Model model, BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BorrowHistoryResponse.Info> borrowHistory = borrowRecordService.getBorrowHistory(searchCondition, pageable);
+        model.addAttribute("pageContent", borrowHistory);
+
+        return "admin/borrows/fragments/borrow-list-panel :: borrowListPanel";
+    }
+
+    @Description("도서 대출 연체 목록")
+    @GetMapping("/borrows/overdue")
+    public String overdueBorrowList(Model model, BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BorrowHistoryResponse.Info> overdueBorrowRecords = borrowRecordService.getOverdueBorrowRecords(searchCondition, pageable);
+        model.addAttribute("pageContent", overdueBorrowRecords);
+
+        return "admin/borrows/fragments/overdue-borrow-list-panel :: overdueBorrowListPanel";
+    }
+
+
+
+
 
 }

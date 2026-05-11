@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
         bindSearchSubmit(searchForm, conditionElement, keywordElement);
         bindReset(resetButton, conditionElement, keywordElement);
     }
+
+    bindBookRows();
 });
 
 function syncSearchFieldsFromQuery(conditionElement, keywordElement) {
@@ -60,5 +62,41 @@ function bindReset(resetButton, conditionElement, keywordElement) {
     resetButton.addEventListener("click", function () {
         conditionElement.value = "title";
         keywordElement.value = "";
+    });
+}
+
+function bindBookRows() {
+    const rows = document.querySelectorAll(".ui-table__row--clickable[data-book-url]");
+
+    rows.forEach(function (row) {
+        row.addEventListener("click", function (event) {
+            if (event.target.closest("a")) {
+                return;
+            }
+
+            const bookUrl = row.dataset.bookUrl;
+
+            if (bookUrl) {
+                window.location.href = bookUrl;
+            }
+        });
+
+        row.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== " ") {
+                return;
+            }
+
+            if (event.target.closest("a")) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const bookUrl = row.dataset.bookUrl;
+
+            if (bookUrl) {
+                window.location.href = bookUrl;
+            }
+        });
     });
 }

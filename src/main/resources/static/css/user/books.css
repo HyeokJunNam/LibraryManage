@@ -1,7 +1,70 @@
+.borrow-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.borrow-page__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.borrow-page__title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--gray-900);
+}
+
+.borrow-page__description {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: var(--gray-500);
+}
+
+.borrow-page__content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.borrow-page__section {
+    min-width: 0;
+}
+
+.borrow-page__panel {
+    min-width: 0;
+}
+
+.borrow-page__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    background: var(--white);
+    font-size: 14px;
+    color: var(--gray-500);
+}
+
 .book-list {
+    min-height: calc(100vh - 64px);
     background: var(--color-bg);
     color: var(--color-text);
 }
+
+.book-list__page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px;
+}
+
+/* ==============================
+   Search Panel
+============================== */
 
 .book-list .search-panel {
     padding: 28px;
@@ -9,6 +72,13 @@
     background: linear-gradient(135deg, #f7fff9 0%, #edf8f1 58%, #e3f2e8 100%);
     border: 1px solid var(--color-line-strong);
     box-shadow: var(--shadow-lg);
+}
+
+.book-list .search-panel__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
 }
 
 .book-list .search-panel__title {
@@ -19,7 +89,7 @@
 }
 
 .book-list .search-panel__desc {
-    margin-top: 8px;
+    margin: 8px 0 0;
     font-size: 14px;
     color: var(--color-text-muted);
 }
@@ -38,13 +108,133 @@
 .book-list .search-form__actions {
     display: flex;
     gap: 10px;
+    align-items: center;
+    white-space: nowrap;
 }
+
+/* ==============================
+   Table Panel
+============================== */
 
 .book-list .table-panel {
     margin-top: 24px;
 }
 
+.book-list .table-panel__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.book-list .table-panel__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+.book-list .table-panel__desc {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+/*
+   기존 질문 기준:
+   - 테이블과 페이지네이션은 table-block 안에서 하나의 덩어리로 보이게 한다.
+   - 별도 table-panel__pagination은 사용하지 않는다.
+   - pagination 여백은 table-block__pagination에서 관리한다.
+*/
+
+.book-list .table-block {
+    overflow: hidden;
+}
+
+.book-list .ui-table {
+    min-width: 820px;
+}
+
+.book-list .ui-table__header,
+.book-list .ui-table__row {
+    grid-template-columns: var(--table-columns);
+}
+
+.book-list .ui-table__header .ui-table__cell,
+.book-list .ui-table__row .ui-table__cell {
+    min-width: 0;
+}
+
+.book-list .ui-table__cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-list .ui-table__cell--primary {
+    font-weight: 700;
+}
+
+.book-list .book-title-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.book-list .book-title-link:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.book-list .ui-table__row--clickable {
+    cursor: pointer;
+}
+
+.book-list .ui-table__row--clickable:focus {
+    outline: 2px solid rgba(48, 125, 73, 0.28);
+    outline-offset: -2px;
+}
+
+/* ==============================
+   Empty
+============================== */
+
+.book-list .empty-block {
+    padding: 56px 24px;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.book-list .empty-block__icon {
+    font-size: 36px;
+    line-height: 1;
+}
+
+.book-list .empty-block__title {
+    margin-top: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-text);
+}
+
+.book-list .empty-block__desc {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+/* ==============================
+   Responsive
+============================== */
+
 @media (max-width: 960px) {
+    .book-list__page {
+        padding: 22px;
+    }
+
     .book-list .search-form__row {
         grid-template-columns: 1fr;
     }
@@ -56,11 +246,15 @@
 }
 
 @media (max-width: 720px) {
+    .book-list__page {
+        padding: 16px;
+    }
+
     .book-list .search-panel {
         padding: 20px;
     }
 
-    .book-list [data-pagination] {
-        padding: 20px;
+    .book-list .table-panel__head {
+        margin-bottom: 12px;
     }
 }

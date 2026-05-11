@@ -7,7 +7,7 @@
 
     <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/books/books-detail.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/books/book-detail-items.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/books/borrows.css}">
     <link rel="stylesheet" th:href="@{/css/admin/books/book-detail-borrows.css}">
 </head>
 <body>
@@ -159,7 +159,7 @@
             <section
                     class="book-detail-items-area"
                     id="bookDetailItemsArea"
-                    th:data-items-url="@{/admin/books/{bookId}/items(bookId=${book.id})}">
+                    th:data-items-url="@{/admin/books/{bookId}/copies(bookId=${book.id})}">
             </section>
 
             <section

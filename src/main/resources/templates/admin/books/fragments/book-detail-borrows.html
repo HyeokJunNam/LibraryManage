@@ -15,9 +15,9 @@
         </div>
 
         <div
-                th:if="${borrowPageContent == null
-                or borrowPageContent.content == null
-                or #lists.isEmpty(borrowPageContent.content)}"
+                th:if="${pageContent == null
+                or pageContent.content == null
+                or #lists.isEmpty(pageContent.content)}"
                 class="book-borrow-empty">
             <div class="book-borrow-empty__icon">📖</div>
             <h4 class="book-borrow-empty__title">대출 이력이 없습니다</h4>
@@ -27,9 +27,9 @@
         </div>
 
         <div
-                th:if="${borrowPageContent != null
-                and borrowPageContent.content != null
-                and !#lists.isEmpty(borrowPageContent.content)}"
+                th:if="${pageContent != null
+                and pageContent.content != null
+                and !#lists.isEmpty(pageContent.content)}"
                 class="book-borrow-card__body">
 
             <div class="table-block table-block--reserve-space book-borrow-table-block">
@@ -49,12 +49,12 @@
 
                         <div>
                             <div
-                                    th:each="borrowRecord, stat : ${borrowPageContent.content}"
+                                    th:each="borrowRecord, stat : ${pageContent.content}"
                                     class="ui-table__row book-borrow-table__row">
 
                                 <div
                                         class="ui-table__leading-cell"
-                                        th:text="${borrowPageContent.pageMetadata.page * borrowPageContent.pageMetadata.size + stat.index + 1}">
+                                        th:text="${pageContent.pageMetadata.page * pageContent.pageMetadata.size + stat.index + 1}">
                                     1
                                 </div>
 
@@ -118,10 +118,10 @@
 
                 <div
                         class="table-block__pagination"
-                        th:if="${borrowPageContent.pageMetadata != null}"
-                        th:data-page-size="${borrowPageContent.pageMetadata.size}">
+                        th:if="${pageContent.pageMetadata != null}"
+                        th:data-page-size="${pageContent.pageMetadata.size}">
 
-                    <th:block th:replace="~{common/fragments/pagination :: pagination(${borrowPageContent.pageMetadata})}"></th:block>
+                    <th:block th:replace="~{common/fragments/pagination :: pagination(${pageContent.pageMetadata})}"></th:block>
                 </div>
             </div>
 

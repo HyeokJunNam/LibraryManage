@@ -32,7 +32,7 @@ public class Book extends BaseEntity {
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "book")
-    private List<BookItem> bookItems = new ArrayList<>();
+    private List<BookCopy> bookCopies = new ArrayList<>();
 
 
     public void changeTitle(String title) {

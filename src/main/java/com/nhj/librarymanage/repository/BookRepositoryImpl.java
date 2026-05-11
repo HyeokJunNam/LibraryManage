@@ -1,17 +1,13 @@
 package com.nhj.librarymanage.repository;
 
-import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.code.BookCopyStatus;
 import com.nhj.librarymanage.domain.model.dto.BookRequest;
 import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +16,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import static com.nhj.librarymanage.domain.entity.QBook.book;
-import static com.nhj.librarymanage.domain.entity.QBookItem.bookItem;
-import static com.nhj.librarymanage.domain.entity.QBorrowRecord.borrowRecord;
+import static com.nhj.librarymanage.domain.entity.QBookCopy.bookCopy;
 
 @RequiredArgsConstructor
 @Repository
@@ -66,12 +60,12 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     @Override
     public List<Book> findBorrowableBook(List<Long> bookIds) {
         BooleanExpression inBook = QuerydslFilterHelper.in(book.id, bookIds);
-        BooleanExpression likeAvailable = QuerydslFilterHelper.like(bookItem.status.stringValue(), BookItemStatus.AVAILABLE.getCode());
-        BooleanExpression isNullBorrowRecord = QuerydslFilterHelper.isNull(bookItem.borrowRecord);
+        BooleanExpression likeAvailable = QuerydslFilterHelper.like(bookCopy.status.stringValue(), BookCopyStatus.AVAILABLE.getCode());
+        BooleanExpression isNullBorrowRecord = QuerydslFilterHelper.isNull(bookCopy.borrowRecord);
 
         return jpaQueryFactory
                 .selectFrom(book)
-                .join(book.bookItems, bookItem).fetchJoin()
+                .join(book.bookCopies, bookCopy).fetchJoin()
                 .where(inBook, likeAvailable, isNullBorrowRecord)
                 .fetch();
     }

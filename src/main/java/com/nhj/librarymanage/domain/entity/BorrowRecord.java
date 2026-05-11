@@ -17,8 +17,8 @@ public class BorrowRecord extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_item_id")
-    private BookItem bookitem;
+    @JoinColumn(name = "book_copy_id")
+    private BookCopy bookCopy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.domain.entity;
 
-import com.nhj.librarymanage.domain.code.BookItemStatus;
+import com.nhj.librarymanage.domain.code.BookCopyStatus;
 import com.nhj.librarymanage.domain.code.BorrowStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity(name = "book_item")
-public class BookItem extends BaseEntity {
+@Entity(name = "book_copy")
+public class BookCopy extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,19 +24,19 @@ public class BookItem extends BaseEntity {
     private String location;
 
     @Enumerated(EnumType.STRING)
-    private BookItemStatus status;
+    private BookCopyStatus status;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private BorrowRecord borrowRecord;
 
     @Builder
-    public BookItem(Book book, BookItemStatus status, String location) {
+    public BookCopy(Book book, BookCopyStatus status, String location) {
         this.book = book;
         this.status = status;
         this.location = location;
     }
 
-    public void update(BookItemStatus status, String location) {
+    public void update(BookCopyStatus status, String location) {
         this.status = status;
         this.location = location;
     }
@@ -45,7 +45,7 @@ public class BookItem extends BaseEntity {
         LocalDateTime now = LocalDateTime.now();
 
         this.borrowRecord = BorrowRecord.builder()
-                .bookitem(this)
+                .bookCopy(this)
                 .member(member)
                 .borrowedAt(now)
                 .dueAt(now.plusDays(borrowDay))
@@ -58,7 +58,7 @@ public class BookItem extends BaseEntity {
     }
 
     public BorrowStatus getBorrowStatus() {
-        if (status == BookItemStatus.AVAILABLE) {
+        if (status == BookCopyStatus.AVAILABLE) {
             if (borrowRecord == null) {
                 return BorrowStatus.AVAILABLE;
             }
