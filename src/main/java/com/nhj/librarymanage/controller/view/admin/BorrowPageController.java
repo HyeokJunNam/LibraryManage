@@ -1,7 +1,6 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.code.AdminPageOptions;
 import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.BorrowHistoryRequest;
 import com.nhj.librarymanage.domain.model.dto.BorrowHistoryResponse;
@@ -28,9 +27,9 @@ public class BorrowPageController {
 
 
     @Description("도서 대출 목록 View")
-    @GetMapping("/borrows")
+    @GetMapping("/borrows/status")
     public String borrowHistory() {
-        return "admin/borrows/borrows";
+        return "admin/borrows/borrow-status";
     }
 
     @Description("도서 대출 목록")

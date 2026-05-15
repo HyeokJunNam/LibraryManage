@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>대출 / 반납 처리</title>
-    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <th:block th:replace="~{common/admin/admin-page-assets :: assets}"></th:block>
 
     <link rel="stylesheet" th:href="@{/css/admin/borrows/fragments/process-member-panel.css}">
     <link rel="stylesheet" th:href="@{/css/admin/borrows/fragments/process-book-panel.css}">
@@ -15,9 +15,9 @@
 </head>
 <body>
 <div class="admin-page">
-    <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('book-process')}"></aside>
+    <aside th:replace="~{common/admin/sidebar :: sidebar('borrow-process')}"></aside>
 
-    <main class="admin-main book-process-page">
+    <main class="admin-main borrow-process-page">
         <header class="process-hero">
             <div class="process-hero__content">
                 <p class="process-hero__eyebrow">BORROW MANAGEMENT</p>

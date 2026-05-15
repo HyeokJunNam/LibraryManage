@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
+import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberService;
@@ -24,8 +25,9 @@ public class MemberPageController {
     @Description("회원 관리 화면")
     @GetMapping("/members")
     public String members(Model model, @ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<MemberResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
-        model.addAttribute("members", infos);
+        PageResponse<MemberResponse.Info> pageResponse = memberService.getMembers(searchCondition, pageable);
+        model.addAttribute("members", pageResponse.content());
+        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
         return "admin/members/members";
     }

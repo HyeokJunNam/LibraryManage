@@ -1,6 +1,8 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Member;
+import com.nhj.librarymanage.domain.model.PageResponse;
+import com.nhj.librarymanage.domain.model.dto.BookResponse;
 import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
@@ -35,8 +37,10 @@ public class MemberService {
     }
 
     @Transactional
-    public Page<MemberResponse.Info> getMembers(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
-        return memberRepository.findAll(searchCondition, pageable).map(MemberResponse.Info::from);
+    public PageResponse<MemberResponse.Info> getMembers(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+        Page<Member> members =  memberRepository.findAll(searchCondition, pageable);
+
+        return PageResponse.from(members.map(MemberResponse.Info::from));
     }
 
     private void validateSignup(String email, String loginId, String token) {

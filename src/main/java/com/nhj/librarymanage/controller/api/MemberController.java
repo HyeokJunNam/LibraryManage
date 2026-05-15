@@ -2,6 +2,7 @@ package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.model.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
+import com.nhj.librarymanage.domain.model.PageResponse;
 import com.nhj.librarymanage.domain.model.dto.MemberRequest;
 import com.nhj.librarymanage.domain.model.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberService;
@@ -32,7 +33,7 @@ public class MemberController {
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
     public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<MemberResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
+        PageResponse<MemberResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
         ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);

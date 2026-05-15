@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 대시보드</title>
-    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <th:block th:replace="~{common/admin/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/index.css}">
 </head>
 <body>
 <div class="admin-page">
-    <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('dashboard')}"></aside>
+    <aside th:replace="~{common/admin/sidebar :: sidebar('dashboard')}"></aside>
 
     <main class="admin-main">
         <header class="admin-hero">

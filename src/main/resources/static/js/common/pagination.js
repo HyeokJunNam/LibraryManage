@@ -5,16 +5,13 @@ document.addEventListener("click", (event) => {
         return;
     }
 
-    const paginationArea = pageButton.closest("[data-pagination-mode]");
+    const paginationArea = findPaginationArea(pageButton);
 
     if (!paginationArea) {
         return;
     }
 
-    if (
-        pageButton.disabled ||
-        pageButton.classList.contains("pagination__button--disabled")
-    ) {
+    if (isDisabledPageButton(pageButton)) {
         return;
     }
 
@@ -24,7 +21,9 @@ document.addEventListener("click", (event) => {
         return;
     }
 
-    const mode = paginationArea.dataset.paginationMode;
+    event.preventDefault();
+
+    const mode = paginationArea.dataset.paginationMode || "link";
 
     if (mode === "link") {
         movePageByLink(paginationArea, page);
@@ -35,6 +34,17 @@ document.addEventListener("click", (event) => {
         dispatchAjaxPageEvent(paginationArea, page);
     }
 });
+
+function findPaginationArea(pageButton) {
+    return pageButton.closest("[data-pagination-mode]")
+        || pageButton.closest(".table-block__pagination");
+}
+
+function isDisabledPageButton(pageButton) {
+    return pageButton.disabled
+        || pageButton.classList.contains("pagination__button--disabled")
+        || pageButton.classList.contains("pagination__number--active");
+}
 
 function movePageByLink(paginationArea, page) {
     const baseUrl = paginationArea.dataset.baseUrl || window.location.pathname;

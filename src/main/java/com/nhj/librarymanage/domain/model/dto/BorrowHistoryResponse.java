@@ -16,7 +16,7 @@ public class BorrowHistoryResponse {
     @Builder(access = AccessLevel.PRIVATE)
     public record Info(
             Long borrowRecordId,
-            Long bookItemId,
+            Long bookCopyId,
             String bookTitle,
             String location,
             Long memberId,
@@ -40,7 +40,7 @@ public class BorrowHistoryResponse {
 
             return Info.builder()
                     .borrowRecordId(borrowRecord.getId())
-                    .bookItemId(bookCopy.getId())
+                    .bookCopyId(bookCopy.getId())
                     .bookTitle(book.getTitle())
                     .location(bookCopy.getLocation())
                     .memberId(member.getId())
@@ -58,7 +58,7 @@ public class BorrowHistoryResponse {
     @Builder(access = AccessLevel.PRIVATE)
     public record InfoByBook(
             Long borrowRecordId,
-            Long bookItemId,
+            Long bookCopyId,
             Long memberId,
             String memberName, // 얘
             EnumOption<BorrowStatus> borrowStatus,
@@ -79,7 +79,7 @@ public class BorrowHistoryResponse {
 
             return InfoByBook.builder()
                     .borrowRecordId(borrowRecord.getId())
-                    .bookItemId(bookCopy.getId())
+                    .bookCopyId(bookCopy.getId())
                     .memberId(member.getId())
                     .memberName(member.getName())
                     .borrowStatus(borrowStatus)
@@ -94,7 +94,7 @@ public class BorrowHistoryResponse {
     @Builder
     public record InfoByMember(
             Long borrowRecordId,
-            Long bookItemId,
+            Long bookCopyId,
             Long memberId,
             String memberName,
             String bookTitle,
@@ -109,7 +109,7 @@ public class BorrowHistoryResponse {
 
             return InfoByMember.builder()
                     .borrowRecordId(borrowRecord.getId())
-                    .bookItemId(bookCopy.getId())
+                    .bookCopyId(bookCopy.getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())
                     .memberName(member.getName())

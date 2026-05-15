@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<th:block th:fragment="tableBlock(columns, rowsFragment, page, baseUrl, tableClass, reserveSpace)">
+<th:block th:fragment="tableBlock(columns, rowsFragment, tableClass, reserveSpace)">
 
     <div class="table-block"
          th:classappend="${reserveSpace} ? ' table-block--reserve-space' : ''">
@@ -28,13 +28,58 @@
             </div>
         </div>
 
-        <div class="table-block__pagination">
-            <div
-                    data-pagination
-                    th:data-current-page="${page.number}"
-                    th:data-total-pages="${page.totalPages}"
-                    th:data-base-url="${baseUrl}">
-            </div>
+        <th:block th:replace="~{common/table-block ::
+            pagination(
+                ${pageMetaData},
+                ${paginationMode},
+                ${paginationBaseUrl},
+                ${paginationEvent}
+            )
+        }"></th:block>
+
+    </div>
+
+</th:block>
+
+
+<th:block th:fragment="pagination(pageMetaData, paginationMode, paginationBaseUrl, paginationEvent)">
+
+    <div class="table-block__pagination"
+         th:if="${pageMetaData != null}"
+         th:attr="data-pagination-mode=${paginationMode != null ? paginationMode : 'link'},
+                  data-base-url=${paginationBaseUrl},
+                  data-pagination-event=${paginationEvent},
+                  data-page-size=${pageMetaData.size}">
+
+        <div class="pagination">
+
+            <button type="button"
+                    class="pagination__button"
+                    th:classappend="${pageMetaData.first} ? ' pagination__button--disabled' : ''"
+                    th:disabled="${pageMetaData.first}"
+                    th:data-page="${pageMetaData.page - 1}">
+                이전
+            </button>
+
+            <th:block th:if="${pageMetaData.totalPages > 0}">
+                <button type="button"
+                        class="pagination__number"
+                        th:each="pageNumber : ${#numbers.sequence(0, pageMetaData.totalPages - 1)}"
+                        th:classappend="${pageNumber == pageMetaData.page} ? ' pagination__number--active' : ''"
+                        th:data-page="${pageNumber}"
+                        th:text="${pageNumber + 1}">
+                    1
+                </button>
+            </th:block>
+
+            <button type="button"
+                    class="pagination__button"
+                    th:classappend="${pageMetaData.last} ? ' pagination__button--disabled' : ''"
+                    th:disabled="${pageMetaData.last}"
+                    th:data-page="${pageMetaData.page + 1}">
+                다음
+            </button>
+
         </div>
 
     </div>

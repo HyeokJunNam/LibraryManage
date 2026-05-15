@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 목록</title>
-    <th:block th:replace="~{user/common/user-page-assets :: assets}"></th:block>
+    <th:block th:replace="~{common/user/user-page-assets :: assets}"></th:block>
 
-    <link rel="stylesheet" th:href="@{/css/user/common/topbar.css}">
+    <link rel="stylesheet" th:href="@{/css/common/user/topbar.css}">
     <link rel="stylesheet" th:href="@{/css/user/books.css}">
 </head>
 <body>
 <div class="app">
-    <div th:replace="~{user/common/fragments/topbar :: topbar}"></div>
+    <div th:replace="~{common/user/topbar :: topbar}"></div>
 
     <div class="book-list">
         <main class="book-list__page">

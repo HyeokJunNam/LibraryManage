@@ -33,7 +33,8 @@ public class BookPageController {
         PageResponse<BookResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
-        model.addAttribute("bookPageContent", pageResponse);
+        model.addAttribute("books", pageResponse.content());
+        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("borrowStatistics", borrowStatistics);
 
         return "admin/books/books";
@@ -51,10 +52,11 @@ public class BookPageController {
     @Description(value = "도서 재고 현황 조회")
     @GetMapping("/books/{id}/copies")
     public String bookItemFragment(Model model, @PathVariable Long id, Pageable pageable) {
-        PageResponse<BookCopyResponse.Info> bookCopies = bookCopyService.getBookCopies(id, pageable); // 여기서 레코드 한번 더 조회 타는거 있음. 근데 1번 더타는건 그래프 탐색 특성 상 허용되어야 함
+        PageResponse<BookCopyResponse.Info> pageResponse = bookCopyService.getBookCopies(id, pageable); // 여기서 레코드 한번 더 조회 타는거 있음. 근데 1번 더타는건 그래프 탐색 특성 상 허용되어야 함
 
         model.addAttribute("bookId", id);
-        model.addAttribute("pageContent", bookCopies);
+        model.addAttribute("bookCopies", pageResponse.content());
+        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("options", AdminPageOptions.options());
 
         return "admin/books/fragments/book-detail-copies :: bookCopies";
@@ -64,7 +66,9 @@ public class BookPageController {
     @GetMapping("/books/{id}/borrows")
     public String bookBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
         PageResponse<BorrowHistoryResponse.InfoByBook> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, pageable);
-        model.addAttribute("pageContent", pageResponse);
+
+        model.addAttribute("borrows", pageResponse.content());
+        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
         return "admin/books/fragments/book-detail-borrows :: bookBorrows";
     }

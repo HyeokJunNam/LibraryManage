@@ -1,4 +1,4 @@
-// js/admin/borrows/borrows.js
+// js/admin/borrows/borrow-status.js
 
 const PANEL_SELECTOR = "[data-fragment-url]";
 const SEARCH_FORM_SELECTOR = "[data-table-search-form]";

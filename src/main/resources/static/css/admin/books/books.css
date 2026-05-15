@@ -95,22 +95,51 @@
 }
 
 .books-table-card__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    padding: 20px 28px;
+    padding: 24px 28px 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfefc 100%);
     border-bottom: 1px solid var(--gray-100);
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+}
+
+.books-table-card__title-area {
+    max-width: 760px;
 }
 
 .books-table-card__title {
-    flex: 0 0 auto;
     margin: 0;
     color: var(--gray-900);
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 800;
     letter-spacing: -0.01em;
+}
+
+.books-table-card__caption {
+    margin: 8px 0 0;
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.books-table-card__control-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(226, 232, 240, 0.72);
+}
+
+.books-table-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.books-table-card__actions:empty {
+    display: block;
+    min-width: 1px;
 }
 
 .books-list-search {
@@ -121,20 +150,8 @@
     --list-search-input-width: 320px;
 }
 
-.books-table-card__summary {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    min-height: 34px;
-    padding: 0 12px;
-    border: 1px solid var(--green-100);
-    border-radius: 999px;
-    background: var(--green-50);
-    color: var(--green-800);
-    font-size: 13px;
-    font-weight: 800;
-    white-space: nowrap;
+.books-table-card__content {
+    background: var(--white);
 }
 
 .books-table-card__body {
@@ -151,14 +168,29 @@
 }
 
 @media (max-width: 980px) {
-    .page-hero,
-    .books-table-card__head {
+    .page-hero {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .books-table-card__summary {
-        width: fit-content;
+    .books-table-card__head {
+        padding: 22px 24px 18px;
+    }
+
+    .books-table-card__control-area {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-top: 16px;
+        padding-top: 14px;
+    }
+
+    .books-table-card__actions {
+        width: 100%;
+    }
+
+    .books-table-card__actions:empty {
+        display: none;
     }
 
     .books-list-search {
@@ -171,6 +203,19 @@
 
 @media (max-width: 520px) {
     .books-table-card__head {
-        padding: 22px 20px 18px;
+        padding: 22px 20px 16px;
+    }
+
+    .books-table-card__title {
+        font-size: 20px;
+    }
+
+    .books-table-card__caption {
+        font-size: 13px;
+    }
+
+    .books-table-card__control-area {
+        margin-top: 14px;
+        padding-top: 14px;
     }
 }

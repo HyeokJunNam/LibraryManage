@@ -14,11 +14,8 @@
             </div>
         </div>
 
-        <div
-                th:if="${pageContent == null
-                or pageContent.content == null
-                or #lists.isEmpty(pageContent.content)}"
-                class="book-borrow-empty">
+        <div th:if="${borrows == null or #lists.isEmpty(borrows)}"
+             class="book-borrow-empty">
             <div class="book-borrow-empty__icon">📖</div>
             <h4 class="book-borrow-empty__title">대출 이력이 없습니다</h4>
             <p class="book-borrow-empty__desc">
@@ -26,11 +23,8 @@
             </p>
         </div>
 
-        <div
-                th:if="${pageContent != null
-                and pageContent.content != null
-                and !#lists.isEmpty(pageContent.content)}"
-                class="book-borrow-card__body">
+        <div th:if="${borrows != null and !#lists.isEmpty(borrows)}"
+             class="book-borrow-card__body">
 
             <div class="table-block table-block--reserve-space book-borrow-table-block">
                 <div class="ui-table-wrap">
@@ -48,51 +42,45 @@
                         </div>
 
                         <div>
-                            <div
-                                    th:each="borrowRecord, stat : ${pageContent.content}"
-                                    class="ui-table__row book-borrow-table__row">
+                            <div th:each="borrowRecord, stat : ${borrows}"
+                                 class="ui-table__row book-borrow-table__row">
 
-                                <div
-                                        class="ui-table__leading-cell"
-                                        th:text="${pageContent.pageMetadata.page * pageContent.pageMetadata.size + stat.index + 1}">
+                                <div class="ui-table__leading-cell"
+                                     th:text="${pageMetaData != null
+                                        ? pageMetaData.page * pageMetaData.size + stat.index + 1
+                                        : stat.index + 1}">
                                     1
                                 </div>
 
-                                <div
-                                        class="ui-table__cell"
-                                        th:text="${borrowRecord.borrowRecordId}">
+                                <div class="ui-table__cell"
+                                     th:text="${borrowRecord.borrowRecordId}">
                                     18
                                 </div>
 
-                                <div
-                                        class="ui-table__cell"
-                                        th:text="${borrowRecord.bookItemId}">
+                                <div class="ui-table__cell"
+                                     th:text="${borrowRecord.bookCopyId != null ? borrowRecord.bookCopyId : borrowRecord.bookItemId}">
                                     7
                                 </div>
 
                                 <div class="ui-table__cell ui-table__cell--primary">
-                                    <span
-                                            class="ui-table__text"
-                                            th:text="${borrowRecord.memberName != null ? borrowRecord.memberName : '-'}">
+                                    <span class="ui-table__text"
+                                          th:text="${borrowRecord.memberName != null ? borrowRecord.memberName : '-'}">
                                         남혁준
                                     </span>
                                 </div>
 
-                                <div
-                                        class="ui-table__cell"
-                                        th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">
+                                <div class="ui-table__cell"
+                                     th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">
                                     2026-04-28
                                 </div>
 
-                                <div
-                                        class="ui-table__cell"
-                                        th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">
+                                <div class="ui-table__cell"
+                                     th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">
                                     2026-05-05
                                 </div>
 
-                                <div
-                                        class="ui-table__cell"
-                                        th:text="${borrowRecord.returnedAt != null ? #temporals.format(borrowRecord.returnedAt, 'yyyy-MM-dd') : '-'}">
+                                <div class="ui-table__cell"
+                                     th:text="${borrowRecord.returnedAt != null ? #temporals.format(borrowRecord.returnedAt, 'yyyy-MM-dd') : '-'}">
                                     -
                                 </div>
 
@@ -116,13 +104,14 @@
                     </div>
                 </div>
 
-                <div
-                        class="table-block__pagination"
-                        th:if="${pageContent.pageMetadata != null}"
-                        th:data-page-size="${pageContent.pageMetadata.size}">
-
-                    <th:block th:replace="~{common/fragments/pagination :: pagination(${pageContent.pageMetadata})}"></th:block>
-                </div>
+                <th:block th:replace="~{common/table-block ::
+                    pagination(
+                        ${pageMetaData},
+                        'ajax',
+                        null,
+                        'book-borrows:page-change'
+                    )
+                }"></th:block>
             </div>
 
         </div>

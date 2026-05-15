@@ -1,4 +1,4 @@
-.book-detail-items-card {
+.book-detail-copies-card {
     min-width: 0;
     min-height: 620px;
     display: flex;
@@ -10,7 +10,7 @@
     box-shadow: var(--shadow);
 }
 
-.book-detail-items-card__head {
+.book-detail-copies-card__head {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -20,7 +20,7 @@
     background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-soft) 100%);
 }
 
-.book-detail-items-card__title {
+.book-detail-copies-card__title {
     margin: 0;
     color: var(--gray-900);
     font-size: 20px;
@@ -28,36 +28,36 @@
     letter-spacing: -0.01em;
 }
 
-.book-detail-items-card__desc {
+.book-detail-copies-card__desc {
     margin: 8px 0 0;
     color: var(--color-text-muted);
     font-size: 14px;
     line-height: 1.6;
 }
 
-.book-detail-items-card__actions {
+.book-detail-copies-card__actions {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.book-detail-items-card__edit-actions {
+.book-detail-copies-card__edit-actions {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.book-detail-items-card__edit-button,
-.book-detail-items-card__save-button,
-.book-detail-items-card__cancel-button {
+.book-detail-copies-card__edit-button,
+.book-detail-copies-card__save-button,
+.book-detail-copies-card__cancel-button {
     height: 38px;
     padding: 0 16px;
     border-radius: 12px;
     white-space: nowrap;
 }
 
-.book-detail-items-card__body {
+.book-detail-copies-card__body {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -65,43 +65,43 @@
     background: var(--color-surface);
 }
 
-.book-detail-items-table-block {
+.book-detail-copies-table-block {
     flex: 1;
     min-width: 0;
     border-top: 0;
 }
 
-.book-detail-items-table {
+.book-detail-copies-table {
     min-width: 900px;
     --table-columns: 0.8fr 1.25fr 1.45fr 1.15fr 1.15fr 1fr;
 }
 
-.book-detail-items-table__row {
+.book-detail-copies-table__row {
     cursor: default;
 }
 
-.book-detail-items-table__row--dirty,
-.book-detail-items-table__row--created {
+.book-detail-copies-table__row--dirty,
+.book-detail-copies-table__row--created {
     background: #fffdf5;
 }
 
-.book-detail-items-table__row--deleted {
+.book-detail-copies-table__row--deleted {
     background: #fff7f7;
 }
 
-.book-detail-items-table__row--deleted .ui-table__leading-cell,
-.book-detail-items-table__row--deleted .ui-table__cell {
+.book-detail-copies-table__row--deleted .ui-table__leading-cell,
+.book-detail-copies-table__row--deleted .ui-table__cell {
     color: var(--gray-400);
 }
 
-.book-detail-items-table__row--deleted .book-detail-item-status-view,
-.book-detail-items-table__row--deleted .book-detail-item-location-view,
-.book-detail-items-table__row--deleted .status-badge {
+.book-detail-copies-table__row--deleted .book-detail-copy-status-view,
+.book-detail-copies-table__row--deleted .book-detail-copy-location-view,
+.book-detail-copies-table__row--deleted .status-badge {
     opacity: 0.5;
     text-decoration: line-through;
 }
 
-.book-detail-items-empty {
+.book-detail-copies-empty {
     flex: 1;
     min-height: 220px;
     display: flex;
@@ -112,19 +112,19 @@
     text-align: center;
 }
 
-.book-detail-items-empty__icon {
+.book-detail-copies-empty__icon {
     font-size: 42px;
     line-height: 1;
 }
 
-.book-detail-items-empty__title {
+.book-detail-copies-empty__title {
     margin: 14px 0 0;
     color: var(--gray-900);
     font-size: 20px;
     font-weight: 900;
 }
 
-.book-detail-items-empty__desc {
+.book-detail-copies-empty__desc {
     margin: 8px 0 0;
     max-width: 360px;
     color: var(--color-text-muted);
@@ -132,20 +132,20 @@
     line-height: 1.7;
 }
 
-.book-detail-items-pagination--disabled {
+.book-detail-copies-pagination--disabled {
     opacity: 0.45;
 }
 
-.book-detail-items-pagination--disabled .pagination {
+.book-detail-copies-pagination--disabled .pagination {
     pointer-events: none;
 }
 
-.book-detail-items-pagination--disabled .pagination__button,
-.book-detail-items-pagination--disabled .pagination__number {
+.book-detail-copies-pagination--disabled .pagination__button,
+.book-detail-copies-pagination--disabled .pagination__number {
     cursor: not-allowed;
 }
 
-.book-detail-item-control {
+.book-detail-copy-control {
     height: 36px;
     padding: 0 12px;
     border: 1px solid var(--gray-200);
@@ -160,57 +160,57 @@
     transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
 }
 
-.book-detail-item-status-edit {
+.book-detail-copy-status-edit {
     width: clamp(126px, 70%, 170px);
 }
 
-.book-detail-item-location-edit {
+.book-detail-copy-location-edit {
     width: clamp(150px, 75%, 220px);
     max-width: 100%;
 }
 
-.book-detail-item-control:focus {
+.book-detail-copy-control:focus {
     border-color: var(--green-500);
     box-shadow: 0 0 0 3px rgba(47, 158, 91, 0.12);
 }
 
-.book-detail-item-control:disabled {
+.book-detail-copy-control:disabled {
     background: var(--gray-50);
     color: var(--gray-400);
     cursor: not-allowed;
 }
 
-.book-detail-item-status-edit--available,
-.book-detail-item-status-edit--available:disabled {
+.book-detail-copy-status-edit--available,
+.book-detail-copy-status-edit--available:disabled {
     border-color: var(--green-100);
     background: var(--green-50);
     color: var(--green-800);
 }
 
-.book-detail-item-status-edit--damaged,
-.book-detail-item-status-edit--damaged:disabled,
-.book-detail-item-status-edit--lost,
-.book-detail-item-status-edit--lost:disabled {
+.book-detail-copy-status-edit--damaged,
+.book-detail-copy-status-edit--damaged:disabled,
+.book-detail-copy-status-edit--lost,
+.book-detail-copy-status-edit--lost:disabled {
     border-color: var(--color-danger-line);
     background: var(--color-danger-soft);
     color: var(--color-danger);
 }
 
-.book-detail-item-status-edit--discarded,
-.book-detail-item-status-edit--discarded:disabled {
+.book-detail-copy-status-edit--discarded,
+.book-detail-copy-status-edit--discarded:disabled {
     border-color: var(--gray-200);
     background: var(--gray-50);
     color: var(--gray-500);
 }
 
-.book-detail-item-status-edit option {
+.book-detail-copy-status-edit option {
     background: var(--white);
     color: var(--gray-800);
 }
 
-.book-detail-item-row__state,
-.book-detail-item-row__new-label,
-.book-detail-item-row__empty-value {
+.book-detail-copy-row__state,
+.book-detail-copy-row__new-label,
+.book-detail-copy-row__empty-value {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -225,43 +225,43 @@
     font-weight: 900;
 }
 
-.book-detail-item-row__new-label {
+.book-detail-copy-row__new-label {
     border-color: var(--green-100);
     background: var(--green-50);
     color: var(--green-800);
 }
 
-.book-detail-items-table__row--dirty .book-detail-item-row__state {
+.book-detail-copies-table__row--dirty .book-detail-copy-row__state {
     border-color: #fde68a;
     background: #fffbeb;
     color: #b45309;
     font-size: 0;
 }
 
-.book-detail-items-table__row--dirty .book-detail-item-row__state::before {
+.book-detail-copies-table__row--dirty .book-detail-copy-row__state::before {
     content: "수정";
     font-size: 12px;
 }
 
-.book-detail-items-table__row--created .book-detail-item-row__state {
+.book-detail-copies-table__row--created .book-detail-copy-row__state {
     border-color: var(--green-100);
     background: var(--green-50);
     color: var(--green-800);
     font-size: 0;
 }
 
-.book-detail-items-table__row--created .book-detail-item-row__state::before {
+.book-detail-copies-table__row--created .book-detail-copy-row__state::before {
     content: "신규";
     font-size: 12px;
 }
 
-.book-detail-items-table__row--deleted .book-detail-item-row__state {
+.book-detail-copies-table__row--deleted .book-detail-copy-row__state {
     display: none;
 }
 
-.book-detail-item-row__delete,
-.book-detail-item-row__cancel-delete,
-.book-detail-item-row__remove {
+.book-detail-copy-row__delete,
+.book-detail-copy-row__cancel-delete,
+.book-detail-copy-row__remove {
     height: 30px;
     padding: 0 10px;
     border: 1px solid var(--gray-200);
@@ -274,32 +274,32 @@
     transition: all 0.18s ease;
 }
 
-.book-detail-item-row__delete:hover,
-.book-detail-item-row__remove:hover {
+.book-detail-copy-row__delete:hover,
+.book-detail-copy-row__remove:hover {
     background: var(--color-danger-soft);
     color: var(--color-danger);
     border-color: var(--color-danger-line);
 }
 
-.book-detail-item-row__cancel-delete {
+.book-detail-copy-row__cancel-delete {
     border-color: var(--color-danger-line);
     background: var(--color-danger-soft);
     color: var(--color-danger);
 }
 
-.book-detail-item-row__cancel-delete:hover {
+.book-detail-copy-row__cancel-delete:hover {
     background: var(--color-danger-soft);
     color: var(--color-danger);
     border-color: var(--color-danger);
 }
 
-.book-detail-item-row__delete:disabled {
+.book-detail-copy-row__delete:disabled {
     background: var(--gray-50);
     color: var(--gray-400);
     cursor: not-allowed;
 }
 
-.book-detail-items-add-row {
+.book-detail-copies-add-row {
     display: none;
     width: 100%;
     min-height: 52px;
@@ -313,12 +313,12 @@
     transition: background 0.18s ease, color 0.18s ease;
 }
 
-.book-detail-items-add-row:hover {
+.book-detail-copies-add-row:hover {
     background: #f7fff9;
     color: var(--green-800);
 }
 
-.book-detail-items-add-row__icon {
+.book-detail-copies-add-row__icon {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -334,72 +334,72 @@
     line-height: 1;
 }
 
-.book-detail-items-card.is-editing .book-detail-items-add-row {
+.book-detail-copies-card.is-editing .book-detail-copies-add-row {
     display: inline-flex !important;
     justify-content: center;
     align-items: center;
 }
 
-.book-detail-items-card.is-editing .book-detail-item-status-view,
-.book-detail-items-card.is-editing .book-detail-item-location-view {
+.book-detail-copies-card.is-editing .book-detail-copy-status-view,
+.book-detail-copies-card.is-editing .book-detail-copy-location-view {
     display: none;
 }
 
-.book-detail-items-card.is-editing .book-detail-item-status-edit,
-.book-detail-items-card.is-editing .book-detail-item-location-edit {
+.book-detail-copies-card.is-editing .book-detail-copy-status-edit,
+.book-detail-copies-card.is-editing .book-detail-copy-location-edit {
     display: inline-flex !important;
 }
 
-.book-detail-items-card.is-editing .book-detail-item-row__state {
+.book-detail-copies-card.is-editing .book-detail-copy-row__state {
     display: none;
 }
 
-.book-detail-items-card.is-editing .book-detail-item-row__delete {
+.book-detail-copies-card.is-editing .book-detail-copy-row__delete {
     display: inline-flex !important;
     justify-content: center;
     align-items: center;
 }
 
-.book-detail-items-card.is-editing .book-detail-items-table__row--deleted .book-detail-item-row__delete {
+.book-detail-copies-card.is-editing .book-detail-copies-table__row--deleted .book-detail-copy-row__delete {
     display: none !important;
 }
 
-.book-detail-items-card.is-editing .book-detail-items-table__row--deleted .book-detail-item-row__cancel-delete {
+.book-detail-copies-card.is-editing .book-detail-copies-table__row--deleted .book-detail-copy-row__cancel-delete {
     display: inline-flex !important;
     justify-content: center;
     align-items: center;
 }
 
-.book-detail-items-card.is-editing .book-detail-items-table__row--deleted .book-detail-item-row__state {
+.book-detail-copies-card.is-editing .book-detail-copies-table__row--deleted .book-detail-copy-row__state {
     display: none !important;
 }
 
 @media (max-width: 1280px) {
-    .book-detail-items-card {
+    .book-detail-copies-card {
         min-height: auto;
     }
 }
 
 @media (max-width: 768px) {
-    .book-detail-items-card__head {
+    .book-detail-copies-card__head {
         padding: 22px 20px 18px;
         flex-direction: column;
         align-items: stretch;
     }
 
-    .book-detail-items-card__actions {
+    .book-detail-copies-card__actions {
         width: 100%;
         justify-content: flex-end;
     }
 
-    .book-detail-items-card__edit-actions {
+    .book-detail-copies-card__edit-actions {
         width: 100%;
         justify-content: flex-end;
     }
 
-    .book-detail-items-card__edit-button,
-    .book-detail-items-card__save-button,
-    .book-detail-items-card__cancel-button {
+    .book-detail-copies-card__edit-button,
+    .book-detail-copies-card__save-button,
+    .book-detail-copies-card__cancel-button {
         width: 100%;
         justify-content: center;
     }

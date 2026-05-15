@@ -1,0 +1,315 @@
+/* css/admin/borrows/borrow-status.css */
+
+/* =========================
+   PAGE HERO
+   - 화면 고유 영역
+========================= */
+.page-hero {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+
+    padding: 32px;
+    margin-bottom: 24px;
+
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--green-100);
+    background: linear-gradient(135deg, #f7fff9 0%, #e7f7ec 55%, #d9f0e0 100%);
+    box-shadow: var(--shadow);
+}
+
+.page-hero--borrows::after {
+    content: "BORROWS";
+    position: absolute;
+    right: 34px;
+    bottom: -18px;
+
+    color: rgba(31, 107, 69, 0.08);
+    font-size: 96px;
+    font-weight: 900;
+    line-height: 1;
+
+    pointer-events: none;
+}
+
+.page-hero__content,
+.page-hero__actions {
+    position: relative;
+    z-index: 1;
+}
+
+.page-hero__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-hero__eyebrow {
+    margin: 0 0 10px;
+
+    color: var(--green-700);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.page-hero__title {
+    margin: 0;
+
+    color: var(--green-800);
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+}
+
+.page-hero__desc {
+    margin: 16px 0 0;
+    max-width: 760px;
+
+    color: var(--gray-700);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.page-hero__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+.borrow-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.borrow-page__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    min-width: 0;
+}
+
+.borrow-page__section,
+.borrow-page__panel {
+    min-width: 0;
+}
+
+.borrow-page__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 240px;
+    padding: 32px;
+
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    box-shadow: var(--shadow);
+
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   PANEL
+========================= */
+.borrow-panel {
+    overflow: hidden;
+    min-width: 0;
+
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    box-shadow: var(--shadow);
+}
+
+.borrow-panel__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+
+    padding: 24px 28px 20px;
+
+    border-bottom: 1px solid var(--gray-100);
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-soft) 100%);
+}
+
+.borrow-panel__title {
+    margin: 0;
+
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+}
+
+.borrow-panel__description {
+    margin: 8px 0 0;
+
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   SEARCH
+   - 기본 검색폼 스타일은 list-searchbar.css 사용
+   - 버튼 스타일은 common.css의 .btn 사용
+========================= */
+.borrow-panel__search {
+    padding: 20px 28px;
+
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--color-surface-soft);
+}
+
+.borrow-list-search {
+    --list-search-select-width: 160px;
+    --list-search-input-width: 1fr;
+
+    grid-template-columns: var(--list-search-select-width) minmax(0, 1fr) auto;
+    gap: 8px;
+}
+
+.borrow-panel__search-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    white-space: nowrap;
+}
+
+.borrow-panel__search-button,
+.borrow-panel__reset-button {
+    min-height: 40px;
+    height: 40px;
+    padding: 0 16px;
+}
+
+
+/* =========================
+   TABLE BLOCK ADAPTER
+   - 기본 테이블 구조는 table-block.css 사용
+   - 이 파일에서는 컬럼 비율만 지정
+========================= */
+.borrow-table-block {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.borrow-table {
+    min-width: 1120px;
+}
+
+.borrow-table .ui-table__leading-cell,
+.borrow-table .ui-table__cell {
+    padding: 0 8px;
+}
+
+.borrow-table .ui-table__cell--danger {
+    color: var(--color-danger);
+    font-weight: 800;
+}
+
+
+/* =========================
+   BORROW LIST COLUMNS
+   No / 대출 ID / 재고 ID / 도서명 / 위치 / 회원명 / 상태 / 대출일 / 반납 예정일 / 반납일
+========================= */
+.borrow-table--list {
+    --table-leading-column: 56px;
+    --table-columns:
+            minmax(76px, 0.7fr)
+            minmax(76px, 0.7fr)
+            minmax(220px, 2.4fr)
+            minmax(96px, 0.9fr)
+            minmax(100px, 1fr)
+            minmax(96px, 0.9fr)
+            minmax(110px, 1fr)
+            minmax(110px, 1fr)
+            minmax(110px, 1fr);
+}
+
+
+/* =========================
+   OVERDUE LIST COLUMNS
+   No / 대출 ID / 재고 ID / 도서명 / 위치 / 회원명 / 대출일 / 반납 예정일 / 연체일 / 상태
+========================= */
+.borrow-table--overdue {
+    --table-leading-column: 56px;
+    --table-columns:
+            minmax(76px, 0.7fr)
+            minmax(76px, 0.7fr)
+            minmax(220px, 2.4fr)
+            minmax(96px, 0.9fr)
+            minmax(100px, 1fr)
+            minmax(110px, 1fr)
+            minmax(110px, 1fr)
+            minmax(90px, 0.8fr)
+            minmax(96px, 0.9fr);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+    .page-hero {
+        padding: 28px 24px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-hero__title {
+        font-size: 30px;
+    }
+
+    .page-hero__actions {
+        flex-wrap: wrap;
+    }
+
+    .borrow-panel__header {
+        padding: 22px 20px 18px;
+    }
+
+    .borrow-panel__search {
+        padding: 18px 20px;
+    }
+
+    .borrow-list-search {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .borrow-panel__search-actions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 720px) {
+    .borrow-panel__search-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .borrow-panel__search-button,
+    .borrow-panel__reset-button {
+        width: 100%;
+    }
+}

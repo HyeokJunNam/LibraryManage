@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 상세</title>
 
-    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <th:block th:replace="~{common/admin/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/books/books-detail.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/books/borrows.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/books/book-detail-copies.css}">
     <link rel="stylesheet" th:href="@{/css/admin/books/book-detail-borrows.css}">
 </head>
 <body>
 <div class="admin-page">
-    <aside th:replace="~{admin/common/fragments/sidebar :: sidebar('books')}"></aside>
+    <aside th:replace="~{common/admin/sidebar :: sidebar('books')}"></aside>
 
     <main class="admin-main">
 
@@ -157,9 +157,29 @@
             </section>
 
             <section
-                    class="book-detail-items-area"
-                    id="bookDetailItemsArea"
-                    th:data-items-url="@{/admin/books/{bookId}/copies(bookId=${book.id})}">
+                    class="book-detail-copies-area"
+                    id="bookDetailCopiesArea"
+                    th:data-copies-url="@{/admin/books/{bookId}/copies(bookId=${book.id})}">
+
+                <section class="book-detail-copies-card">
+                    <div class="book-detail-copies-card__head">
+                        <div>
+                            <h3 class="book-detail-copies-card__title">도서 재고 현황</h3>
+                            <p class="book-detail-copies-card__desc">
+                                재고 현황을 불러오는 중입니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="book-detail-copies-empty">
+                        <div class="book-detail-copies-empty__icon">⏳</div>
+                        <h4 class="book-detail-copies-empty__title">재고 현황을 불러오고 있습니다</h4>
+                        <p class="book-detail-copies-empty__desc">
+                            잠시만 기다려 주세요.
+                        </p>
+                    </div>
+                </section>
+
             </section>
 
             <section
@@ -192,7 +212,7 @@
 
 <th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
 
-<script type="module" th:src="@{/js/admin/books/books-detail.js}"></script>
-<script type="module" th:src="@{/js/admin/books/book-detail-items.js}"></script>
+<script type="module" th:src="@{/js/admin/books/book-detail-copies.js}"></script>
+<script type="module" th:src="@{/js/admin/books/book-detail-borrows.js}"></script>
 </body>
 </html>

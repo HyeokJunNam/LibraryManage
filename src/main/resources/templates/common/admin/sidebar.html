@@ -49,7 +49,7 @@
                     대출 / 반납 처리
                 </a>
 
-                <a th:href="@{/admin/borrows}"
+                <a th:href="@{/admin/borrows/status}"
                    class="admin-nav__sub-item"
                    th:classappend="${activeMenu == 'borrow-status'} ? ' admin-nav__sub-item--active' : ''">
                     대출 현황
@@ -85,7 +85,7 @@
         </form>
     </div>
 
-    <script th:src="@{/js/admin/common/sidebar.js}"></script>
+    <script th:src="@{/js/common/admin/sidebar.js}"></script>
 </aside>
 </body>
 </html>
