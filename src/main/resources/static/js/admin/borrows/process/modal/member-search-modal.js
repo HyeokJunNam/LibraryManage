@@ -12,22 +12,44 @@ export function createMemberSearchModal({ onSelectMember } = {}) {
     const openButtons = document.querySelectorAll('[data-role="open-member-search"]');
     const closeButtons = document.querySelectorAll('[data-role="close-member-search"]');
 
-    function getResultPanel() {
-        return modal.querySelector("#memberSearchResultPanel");
+    let hasLoadedOnce = false;
+    let preloadPromise = null;
+
+    function getResultMount() {
+        return modal.querySelector('[data-role="member-search-result-mount"]');
     }
 
     function getSearchKeyword() {
         return modal.querySelector("[data-table-search-keyword]");
     }
 
+    async function loadResultPanel() {
+        const resultMount = getResultMount();
+        if (!resultMount || !window.TableLayout?.reload) return;
+
+        await window.TableLayout.reload(resultMount);
+        hasLoadedOnce = true;
+    }
+
+    function preloadResultPanel() {
+        if (hasLoadedOnce) return Promise.resolve();
+        if (preloadPromise) return preloadPromise;
+
+        preloadPromise = loadResultPanel().finally(() => {
+            preloadPromise = null;
+        });
+
+        return preloadPromise;
+    }
+
     async function open() {
         modal.classList.remove("is-hidden");
         modal.setAttribute("aria-hidden", "false");
 
-        const resultPanel = getResultPanel();
-
-        if (resultPanel && window.TableLayout?.reload) {
-            await window.TableLayout.reload(resultPanel);
+        if (!hasLoadedOnce) {
+            await preloadResultPanel();
+        } else {
+            loadResultPanel();
         }
 
         window.setTimeout(() => {
@@ -41,14 +63,6 @@ export function createMemberSearchModal({ onSelectMember } = {}) {
     }
 
     function reset() {
-        const resultPanel = getResultPanel();
-
-        if (resultPanel) {
-            resultPanel.innerHTML = "";
-            delete resultPanel.dataset.currentUrl;
-            delete resultPanel.dataset.currentSearchTarget;
-        }
-
         close();
     }
 
@@ -92,6 +106,10 @@ export function createMemberSearchModal({ onSelectMember } = {}) {
             reset();
         }
     });
+
+    window.setTimeout(() => {
+        preloadResultPanel();
+    }, 0);
 
     return {
         open,

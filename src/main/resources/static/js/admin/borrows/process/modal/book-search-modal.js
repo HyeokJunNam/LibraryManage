@@ -12,8 +12,11 @@ export function createBookSearchModal({ getConfirmedBooks, onConfirmSelected } =
     const openButtons = document.querySelectorAll('[data-role="open-book-search"]');
     const pendingSelectedBooks = new Map();
 
-    function getResultPanel() {
-        return modal.querySelector("#bookSearchResultPanel");
+    let hasLoadedOnce = false;
+    let preloadPromise = null;
+
+    function getResultMount() {
+        return modal.querySelector('[data-role="book-search-result-mount"]');
     }
 
     function getSearchKeyword() {
@@ -76,19 +79,38 @@ export function createBookSearchModal({ getConfirmedBooks, onConfirmSelected } =
         }
     }
 
+    async function loadResultPanel() {
+        const resultMount = getResultMount();
+        if (!resultMount || !window.TableLayout?.reload) return;
+
+        await window.TableLayout.reload(resultMount);
+        hasLoadedOnce = true;
+        updateSelectionControls();
+    }
+
+    function preloadResultPanel() {
+        if (hasLoadedOnce) return Promise.resolve();
+        if (preloadPromise) return preloadPromise;
+
+        preloadPromise = loadResultPanel().finally(() => {
+            preloadPromise = null;
+        });
+
+        return preloadPromise;
+    }
+
     async function open() {
         syncPendingBooksFromConfirmed();
 
         modal.classList.remove("is-hidden");
         modal.setAttribute("aria-hidden", "false");
 
-        const resultPanel = getResultPanel();
-
-        if (resultPanel && window.TableLayout?.reload) {
-            await window.TableLayout.reload(resultPanel);
+        if (!hasLoadedOnce) {
+            await preloadResultPanel();
+        } else {
+            loadResultPanel();
+            updateSelectionControls();
         }
-
-        updateSelectionControls();
 
         window.setTimeout(() => {
             getSearchKeyword()?.focus();
@@ -102,15 +124,6 @@ export function createBookSearchModal({ getConfirmedBooks, onConfirmSelected } =
 
     function reset() {
         pendingSelectedBooks.clear();
-
-        const resultPanel = getResultPanel();
-
-        if (resultPanel) {
-            resultPanel.innerHTML = "";
-            delete resultPanel.dataset.currentUrl;
-            delete resultPanel.dataset.currentSearchTarget;
-        }
-
         updateSelectionControls();
         close();
     }
@@ -191,10 +204,14 @@ export function createBookSearchModal({ getConfirmedBooks, onConfirmSelected } =
         updateSelectionControls();
     });
 
-    const resultPanel = getResultPanel();
-    if (resultPanel) {
-        observer.observe(resultPanel, { childList: true, subtree: true });
+    const resultMount = getResultMount();
+    if (resultMount) {
+        observer.observe(resultMount, { childList: true, subtree: true });
     }
+
+    window.setTimeout(() => {
+        preloadResultPanel();
+    }, 0);
 
     return {
         open,

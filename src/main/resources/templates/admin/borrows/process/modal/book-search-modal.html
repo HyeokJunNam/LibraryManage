@@ -34,10 +34,10 @@
             </div>
 
             <div class="book-search-modal__body">
-                <section class="book-search-result"
-                         id="bookSearchResultPanel"
-                         th:data-fragment-url="@{/admin/books/search}">
-                </section>
+                <div class="book-search-result"
+                     data-role="book-search-result-mount"
+                     th:data-fragment-url="@{/admin/books/search}">
+                </div>
             </div>
 
         </section>
