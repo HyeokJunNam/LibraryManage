@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.domain.model.dto.MemberRequest;
+import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
 import com.querydsl.core.types.Expression;
@@ -34,12 +34,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(member.id, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression likeName = QuerydslFilterHelper.like(member.name, searchCondition.name());
-        BooleanExpression likeMemberNo = QuerydslFilterHelper.like(member.memberNo, searchCondition.memberNo());
+        BooleanExpression likePhoneNumber = QuerydslFilterHelper.like(member.phoneNumber, searchCondition.phoneNumber());
         BooleanExpression likeEmail = QuerydslFilterHelper.like(member.email, searchCondition.email());
 
         List<Member> query = jpaQueryFactory
                 .selectFrom(member)
-                .where(likeName, likeMemberNo, likeEmail)
+                .where(likeName, likePhoneNumber, likeEmail)
                 .orderBy(order)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -48,7 +48,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(member.id.count())
                 .from(member)
-                .where(likeName, likeMemberNo, likeEmail);
+                .where(likeName, likePhoneNumber, likeEmail);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }

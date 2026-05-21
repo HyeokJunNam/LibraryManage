@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="bookSearchModal">
+
+    <div class="book-search-modal is-hidden"
+         id="bookSearchModal"
+         aria-hidden="true">
+
+        <div class="book-search-modal__backdrop"
+             data-role="close-book-search"></div>
+
+        <section class="book-search-modal__dialog"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="bookSearchModalTitle">
+
+            <div class="book-search-modal__header">
+                <div class="book-search-modal__header-main">
+                    <p class="book-search-modal__eyebrow">BOOK SEARCH</p>
+                    <h3 class="book-search-modal__title" id="bookSearchModalTitle">도서 검색</h3>
+                    <p class="book-search-modal__desc">
+                        도서명, ISBN, 저자, 출판사로 검색하여 처리할 도서를 선택할 수 있습니다.
+                    </p>
+                </div>
+
+                <button type="button"
+                        class="book-search-modal__close-btn"
+                        data-role="close-book-search"
+                        aria-label="도서 검색 닫기">
+                    ✕
+                </button>
+            </div>
+
+            <div class="book-search-modal__body">
+                <section class="book-search-result"
+                         id="bookSearchResultPanel"
+                         th:data-fragment-url="@{/admin/books/search}">
+                </section>
+            </div>
+
+        </section>
+    </div>
+
+</th:block>
+
+
+<th:block th:fragment="bookSearchResultPanel"
+          th:with="TABLE_MODE_AJAX='ajax'">
+
+    <section class="book-search-result"
+             id="bookSearchResultPanel"
+             th:data-fragment-url="@{/admin/books/search}">
+
+        <div class="table-layout table-layout--auto-height">
+
+            <th:block th:replace="~{common/table-layout :: tableToolbar(
+                searchMode=${TABLE_MODE_AJAX}
+            )}"></th:block>
+
+            <div class="table-layout__body">
+                <table class="table-layout__table book-search-result__table">
+                    <thead class="table-layout__thead">
+                    <tr class="table-layout__row table-layout__row--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                            <span class="table-layout__text">선택</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">도서명</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">ISBN</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">저자</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">보유 재고</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">대출 가능</span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="table-layout__tbody">
+                    <tr class="table-layout__row table-layout__row--clickable book-search-result__row"
+                        th:each="book : ${content}"
+                        data-role="select-book-row"
+                        tabindex="0"
+                        th:data-book-id="${book.id}"
+                        th:data-book-title="${book.title}"
+                        th:data-book-isbn="${book.isbn}"
+                        th:data-book-author="${book.author}"
+                        th:data-book-publisher="${book.publisher}"
+                        th:data-book-stock-quantity="${book.stockQuantity}"
+                        th:data-book-available-quantity="${book.availableQuantity}"
+                        th:attr="data-disabled=${book.availableQuantity <= 0}">
+
+                        <td class="table-layout__cell table-layout__cell--leading table-layout__cell--checkbox">
+                            <input type="checkbox"
+                                   class="book-search-result__checkbox"
+                                   tabindex="-1"
+                                   aria-hidden="true"
+                                   th:checked="${selectedBookIds != null and #lists.contains(selectedBookIds, book.id)}"
+                                   th:disabled="${book.availableQuantity <= 0}">
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--primary">
+                            <span class="table-layout__text"
+                                  th:text="${book.title}">
+                                도서명
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                            <span class="table-layout__text"
+                                  th:text="${book.isbn}">
+                                ISBN
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                            <span class="table-layout__text"
+                                  th:text="${book.author}">
+                                저자
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell book-search-result__stock">
+                            <span class="table-layout__text"
+                                  th:text="${book.stockQuantity}">
+                                0
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell book-search-result__available"
+                            th:classappend="${book.availableQuantity <= 0} ? ' is-zero' : ' is-positive'">
+                            <span class="table-layout__text"
+                                  th:text="${book.availableQuantity}">
+                                0
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr class="table-layout__row table-layout__row--empty"
+                        th:if="${content == null or #lists.isEmpty(content)}">
+                        <td class="table-layout__cell table-layout__cell--empty"
+                            colspan="6">
+                            검색 결과가 없습니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <th:block th:replace="~{common/table-layout :: tablePagination(
+                paginationMode=${TABLE_MODE_AJAX}
+            )}"></th:block>
+
+        </div>
+
+        <div class="book-search-modal__footer">
+            <button type="button"
+                    class="book-search-modal__footer-btn book-search-modal__footer-btn--secondary"
+                    data-role="close-book-search">
+                취소
+            </button>
+
+            <button type="button"
+                    class="book-search-modal__footer-btn book-search-modal__footer-btn--primary"
+                    id="confirmBookSelectionButton"
+                    disabled>
+                선택 완료
+            </button>
+        </div>
+
+    </section>
+
+</th:block>
+
+</body>
+</html>

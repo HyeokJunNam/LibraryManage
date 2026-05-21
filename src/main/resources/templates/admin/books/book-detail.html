@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 상세</title>
 
-    <th:block th:replace="~{common/admin/admin-page-assets :: assets}"></th:block>
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/books/books-detail.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/books/book-detail-copies.css}">
-    <link rel="stylesheet" th:href="@{/css/admin/books/book-detail-borrows.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/books/fragments/book-detail-copies.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/books/fragments/book-detail-borrows.css}">
 </head>
 <body>
 <div class="admin-page">
-    <aside th:replace="~{common/admin/sidebar :: sidebar('books')}"></aside>
+    <aside th:replace="~{admin/common/sidebar :: sidebar('books')}"></aside>
 
     <main class="admin-main">
 
@@ -212,7 +212,7 @@
 
 <th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
 
-<script type="module" th:src="@{/js/admin/books/book-detail-copies.js}"></script>
-<script type="module" th:src="@{/js/admin/books/book-detail-borrows.js}"></script>
+<script type="module" th:src="@{/js/admin/books/fragments/book-detail-copies.js}"></script>
+<script type="module" th:src="@{/js/admin/books/fragments/book-detail-borrows.js}"></script>
 </body>
 </html>

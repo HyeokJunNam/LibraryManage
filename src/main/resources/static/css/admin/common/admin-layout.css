@@ -1,0 +1,62 @@
+/* =========================
+   ADMIN PAGE LAYOUT
+========================= */
+
+.admin-page {
+    min-height: 100vh;
+    display: flex;
+    background: var(--gray-50);
+}
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+    padding: 32px;
+}
+
+/* =========================
+   PAGE HERO
+========================= */
+
+.page-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 32px;
+    margin-bottom: 24px;
+
+    border: 1px solid var(--green-100);
+    border-radius: 28px;
+    background: linear-gradient(135deg, #f7fff9 0%, #e7f7ec 55%, #d9f0e0 100%);
+    box-shadow: var(--shadow);
+}
+
+.page-hero__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.page-hero__eyebrow {
+    margin: 0 0 10px;
+    color: var(--green-700);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.page-hero__title {
+    margin: 0;
+    color: var(--green-800);
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.page-hero__desc {
+    margin: 16px 0 0;
+    max-width: 760px;
+    color: var(--gray-700);
+    font-size: 16px;
+    line-height: 1.7;
+}

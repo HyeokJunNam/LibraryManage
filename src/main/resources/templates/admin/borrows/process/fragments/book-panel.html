@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="bookPanel">
+
+    <section class="book-panel"
+             data-mode="idle"
+             id="bookPanel">
+
+        <div class="book-panel__body">
+
+            <section class="book-empty-state"
+                     id="bookPanelEmpty">
+                <div class="book-empty-state__icon">📚</div>
+                <h4 class="book-empty-state__title">대출 / 반납</h4>
+                <p class="book-empty-state__desc">회원을 선택한 뒤 처리할 버튼을 눌러주세요.</p>
+            </section>
+
+            <th:block th:replace="~{admin/borrows/process/fragments/book-borrow-panel :: bookBorrowPanel}"></th:block>
+            <th:block th:replace="~{admin/borrows/process/fragments/book-return-panel :: bookReturnPanel}"></th:block>
+
+        </div>
+
+    </section>
+
+</th:block>
+</body>
+</html>

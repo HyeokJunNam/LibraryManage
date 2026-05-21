@@ -1,10 +1,9 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.PageResponseTest;
-import com.nhj.librarymanage.domain.model.dto.BookRequest;
-import com.nhj.librarymanage.domain.model.dto.BookResponse;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.BookRequest;
+import com.nhj.librarymanage.domain.dto.BookResponse;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

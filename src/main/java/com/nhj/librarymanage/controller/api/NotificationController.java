@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.dto.NotificationRequest;
+import com.nhj.librarymanage.domain.dto.NotificationRequest;
 import com.nhj.librarymanage.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

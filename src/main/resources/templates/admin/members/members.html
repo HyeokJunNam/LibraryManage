@@ -1,4 +1,3 @@
-<!-- members.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 관리</title>
 
-    <th:block th:replace="~{common/admin/admin-page-assets :: assets}"></th:block>
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/members/members.css}">
 </head>
 <body>
 <div class="admin-page">
-    <aside th:replace="~{common/admin/sidebar :: sidebar('members')}"></aside>
+    <aside th:replace="~{admin/common/sidebar :: sidebar('members')}"></aside>
 
     <main class="admin-main">
 
@@ -23,17 +22,13 @@
                     전체 회원을 조회하고 회원 정보 및 상태를 확인할 수 있습니다.
                 </p>
             </div>
-
-            <div class="page-hero__actions">
-                <a th:href="@{/admin/members/new}" class="btn btn--primary">회원 추가</a>
-            </div>
         </header>
 
         <section class="statistics-grid">
-
             <article class="statistics-card">
                 <p class="statistics-card__label">전체 회원</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.totalCount : 0}">
                     0
                 </strong>
@@ -42,7 +37,8 @@
 
             <article class="statistics-card">
                 <p class="statistics-card__label">활성 회원</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.activeCount : 0}">
                     0
                 </strong>
@@ -51,7 +47,8 @@
 
             <article class="statistics-card">
                 <p class="statistics-card__label">휴면 회원</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.inactiveCount : 0}">
                     0
                 </strong>
@@ -60,196 +57,147 @@
 
             <article class="statistics-card">
                 <p class="statistics-card__label">정지 회원</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${memberSummary != null ? memberSummary.suspendedCount : 0}">
                     0
                 </strong>
                 <p class="statistics-card__meta">이용 제한 상태 회원</p>
             </article>
-
         </section>
 
-        <section class="filter-panel">
-            <form th:action="@{/admin/members}" method="get" class="filter-form">
+        <section class="members-table-layout table-layout">
 
-                <div class="filter-form__group">
-                    <label for="keyword" class="filter-form__label">검색어</label>
-                    <input
-                            id="keyword"
-                            name="keyword"
-                            type="text"
-                            class="filter-form__input"
-                            placeholder="이름, 이메일, 전화번호 검색"
-                            th:value="${param.keyword}">
-                </div>
+            <th:block th:replace="~{common/table-layout :: tableHeader(
+                title='회원 목록',
+                caption='등록된 회원을 검색하고, 선택한 회원의 상세 정보를 확인할 수 있습니다.',
+                actions=null
+            )}"></th:block>
 
-                <div class="filter-form__group">
-                    <label for="status" class="filter-form__label">회원 상태</label>
-                    <select id="status" name="status" class="filter-form__select">
-                        <option value="">전체</option>
-                        <option value="ACTIVE"
-                                th:selected="${param.status != null and param.status[0] == 'ACTIVE'}">
-                            활성
-                        </option>
-                        <option value="INACTIVE"
-                                th:selected="${param.status != null and param.status[0] == 'INACTIVE'}">
-                            휴면
-                        </option>
-                        <option value="SUSPENDED"
-                                th:selected="${param.status != null and param.status[0] == 'SUSPENDED'}">
-                            정지
-                        </option>
-                    </select>
-                </div>
+            <th:block th:replace="~{common/table-layout :: tableToolbar(searchMode='server')}"></th:block>
 
-                <div class="filter-form__group">
-                    <label for="role" class="filter-form__label">권한</label>
-                    <select id="role" name="role" class="filter-form__select">
-                        <option value="">전체</option>
-                        <option value="USER"
-                                th:selected="${param.role != null and param.role[0] == 'USER'}">
-                            일반 회원
-                        </option>
-                        <option value="ADMIN"
-                                th:selected="${param.role != null and param.role[0] == 'ADMIN'}">
-                            관리자
-                        </option>
-                    </select>
-                </div>
+            <div class="table-layout__body">
+                <table class="table-layout__table">
+                    <thead class="table-layout__thead">
+                    <tr class="table-layout__row table-layout__row--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                            <span class="table-layout__text"></span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">이름</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">이메일</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">연락처</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">권한</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">가입일</span>
+                        </th>
+                    </tr>
+                    </thead>
 
-                <div class="filter-form__group">
-                    <label for="sort" class="filter-form__label">정렬</label>
-                    <select id="sort" name="sort" class="filter-form__select">
-                        <option value="latest"
-                                th:selected="${param.sort == null or param.sort[0] == 'latest'}">
-                            최신 가입순
-                        </option>
-                        <option value="name"
-                                th:selected="${param.sort != null and param.sort[0] == 'name'}">
-                            이름순
-                        </option>
-                        <option value="oldest"
-                                th:selected="${param.sort != null and param.sort[0] == 'oldest'}">
-                            오래된 가입순
-                        </option>
-                    </select>
-                </div>
+                    <tbody class="table-layout__tbody">
+                    <tr
+                            class="table-layout__row table-layout__row--clickable"
+                            th:each="row : ${content}"
+                            th:attr="data-member-url=@{/admin/members/{id}(id=${row.id})},
+                                     tabindex=0,
+                                     role='link',
+                                     aria-label=${row.name + ' 상세 정보 보기'}">
 
-                <div class="filter-form__actions">
-                    <button type="submit" class="btn btn--primary">검색</button>
-                    <a th:href="@{/admin/members}" class="btn btn--secondary">초기화</a>
-                </div>
+                        <td class="table-layout__cell table-layout__cell--leading"></td>
 
-            </form>
-        </section>
+                        <td class="table-layout__cell table-layout__cell--primary">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.name}">
+                                    홍길동
+                                </span>
+                        </td>
 
-        <section class="members-table-card">
+                        <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.email != null ? row.email : '-'}">
+                                    hong@example.com
+                                </span>
+                        </td>
 
-            <div class="members-table-card__head">
-                <div>
-                    <h3 class="members-table-card__title">회원 목록</h3>
-                    <p class="members-table-card__desc">
-                        조건에 맞는 회원 목록을 확인할 수 있습니다.
-                    </p>
-                </div>
+                        <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.phone != null ? row.phone : '-'}">
+                                    010-1234-5678
+                                </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                                <span
+                                        class="role-badge"
+                                        th:classappend="${row.role == 'ROLE_ADMIN'} ? ' role-badge--admin' : ' role-badge--user'"
+                                        th:text="${row.role == 'ROLE_ADMIN'} ? '관리자' : '일반 회원'">
+                                    일반 회원
+                                </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.createdAt != null ? #temporals.format(row.createdAt, 'yyyy-MM-dd HH:mm') : '-'}">
+                                    2026-04-27 10:00
+                                </span>
+                        </td>
+                    </tr>
+
+                    <tr
+                            class="table-layout__row table-layout__row--empty"
+                            th:if="${content == null or #lists.isEmpty(content)}">
+                        <td
+                                class="table-layout__cell table-layout__cell--empty"
+                                colspan="6">
+                            조회 된 데이터가 없습니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div th:if="${members == null or #lists.isEmpty(members)}"
-                 class="empty-block">
-                <div class="empty-block__icon">👤</div>
-                <div class="empty-block__title">조회된 회원이 없습니다.</div>
-                <div class="empty-block__desc">
-                    검색 조건을 변경해서 다시 시도해보세요.
-                </div>
-            </div>
-
-            <div th:if="${members != null and !#lists.isEmpty(members)}"
-                 class="members-table-card__body">
-
-                <div class="table-block members-table-block">
-
-                    <div class="ui-table-wrap">
-
-                        <div class="ui-table members-table">
-
-                            <div class="ui-table__header">
-                                <div class="ui-table__leading-cell"></div>
-                                <div class="ui-table__cell">이름</div>
-                                <div class="ui-table__cell">이메일</div>
-                                <div class="ui-table__cell">연락처</div>
-                                <div class="ui-table__cell">권한</div>
-                                <div class="ui-table__cell">가입일</div>
-                            </div>
-
-                            <div th:each="member : ${members}"
-                                 class="ui-table__row ui-table__row--clickable"
-                                 th:attr="data-member-url=@{/admin/members/{id}(id=${member.id})},
-                                          tabindex=0,
-                                          role='link',
-                                          aria-label=${member.name + ' 상세 정보 보기'}">
-
-                                <div class="ui-table__leading-cell"></div>
-
-                                <div class="ui-table__cell ui-table__cell--primary">
-                                    <span class="ui-table__text"
-                                          th:text="${member.name}">
-                                        홍길동
-                                    </span>
-                                </div>
-
-                                <div class="ui-table__cell">
-                                    <span class="ui-table__text"
-                                          th:text="${member.email != null ? member.email : '-'}">
-                                        hong@example.com
-                                    </span>
-                                </div>
-
-                                <div class="ui-table__cell">
-                                    <span class="ui-table__text"
-                                          th:text="${member.phone != null ? member.phone : '-'}">
-                                        010-1234-5678
-                                    </span>
-                                </div>
-
-                                <div class="ui-table__cell">
-                                    <span class="role-badge"
-                                          th:classappend="${member.role == 'ROLE_ADMIN'} ?
-                                          ' role-badge--admin' : ' role-badge--user'"
-                                          th:text="${member.role == 'ROLE_ADMIN'} ?
-                                          '관리자' : '일반 회원'">
-                                        일반 회원
-                                    </span>
-                                </div>
-
-                                <div class="ui-table__cell">
-                                    <span class="ui-table__text"
-                                          th:text="${member.createdAt != null ? #temporals.format(member.createdAt, 'yyyy-MM-dd HH:mm') : '-'}">
-                                        2026-04-27 10:00
-                                    </span>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <th:block th:replace="~{common/table-block ::
-                        pagination(
-                            ${pageMetaData},
-                            'link',
-                            '/admin/members',
-                            null
-                        )
-                    }"></th:block>
-
-                </div>
-            </div>
-
+            <th:block th:replace="~{common/table-layout :: tablePagination(
+                paginationMode='server'
+            )}"></th:block>
         </section>
 
     </main>
 </div>
 
-<script th:src="@{/js/admin/members/members.js}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll(".table-layout__row--clickable");
+
+        rows.forEach((row) => {
+            const moveToDetail = () => {
+                const url = row.dataset.memberUrl;
+
+                if (url) {
+                    window.location.href = url;
+                }
+            };
+
+            row.addEventListener("click", moveToDetail);
+
+            row.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    moveToDetail();
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

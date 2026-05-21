@@ -2,9 +2,9 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.BookCopyRequest;
-import com.nhj.librarymanage.domain.model.dto.BookCopyResponse;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.BookCopyRequest;
+import com.nhj.librarymanage.domain.dto.BookCopyResponse;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.BookItemAlreadyBorrowedException;
 import com.nhj.librarymanage.repository.BookCopyRepository;

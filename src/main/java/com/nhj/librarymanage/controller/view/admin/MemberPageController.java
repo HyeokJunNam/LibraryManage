@@ -1,12 +1,13 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.MemberRequest;
-import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.MemberRequest;
+import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.model.table.BookTableView;
+import com.nhj.librarymanage.model.table.MemberTableView;
 import com.nhj.librarymanage.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +27,10 @@ public class MemberPageController {
     @GetMapping("/members")
     public String members(Model model, @ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
         PageResponse<MemberResponse.Info> pageResponse = memberService.getMembers(searchCondition, pageable);
-        model.addAttribute("members", pageResponse.content());
+        model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
+
+        MemberTableView.TABLE.applyTo(model);
 
         return "admin/members/members";
     }

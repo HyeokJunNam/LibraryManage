@@ -1,11 +1,11 @@
 package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.ApiResponse;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.BookCopyRequest;
-import com.nhj.librarymanage.domain.model.dto.BookRequest;
-import com.nhj.librarymanage.domain.model.dto.BookResponse;
+import com.nhj.librarymanage.domain.dto.ApiResponse;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.BookCopyRequest;
+import com.nhj.librarymanage.domain.dto.BookRequest;
+import com.nhj.librarymanage.domain.dto.BookResponse;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,7 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Description(value = "도서 재고 정보 등록 및 수정, 삭제 ")
+    @Description(value = "도서 재고 정보 등록 및 수정, 삭제")
     @PostMapping("/books/{bookId}/copies/batch")
     public ResponseEntity<HttpStatus> createBookItem(@PathVariable Long bookId, @RequestBody BookCopyRequest.Upsert upsert) {
         bookCopyService.upsetBookCopy(bookId, upsert);

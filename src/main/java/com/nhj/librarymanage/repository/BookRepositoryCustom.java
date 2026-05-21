@@ -1,8 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.model.dto.BookRequest;
-import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
+import com.nhj.librarymanage.domain.dto.BookRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

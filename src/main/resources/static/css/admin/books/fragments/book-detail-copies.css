@@ -1,0 +1,195 @@
+/* ==========================================================================
+   BOOK DETAIL COPIES PANEL
+   ========================================================================== */
+
+/* 도서 재고 현황 패널 그리드 컬럼 정의 */
+#bookDetailCopiesCard .table-layout__table {
+    width: 100%;
+    min-width: 0;
+
+    --table-leading-column: 56px;
+    --table-columns:
+            minmax(64px, 0.7fr)   /* 재고 ID */
+            minmax(86px, 1fr)     /* 도서 상태 */
+            minmax(120px, 1.5fr)  /* 재고 위치 */
+            minmax(92px, 1fr)     /* 등록일 */
+            minmax(86px, 1fr)     /* 대출 상태 */
+            minmax(86px, 0.9fr);  /* 관리 */
+}
+
+/* 패널 내부에서 불필요한 가로 스크롤 방지 */
+#bookDetailCopiesCard .table-layout__body {
+    overflow-x: hidden;
+}
+
+/* 데이터 성격에 따른 셀 정렬 최적화 */
+#bookDetailCopiesCard .table-layout__cell:nth-child(1),
+#bookDetailCopiesCard .table-layout__cell:nth-child(2),
+#bookDetailCopiesCard .table-layout__cell:nth-child(3),
+#bookDetailCopiesCard .table-layout__cell:nth-child(5),
+#bookDetailCopiesCard .table-layout__cell:nth-child(6),
+#bookDetailCopiesCard .table-layout__cell:nth-child(7) {
+    justify-content: center;
+    text-align: center;
+}
+
+/* 재고 위치 열 좌측 정렬 */
+#bookDetailCopiesCard .table-layout__cell:nth-child(4) {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+/* 위치 텍스트도 공용 말줄임 규칙에 맞춘다 */
+#bookDetailCopiesCard .book-detail-copy-location-view {
+    display: block;
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   IN-LINE FORM CONTROLS
+   -------------------------------------------------------------------------- */
+
+.book-detail-copy-control {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    background-color: var(--color-surface);
+    color: var(--gray-900);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition:
+            border-color 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
+}
+
+.book-detail-copy-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(47, 158, 91, 0.14);
+}
+
+.book-detail-copy-control:disabled {
+    background-color: var(--gray-100);
+    color: var(--gray-400);
+    cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   IS-EDITING STATE CONTROLS
+   -------------------------------------------------------------------------- */
+
+.book-detail-copies-card.is-editing #editBookCopiesButton {
+    display: none !important;
+}
+
+.book-detail-copies-card.is-editing #bookCopyEditActions {
+    display: inline-flex !important;
+    gap: 10px;
+}
+
+.book-detail-copies-card.is-editing .book-detail-copies-add-row {
+    display: flex !important;
+}
+
+.book-detail-copies-card.is-editing .book-detail-copy-status-view,
+.book-detail-copies-card.is-editing .book-detail-copy-location-view {
+    display: none !important;
+}
+
+.book-detail-copies-card.is-editing .book-detail-copy-control.is-hidden {
+    display: block !important;
+}
+
+.book-detail-copies-card.is-editing select.book-detail-copy-control.is-hidden {
+    display: inline-block !important;
+}
+
+/* --------------------------------------------------------------------------
+   DYNAMIC ROW STATE CONTROLS
+   -------------------------------------------------------------------------- */
+
+.book-detail-copies-card.is-editing .table-layout__row--deleted {
+    background-color: var(--gray-50) !important;
+    opacity: 0.55;
+}
+
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-control {
+    display: none !important;
+}
+
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-status-view,
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-location-view {
+    display: inline-flex !important;
+    color: var(--gray-400);
+    text-decoration: line-through;
+}
+
+.book-detail-copies-card.is-editing .book-detail-copy-row__state {
+    display: none;
+}
+
+.book-detail-copies-card.is-editing .book-detail-copy-row__delete.is-hidden {
+    display: inline-flex !important;
+}
+
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-row__delete {
+    display: none !important;
+}
+
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-row__cancel-delete.is-hidden {
+    display: inline-flex !important;
+}
+
+.book-detail-copies-table__row--created,
+.table-layout__row--created {
+    background-color: rgba(47, 158, 91, 0.02) !important;
+}
+
+.book-detail-copy-row__new-label {
+    color: var(--color-primary);
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+}
+
+.book-detail-copy-row__state,
+.book-detail-copy-row__empty-value {
+    color: var(--gray-500);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   ADD TRIGGER BUTTON
+   -------------------------------------------------------------------------- */
+
+.book-detail-copies-add-row {
+    display: none;
+    width: calc(100% - 36px);
+    height: 46px;
+    margin: 16px 18px 0;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-surface);
+    border: 1px dashed var(--gray-200);
+    border-radius: var(--radius-md);
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.book-detail-copies-add-row:hover {
+    background: var(--gray-50);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}

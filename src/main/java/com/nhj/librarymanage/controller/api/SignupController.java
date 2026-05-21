@@ -1,11 +1,11 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.model.ApiResponse;
+import com.nhj.librarymanage.domain.dto.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.dto.EmailVerificationRequest;
-import com.nhj.librarymanage.domain.model.dto.EmailVerificationResponse;
-import com.nhj.librarymanage.domain.model.dto.MemberRequest;
-import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.EmailVerificationRequest;
+import com.nhj.librarymanage.domain.dto.EmailVerificationResponse;
+import com.nhj.librarymanage.domain.dto.MemberRequest;
+import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberService;
 import com.nhj.librarymanage.service.SignupEmailVerificationService;
 import com.nhj.librarymanage.service.SignupTokenService;

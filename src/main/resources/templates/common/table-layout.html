@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="tableHeader(title, caption, actions)">
+    <div class="table-layout__header">
+        <div class="table-layout__title-area">
+            <h2 class="table-layout__title" th:text="${title}">목록</h2>
+            <p class="table-layout__caption"
+               th:if="${caption != null and !#strings.isEmpty(caption)}"
+               th:text="${caption}">
+                설명
+            </p>
+        </div>
+
+        <div class="table-layout__actions" th:if="${actions != null}">
+            <th:block th:replace="${actions}"></th:block>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="tableToolbar(searchMode)">
+    <div class="table-layout__toolbar"
+         th:data-search-mode="${searchMode != null ? searchMode : 'server'}">
+
+        <form class="table-layout__search"
+              method="get"
+              th:if="${searchFields != null and !#lists.isEmpty(searchFields)}"
+              data-table-search-form>
+
+            <label class="table-layout__search-field table-layout__search-field--select">
+                <span class="table-layout__search-label">검색 조건</span>
+
+                <select class="table-layout__search-select"
+                        data-table-search-target>
+                    <option th:each="field : ${searchFields}"
+                            th:value="${field.name}"
+                            th:text="${field.label}">
+                        검색조건
+                    </option>
+                </select>
+            </label>
+
+            <label class="table-layout__search-field table-layout__search-field--keyword">
+                <span class="table-layout__search-label">검색어</span>
+
+                <input class="table-layout__search-input"
+                       type="text"
+                       placeholder="검색어 입력"
+                       data-table-search-keyword>
+            </label>
+
+            <button type="submit" class="table-layout__search-button">
+                검색
+            </button>
+        </form>
+
+        <div class="table-layout__toolbar-spacer"
+             th:if="${searchFields == null or #lists.isEmpty(searchFields)}"></div>
+    </div>
+</th:block>
+
+<th:block th:fragment="tablePagination(paginationMode)">
+    <div class="table-layout__pagination"
+         th:classappend="${pageMetaData == null} ? ' table-layout__pagination--empty' : ''"
+         th:data-pagination-mode="${paginationMode != null ? paginationMode : 'server'}"
+         th:data-page-size="${pageMetaData != null ? pageMetaData.size : 5}">
+
+        <form class="table-layout__pagination-form"
+              method="get"
+              data-table-pagination-form
+              th:if="${pageMetaData != null}"
+              th:with="
+                  currentPage=${pageMetaData.page},
+                  totalPages=${pageMetaData.totalPages},
+                  pageSize=${pageMetaData.size},
+                  startPage=${pageMetaData.page - 2 < 0 ? 0 : pageMetaData.page - 2},
+                  endPage=${pageMetaData.page + 2 >= pageMetaData.totalPages ? pageMetaData.totalPages - 1 : pageMetaData.page + 2}
+              ">
+
+            <th:block th:if="${searchFields != null and !#lists.isEmpty(searchFields)}">
+                <input th:each="field : ${searchFields}"
+                       type="hidden"
+                       th:name="${field.name}"
+                       data-table-pagination-hidden
+                       disabled>
+            </th:block>
+
+            <input type="hidden"
+                   name="page"
+                   th:value="${currentPage}"
+                   data-table-pagination-page>
+
+            <input type="hidden"
+                   name="size"
+                   th:value="${pageSize}"
+                   data-table-pagination-size>
+
+            <nav class="table-layout__pagination-nav"
+                 aria-label="페이지네이션">
+
+                <button type="submit"
+                        th:data-page="${currentPage - 1}"
+                        class="table-layout__page-button"
+                        data-table-pagination-page-button
+                        th:disabled="${pageMetaData.first or totalPages == 0}">
+                    이전
+                </button>
+
+                <button type="submit"
+                        th:if="${totalPages == 0}"
+                        data-page="0"
+                        class="table-layout__page-button table-layout__page-button--active"
+                        data-table-pagination-page-button
+                        disabled
+                        aria-current="page">
+                    1
+                </button>
+
+                <button type="submit"
+                        th:if="${totalPages > 0}"
+                        th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
+                        th:data-page="${pageNumber}"
+                        class="table-layout__page-button"
+                        data-table-pagination-page-button
+                        th:classappend="${pageNumber == currentPage} ? ' table-layout__page-button--active' : ''"
+                        th:disabled="${pageNumber == currentPage}"
+                        th:text="${pageNumber + 1}"
+                        th:attr="aria-current=${pageNumber == currentPage ? 'page' : null}">
+                    1
+                </button>
+
+                <button type="submit"
+                        th:data-page="${currentPage + 1}"
+                        class="table-layout__page-button"
+                        data-table-pagination-page-button
+                        th:disabled="${pageMetaData.last or totalPages == 0}">
+                    다음
+                </button>
+            </nav>
+        </form>
+    </div>
+</th:block>
+
+<th:block th:fragment="tableFooter(actions)">
+    <div class="table-layout__footer" th:if="${actions != null}">
+        <div class="table-layout__footer-actions">
+            <th:block th:replace="${actions}"></th:block>
+        </div>
+    </div>
+</th:block>
+
+</html>

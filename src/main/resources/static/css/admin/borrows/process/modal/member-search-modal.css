@@ -1,0 +1,273 @@
+.is-hidden {
+    display: none !important;
+}
+
+/* =========================
+   MODAL
+========================= */
+.member-search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.member-search-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.48);
+    backdrop-filter: blur(2px);
+}
+
+.member-search-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(840px, 100%);
+    max-height: min(760px, calc(100vh - 32px));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+
+/* =========================
+   HEADER
+========================= */
+.member-search-modal__header {
+    padding: 24px 28px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.member-search-modal__header-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.member-search-modal__eyebrow {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green-700);
+}
+
+.member-search-modal__title {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--gray-900);
+}
+
+.member-search-modal__desc {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--gray-500);
+}
+
+.member-search-modal__close {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--gray-100);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--gray-700);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.member-search-modal__close:hover {
+    background: var(--gray-50);
+}
+
+/* =========================
+   BODY
+========================= */
+.member-search-modal__body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--white);
+}
+
+/* =========================
+   RESULT
+========================= */
+.member-search-result {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 모달 내부에서는 모달 dialog가 card 역할을 하므로 table-layout 외곽 장식 제거 */
+.member-search-result .table-layout {
+    flex: 1;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* =========================
+   TABLE TOOLBAR OVERRIDE
+   - common/table-layout :: tableToolbar() 사용
+========================= */
+.member-search-result .table-layout__toolbar {
+    min-height: auto;
+    padding: 18px 28px;
+    background: linear-gradient(180deg, #fbfdfb 0%, #f8fbf9 100%);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.member-search-result .table-layout__search {
+    width: 100%;
+    justify-content: flex-end;
+    margin-left: 0;
+}
+
+.member-search-result .table-layout__search-field--select {
+    flex: 0 0 150px;
+}
+
+.member-search-result .table-layout__search-field--keyword {
+    flex: 1 1 auto;
+}
+
+.member-search-result .table-layout__search-select,
+.member-search-result .table-layout__search-input {
+    width: 100%;
+    height: 44px;
+}
+
+.member-search-result .table-layout__search-button {
+    height: 44px;
+    flex: 0 0 auto;
+}
+
+/* =========================
+   TABLE OVERRIDE
+========================= */
+.member-search-result .table-layout__body {
+    min-height: 0;
+}
+
+.member-search-result .table-layout__table {
+    min-width: 620px;
+
+    /*
+       leading: 순번
+       columns: 회원번호 / 회원명 / 이메일
+    */
+    --table-leading-column: 80px;
+    --table-columns: 1.2fr 1.1fr 1.6fr;
+}
+
+.member-search-result .table-layout__row {
+    padding-left: 22px;
+    padding-right: 22px;
+}
+
+.member-search-result .table-layout__cell {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.member-search-result .table-layout__cell--leading {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.member-search-result .table-layout__tbody .table-layout__row--clickable:hover {
+    background: #f4fbf6;
+}
+
+.member-search-result .table-layout__row--clickable.is-selected {
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.member-search-result .table-layout__row--clickable.is-selected .table-layout__cell--primary {
+    color: var(--green-800);
+}
+
+/* =========================
+   PAGINATION OVERRIDE
+========================= */
+.member-search-result .table-layout__pagination {
+    padding: 16px 18px 18px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .member-search-modal {
+        padding: 8px;
+    }
+
+    .member-search-modal__dialog {
+        width: min(100vw, 100%);
+        max-height: calc(100vh - 16px);
+        border-radius: 20px;
+    }
+
+    .member-search-modal__header {
+        padding: 20px;
+    }
+
+    .member-search-modal__title {
+        font-size: 23px;
+    }
+
+    .member-search-result .table-layout__toolbar {
+        padding: 16px 20px;
+    }
+
+    .member-search-result .table-layout__search {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .member-search-result .table-layout__search-field--select,
+    .member-search-result .table-layout__search-field--keyword {
+        flex: initial;
+    }
+
+    .member-search-result .table-layout__search-select,
+    .member-search-result .table-layout__search-input,
+    .member-search-result .table-layout__search-button {
+        width: 100%;
+    }
+
+    .member-search-result .table-layout__table {
+        min-width: 620px;
+        --table-leading-column: 70px;
+        --table-columns: 0.9fr 0.9fr 1.4fr;
+    }
+
+    .member-search-result .table-layout__row {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}

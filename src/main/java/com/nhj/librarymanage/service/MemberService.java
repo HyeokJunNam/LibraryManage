@@ -1,10 +1,9 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.BookResponse;
-import com.nhj.librarymanage.domain.model.dto.MemberRequest;
-import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.MemberRequest;
+import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.repository.MemberRepository;

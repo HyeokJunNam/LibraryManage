@@ -2,7 +2,7 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.model.dto.ReturnRequest;
+import com.nhj.librarymanage.domain.dto.ReturnRequest;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class ReturnService {
 
     @Transactional
     public void returnBook(ReturnRequest.Create create) {
-        List<BorrowRecord> borrowRecords = borrowRecordRepository.findAllById(create.bookRecordIds());
+        List<BorrowRecord> borrowRecords = borrowRecordRepository.findAllById(create.bookRecordIdsAsLong());
 
 
         for (BorrowRecord borrowRecord : borrowRecords) {

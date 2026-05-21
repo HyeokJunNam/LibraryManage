@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.model.event.BookBorrowableEvent;
+import com.nhj.librarymanage.model.event.BookBorrowableEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;

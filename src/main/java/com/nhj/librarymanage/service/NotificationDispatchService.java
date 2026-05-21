@@ -3,7 +3,7 @@ package com.nhj.librarymanage.service;
 import com.nhj.librarymanage.domain.code.NotificationChannel;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.Notification;
-import com.nhj.librarymanage.domain.model.vo.MailContent;
+import com.nhj.librarymanage.model.vo.MailContent;
 import com.nhj.librarymanage.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

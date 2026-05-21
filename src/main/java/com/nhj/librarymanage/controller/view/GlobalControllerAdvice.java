@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.controller.view;
 
-import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.security.member.AuthenticatedUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ControllerAdvice;

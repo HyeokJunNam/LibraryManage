@@ -1,11 +1,10 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.BorrowHistoryRequest;
-import com.nhj.librarymanage.domain.model.dto.BorrowHistoryResponse;
-import com.nhj.librarymanage.domain.model.dto.BorrowRequest;
-import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.BorrowHistoryRequest;
+import com.nhj.librarymanage.domain.dto.BorrowHistoryResponse;
+import com.nhj.librarymanage.domain.dto.BorrowStatistics;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,8 +27,8 @@ public class BorrowRecordService {
     }
 
     @Transactional
-    public PageResponse<BorrowHistoryResponse.InfoByMember> getBorrowHistoryByMember(Long memberId, Pageable pageable) {
-        Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, pageable);
+    public PageResponse<BorrowHistoryResponse.InfoByMember> getBorrowHistoryByMember(Long memberId, BorrowHistoryRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+        Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, searchCondition, pageable);
         Page<BorrowHistoryResponse.InfoByMember> infos = borrowRecords.map(BorrowHistoryResponse.InfoByMember::from);
 
         return PageResponse.from(infos);

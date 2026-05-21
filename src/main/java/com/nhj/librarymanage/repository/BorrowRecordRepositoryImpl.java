@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.model.dto.BorrowHistoryRequest;
-import com.nhj.librarymanage.domain.model.dto.BorrowStatistics;
+import com.nhj.librarymanage.domain.dto.BorrowHistoryRequest;
+import com.nhj.librarymanage.domain.dto.BorrowStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
 import com.querydsl.core.types.Expression;
@@ -70,19 +70,23 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     }
 
     @Override
-    public Page<BorrowRecord> searchByMemberId(Long memberId, Pageable pageable) {
+    public Page<BorrowRecord> searchByMemberId(Long memberId, BorrowHistoryRequest.SearchConditionByMember searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
+
         BooleanExpression eqMemberId = QuerydslFilterHelper.eq(borrowRecord.member.id, memberId);
 
+        BooleanExpression eqBookRecordId = QuerydslFilterHelper.eq(borrowRecord.id, searchCondition.bookRecordId());
+        BooleanExpression likeBookTitle = QuerydslFilterHelper.like(book.title, searchCondition.bookTitle());
+
         List<BorrowRecord> query = searchQuery(pageable)
-                .where(eqMemberId)
+                .where(eqMemberId, eqBookRecordId, likeBookTitle)
                 .orderBy(order)
                 .fetch();
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(borrowRecord.id.count())
                 .from(borrowRecord)
-                .where(eqMemberId);
+                .where(eqMemberId, eqBookRecordId, likeBookTitle);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }

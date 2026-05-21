@@ -1,13 +1,12 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.model.ApiResponse;
+import com.nhj.librarymanage.domain.dto.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.MemberRequest;
-import com.nhj.librarymanage.domain.model.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.MemberRequest;
+import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

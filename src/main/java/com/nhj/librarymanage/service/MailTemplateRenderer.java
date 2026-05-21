@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.model.vo.MailContent;
+import com.nhj.librarymanage.model.vo.MailContent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;

@@ -1,0 +1,79 @@
+/* ==========================================================================
+   BOOK DETAIL BORROWS PANEL
+   ========================================================================== */
+
+/* 대출 현황 패널 독립 테이블 Grid 컬럼 비율 정의 */
+#bookDetailBorrowsPanel .table-layout__table {
+    min-width: 1000px;
+    --table-leading-column: 70px; /* No 열 크기 명시적 지정 */
+    --table-columns:
+            1fr     /* 대출 ID */
+            1fr     /* 재고 ID */
+            1.2fr   /* 회원 ID */
+            1.5fr   /* 회원명 */
+            1.3fr   /* 대출일 */
+            1.3fr   /* 반납예정일 */
+            1.2fr;  /* 대출 상태 배지 */
+}
+
+/* 데이터 가시성 확보를 위한 셀 정렬 최적화 (가운데 정렬군 스코프) */
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(1),
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(2),
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(3),
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(4),
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(6),
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(7),
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(8) {
+    justify-content: center;
+    text-align: center;
+}
+
+/* 회원명 열: 좌측 정렬 및 텍스트 말줄임(Ellipsis) 방어 코드 대응 */
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(5) {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+#bookDetailBorrowsPanel .table-layout__cell:nth-child(5) .table-layout__text {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   EMPTY / LOADING STATE
+   -------------------------------------------------------------------------- */
+.book-borrow-empty,
+.book-borrow-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 24px 64px;
+    background: var(--color-surface);
+    text-align: center;
+}
+
+.book-borrow-empty__icon,
+.book-borrow-loading__icon {
+    font-size: 42px;
+    line-height: 1;
+}
+
+.book-borrow-empty__title,
+.book-borrow-loading__title {
+    margin: 14px 0 0;
+    color: var(--gray-900);
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.book-borrow-empty__desc {
+    margin: 8px 0 0;
+    max-width: 360px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+}

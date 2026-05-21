@@ -1,14 +1,13 @@
 package com.nhj.librarymanage.controller.view.user;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.model.dto.BookRequest;
-import com.nhj.librarymanage.domain.model.dto.BookResponse;
-import com.nhj.librarymanage.domain.model.dto.NotificationResponse;
+import com.nhj.librarymanage.domain.dto.BookRequest;
+import com.nhj.librarymanage.domain.dto.BookResponse;
+import com.nhj.librarymanage.domain.dto.NotificationResponse;
 import com.nhj.librarymanage.security.member.CurrentAuthenticatedUserProvider;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.NotificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

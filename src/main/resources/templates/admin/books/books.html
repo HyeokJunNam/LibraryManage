@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 관리</title>
 
-    <th:block th:replace="~{common/admin/admin-page-assets :: assets}"></th:block>
-    <link rel="stylesheet" th:href="@{/css/common/admin/list-searchbar.css}">
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/admin/books/books.css}">
 </head>
 <body>
 <div class="admin-page">
-    <aside th:replace="~{common/admin/sidebar :: sidebar('books')}"></aside>
+    <aside th:replace="~{admin/common/sidebar :: sidebar('books')}"></aside>
 
     <main class="admin-main">
         <header class="page-hero">
@@ -22,16 +21,13 @@
                     전체 도서를 조회하고 도서 정보를 확인할 수 있습니다.
                 </p>
             </div>
-
-            <div class="page-hero__actions">
-                <a th:href="@{/admin/books/new}" class="btn btn--primary">도서 등록</a>
-            </div>
         </header>
 
         <section class="statistics-grid">
             <article class="statistics-card">
                 <p class="statistics-card__label">전체 도서 재고 수</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.totalBookItemCount : 0}">
                     0
                 </strong>
@@ -39,7 +35,8 @@
 
             <article class="statistics-card">
                 <p class="statistics-card__label">대출 가능 도서 수</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.totalBorrowCount : 0}">
                     0
                 </strong>
@@ -47,7 +44,8 @@
 
             <article class="statistics-card">
                 <p class="statistics-card__label">현재 대출 도서 수</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.currentBorrowCount : 0}">
                     0
                 </strong>
@@ -55,192 +53,109 @@
 
             <article class="statistics-card">
                 <p class="statistics-card__label">연체 도서 수</p>
-                <strong class="statistics-card__value"
+                <strong
+                        class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.overdueBorrowCount : 0}">
                     0
                 </strong>
             </article>
         </section>
 
-        <section class="books-table-card">
-            <div class="books-table-card__head">
-                <div class="books-table-card__title-area">
-                    <h3 class="books-table-card__title">도서 목록</h3>
-                    <p class="books-table-card__caption">
-                        등록된 도서를 검색하고, 선택한 도서의 상세 정보와 재고 현황을 확인할 수 있습니다.
-                    </p>
-                </div>
+        <section class="books-table-layout table-layout">
 
-                <div class="books-table-card__control-area">
-                    <div class="books-table-card__actions">
-                        <!-- 추후 기능 버튼 배치 영역 -->
-                    </div>
+            <th:block th:replace="~{common/table-layout :: tableHeader(
+                title='도서 목록',
+                caption='등록된 도서를 검색하고, 선택한 도서의 상세 정보와 재고 현황을 확인할 수 있습니다.',
+                actions=null
+            )}"></th:block>
 
-                    <form th:action="@{/admin/books}"
-                          method="get"
-                          class="list-search books-list-search"
-                          id="bookSearchForm">
+            <th:block th:replace="~{common/table-layout :: tableToolbar(searchMode='server')}"></th:block>
 
-                        <select id="bookSearchTarget"
-                                class="list-search__select"
-                                aria-label="검색 조건">
-                            <option value="title"
-                                    th:selected="${searchCondition == null
-                                        or (
-                                            (searchCondition.title != null and !#strings.isEmpty(searchCondition.title))
-                                            or (
-                                                (searchCondition.isbn == null or #strings.isEmpty(searchCondition.isbn))
-                                                and (searchCondition.author == null or #strings.isEmpty(searchCondition.author))
-                                                and (searchCondition.publisher == null or #strings.isEmpty(searchCondition.publisher))
-                                            )
-                                        )}">
-                                도서명
-                            </option>
-                            <option value="isbn"
-                                    th:selected="${searchCondition != null
-                                        and searchCondition.isbn != null
-                                        and !#strings.isEmpty(searchCondition.isbn)}">
-                                ISBN
-                            </option>
-                            <option value="author"
-                                    th:selected="${searchCondition != null
-                                        and searchCondition.author != null
-                                        and !#strings.isEmpty(searchCondition.author)}">
-                                저자
-                            </option>
-                            <option value="publisher"
-                                    th:selected="${searchCondition != null
-                                        and searchCondition.publisher != null
-                                        and !#strings.isEmpty(searchCondition.publisher)}">
-                                출판사
-                            </option>
-                        </select>
+            <div class="table-layout__body">
+                <table class="table-layout__table">
+                    <thead class="table-layout__thead">
+                    <tr class="table-layout__row table-layout__row--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                            <span class="table-layout__text"></span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">도서명</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">ISBN</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">저자</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">출판사</span>
+                        </th>
+                    </tr>
+                    </thead>
 
-                        <input id="bookSearchKeyword"
-                               type="text"
-                               class="list-search__input"
-                               placeholder="검색어를 입력하세요"
-                               aria-label="검색어"
-                               th:value="${searchCondition != null
-                                    ? (
-                                        searchCondition.isbn != null and !#strings.isEmpty(searchCondition.isbn)
-                                            ? searchCondition.isbn
-                                            : (
-                                                searchCondition.author != null and !#strings.isEmpty(searchCondition.author)
-                                                    ? searchCondition.author
-                                                    : (
-                                                        searchCondition.publisher != null and !#strings.isEmpty(searchCondition.publisher)
-                                                            ? searchCondition.publisher
-                                                            : searchCondition.title
-                                                    )
-                                            )
-                                    )
-                                    : ''}">
+                    <tbody class="table-layout__tbody">
+                    <tr
+                            class="table-layout__row table-layout__row--clickable"
+                            th:each="row : ${content}"
+                            th:attr="data-book-url=@{/admin/books/{id}(id=${row.id})},
+                                     tabindex=0,
+                                     role='link',
+                                     aria-label=${row.title + ' 상세 정보 보기'}">
 
-                        <input type="hidden" name="title" id="bookSearchTitle">
-                        <input type="hidden" name="isbn" id="bookSearchIsbn">
-                        <input type="hidden" name="author" id="bookSearchAuthor">
-                        <input type="hidden" name="publisher" id="bookSearchPublisher">
+                        <td class="table-layout__cell table-layout__cell--leading"></td>
 
-                        <button type="submit" class="list-search__button">
-                            검색
-                        </button>
-                    </form>
-                </div>
+                        <td class="table-layout__cell table-layout__cell--primary">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.title}">
+                                </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.isbn != null ? row.isbn : '-'}">
+                                </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.author != null ? row.author : '-'}">
+                                </span>
+                        </td>
+
+                        <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${row.publisher != null ? row.publisher : '-'}">
+                                </span>
+                        </td>
+                    </tr>
+
+                    <tr
+                            class="table-layout__row table-layout__row--empty"
+                            th:if="${content == null or #lists.isEmpty(content)}">
+                        <td
+                                class="table-layout__cell table-layout__cell--empty"
+                                colspan="5">
+                            조회 된 데이터가 없습니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="books-table-card__content">
-                <div th:if="${books == null or #lists.isEmpty(books)}"
-                     class="empty-block">
-                    <div class="empty-block__icon">📚</div>
-                    <div class="empty-block__title">조회된 도서가 없습니다.</div>
-                    <div class="empty-block__desc">검색 조건을 변경해서 다시 시도해보세요.</div>
-                </div>
-
-                <div th:if="${books != null and !#lists.isEmpty(books)}"
-                     class="books-table-card__body">
-
-                    <div class="table-block books-table-block">
-                        <div class="ui-table-wrap">
-                            <div class="ui-table books-table">
-                                <div class="ui-table__header">
-                                    <div class="ui-table__leading-cell"></div>
-
-                                    <div class="ui-table__cell ui-table__cell--fill-start">
-                                        <span class="ui-table__text">도서명</span>
-                                    </div>
-
-                                    <div class="ui-table__cell ui-table__cell--center-start">
-                                        <span class="ui-table__text">ISBN</span>
-                                    </div>
-
-                                    <div class="ui-table__cell ui-table__cell--center-start">
-                                        <span class="ui-table__text">저자</span>
-                                    </div>
-
-                                    <div class="ui-table__cell ui-table__cell--center-start">
-                                        <span class="ui-table__text">출판사</span>
-                                    </div>
-                                </div>
-
-                                <div th:each="book : ${books}"
-                                     class="ui-table__row ui-table__row--clickable"
-                                     th:attr="data-book-url=@{/admin/books/{id}(id=${book.id})},
-                                              tabindex=0,
-                                              role='link',
-                                              aria-label=${book.title + ' 상세 정보 보기'}">
-
-                                    <div class="ui-table__leading-cell"></div>
-
-                                    <div class="ui-table__cell ui-table__cell--primary ui-table__cell--fill-start">
-                                        <span class="ui-table__text"
-                                              th:text="${book.title}">
-                                            도서명
-                                        </span>
-                                    </div>
-
-                                    <div class="ui-table__cell ui-table__cell--center-start">
-                                        <span class="ui-table__text"
-                                              th:text="${book.isbn != null ? book.isbn : '-'}">
-                                            9781234567890
-                                        </span>
-                                    </div>
-
-                                    <div class="ui-table__cell ui-table__cell--center-start">
-                                        <span class="ui-table__text"
-                                              th:text="${book.author != null ? book.author : '-'}">
-                                            홍길동
-                                        </span>
-                                    </div>
-
-                                    <div class="ui-table__cell ui-table__cell--center-start">
-                                        <span class="ui-table__text"
-                                              th:text="${book.publisher != null ? book.publisher : '-'}">
-                                            오픈AI출판사
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <th:block th:replace="~{common/table-block ::
-                            pagination(
-                                ${pageMetaData},
-                                'link',
-                                '/admin/books',
-                                null
-                            )
-                        }"></th:block>
-                    </div>
-                </div>
-            </div>
+            <th:block th:replace="~{common/table-layout :: tablePagination(
+                paginationMode='server'
+            )}"></th:block>
         </section>
     </main>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll(".ui-table__row--clickable");
+        const rows = document.querySelectorAll(".table-layout__row--clickable");
 
         rows.forEach((row) => {
             const moveToDetail = () => {
@@ -260,42 +175,6 @@
                 }
             });
         });
-
-        const searchForm = document.getElementById("bookSearchForm");
-        const searchTarget = document.getElementById("bookSearchTarget");
-        const searchKeyword = document.getElementById("bookSearchKeyword");
-
-        const hiddenFields = {
-            title: document.getElementById("bookSearchTitle"),
-            isbn: document.getElementById("bookSearchIsbn"),
-            author: document.getElementById("bookSearchAuthor"),
-            publisher: document.getElementById("bookSearchPublisher")
-        };
-
-        if (searchForm && searchTarget && searchKeyword) {
-            searchForm.addEventListener("submit", function () {
-                Object.values(hiddenFields).forEach((field) => {
-                    if (field) {
-                        field.value = "";
-                        field.disabled = true;
-                    }
-                });
-
-                const target = searchTarget.value;
-                const keyword = searchKeyword.value.trim();
-
-                if (!keyword) {
-                    return;
-                }
-
-                const selectedField = hiddenFields[target];
-
-                if (selectedField) {
-                    selectedField.disabled = false;
-                    selectedField.value = keyword;
-                }
-            });
-        }
     });
 </script>
 </body>

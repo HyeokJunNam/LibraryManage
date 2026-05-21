@@ -2,8 +2,8 @@ package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.code.AdminPageOptions;
-import com.nhj.librarymanage.domain.model.PageResponse;
-import com.nhj.librarymanage.domain.model.dto.*;
+import com.nhj.librarymanage.domain.dto.*;
+import com.nhj.librarymanage.model.table.BookTableView;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
@@ -33,9 +33,11 @@ public class BookPageController {
         PageResponse<BookResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
-        model.addAttribute("books", pageResponse.content());
+        model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("borrowStatistics", borrowStatistics);
+
+        BookTableView.TABLE.applyTo(model);
 
         return "admin/books/books";
     }

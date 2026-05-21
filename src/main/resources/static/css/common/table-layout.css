@@ -1,0 +1,588 @@
+/* =========================
+   COMMON TABLE LAYOUT
+========================= */
+
+.table-layout {
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+
+    /*
+       기본 정책:
+       모든 table-layout은 최소 5개 row 높이만큼 tbody 공간을 확보한다.
+
+       예외적으로 row 개수만큼만 높이를 쓰고 싶으면
+       .table-layout--auto-height 를 함께 사용한다.
+    */
+    --table-row-height: 56px;
+    --table-visible-rows: 5;
+
+    /*
+       페이지네이션 버튼이 없어도
+       버튼이 있을 때와 동일한 영역 높이를 유지한다.
+
+       계산 기준:
+       padding-top 18px + button height 44px + padding-bottom 18px = 80px
+    */
+    --table-pagination-height: 80px;
+}
+
+/*
+   기존 호환용.
+   과거 HTML에 table-layout--reserve-space가 남아 있어도
+   동작 차이가 생기지 않도록 별도 책임은 주지 않는다.
+*/
+.table-layout--reserve-space {
+}
+
+/*
+   예외 modifier:
+   row 개수만큼만 높이를 사용한다.
+*/
+.table-layout--auto-height {
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.table-layout__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    padding: 24px 28px 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfefc 100%);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.table-layout__title-area {
+    flex: 1;
+    max-width: 760px;
+}
+
+.table-layout__title {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.table-layout__caption {
+    margin: 8px 0 0;
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.table-layout__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.table-layout__actions:empty {
+    display: none;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.table-layout__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 77px;
+    box-sizing: border-box;
+
+    padding: 16px 28px 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfefc 100%);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.table-layout__toolbar-spacer {
+    flex: 0 0 auto;
+    min-width: 1px;
+    order: 1;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.table-layout__search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: auto;
+    order: 2;
+}
+
+.table-layout__search-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.table-layout__search-label {
+    display: none;
+}
+
+.table-layout__search-select,
+.table-layout__search-input {
+    height: 42px;
+
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    background: var(--white);
+
+    color: var(--gray-800);
+    font-size: 14px;
+    font-weight: 600;
+
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.table-layout__search-select {
+    width: 140px;
+    padding: 0 38px 0 14px;
+    cursor: pointer;
+}
+
+.table-layout__search-input {
+    width: 320px;
+    padding: 0 14px;
+}
+
+.table-layout__search-input::placeholder {
+    color: var(--gray-400);
+    font-weight: 500;
+}
+
+.table-layout__search-select:focus,
+.table-layout__search-input:focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 3px rgba(37, 135, 76, 0.12);
+}
+
+.table-layout__search-button {
+    height: 42px;
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--green-500), var(--green-600));
+
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.table-layout__search-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 135, 76, 0.18);
+}
+
+/* =========================
+   BODY / TABLE
+========================= */
+
+.table-layout__body {
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: 0 0 auto;
+    background: var(--white);
+}
+
+.table-layout__table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    background: var(--white);
+
+    --table-leading-column: 120px;
+    --table-columns: repeat(4, minmax(120px, 1fr));
+}
+
+.table-layout__thead,
+.table-layout__tbody {
+    display: block;
+}
+
+.table-layout__tbody {
+    min-height: calc(var(--table-row-height) * var(--table-visible-rows));
+}
+
+.table-layout--auto-height .table-layout__tbody {
+    min-height: 0;
+}
+
+/* =========================
+   TABLE COMMON ROW
+========================= */
+
+.table-layout__row {
+    display: grid;
+    grid-template-columns: var(--table-leading-column) var(--table-columns);
+    align-items: center;
+    gap: 0;
+
+    padding-right: 18px;
+    padding-left: 18px;
+
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+    transition: background 0.15s ease;
+}
+
+/* =========================
+   TABLE HEADER
+========================= */
+
+.table-layout__row--head {
+    padding-top: 13px;
+    padding-bottom: 13px;
+
+    background: #fbfcfb;
+    border-bottom: 1px solid var(--gray-200);
+
+    color: var(--gray-800);
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+}
+
+.table-layout__row--head .table-layout__cell {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+}
+
+/* =========================
+   TABLE BODY ROW
+========================= */
+
+.table-layout__tbody .table-layout__row {
+    min-height: var(--table-row-height);
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.table-layout__tbody .table-layout__row:not(.table-layout__row--empty):hover {
+    background: #f9fbfa;
+}
+
+.table-layout__row--clickable {
+    cursor: pointer;
+}
+
+.table-layout__row--clickable:focus {
+    outline: none;
+    background: #f4fbf6;
+}
+
+.table-layout__row--clickable:focus-visible {
+    outline: 3px solid rgba(37, 135, 76, 0.18);
+    outline-offset: -3px;
+}
+
+/* =========================
+   TABLE CELL
+========================= */
+
+.table-layout__cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    min-width: 0;
+    overflow: hidden;
+    padding: 0 8px;
+
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: var(--gray-600);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.table-layout__cell--head {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.table-layout__cell--leading {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+}
+
+.table-layout__cell--primary {
+    color: var(--gray-800);
+    font-weight: 600;
+}
+
+.table-layout__cell--muted {
+    color: var(--gray-500);
+    font-weight: 500;
+}
+
+.table-layout__cell--checkbox {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
+}
+
+.table-layout__cell--right {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.table-layout__cell--center-start {
+    justify-content: center;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.table-layout__cell--center-start .table-layout__text {
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+    text-align: left;
+}
+
+.table-layout__cell--fill-start {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.table-layout__cell--fill-start .table-layout__text {
+    width: 100%;
+    max-width: none;
+    text-align: left;
+}
+
+.table-layout__text {
+    display: block;
+    overflow: hidden;
+
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.table-layout__row--empty {
+    display: block;
+    padding: 0;
+    border-bottom: none;
+    background: var(--white);
+    min-height: calc(var(--table-row-height) * var(--table-visible-rows));
+}
+
+.table-layout__tbody .table-layout__row--empty,
+.table-layout__tbody .table-layout__row--empty:hover {
+    background: var(--white);
+}
+
+.table-layout__cell--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: calc(var(--table-row-height) * var(--table-visible-rows));
+    padding: 0 24px;
+
+    text-align: center;
+
+    color: var(--gray-600);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
+}
+
+/*
+   empty 상태에서는 pagination 영역까지 포함한 전체 높이 기준으로
+   안내 문구가 중앙에 보이도록 시각 보정한다.
+*/
+.table-layout:not(.table-layout--auto-height) .table-layout__cell--empty {
+    transform: translateY(calc(var(--table-pagination-height) / 2));
+}
+
+/*
+   예외: row 개수만큼만 높이를 사용하는 테이블.
+   empty 상태에서는 1개 row 높이만 확보한다.
+*/
+.table-layout--auto-height .table-layout__row--empty {
+    min-height: var(--table-row-height);
+}
+
+.table-layout--auto-height .table-layout__cell--empty {
+    min-height: var(--table-row-height);
+    padding: 0 24px;
+    transform: none;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+
+.table-layout__pagination {
+    flex-shrink: 0;
+    min-height: var(--table-pagination-height);
+    box-sizing: border-box;
+
+    padding: 18px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+}
+
+/*
+   AJAX placeholder처럼 아직 pagination을 렌더링하지 않은 상태.
+   빈 상태는 내부 DOM 구조로 추측하지 않고 modifier로 명시한다.
+
+   display: none을 쓰면 페이지네이션 공간이 사라지므로 사용하지 않는다.
+*/
+.table-layout__pagination--empty {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.table-layout__pagination-form {
+    margin: 0;
+}
+
+.table-layout__pagination-nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 0;
+}
+
+.table-layout__page-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 44px;
+    height: 44px;
+    padding: 0 14px;
+
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    background: var(--white);
+
+    color: var(--gray-700);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.table-layout__page-button:hover:not(:disabled) {
+    border-color: var(--green-300);
+    background: #fbfefc;
+    color: var(--green-700);
+}
+
+.table-layout__page-button--active,
+.table-layout__page-button--active:hover,
+.table-layout__page-button--active:disabled {
+    border-color: var(--green-600);
+    background: linear-gradient(135deg, var(--green-500), var(--green-600));
+    color: var(--white);
+    box-shadow: 0 10px 20px rgba(37, 135, 76, 0.2);
+    cursor: default;
+}
+
+.table-layout__page-button:disabled:not(.table-layout__page-button--active) {
+    background: var(--gray-50);
+    color: #b1bbb4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.table-layout__page-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 44px;
+    height: 44px;
+
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.table-layout__footer {
+    flex-shrink: 0;
+    padding: 18px 28px 22px;
+
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+}
+
+.table-layout__footer-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.table-layout__footer-actions:empty {
+    display: none;
+}
