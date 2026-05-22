@@ -3,7 +3,6 @@ package com.nhj.librarymanage.controller.view.admin;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.code.AdminPageOptions;
 import com.nhj.librarymanage.domain.dto.*;
-import com.nhj.librarymanage.model.table.BookTableView;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
@@ -37,7 +36,7 @@ public class BookPageController {
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("borrowStatistics", borrowStatistics);
 
-        BookTableView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/books/books";
     }
@@ -69,7 +68,7 @@ public class BookPageController {
     public String bookBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
         PageResponse<BorrowHistoryResponse.InfoByBook> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, pageable);
 
-        model.addAttribute("borrows", pageResponse.content());
+        model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
         return "admin/books/fragments/book-detail-borrows :: bookBorrows";

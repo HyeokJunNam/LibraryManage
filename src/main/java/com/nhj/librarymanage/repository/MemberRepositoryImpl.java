@@ -30,7 +30,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             QuerydslSortHelper.buildOrderColumnMap(List.of());
 
     @Override
-    public Page<Member> findAll(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+    public Page<Member> search(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(member.id, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression likeName = QuerydslFilterHelper.like(member.name, searchCondition.name());

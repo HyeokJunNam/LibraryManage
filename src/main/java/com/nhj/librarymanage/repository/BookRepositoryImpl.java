@@ -35,10 +35,10 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     public Page<Book> findAll(BookRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(book.id, ORDER_COLUMN_MAP, pageable);
 
-        BooleanExpression likeIsbn = QuerydslFilterHelper.like(book.isbn, searchCondition.getIsbn());
-        BooleanExpression likeTitle = QuerydslFilterHelper.like(book.title, searchCondition.getTitle());
-        BooleanExpression likeAuthor = QuerydslFilterHelper.like(book.author, searchCondition.getAuthor());
-        BooleanExpression likePublisher = QuerydslFilterHelper.like(book.publisher, searchCondition.getPublisher());
+        BooleanExpression likeIsbn = QuerydslFilterHelper.like(book.isbn, searchCondition.isbn());
+        BooleanExpression likeTitle = QuerydslFilterHelper.like(book.title, searchCondition.title());
+        BooleanExpression likeAuthor = QuerydslFilterHelper.like(book.author, searchCondition.author());
+        BooleanExpression likePublisher = QuerydslFilterHelper.like(book.publisher, searchCondition.publisher());
 
         List<Book> query = jpaQueryFactory
                 .selectFrom(book)

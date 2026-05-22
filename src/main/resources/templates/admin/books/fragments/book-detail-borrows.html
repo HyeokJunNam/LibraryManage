@@ -25,13 +25,27 @@
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
                         <span class="table-layout__text">No</span>
                     </th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">대출 ID</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">재고 ID</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">회원 ID</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">회원 이름</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">대출일</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">반납예정일</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">대출 상태</span></th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">대출 ID</span>
+                    </th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">재고 ID</span>
+                    </th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">회원 ID</span>
+                    </th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">회원 이름</span>
+                    </th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">대출일</span>
+                    </th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">반납예정일</span>
+                    </th>
+                    <th class="table-layout__cell table-layout__cell--head">
+                        <span class="table-layout__text">대출 상태</span>
+                    </th>
                 </tr>
                 </thead>
 
@@ -40,7 +54,7 @@
                         th:data-page-start-index="${pageMetaData != null ? pageMetaData.page * pageMetaData.size : 0}">
 
                 <tr
-                        th:each="borrowRecord, stat : ${borrows}"
+                        th:each="borrowRecord, stat : ${content}"
                         class="table-layout__row book-detail-borrows-table__row">
 
                     <td class="table-layout__cell table-layout__cell--leading">
@@ -54,27 +68,45 @@
                     </td>
 
                     <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.borrowRecordId != null ? borrowRecord.borrowRecordId : '-'}">1</span>
+                        <span class="table-layout__text"
+                              th:text="${borrowRecord.borrowRecordId != null ? borrowRecord.borrowRecordId : '-'}">
+                            1
+                        </span>
                     </td>
 
                     <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.bookCopyId != null ? borrowRecord.bookCopyId : '-'}">1</span>
+                        <span class="table-layout__text"
+                              th:text="${borrowRecord.bookCopyId != null ? borrowRecord.bookCopyId : '-'}">
+                            1
+                        </span>
                     </td>
 
                     <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.memberId != null ? borrowRecord.memberId : '-'}">100</span>
+                        <span class="table-layout__text"
+                              th:text="${borrowRecord.memberId != null ? borrowRecord.memberId : '-'}">
+                            100
+                        </span>
                     </td>
 
                     <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.memberName != null ? borrowRecord.memberName : '-'}">홍길동</span>
+                        <span class="table-layout__text"
+                              th:text="${borrowRecord.memberName != null ? borrowRecord.memberName : '-'}">
+                            홍길동
+                        </span>
                     </td>
 
                     <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">2026-04-30</span>
+                        <span class="table-layout__text"
+                              th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">
+                            2026-04-30
+                        </span>
                     </td>
 
                     <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">2026-05-14</span>
+                        <span class="table-layout__text"
+                              th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">
+                            2026-05-14
+                        </span>
                     </td>
 
                     <td class="table-layout__cell">
@@ -91,7 +123,7 @@
 
                 <tr
                         class="table-layout__row table-layout__row--empty"
-                        th:if="${borrows == null or #lists.isEmpty(borrows)}">
+                        th:if="${content == null or #lists.isEmpty(content)}">
                     <td
                             class="table-layout__cell table-layout__cell--empty"
                             colspan="8">

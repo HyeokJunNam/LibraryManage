@@ -46,7 +46,7 @@ public class BorrowPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        MemberSearchModalView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/borrows/process/modal/member-search-modal :: memberSearchResultPanel";
     }
@@ -58,7 +58,7 @@ public class BorrowPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        BookSearchModalView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/borrows/process/modal/book-search-modal :: bookSearchResultPanel";
     }
@@ -71,7 +71,7 @@ public class BorrowPageController {
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("memberId", memberId);
 
-        ReturnTableView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/borrows/process/fragments/book-return-panel :: bookReturnPanel";
     }
@@ -87,7 +87,7 @@ public class BorrowPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        BorrowListTableView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/borrows/borrow-status/fragments/borrow-list-panel :: borrowListPanel";
     }
@@ -99,7 +99,7 @@ public class BorrowPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        OverdueListTableView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/borrows/borrow-status/fragments/overdue-list-panel :: overdueListPanel";
     }

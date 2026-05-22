@@ -37,7 +37,7 @@ public class MemberService {
 
     @Transactional
     public PageResponse<MemberResponse.Info> getMembers(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<Member> members =  memberRepository.findAll(searchCondition, pageable);
+        Page<Member> members =  memberRepository.search(searchCondition, pageable);
 
         return PageResponse.from(members.map(MemberResponse.Info::from));
     }

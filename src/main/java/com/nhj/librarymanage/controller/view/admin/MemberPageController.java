@@ -4,8 +4,6 @@ import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.PageResponse;
 import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
-import com.nhj.librarymanage.model.table.BookTableView;
-import com.nhj.librarymanage.model.table.MemberTableView;
 import com.nhj.librarymanage.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +28,7 @@ public class MemberPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        MemberTableView.TABLE.applyTo(model);
+        searchCondition.applySearchFields(model);
 
         return "admin/members/members";
     }

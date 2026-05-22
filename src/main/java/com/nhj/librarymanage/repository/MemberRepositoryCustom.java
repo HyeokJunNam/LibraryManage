@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepositoryCustom {
 
-    Page<Member> findAll(MemberRequest.SearchCondition searchCondition, Pageable pageable);
+    Page<Member> search(MemberRequest.SearchCondition searchCondition, Pageable pageable);
 
 }
