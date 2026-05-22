@@ -4,6 +4,7 @@
 
 <section
         th:fragment="bookCopies"
+        th:with="copyColumnCount=7"
         class="book-detail-copies-card table-layout"
         id="bookDetailCopiesCard"
         th:data-book-id="${bookId}"
@@ -46,6 +47,7 @@
             <tbody
                     id="bookDetailCopyRows"
                     class="table-layout__tbody"
+                    th:data-column-count="${copyColumnCount}"
                     th:data-page-start-index="${pageMetaData != null ? pageMetaData.page * pageMetaData.size : 0}">
 
             <tr
@@ -171,7 +173,7 @@
                     th:if="${bookCopies == null or #lists.isEmpty(bookCopies)}">
                 <td
                         class="table-layout__cell table-layout__cell--empty"
-                        colspan="7">
+                        th:colspan="${copyColumnCount}">
                     등록된 재고가 없습니다.
                 </td>
             </tr>
@@ -242,6 +244,16 @@
                         data-role="remove-created-row">
                     삭제
                 </button>
+            </td>
+        </tr>
+    </template>
+
+    <template id="bookDetailCopyEmptyRowTemplate">
+        <tr class="table-layout__row table-layout__row--empty">
+            <td
+                    class="table-layout__cell table-layout__cell--empty"
+                    th:colspan="${copyColumnCount}">
+                등록된 신규 재고가 없습니다.
             </td>
         </tr>
     </template>
