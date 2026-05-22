@@ -661,6 +661,21 @@ function initBookCopiesArea() {
 
         bookCopiesArea.innerHTML = html;
 
+        const shouldFallbackToLastPage = options.fallbackToLastPage === true;
+        const serverPageCountAfterRender = getServerPageCount();
+
+        if (
+            shouldFallbackToLastPage
+            && page >= serverPageCountAfterRender
+            && serverPageCountAfterRender > 0
+        ) {
+            await renderCopies(getLastServerPage(), {
+                captureBefore: false,
+                fallbackToLastPage: false
+            });
+            return;
+        }
+
         try {
             initBookDetailCopies();
             applyEditStateToCurrentPage();
@@ -1134,13 +1149,14 @@ function initBookCopiesArea() {
 
             await showAlert("재고가 저장되었습니다.");
 
-            const currentPage = getCurrentPage();
+            const pageToRenderAfterSave = getCurrentPage();
+
             clearEditState();
 
-            await renderCopies(
-                currentPage >= getServerPageCount() ? getLastServerPage() : currentPage,
-                { captureBefore: false }
-            );
+            await renderCopies(pageToRenderAfterSave, {
+                captureBefore: false,
+                fallbackToLastPage: true
+            });
         } catch (error) {
             console.error(error);
             await showAlert(error.message || "재고 저장에 실패했습니다.");
