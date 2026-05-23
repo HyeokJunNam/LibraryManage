@@ -5,258 +5,264 @@
 <section
         th:fragment="bookCopies"
         th:with="copyColumnCount=7"
-        class="book-detail-copies-card table-layout"
+        class="panel-layout"
         id="bookDetailCopiesCard"
         th:data-book-id="${bookId}"
         th:data-fragment-url="@{/admin/books/{id}/copies(id=${bookId})}">
 
-    <th:block th:replace="~{common/table-layout :: tableHeader(
-        title='도서 재고 현황',
-        caption='이 도서에 등록된 개별 재고의 상태를 확인합니다.',
-        actions=~{::bookDetailActions}
-    )}"></th:block>
+    <div class="panel-layout__body">
+        <section class="book-detail-copies-card table-layout">
 
-    <div class="table-layout__body">
-        <table class="table-layout__table">
-            <thead class="table-layout__thead">
-            <tr class="table-layout__row table-layout__row--head">
-                <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
-                    <span class="table-layout__text">No</span>
-                </th>
-                <th class="table-layout__cell table-layout__cell--head">
-                    <span class="table-layout__text">재고 ID</span>
-                </th>
-                <th class="table-layout__cell table-layout__cell--head">
-                    <span class="table-layout__text">도서 상태</span>
-                </th>
-                <th class="table-layout__cell table-layout__cell--head">
-                    <span class="table-layout__text">재고 위치</span>
-                </th>
-                <th class="table-layout__cell table-layout__cell--head">
-                    <span class="table-layout__text">등록일</span>
-                </th>
-                <th class="table-layout__cell table-layout__cell--head">
-                    <span class="table-layout__text">대출 상태</span>
-                </th>
-                <th class="table-layout__cell table-layout__cell--head">
-                    <span class="table-layout__text">관리</span>
-                </th>
-            </tr>
-            </thead>
+            <th:block th:replace="~{common/table-layout :: tableHeader(
+                title='도서 재고 현황',
+                caption='이 도서에 등록된 개별 재고의 상태를 확인합니다.',
+                actions=~{::bookDetailActions}
+            )}"></th:block>
 
-            <tbody
-                    id="bookDetailCopyRows"
-                    class="table-layout__tbody"
-                    th:data-column-count="${copyColumnCount}"
-                    th:data-page-start-index="${pageMetaData != null ? pageMetaData.page * pageMetaData.size : 0}">
+            <div class="table-layout__body">
+                <table class="table-layout__table">
+                    <thead class="table-layout__thead">
+                    <tr class="table-layout__row table-layout__row--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                            <span class="table-layout__text">No</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">재고 ID</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">도서 상태</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">재고 위치</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">등록일</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">대출 상태</span>
+                        </th>
+                        <th class="table-layout__cell table-layout__cell--head">
+                            <span class="table-layout__text">관리</span>
+                        </th>
+                    </tr>
+                    </thead>
 
-            <tr
-                    th:each="bookCopy, stat : ${bookCopies}"
-                    class="table-layout__row book-detail-copies-table__row"
-                    data-row-mode="clean"
-                    th:data-book-copy-id="${bookCopy.bookCopyId}"
-                    th:data-borrowed="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}"
-                    th:data-original-status="${bookCopy.bookCopyStatus != null ? bookCopy.bookCopyStatus.value : ''}"
-                    th:data-original-location="${bookCopy.location != null ? bookCopy.location : ''}">
+                    <tbody
+                            id="bookDetailCopyRows"
+                            class="table-layout__tbody"
+                            th:data-column-count="${copyColumnCount}"
+                            th:data-page-start-index="${pageMetaData != null ? pageMetaData.page * pageMetaData.size : 0}">
 
-                <td class="table-layout__cell table-layout__cell--leading">
-                    <span
-                            class="book-detail-copy-row__index"
-                            th:text="${pageMetaData != null
-                                   ? (pageMetaData.page * pageMetaData.size + stat.index + 1)
-                                   : (stat.index + 1)}">
-                        1
-                    </span>
-                </td>
+                    <tr
+                            th:each="bookCopy, stat : ${bookCopies}"
+                            class="table-layout__row book-detail-copies-table__row"
+                            data-row-mode="clean"
+                            th:data-book-copy-id="${bookCopy.bookCopyId}"
+                            th:data-borrowed="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}"
+                            th:data-original-status="${bookCopy.bookCopyStatus != null ? bookCopy.bookCopyStatus.value : ''}"
+                            th:data-original-location="${bookCopy.location != null ? bookCopy.location : ''}">
 
-                <td class="table-layout__cell">
-                    <span
-                            class="table-layout__text"
-                            th:text="${bookCopy.bookCopyId != null ? bookCopy.bookCopyId : '-'}">
-                        1
-                    </span>
-                </td>
+                        <td class="table-layout__cell table-layout__cell--leading">
+                            <span
+                                    class="book-detail-copy-row__index"
+                                    th:text="${pageMetaData != null
+                                           ? (pageMetaData.page * pageMetaData.size + stat.index + 1)
+                                           : (stat.index + 1)}">
+                                1
+                            </span>
+                        </td>
 
-                <td class="table-layout__cell">
-                    <span
-                            class="book-detail-copy-status-view status-badge"
-                            th:classappend="${bookCopy.bookCopyStatus != null
-                                           ? ' status-badge--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value)
-                                           : ' status-badge--default'}"
-                            th:text="${(bookCopy.bookCopyStatus != null
-                                    and bookCopy.bookCopyStatus.label != null
-                                    and !#strings.isEmpty(bookCopy.bookCopyStatus.label))
-                                   ? bookCopy.bookCopyStatus.label
-                                   : '-'}">
-                        상태
-                    </span>
+                        <td class="table-layout__cell">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${bookCopy.bookCopyId != null ? bookCopy.bookCopyId : '-'}">
+                                1
+                            </span>
+                        </td>
 
-                    <select
-                            class="book-detail-copy-control book-detail-copy-status-edit is-hidden"
-                            data-field="status"
-                            th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}"
-                            th:classappend="${bookCopy.bookCopyStatus != null
-                                               ? ' book-detail-copy-status-edit--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value)
-                                               : ''}">
-                        <option
-                                th:each="statusOption : ${options.bookCopyStatuses}"
-                                th:value="${statusOption.value}"
-                                th:text="${statusOption.label}"
-                                th:selected="${bookCopy.bookCopyStatus != null and bookCopy.bookCopyStatus.value == statusOption.value}">
-                            상태
-                        </option>
-                    </select>
-                </td>
+                        <td class="table-layout__cell">
+                            <span
+                                    class="book-detail-copy-status-view status-badge"
+                                    th:classappend="${bookCopy.bookCopyStatus != null
+                                                   ? ' status-badge--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value)
+                                                   : ' status-badge--default'}"
+                                    th:text="${(bookCopy.bookCopyStatus != null
+                                            and bookCopy.bookCopyStatus.label != null
+                                            and !#strings.isEmpty(bookCopy.bookCopyStatus.label))
+                                           ? bookCopy.bookCopyStatus.label
+                                           : '-'}">
+                                상태
+                            </span>
 
-                <td class="table-layout__cell">
-                    <span
-                            class="book-detail-copy-location-view table-layout__text"
-                            th:text="${(bookCopy.location != null and !#strings.isEmpty(bookCopy.location))
-                                  ? bookCopy.location
-                                  : '-'}">
-                        A-01
-                    </span>
+                            <select
+                                    class="book-detail-copy-control book-detail-copy-status-edit is-hidden"
+                                    data-field="status"
+                                    th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}"
+                                    th:classappend="${bookCopy.bookCopyStatus != null
+                                                       ? ' book-detail-copy-status-edit--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value)
+                                                       : ''}">
+                                <option
+                                        th:each="statusOption : ${options.bookCopyStatuses}"
+                                        th:value="${statusOption.value}"
+                                        th:text="${statusOption.label}"
+                                        th:selected="${bookCopy.bookCopyStatus != null and bookCopy.bookCopyStatus.value == statusOption.value}">
+                                    상태
+                                </option>
+                            </select>
+                        </td>
 
-                    <input
-                            type="text"
-                            class="book-detail-copy-control book-detail-copy-location-edit is-hidden"
-                            data-field="location"
-                            placeholder="예: A-01"
-                            autocomplete="off"
-                            th:value="${bookCopy.location != null ? bookCopy.location : ''}"
-                            th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}">
-                </td>
+                        <td class="table-layout__cell">
+                            <span
+                                    class="book-detail-copy-location-view table-layout__text"
+                                    th:text="${(bookCopy.location != null and !#strings.isEmpty(bookCopy.location))
+                                          ? bookCopy.location
+                                          : '-'}">
+                                A-01
+                            </span>
 
-                <td class="table-layout__cell">
-                    <span
-                            class="table-layout__text"
-                            th:text="${bookCopy.createdAt != null ? #temporals.format(bookCopy.createdAt, 'yyyy-MM-dd') : '-'}">
-                        2026-04-30
-                    </span>
-                </td>
+                            <input
+                                    type="text"
+                                    class="book-detail-copy-control book-detail-copy-location-edit is-hidden"
+                                    data-field="location"
+                                    placeholder="예: A-01"
+                                    autocomplete="off"
+                                    th:value="${bookCopy.location != null ? bookCopy.location : ''}"
+                                    th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}">
+                        </td>
 
-                <td class="table-layout__cell">
-                    <span
-                            class="status-badge"
-                            th:classappend="${bookCopy.borrowStatus != null
-                                           ? ' status-badge--' + #strings.toLowerCase(bookCopy.borrowStatus.value)
-                                           : ' status-badge--default'}"
-                            th:text="${(bookCopy.borrowStatus != null
-                                    and bookCopy.borrowStatus.label != null
-                                    and !#strings.isEmpty(bookCopy.borrowStatus.label))
-                                   ? bookCopy.borrowStatus.label
-                                   : '-'}">
-                        대출 상태
-                    </span>
-                </td>
+                        <td class="table-layout__cell">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${bookCopy.createdAt != null ? #temporals.format(bookCopy.createdAt, 'yyyy-MM-dd') : '-'}">
+                                2026-04-30
+                            </span>
+                        </td>
 
-                <td class="table-layout__cell">
-                    <span class="book-detail-copy-row__state">기존</span>
-                    <button
-                            type="button"
-                            class="btn btn--danger btn--sm book-detail-copy-row__delete is-hidden"
-                            data-role="mark-delete-row"
-                            th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}">
-                        삭제
-                    </button>
-                    <button
-                            type="button"
-                            class="btn btn--outline btn--sm book-detail-copy-row__cancel-delete is-hidden"
-                            data-role="cancel-delete-row">
-                        취소
-                    </button>
-                </td>
-            </tr>
+                        <td class="table-layout__cell">
+                            <span
+                                    class="status-badge"
+                                    th:classappend="${bookCopy.borrowStatus != null
+                                                   ? ' status-badge--' + #strings.toLowerCase(bookCopy.borrowStatus.value)
+                                                   : ' status-badge--default'}"
+                                    th:text="${(bookCopy.borrowStatus != null
+                                            and bookCopy.borrowStatus.label != null
+                                            and !#strings.isEmpty(bookCopy.borrowStatus.label))
+                                           ? bookCopy.borrowStatus.label
+                                           : '-'}">
+                                대출 상태
+                            </span>
+                        </td>
 
-            <tr
-                    class="table-layout__row table-layout__row--empty"
-                    th:if="${bookCopies == null or #lists.isEmpty(bookCopies)}">
-                <td
-                        class="table-layout__cell table-layout__cell--empty"
-                        th:colspan="${copyColumnCount}">
-                    등록된 재고가 없습니다.
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        <td class="table-layout__cell">
+                            <span class="book-detail-copy-row__state">기존</span>
+                            <button
+                                    type="button"
+                                    class="btn btn--danger btn--sm book-detail-copy-row__delete is-hidden"
+                                    data-role="mark-delete-row"
+                                    th:disabled="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}">
+                                삭제
+                            </button>
+                            <button
+                                    type="button"
+                                    class="btn btn--outline btn--sm book-detail-copy-row__cancel-delete is-hidden"
+                                    data-role="cancel-delete-row">
+                                취소
+                            </button>
+                        </td>
+                    </tr>
 
-        <button
-                type="button"
-                class="book-detail-copies-add-row is-hidden"
-                id="addBookCopyRowButton">
-            <span class="book-detail-copies-add-row__icon">+</span>
-            <span class="book-detail-copies-add-row__text">재고 행 추가</span>
-        </button>
-    </div>
+                    <tr
+                            class="table-layout__row table-layout__row--empty"
+                            th:if="${bookCopies == null or #lists.isEmpty(bookCopies)}">
+                        <td
+                                class="table-layout__cell table-layout__cell--empty"
+                                th:colspan="${copyColumnCount}">
+                            등록된 재고가 없습니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-    <th:block
-            th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"
-            th:with="searchFields=${#lists.isEmpty()}">
-    </th:block>
-
-    <template id="bookDetailCopyRowTemplate">
-        <tr
-                class="table-layout__row book-detail-copies-table__row book-detail-copies-table__row--created"
-                data-row-mode="created"
-                data-borrowed="false">
-
-            <td class="table-layout__cell table-layout__cell--leading">
-                <span class="book-detail-copy-row__index">신규</span>
-            </td>
-
-            <td class="table-layout__cell">
-                <span class="book-detail-copy-row__new-label">신규</span>
-            </td>
-
-            <td class="table-layout__cell">
-                <select
-                        class="book-detail-copy-control book-detail-copy-status-edit book-detail-copy-status-edit--available"
-                        data-field="status">
-                    <option
-                            th:each="statusOption : ${options.bookCopyStatuses}"
-                            th:value="${statusOption.value}"
-                            th:text="${statusOption.label}"
-                            th:selected="${statusOption.value == 'AVAILABLE'}">
-                        상태
-                    </option>
-                </select>
-            </td>
-
-            <td class="table-layout__cell">
-                <input
-                        type="text"
-                        class="book-detail-copy-control book-detail-copy-location-edit"
-                        data-field="location"
-                        placeholder="예: A-01"
-                        autocomplete="off">
-            </td>
-
-            <td class="table-layout__cell">-</td>
-
-            <td class="table-layout__cell">
-                <span class="book-detail-copy-row__empty-value">-</span>
-            </td>
-
-            <td class="table-layout__cell">
                 <button
                         type="button"
-                        class="btn btn--danger btn--sm book-detail-copy-row__remove"
-                        data-role="remove-created-row">
-                    삭제
+                        class="book-detail-copies-add-row is-hidden"
+                        id="addBookCopyRowButton">
+                    <span class="book-detail-copies-add-row__icon">+</span>
+                    <span class="book-detail-copies-add-row__text">재고 행 추가</span>
                 </button>
-            </td>
-        </tr>
-    </template>
+            </div>
 
-    <template id="bookDetailCopyEmptyRowTemplate">
-        <tr class="table-layout__row table-layout__row--empty">
-            <td
-                    class="table-layout__cell table-layout__cell--empty"
-                    th:colspan="${copyColumnCount}">
-                등록된 신규 재고가 없습니다.
-            </td>
-        </tr>
-    </template>
+            <th:block
+                    th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"
+                    th:with="searchFields=${#lists.isEmpty()}">
+            </th:block>
+
+            <template id="bookDetailCopyRowTemplate">
+                <tr
+                        class="table-layout__row book-detail-copies-table__row book-detail-copies-table__row--created"
+                        data-row-mode="created"
+                        data-borrowed="false">
+
+                    <td class="table-layout__cell table-layout__cell--leading">
+                        <span class="book-detail-copy-row__index">신규</span>
+                    </td>
+
+                    <td class="table-layout__cell">
+                        <span class="book-detail-copy-row__new-label">신규</span>
+                    </td>
+
+                    <td class="table-layout__cell">
+                        <select
+                                class="book-detail-copy-control book-detail-copy-status-edit book-detail-copy-status-edit--available"
+                                data-field="status">
+                            <option
+                                    th:each="statusOption : ${options.bookCopyStatuses}"
+                                    th:value="${statusOption.value}"
+                                    th:text="${statusOption.label}"
+                                    th:selected="${statusOption.value == 'AVAILABLE'}">
+                                상태
+                            </option>
+                        </select>
+                    </td>
+
+                    <td class="table-layout__cell">
+                        <input
+                                type="text"
+                                class="book-detail-copy-control book-detail-copy-location-edit"
+                                data-field="location"
+                                placeholder="예: A-01"
+                                autocomplete="off">
+                    </td>
+
+                    <td class="table-layout__cell">-</td>
+
+                    <td class="table-layout__cell">
+                        <span class="book-detail-copy-row__empty-value">-</span>
+                    </td>
+
+                    <td class="table-layout__cell">
+                        <button
+                                type="button"
+                                class="btn btn--danger btn--sm book-detail-copy-row__remove"
+                                data-role="remove-created-row">
+                            삭제
+                        </button>
+                    </td>
+                </tr>
+            </template>
+
+            <template id="bookDetailCopyEmptyRowTemplate">
+                <tr class="table-layout__row table-layout__row--empty">
+                    <td
+                            class="table-layout__cell table-layout__cell--empty"
+                            th:colspan="${copyColumnCount}">
+                        등록된 신규 재고가 없습니다.
+                    </td>
+                </tr>
+            </template>
+
+        </section>
+    </div>
 
 </section>
 
@@ -270,8 +276,18 @@
         </button>
 
         <div class="book-detail-copies-card__edit-actions is-hidden" id="bookCopyEditActions">
-            <button type="button" class="btn btn--primary book-detail-copies-card__save-button" id="saveBookCopiesButton">저장</button>
-            <button type="button" class="btn btn--ghost book-detail-copies-card__cancel-button" id="cancelBookCopiesButton">취소</button>
+            <button
+                    type="button"
+                    class="btn btn--primary book-detail-copies-card__save-button"
+                    id="saveBookCopiesButton">
+                저장
+            </button>
+            <button
+                    type="button"
+                    class="btn btn--ghost book-detail-copies-card__cancel-button"
+                    id="cancelBookCopiesButton">
+                취소
+            </button>
         </div>
     </div>
 </th:block>

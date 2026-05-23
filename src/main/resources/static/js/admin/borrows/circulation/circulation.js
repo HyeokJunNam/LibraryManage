@@ -1,5 +1,5 @@
-import { createMemberProcess } from "./fragments/process-member.js";
-import { createBookProcess } from "./fragments/process-book.js";
+import { createMemberProcess } from "./fragments/member.js";
+import { createBookProcess } from "./fragments/book.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     let memberProcess;

@@ -32,20 +32,20 @@
         </a>
 
         <div class="admin-nav__group"
-             th:classappend="${activeMenu == 'borrow-process' or activeMenu == 'borrow-status'} ? ' admin-nav__group--open' : ''">
+             th:classappend="${activeMenu == 'circulation' or activeMenu == 'borrow-status'} ? ' admin-nav__group--open' : ''">
 
             <button type="button"
                     class="admin-nav__item admin-nav__toggle"
-                    th:classappend="${activeMenu == 'borrow-process' or activeMenu == 'borrow-status'} ? ' admin-nav__item--active' : ''"
+                    th:classappend="${activeMenu == 'circulation' or activeMenu == 'borrow-status'} ? ' admin-nav__item--active' : ''"
                     aria-expanded="false">
                 <span>대출 관리</span>
                 <span class="admin-nav__arrow" aria-hidden="true">▾</span>
             </button>
 
             <div class="admin-nav__sub">
-                <a th:href="@{/admin/borrows/process}"
+                <a th:href="@{/admin/circulation}"
                    class="admin-nav__sub-item"
-                   th:classappend="${activeMenu == 'borrow-process'} ? ' admin-nav__sub-item--active' : ''">
+                   th:classappend="${activeMenu == 'circulation'} ? ' admin-nav__sub-item--active' : ''">
                     대출 / 반납 처리
                 </a>
 

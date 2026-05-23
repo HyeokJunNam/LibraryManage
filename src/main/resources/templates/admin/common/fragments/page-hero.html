@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="pageHero(eyebrow, title, desc)">
+    <header class="page-hero">
+        <div class="page-hero__content">
+            <p class="page-hero__eyebrow" th:text="${eyebrow}">ADMIN PAGE</p>
+            <h2 class="page-hero__title" th:text="${title}">관리자 페이지</h2>
+            <p class="page-hero__desc" th:text="${desc}">
+                관리자 페이지 입니다.
+            </p>
+        </div>
+    </header>
+</th:block>
+
+</html>

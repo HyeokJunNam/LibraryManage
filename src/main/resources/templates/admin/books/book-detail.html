@@ -15,25 +15,12 @@
     <aside th:replace="~{admin/common/sidebar :: sidebar('books')}"></aside>
 
     <main class="admin-main">
-
-        <header class="page-hero page-hero--book-detail">
-            <div class="page-hero__content">
-                <p class="page-hero__eyebrow">BOOK DETAIL</p>
-
-                <h2 class="page-hero__title"
-                    th:text="${book.title}">
-                    도서 상세
-                </h2>
-
-                <p class="page-hero__desc">
-                    도서 기본 정보, 재고 요약, 개별 재고 현황과 현재 대출 현황을 확인할 수 있습니다.
-                </p>
-            </div>
-
-            <div class="page-hero__actions">
-                <a th:href="@{/admin/books}" class="btn btn--ghost">목록으로</a>
-            </div>
-        </header>
+        <th:block th:replace="~{admin/common/fragments/page-hero :: pageHero(
+            eyebrow='BOOK DETAIL',
+            title=${book.title},
+            desc='도서 기본 정보, 재고 요약, 개별 재고 현황과 현재 대출 현황을 확인할 수 있습니다.'
+            )}">
+        </th:block>
 
         <section class="book-detail-layout">
 

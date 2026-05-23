@@ -12,19 +12,12 @@
     <aside th:replace="~{admin/common/sidebar :: sidebar('members')}"></aside>
 
     <main class="admin-main">
-        <header class="detail-hero">
-            <div class="detail-hero__content">
-                <p class="detail-hero__eyebrow">MEMBER DETAIL</p>
-                <h2 class="detail-hero__title">회원 상세 정보</h2>
-                <p class="detail-hero__desc">
-                    회원 기본 정보와 대출 이력을 확인할 수 있습니다.
-                </p>
-            </div>
-
-            <div class="detail-hero__actions">
-                <a th:href="@{/admin/members}" class="btn btn--secondary">목록으로</a>
-            </div>
-        </header>
+        <th:block th:replace="~{admin/common/fragments/page-hero :: pageHero(
+            eyebrow='MEMBER DETAIL',
+            title='회원 상세 정보',
+            desc='회원 기본 정보와 대출 이력을 확인할 수 있습니다.'
+            )}">
+        </th:block>
 
         <section class="profile-card">
             <div class="profile-card__main">

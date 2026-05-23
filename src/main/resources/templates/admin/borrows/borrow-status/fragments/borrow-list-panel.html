@@ -5,139 +5,163 @@
 
     <section
             id="borrowListPanel"
-            class="borrow-page__panel borrow-table-layout borrow-table-layout--list table-layout"
+            class="panel-layout borrow-page__panel"
             data-fragment-url="/admin/borrows/list">
 
-        <th:block th:replace="~{common/table-layout :: tableHeader(
-            title='대출 목록',
-            caption='전체 도서 대출 이력을 확인할 수 있습니다.',
-            actions=null
-        )}"></th:block>
+        <div class="panel-layout__body">
+            <section class="borrow-table-layout borrow-table-layout--list table-layout">
 
-        <th:block
-                th:replace="~{common/table-layout :: tableToolbar(searchMode='ajax')}"
-                th:with="searchFields=${safeSearchFields}">
-        </th:block>
+                <th:block th:replace="~{common/table-layout :: tableHeader(
+                    title='대출 목록',
+                    caption='전체 도서 대출 이력을 확인할 수 있습니다.',
+                    actions=null
+                )}"></th:block>
 
-        <div class="table-layout__body">
-            <table class="table-layout__table">
-                <thead class="table-layout__thead">
-                <tr class="table-layout__row table-layout__row--head">
-                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
-                        <span class="table-layout__text">No</span>
-                    </th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">대출 ID</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">재고 ID</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">도서명</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">위치</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">회원명</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">상태</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">대출일</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">반납 예정일</span></th>
-                    <th class="table-layout__cell table-layout__cell--head"><span class="table-layout__text">반납일</span></th>
-                </tr>
-                </thead>
+                <th:block
+                        th:replace="~{common/table-layout :: tableToolbar(searchMode='ajax')}"
+                        th:with="searchFields=${safeSearchFields}">
+                </th:block>
 
-                <tbody class="table-layout__tbody">
-                <tr
-                        class="table-layout__row"
-                        th:each="borrowRecord, stat : ${content}">
+                <div class="table-layout__body">
+                    <table class="table-layout__table">
+                        <thead class="table-layout__thead">
+                        <tr class="table-layout__row table-layout__row--head">
+                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                                <span class="table-layout__text">No</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">대출 ID</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">재고 ID</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">도서명</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">위치</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">회원명</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">상태</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">대출일</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">반납 예정일</span>
+                            </th>
+                            <th class="table-layout__cell table-layout__cell--head">
+                                <span class="table-layout__text">반납일</span>
+                            </th>
+                        </tr>
+                        </thead>
 
-                    <td class="table-layout__cell table-layout__cell--leading">
-                        <span
-                                class="table-layout__text"
-                                th:text="${pageMetaData.page * pageMetaData.size + stat.index + 1}">
-                            1
-                        </span>
-                    </td>
+                        <tbody class="table-layout__tbody">
+                        <tr
+                                class="table-layout__row"
+                                th:each="borrowRecord, stat : ${content}">
 
-                    <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.borrowRecordId}">1</span>
-                    </td>
+                            <td class="table-layout__cell table-layout__cell--leading">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${pageMetaData.page * pageMetaData.size + stat.index + 1}">
+                                    1
+                                </span>
+                            </td>
 
-                    <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.bookCopyId}">1</span>
-                    </td>
+                            <td class="table-layout__cell">
+                                <span class="table-layout__text" th:text="${borrowRecord.borrowRecordId}">1</span>
+                            </td>
 
-                    <td class="table-layout__cell table-layout__cell--primary">
-                        <span class="table-layout__text" th:text="${borrowRecord.bookTitle}">도서명</span>
-                    </td>
+                            <td class="table-layout__cell">
+                                <span class="table-layout__text" th:text="${borrowRecord.bookCopyId}">1</span>
+                            </td>
 
-                    <td class="table-layout__cell">
-                        <span
-                                class="table-layout__text"
-                                th:text="${(borrowRecord.location != null and !#strings.isEmpty(borrowRecord.location))
-                                      ? borrowRecord.location
-                                      : '-'}">
-                            A-1
-                        </span>
-                    </td>
+                            <td class="table-layout__cell table-layout__cell--primary">
+                                <span class="table-layout__text" th:text="${borrowRecord.bookTitle}">도서명</span>
+                            </td>
 
-                    <td class="table-layout__cell">
-                        <span class="table-layout__text" th:text="${borrowRecord.memberName}">홍길동</span>
-                    </td>
+                            <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${(borrowRecord.location != null and !#strings.isEmpty(borrowRecord.location))
+                                              ? borrowRecord.location
+                                              : '-'}">
+                                    A-1
+                                </span>
+                            </td>
 
-                    <td
-                            class="table-layout__cell"
-                            th:with="statusValue=${(borrowRecord.borrowStatus != null and borrowRecord.borrowStatus.value != null)
-                                                   ? #strings.toLowerCase(borrowRecord.borrowStatus.value.toString())
-                                                   : 'default'}">
-                        <span
-                                class="status-badge"
-                                th:classappend="${' status-badge--' + statusValue}"
-                                th:text="${(borrowRecord.borrowStatusLabel != null and !#strings.isEmpty(borrowRecord.borrowStatusLabel))
-                                      ? borrowRecord.borrowStatusLabel
-                                      : '-'}">
-                            대출 상태
-                        </span>
-                    </td>
+                            <td class="table-layout__cell">
+                                <span class="table-layout__text" th:text="${borrowRecord.memberName}">홍길동</span>
+                            </td>
 
-                    <td class="table-layout__cell">
-                        <span
-                                class="table-layout__text"
-                                th:text="${borrowRecord.borrowedAt != null
-                                      ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd')
-                                      : '-'}">
-                            2026-05-01
-                        </span>
-                    </td>
+                            <td
+                                    class="table-layout__cell"
+                                    th:with="statusValue=${(borrowRecord.borrowStatus != null and borrowRecord.borrowStatus.value != null)
+                                                           ? #strings.toLowerCase(borrowRecord.borrowStatus.value.toString())
+                                                           : 'default'}">
+                                <span
+                                        class="status-badge"
+                                        th:classappend="${' status-badge--' + statusValue}"
+                                        th:text="${(borrowRecord.borrowStatusLabel != null and !#strings.isEmpty(borrowRecord.borrowStatusLabel))
+                                              ? borrowRecord.borrowStatusLabel
+                                              : '-'}">
+                                    대출 상태
+                                </span>
+                            </td>
 
-                    <td class="table-layout__cell">
-                        <span
-                                class="table-layout__text"
-                                th:text="${borrowRecord.dueAt != null
-                                      ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd')
-                                      : '-'}">
-                            2026-05-15
-                        </span>
-                    </td>
+                            <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${borrowRecord.borrowedAt != null
+                                              ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd')
+                                              : '-'}">
+                                    2026-05-01
+                                </span>
+                            </td>
 
-                    <td class="table-layout__cell">
-                        <span
-                                class="table-layout__text"
-                                th:text="${borrowRecord.returnedAt != null
-                                      ? #temporals.format(borrowRecord.returnedAt, 'yyyy-MM-dd')
-                                      : '-'}">
-                            -
-                        </span>
-                    </td>
-                </tr>
+                            <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${borrowRecord.dueAt != null
+                                              ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd')
+                                              : '-'}">
+                                    2026-05-15
+                                </span>
+                            </td>
 
-                <tr
-                        class="table-layout__row table-layout__row--empty"
-                        th:if="${content == null or #lists.isEmpty(content)}">
-                    <td class="table-layout__cell table-layout__cell--empty" colspan="10">
-                        대출 내역이 없습니다.
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                            <td class="table-layout__cell">
+                                <span
+                                        class="table-layout__text"
+                                        th:text="${borrowRecord.returnedAt != null
+                                              ? #temporals.format(borrowRecord.returnedAt, 'yyyy-MM-dd')
+                                              : '-'}">
+                                    -
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr
+                                class="table-layout__row table-layout__row--empty"
+                                th:if="${content == null or #lists.isEmpty(content)}">
+                            <td class="table-layout__cell table-layout__cell--empty" colspan="10">
+                                대출 내역이 없습니다.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <th:block
+                        th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"
+                        th:with="searchFields=${safeSearchFields}">
+                </th:block>
+
+            </section>
         </div>
-
-        <th:block
-                th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"
-                th:with="searchFields=${safeSearchFields}">
-        </th:block>
 
     </section>
 </th:block>

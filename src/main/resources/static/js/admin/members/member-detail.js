@@ -1,5 +1,3 @@
-// /js/admin/member-detail.js
-
 document.addEventListener("DOMContentLoaded", () => {
     initializeMemberDetailPage();
 });

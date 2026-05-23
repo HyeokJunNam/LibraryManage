@@ -1,71 +1,3 @@
-.page-hero {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 24px;
-    padding: 32px;
-    border-radius: var(--radius-xl);
-    background: linear-gradient(135deg, #f7fff9 0%, #e7f7ec 55%, #d9f0e0 100%);
-    border: 1px solid var(--green-100);
-    box-shadow: var(--shadow);
-    margin-bottom: 24px;
-}
-
-.page-hero--book-create::after {
-    content: "ISBN";
-    position: absolute;
-    right: 34px;
-    bottom: -18px;
-    color: rgba(31, 107, 69, 0.08);
-    font-size: 110px;
-    font-weight: 900;
-    line-height: 1;
-    pointer-events: none;
-}
-
-.page-hero__content,
-.page-hero__actions {
-    position: relative;
-    z-index: 1;
-}
-
-.page-hero__content {
-    flex: 1;
-    min-width: 0;
-}
-
-.page-hero__eyebrow {
-    margin: 0 0 10px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: var(--green-700);
-}
-
-.page-hero__title {
-    margin: 0;
-    font-size: 36px;
-    font-weight: 800;
-    line-height: 1.2;
-    color: var(--green-800);
-}
-
-.page-hero__desc {
-    margin: 16px 0 0;
-    max-width: 760px;
-    font-size: 16px;
-    color: var(--gray-700);
-    line-height: 1.7;
-}
-
-.page-hero__actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 .is-hidden {
     display: none !important;
 }
@@ -377,16 +309,6 @@
 }
 
 @media (max-width: 768px) {
-    .page-hero {
-        padding: 28px 24px;
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .page-hero__title {
-        font-size: 30px;
-    }
-
     .isbn-lookup-card__head,
     .book-input-card__head,
     .book-draft-panel__head {

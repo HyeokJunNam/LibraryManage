@@ -21,9 +21,9 @@ public class MemberPageController {
 
     private final MemberService memberService;
 
-    @Description("회원 관리 화면")
+    @Description("회원 목록 화면")
     @GetMapping("/members")
-    public String members(Model model, @ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+    public String memberListPage(Model model, @ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
         PageResponse<MemberResponse.Info> pageResponse = memberService.getMembers(searchCondition, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
@@ -33,9 +33,9 @@ public class MemberPageController {
         return "admin/members/members";
     }
 
-    @Description("회원 정보 조회 화면")
+    @Description("회원 상세 화면")
     @GetMapping("/members/{id}")
-    public String memberDetail(Model model, @PathVariable Long id) {
+    public String memberDetailPage(Model model, @PathVariable Long id) {
         MemberResponse.Info info = memberService.getMember(id);
         model.addAttribute("member", info);
 

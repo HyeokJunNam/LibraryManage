@@ -2,7 +2,6 @@ package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.*;
-import com.nhj.librarymanage.model.table.*;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
 import com.nhj.librarymanage.service.MemberService;
@@ -11,28 +10,47 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @Controller
-public class BorrowPageController {
+public class CirculationPageController {
 
     private final BorrowRecordService borrowRecordService;
     private final MemberService memberService;
     private final BookService bookService;
 
-    @Description("대출/반납 처리")
-    @GetMapping("/borrows/process")
-    public String processBook() {
-        return "admin/borrows/process/process";
+    @Description("대출/반납 화면")
+    @GetMapping("/circulation")
+    public String circulationPage() {
+        return "admin/borrows/circulation/circulation";
+    }
+
+    @Description("대출 처리 패널")
+    @GetMapping("/circulation/borrows")
+    public String bookBorrowPanel() {
+        return "admin/borrows/circulation/fragments/book-borrow :: bookBorrowPanel";
     }
 
 
-    @Description("도서 대출 현황")
+    @Description("반납 처리 패널")
+    @GetMapping("/circulation/members/{id}/returns")
+    public String bookReturnPanel(Model model, @PathVariable String id, BorrowHistoryRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+        PageResponse<BorrowHistoryResponse.InfoByMember> pageResponse = borrowRecordService.getBorrowHistoryByMember(NumberParser.parseLong(id), searchCondition, pageable);
+        model.addAttribute("content", pageResponse.content());
+        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
+        model.addAttribute("memberId", id);
+
+        searchCondition.applySearchFields(model);
+
+        return "admin/borrows/circulation/fragments/book-return :: bookReturnPanel";
+    }
+
+
+
+
+    @Description("도서 대출 목록")
     @GetMapping("/borrows/status")
     public String borrowHistory() {
         return "admin/borrows/borrow-status/borrow-status";
@@ -48,7 +66,7 @@ public class BorrowPageController {
 
         searchCondition.applySearchFields(model);
 
-        return "admin/borrows/process/modal/member-search-modal :: memberSearchResultPanel";
+        return "admin/borrows/circulation/modal/member-search-modal :: memberSearchResultPanel";
     }
 
     @Description("도서 검색(모달)")
@@ -60,21 +78,9 @@ public class BorrowPageController {
 
         searchCondition.applySearchFields(model);
 
-        return "admin/borrows/process/modal/book-search-modal :: bookSearchResultPanel";
+        return "admin/borrows/circulation/modal/book-search-modal :: bookSearchResultPanel";
     }
 
-    @Description("반납용 회원 기준 도서 대출 목록")
-    @GetMapping("/members/{memberId}/borrows/list")
-    public String borrowListByMember(Model model, @PathVariable String memberId, BorrowHistoryRequest.SearchConditionByMember searchCondition, Pageable pageable) {
-        PageResponse<BorrowHistoryResponse.InfoByMember> pageResponse = borrowRecordService.getBorrowHistoryByMember(NumberParser.parseLong(memberId), searchCondition, pageable);
-        model.addAttribute("content", pageResponse.content());
-        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
-        model.addAttribute("memberId", memberId);
-
-        searchCondition.applySearchFields(model);
-
-        return "admin/borrows/process/fragments/book-return-panel :: bookReturnPanel";
-    }
 
 
 

@@ -1,10 +1,6 @@
 /* =========================
    MEMBER PANEL
 ========================= */
-.member-panel {
-    min-height: 560px;
-}
-
 .is-hidden {
     display: none !important;
 }
@@ -185,12 +181,6 @@
 /* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 1180px) {
-    .member-panel {
-        min-height: 420px;
-    }
-}
-
 @media (max-width: 768px) {
     .member-panel__body {
         padding: 20px;

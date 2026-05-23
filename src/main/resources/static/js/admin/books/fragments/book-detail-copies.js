@@ -29,8 +29,12 @@ function initBookCopiesArea() {
         lastServerRowCount: 0
     };
 
-    function getCopiesCard() {
+    function getCopiesPanel() {
         return bookCopiesArea.querySelector("#bookDetailCopiesCard");
+    }
+
+    function getCopiesCard() {
+        return getCopiesPanel()?.querySelector(".book-detail-copies-card") || null;
     }
 
     function getRowsContainer() {
@@ -1109,8 +1113,8 @@ function initBookCopiesArea() {
     }
 
     async function saveBookCopies() {
-        const copiesCard = getCopiesCard();
-        const bookId = copiesCard?.dataset.bookId;
+        const copiesPanel = getCopiesPanel();
+        const bookId = copiesPanel?.dataset.bookId;
 
         if (!bookId) {
             await showAlert("도서 ID를 찾을 수 없습니다.");

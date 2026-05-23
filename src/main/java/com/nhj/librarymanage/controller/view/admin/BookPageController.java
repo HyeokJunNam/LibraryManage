@@ -26,9 +26,9 @@ public class BookPageController {
     private final BookCopyService bookCopyService;
     private final BorrowRecordService borrowRecordService;
 
-    @Description("도서 관리 화면")
+    @Description("도서 목록 화면")
     @GetMapping("/books")
-    public String books(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
+    public String bookListPage(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
         PageResponse<BookResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
@@ -43,16 +43,16 @@ public class BookPageController {
 
     @Description("도서 상세 화면")
     @GetMapping("/books/{id}")
-    public String bookDetail(Model model, @PathVariable Long id) {
+    public String bookDetailPage(Model model, @PathVariable Long id) {
         BookResponse.Detail detail = bookService.getBook(id);
         model.addAttribute("book", detail);
 
         return "admin/books/book-detail";
     }
 
-    @Description(value = "도서 재고 현황 조회")
+    @Description(value = "도서 재고 목록 패널")
     @GetMapping("/books/{id}/copies")
-    public String bookItemFragment(Model model, @PathVariable Long id, Pageable pageable) {
+    public String bookCopyListPanel(Model model, @PathVariable Long id, Pageable pageable) {
         PageResponse<BookCopyResponse.Info> pageResponse = bookCopyService.getBookCopies(id, pageable); // 여기서 레코드 한번 더 조회 타는거 있음. 근데 1번 더타는건 그래프 탐색 특성 상 허용되어야 함
 
         model.addAttribute("bookId", id);
@@ -63,9 +63,9 @@ public class BookPageController {
         return "admin/books/fragments/book-detail-copies :: bookCopies";
     }
 
-    @Description(value = "도서 별 도서 대출 현황 조회")
+    @Description(value = "도서 별 도서 대출 목록 패널")
     @GetMapping("/books/{id}/borrows")
-    public String bookBorrowFragment(Model model, @PathVariable Long id, Pageable pageable) {
+    public String borrowListByBookPanel(Model model, @PathVariable Long id, Pageable pageable) {
         PageResponse<BorrowHistoryResponse.InfoByBook> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, pageable);
 
         model.addAttribute("content", pageResponse.content());
@@ -76,14 +76,14 @@ public class BookPageController {
 
     @Description("도서 등록 화면")
     @GetMapping("/books/new")
-    public String newBook() {
+    public String newBookPage() {
 
         return "admin/books/books-new";
     }
 
-    @Description("도서 정보 수정 화면")
+    @Description("도서 수정 화면")
     @GetMapping("/books/{id}/edit")
-    public String editBook(Model model, @PathVariable Long id) {
+    public String editBookPage(Model model, @PathVariable Long id) {
         BookResponse.Detail detail = bookService.getBook(id);
         model.addAttribute("book", detail);
 
