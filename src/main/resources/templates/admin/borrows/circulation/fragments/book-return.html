@@ -3,160 +3,152 @@
 <body>
 
 <th:block th:fragment="returnBookHeaderActions">
-    <div class="return-header-actions">
-        <button type="button"
-                class="btn btn--outline btn--sm"
-                id="resetReturnBookButton"
-                disabled>
-            선택 해제
-        </button>
+    <button type="button"
+            class="btn btn--outline btn--sm"
+            id="resetReturnBookButton"
+            disabled>
+        선택 해제
+    </button>
 
-        <button type="button"
-                class="btn btn--primary btn--sm"
-                id="confirmReturnBookButton"
-                disabled>
-            반납 확인
-        </button>
-    </div>
+    <button type="button"
+            class="btn btn--primary btn--sm"
+            id="confirmReturnBookButton"
+            disabled>
+        반납 확인
+    </button>
 </th:block>
 
 <th:block th:fragment="bookReturnPanel"
           th:with="TABLE_MODE_AJAX='ajax'">
 
-    <section class="panel-layout"
+    <section class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height"
              id="bookReturnModePanel"
              th:attr="data-fragment-url=@{/admin/members/{memberId}/borrows/list(memberId=${memberId})}">
 
-        <div class="panel-layout__body">
-            <section class="table-layout table-layout--reserve-space">
+        <th:block th:replace="~{common/table-layout :: tableHeader(
+            title='반납 도서 목록',
+            caption='회원의 반납 대상 도서를 선택해 반납 처리할 수 있습니다.',
+            actions=~{::returnBookHeaderActions}
+        )}"></th:block>
 
-                <th:block th:replace="~{common/table-layout :: tableHeader(
-                    title='반납 도서 목록',
-                    caption='회원의 반납 대상 도서를 선택해 반납 처리할 수 있습니다.',
-                    actions=~{::returnBookHeaderActions}
-                )}"></th:block>
+        <th:block th:replace="~{common/table-layout :: tableToolbar(
+            searchMode=${TABLE_MODE_AJAX}
+        )}"></th:block>
 
-                <th:block th:replace="~{common/table-layout :: tableToolbar(
-                    searchMode=${TABLE_MODE_AJAX}
-                )}"></th:block>
+        <div class="table-layout__body">
+            <table class="table-layout__table return-table">
 
-                <div class="table-layout__body">
-                    <table class="table-layout__table return-table">
+                <thead class="table-layout__thead">
+                <tr class="table-layout__row table-layout__row--head">
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--checkbox">
+                        <span class="table-layout__text"></span>
+                    </th>
 
-                        <thead class="table-layout__thead">
-                        <tr class="table-layout__row table-layout__row--head">
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading table-layout__cell--checkbox">
-                                <span class="table-layout__text"></span>
-                            </th>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">대출 ID</span>
+                    </th>
 
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                                <span class="table-layout__text">대출 ID</span>
-                            </th>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">재고 ID</span>
+                    </th>
 
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                                <span class="table-layout__text">재고 ID</span>
-                            </th>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
+                        <span class="table-layout__text">도서명</span>
+                    </th>
 
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
-                                <span class="table-layout__text">도서명</span>
-                            </th>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">시작일</span>
+                    </th>
 
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                                <span class="table-layout__text">시작일</span>
-                            </th>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">반납 예정일</span>
+                    </th>
 
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                                <span class="table-layout__text">반납 예정일</span>
-                            </th>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">상태</span>
+                    </th>
+                </tr>
+                </thead>
 
-                            <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                                <span class="table-layout__text">상태</span>
-                            </th>
-                        </tr>
-                        </thead>
+                <tbody class="table-layout__tbody" id="returnBookList">
+                <tr th:each="borrow : ${content}"
+                    class="table-layout__row table-layout__row--clickable return-table__row"
+                    data-role="select-return-book"
+                    role="button"
+                    tabindex="0"
+                    th:attr="data-borrow-record-id=${borrow.borrowRecordId}">
 
-                        <tbody class="table-layout__tbody" id="returnBookList">
-                        <tr th:each="borrow : ${content}"
-                            class="table-layout__row table-layout__row--clickable return-table__row"
-                            data-role="select-return-book"
-                            role="button"
-                            tabindex="0"
-                            th:attr="data-borrow-record-id=${borrow.borrowRecordId}">
+                    <td class="table-layout__cell table-layout__cell--checkbox">
+                        <input type="checkbox"
+                               class="return-table__checkbox"
+                               data-role="return-book-checkbox"
+                               tabindex="-1"
+                               th:value="${borrow.borrowRecordId}"
+                               th:attr="aria-label=${borrow.bookTitle + ' 반납 선택'}">
+                    </td>
 
-                            <td class="table-layout__cell table-layout__cell--leading table-layout__cell--checkbox">
-                                <input type="checkbox"
-                                       class="return-table__checkbox"
-                                       data-role="return-book-checkbox"
-                                       tabindex="-1"
-                                       aria-hidden="true"
-                                       th:value="${borrow.borrowRecordId}"
-                                       th:attr="aria-label=${borrow.bookTitle + ' 반납 선택'}">
-                            </td>
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span class="table-layout__text"
+                              th:text="${borrow.borrowRecordId}">
+                            101
+                        </span>
+                    </td>
 
-                            <td class="table-layout__cell table-layout__cell--center-start">
-                                <span class="table-layout__text"
-                                      th:text="${borrow.borrowRecordId}">
-                                    101
-                                </span>
-                            </td>
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span class="table-layout__text"
+                              th:text="${borrow.bookCopyId}">
+                            1001
+                        </span>
+                    </td>
 
-                            <td class="table-layout__cell table-layout__cell--center-start">
-                                <span class="table-layout__text"
-                                      th:text="${borrow.bookCopyId}">
-                                    1001
-                                </span>
-                            </td>
+                    <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
+                        <span class="table-layout__text"
+                              th:text="${borrow.bookTitle}">
+                            도서명
+                        </span>
+                    </td>
 
-                            <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
-                                <span class="table-layout__text"
-                                      th:text="${borrow.bookTitle}">
-                                    도서명
-                                </span>
-                            </td>
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span class="table-layout__text"
+                              th:text="${borrow.borrowedAt != null ? #temporals.format(borrow.borrowedAt, 'yyyy-MM-dd') : '-'}">
+                            2026-05-21
+                        </span>
+                    </td>
 
-                            <td class="table-layout__cell table-layout__cell--center-start">
-                                <span class="table-layout__text"
-                                      th:text="${borrow.borrowedAt != null ? #temporals.format(borrow.borrowedAt, 'yyyy-MM-dd') : '-'}">
-                                    2026-05-21
-                                </span>
-                            </td>
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span class="table-layout__text"
+                              th:text="${borrow.dueAt != null ? #temporals.format(borrow.dueAt, 'yyyy-MM-dd') : '-'}">
+                            2026-05-28
+                        </span>
+                    </td>
 
-                            <td class="table-layout__cell table-layout__cell--center-start">
-                                <span class="table-layout__text"
-                                      th:text="${borrow.dueAt != null ? #temporals.format(borrow.dueAt, 'yyyy-MM-dd') : '-'}">
-                                    2026-05-28
-                                </span>
-                            </td>
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span class="status-badge"
+                              th:classappend="${borrow.borrowStatus == null}
+                                    ? ' status-badge--default'
+                                    : (${borrow.borrowStatus.value.name() == 'OVERDUE'}
+                                        ? ' status-badge--overdue'
+                                        : ' status-badge--borrowed')"
+                              th:text="${borrow.borrowStatusLabel != null ? borrow.borrowStatusLabel : '-'}">
+                            진행 중
+                        </span>
+                    </td>
+                </tr>
 
-                            <td class="table-layout__cell table-layout__cell--center-start">
-                                <span class="status-badge"
-                                      th:classappend="${borrow.borrowStatus != null and borrow.borrowStatus.value.name() == 'OVERDUE'}
-                                            ? ' status-badge--overdue'
-                                            : ' status-badge--borrowed'"
-                                      th:text="${borrow.borrowStatusLabel != null ? borrow.borrowStatusLabel : '-'}">
-                                    진행 중
-                                </span>
-                            </td>
-                        </tr>
+                <tr class="table-layout__row table-layout__row--empty"
+                    th:if="${content == null or #lists.isEmpty(content)}">
+                    <td class="table-layout__cell table-layout__cell--empty">
+                        반납할 도서가 없습니다.
+                    </td>
+                </tr>
+                </tbody>
 
-                        <tr class="table-layout__row table-layout__row--empty"
-                            th:if="${content == null or #lists.isEmpty(content)}">
-                            <td class="table-layout__cell table-layout__cell--empty"
-                                colspan="7">
-                                반납할 도서가 없습니다.
-                            </td>
-                        </tr>
-                        </tbody>
-
-                    </table>
-                </div>
-
-                <th:block th:replace="~{common/table-layout :: tablePagination(
-                    paginationMode=${TABLE_MODE_AJAX}
-                )}"></th:block>
-
-            </section>
+            </table>
         </div>
+
+        <th:block th:replace="~{common/table-layout :: tablePagination(
+            paginationMode=${TABLE_MODE_AJAX}
+        )}"></th:block>
 
     </section>
 

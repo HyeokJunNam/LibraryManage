@@ -1,10 +1,95 @@
 /* =========================
+   PANEL HOST
+========================= */
+
+/*
+   panel-host
+   = panel-layout을 교체해서 끼우는 슬롯.
+
+   주의:
+   panel-host 자체는 시각적 패널이 아니다.
+   border, radius, shadow를 가지지 않는다.
+*/
+.panel-host {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-host__content {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/*
+   교체 슬롯 안에 들어오는 완성된 패널의
+   가로 overflow를 방지한다.
+
+   높이를 강제로 꽉 채우는 flex: 1은 기본값으로 두지 않는다.
+   필요할 때만 별도 modifier로 확장한다.
+*/
+.panel-host__content > .panel-layout {
+    min-width: 0;
+}
+
+
+/* =========================
    PANEL LAYOUT
 ========================= */
 
+/*
+   panel-layout
+   = 실제로 화면에 보이는 패널 외곽.
+
+   공통 높이 계약:
+   - header section = 110px
+   - control section = 80px
+     ex) toolbar, pagination, footer, action bar
+
+   이 값은 테이블 전용이 아니다.
+   모든 패널 카드가 공유하는 기준이다.
+*/
 .panel-layout {
+    --panel-header-section-height: 110px;
+    --panel-control-section-height: 80px;
+
+    /*
+       일반 패널 content 기준.
+       테이블이 아닌 idle/member 패널에서 사용한다.
+    */
+    --panel-content-min-height: 600px;
+
+    /*
+       테이블 패널의 table section 기준.
+       table-layout은 이 값을 상속해서 사용한다.
+    */
+    --panel-table-head-row-height: 45px;
+    --panel-table-body-row-height: 57px;
+    --panel-visible-rows: 5;
+
+    --panel-table-body-section-height: calc(
+            var(--panel-table-body-row-height) * var(--panel-visible-rows)
+    );
+
+    --panel-table-section-height: calc(
+            var(--panel-table-head-row-height) + var(--panel-table-body-section-height)
+    );
+
+    /*
+       table + pagination을 하나의 content section으로 볼 때의 기준.
+       table section 330px + pagination/control section 80px = 410px
+    */
+    --panel-table-content-section-height: calc(
+            var(--panel-table-section-height) + var(--panel-control-section-height)
+    );
+
     min-width: 0;
-    min-height: 600px;
+    min-height: 0;
 
     display: flex;
     flex-direction: column;
@@ -16,6 +101,20 @@
     box-shadow: var(--shadow);
 }
 
+/*
+   border 안쪽 전체 콘텐츠 영역.
+
+   일반 패널은 이 영역이 내부 기준 높이를 가진다.
+   panel-layout의 border는 자연스럽게 바깥에 붙는다.
+*/
+.panel-layout__content {
+    min-width: 0;
+    min-height: var(--panel-content-min-height);
+
+    display: flex;
+    flex-direction: column;
+}
+
 .panel-layout__body {
     flex: 1;
     min-width: 0;
@@ -25,7 +124,87 @@
     flex-direction: column;
 }
 
-.panel-layout__body > .table-layout {
+/*
+   완전 빈 패널의 중앙 정렬.
+   높이 기준은 panel-layout__content가 담당한다.
+*/
+.panel-layout__empty {
     flex: 1;
-    min-width: 0;
+    min-height: var(--panel-table-body-section-height);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 24px;
+
+    color: var(--gray-600);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
+    text-align: center;
+}
+
+/*
+   헤더는 있지만 본문 내용은 아직 없는 패널.
+   높이 기준은 panel-layout__content가 담당하고,
+   이 요소는 남은 영역에서 중앙 정렬만 담당한다.
+*/
+.panel-layout__body-empty {
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 24px;
+
+    color: var(--gray-600);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.6;
+    text-align: center;
+}
+
+
+/* =========================
+   PANEL FIXED HEIGHT
+========================= */
+
+/*
+   패널 카드 공통 fixed-height 규칙.
+
+   - header section = 110px
+   - control section = 80px
+
+   주의:
+   이 규칙은 table-layout 전용이 아니다.
+   일반 패널, 테이블 패널 모두 같은 기준을 공유한다.
+*/
+.panel-layout--fixed-height .panel-layout__header,
+.panel-layout--fixed-height .table-layout__header {
+    min-height: var(--panel-header-section-height);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+}
+
+.panel-layout--fixed-height .panel-layout__control,
+.panel-layout--fixed-height .panel-layout__footer,
+.panel-layout--fixed-height .table-layout__toolbar,
+.panel-layout--fixed-height .table-layout__pagination,
+.panel-layout--fixed-height .table-layout__footer {
+    min-height: var(--panel-control-section-height);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+}
+
+.panel-layout--fixed-height .panel-layout__footer,
+.panel-layout--fixed-height .table-layout__footer,
+.panel-layout--fixed-height .table-layout__pagination {
+    justify-content: center;
 }

@@ -19,40 +19,54 @@
             eyebrow='BORROW STATUS',
             title='대출 / 연체 목록',
             desc='전체 대출 이력과 연체 현황을 한 화면에서 확인합니다.'
-            )}">
+        )}">
         </th:block>
 
         <section class="borrow-page">
             <div class="borrow-page__content">
 
-                <section class="borrow-page__section borrow-page__section--overdue">
-                    <div id="overdueListPanel"
-                         class="panel-layout borrow-page__panel"
-                         th:attr="data-fragment-url=@{/admin/borrows/overdue}">
-                        <div class="panel-layout__body">
-                            <div class="borrow-page__loading">연체 목록을 불러오는 중입니다.</div>
+                <section class="borrow-page__section">
+                    <section
+                            id="overdueListPanel"
+                            class="panel-layout panel-layout--fixed-height"
+                            th:attr="data-fragment-url=@{/admin/borrows/overdue}">
+
+                        <div class="panel-layout__content">
+                            <div class="panel-layout__body">
+                                <div class="panel-layout__empty borrow-page__loading">
+                                    연체 목록을 불러오는 중입니다.
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                    </section>
                 </section>
 
                 <section class="borrow-page__section">
-                    <div id="borrowListPanel"
-                         class="panel-layout borrow-page__panel"
-                         th:attr="data-fragment-url=@{/admin/borrows/list}">
-                        <div class="panel-layout__body">
-                            <div class="borrow-page__loading">대출 목록을 불러오는 중입니다.</div>
+                    <section
+                            id="borrowListPanel"
+                            class="panel-layout panel-layout--fixed-height"
+                            th:attr="data-fragment-url=@{/admin/borrows/list}">
+
+                        <div class="panel-layout__content">
+                            <div class="panel-layout__body">
+                                <div class="panel-layout__empty borrow-page__loading">
+                                    대출 목록을 불러오는 중입니다.
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                    </section>
                 </section>
 
             </div>
         </section>
 
     </main>
-
 </div>
 
 <th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
+
 <script type="module" th:src="@{/js/admin/borrows/borrow-status/borrow-status.js}"></script>
 
 </body>

@@ -14,33 +14,12 @@
 
        예외적으로 row 개수만큼만 높이를 쓰고 싶으면
        .table-layout--auto-height 를 함께 사용한다.
+
+       row는 고정 height가 아니라 min-height 기준이다.
+       내용이 많아지면 row는 자연스럽게 커질 수 있다.
     */
-    --table-row-height: 56px;
-    --table-visible-rows: 5;
-
-    /*
-       페이지네이션 버튼이 없어도
-       버튼이 있을 때와 동일한 영역 높이를 유지한다.
-
-       계산 기준:
-       padding-top 18px + button height 44px + padding-bottom 18px = 80px
-    */
-    --table-pagination-height: 80px;
-}
-
-/*
-   기존 호환용.
-   과거 HTML에 table-layout--reserve-space가 남아 있어도
-   동작 차이가 생기지 않도록 별도 책임은 주지 않는다.
-*/
-.table-layout--reserve-space {
-}
-
-/*
-   예외 modifier:
-   row 개수만큼만 높이를 사용한다.
-*/
-.table-layout--auto-height {
+    --table-row-min-height: var(--panel-table-body-row-height, 57px);
+    --table-visible-rows: var(--panel-visible-rows, 5);
 }
 
 /* =========================
@@ -232,7 +211,7 @@
 }
 
 .table-layout__tbody {
-    min-height: calc(var(--table-row-height) * var(--table-visible-rows));
+    min-height: calc(var(--table-row-min-height) * var(--table-visible-rows));
 }
 
 .table-layout--auto-height .table-layout__tbody {
@@ -288,7 +267,7 @@
 ========================= */
 
 .table-layout__tbody .table-layout__row {
-    min-height: var(--table-row-height);
+    min-height: var(--table-row-min-height);
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -416,7 +395,7 @@
     padding: 0;
     border-bottom: none;
     background: var(--white);
-    min-height: calc(var(--table-row-height) * var(--table-visible-rows));
+    min-height: calc(var(--table-row-min-height) * var(--table-visible-rows));
 }
 
 .table-layout__tbody .table-layout__row--empty,
@@ -429,7 +408,7 @@
     align-items: center;
     justify-content: center;
 
-    min-height: calc(var(--table-row-height) * var(--table-visible-rows));
+    min-height: calc(var(--table-row-min-height) * var(--table-visible-rows));
     padding: 0 24px;
 
     text-align: center;
@@ -441,23 +420,15 @@
 }
 
 /*
-   empty 상태에서는 pagination 영역까지 포함한 전체 높이 기준으로
-   안내 문구가 중앙에 보이도록 시각 보정한다.
-*/
-.table-layout:not(.table-layout--auto-height) .table-layout__cell--empty {
-    transform: translateY(calc(var(--table-pagination-height) / 2));
-}
-
-/*
    예외: row 개수만큼만 높이를 사용하는 테이블.
    empty 상태에서는 1개 row 높이만 확보한다.
 */
 .table-layout--auto-height .table-layout__row--empty {
-    min-height: var(--table-row-height);
+    min-height: var(--table-row-min-height);
 }
 
 .table-layout--auto-height .table-layout__cell--empty {
-    min-height: var(--table-row-height);
+    min-height: var(--table-row-min-height);
     padding: 0 24px;
     transform: none;
 }
@@ -468,22 +439,21 @@
 
 .table-layout__pagination {
     flex-shrink: 0;
-    min-height: var(--table-pagination-height);
     box-sizing: border-box;
 
-    padding: 18px;
+    padding: 12px;
     background: var(--white);
     border-top: 1px solid var(--gray-100);
 }
 
 /*
-   AJAX placeholder처럼 아직 pagination을 렌더링하지 않은 상태.
-   빈 상태는 내부 DOM 구조로 추측하지 않고 modifier로 명시한다.
+   데이터가 없어도 pagination 영역은 항상 보인다.
 
-   display: none을 쓰면 페이지네이션 공간이 사라지므로 사용하지 않는다.
+   empty pagination은 숨김 상태가 아니라,
+   페이지 이동이 불가능한 비활성 상태를 의미한다.
 */
 .table-layout__pagination--empty {
-    visibility: hidden;
+    visibility: visible;
     pointer-events: none;
 }
 
@@ -563,7 +533,7 @@
 
 .table-layout__footer {
     flex-shrink: 0;
-    padding: 18px 28px 22px;
+    padding: 12px;
 
     background: var(--white);
     border-top: 1px solid var(--gray-100);
@@ -580,4 +550,58 @@
 
 .table-layout__footer-actions:empty {
     display: none;
+}
+
+/* =========================
+   TABLE FIXED HEIGHT
+========================= */
+
+/*
+   table-layout--fixed-height
+   = panel-layout--fixed-height 규칙을 테이블 구조에 적용하는 modifier.
+
+   주의:
+   header/control 높이 기준은 panel-layout이 소유한다.
+   table-layout은 테이블 내부 영역만 계산한다.
+*/
+.table-layout--fixed-height {
+    --table-head-row-height: var(--panel-table-head-row-height, 45px);
+    --table-body-row-height: var(--panel-table-body-row-height, 57px);
+    --table-visible-rows: var(--panel-visible-rows, 5);
+
+    --table-body-section-height: calc(
+            var(--table-body-row-height) * var(--table-visible-rows)
+    );
+
+    --table-section-height: calc(
+            var(--table-head-row-height) + var(--table-body-section-height)
+    );
+
+    --table-row-min-height: var(--table-body-row-height);
+}
+
+.table-layout--fixed-height .table-layout__body {
+    min-height: var(--table-section-height);
+    box-sizing: border-box;
+}
+
+.table-layout--fixed-height .table-layout__row--head {
+    min-height: var(--table-head-row-height);
+    box-sizing: border-box;
+
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.table-layout--fixed-height .table-layout__tbody {
+    min-height: var(--table-body-section-height);
+}
+
+.table-layout--fixed-height .table-layout__tbody .table-layout__row {
+    min-height: var(--table-body-row-height);
+}
+
+.table-layout--fixed-height .table-layout__row--empty,
+.table-layout--fixed-height .table-layout__cell--empty {
+    min-height: var(--table-body-section-height);
 }

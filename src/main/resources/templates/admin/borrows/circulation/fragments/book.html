@@ -3,18 +3,31 @@
 <body>
 <th:block th:fragment="bookPanel">
 
-    <section class="panel-layout book-panel"
+    <section class="panel-host"
              data-mode="idle"
              id="bookPanel">
 
-        <div class="panel-layout__body book-panel__body"
+        <div class="panel-host__content"
              id="bookPanelContent">
 
-            <section class="book-empty-state"
-                     id="bookPanelEmpty">
-                <div class="book-empty-state__icon">📚</div>
-                <h4 class="book-empty-state__title">대출 / 반납</h4>
-                <p class="book-empty-state__desc">회원을 선택한 뒤 처리할 버튼을 눌러주세요.</p>
+            <section class="panel-layout panel-layout--fixed-height"
+                     id="bookPanelIdle">
+
+                <div class="panel-layout__content">
+
+                    <div class="panel-layout__body">
+
+                        <section class="panel-layout__empty book-empty-state"
+                                 id="bookPanelEmpty">
+                            <div class="book-empty-state__icon">📚</div>
+                            <h4 class="book-empty-state__title">대출 / 반납</h4>
+                            <p class="book-empty-state__desc">회원을 선택한 뒤 처리할 버튼을 눌러주세요.</p>
+                        </section>
+
+                    </div>
+
+                </div>
+
             </section>
 
         </div>

@@ -1,60 +1,21 @@
 /* =========================
-   MEMBER TABLE LAYOUT
+   MEMBER TABLE COLUMNS
 ========================= */
 
+/*
+   회원 목록 테이블 전용 컬럼 비율만 정의한다.
+   정렬, row 높이, header, body, pagination은 table-layout 공용 CSS를 사용한다.
+*/
 .members-table-layout .table-layout__table {
-    min-width: 760px;
-    --table-columns: 1fr 1.6fr 1.7fr 1.2fr 1.6fr;
-}
+    min-width: 900px;
 
-/* 1열: 예비열 */
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(1) {
-    justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-}
-
-/* 2열: 이름 */
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(2) {
-    justify-content: center;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(2) .table-layout__text {
-    display: block;
-    text-align: center;
-}
-
-/* 3열: 이메일 */
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(3) {
-    justify-content: center;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(3) .table-layout__text {
-    display: block;
-    width: min(100%, 260px);
-    text-align: center;
-}
-
-/* 4열 이후: 가운데 */
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(4),
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(5),
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(6) {
-    justify-content: center;
-    text-align: center;
-}
-
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(4) .table-layout__text,
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(5) .table-layout__text,
-.members-table-layout .table-layout__row .table-layout__cell:nth-child(6) .table-layout__text {
-    display: inline-block;
-    width: auto;
-    max-width: 100%;
-    text-align: center;
+    --table-leading-column: 56px;
+    --table-columns:
+            minmax(96px, 1fr)       /* 이름 */
+            minmax(180px, 1.7fr)    /* 이메일 */
+            minmax(120px, 1.2fr)    /* 연락처 */
+            minmax(96px, 1fr)       /* 권한 */
+            minmax(150px, 1.4fr);   /* 가입일 */
 }
 
 /* =========================

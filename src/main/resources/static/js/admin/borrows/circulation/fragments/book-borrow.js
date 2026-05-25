@@ -340,7 +340,10 @@ export function createBorrowBookProcess({
 
         setHidden(borrowBookEmptyRow, !empty);
 
-        if (!empty) {
+        if (empty) {
+            pageState.page = 0;
+            renderPagination(1);
+        } else {
             renderRows(books);
         }
 

@@ -34,7 +34,15 @@ function initBookCopiesArea() {
     }
 
     function getCopiesCard() {
-        return getCopiesPanel()?.querySelector(".book-detail-copies-card") || null;
+        const panel = getCopiesPanel();
+
+        if (!panel) {
+            return null;
+        }
+
+        return panel.classList.contains("book-detail-copies-card")
+            ? panel
+            : panel.querySelector(".book-detail-copies-card");
     }
 
     function getRowsContainer() {
@@ -42,7 +50,7 @@ function initBookCopiesArea() {
     }
 
     function getPaginationArea() {
-        return bookCopiesArea.querySelector(".table-layout__pagination");
+        return getCopiesCard()?.querySelector(".table-layout__pagination") || null;
     }
 
     function getPaginationNav() {
@@ -99,23 +107,13 @@ function initBookCopiesArea() {
 
     function getPageStartIndex() {
         const rowsContainer = getRowsContainer();
-        if (!rowsContainer) {
-            return 0;
+        const explicitPageStartIndex = Number(rowsContainer?.dataset.pageStartIndex);
+
+        if (Number.isFinite(explicitPageStartIndex) && explicitPageStartIndex >= 0) {
+            return explicitPageStartIndex;
         }
 
-        const pageStartIndex = Number(rowsContainer.dataset.pageStartIndex);
-        return Number.isFinite(pageStartIndex) && pageStartIndex >= 0
-            ? pageStartIndex
-            : 0;
-    }
-
-    function getColumnCount() {
-        const rowsContainer = getRowsContainer();
-        const columnCount = Number(rowsContainer?.dataset.columnCount);
-
-        return Number.isFinite(columnCount) && columnCount > 0
-            ? columnCount
-            : 1;
+        return getCurrentPage() * getCurrentPageSize();
     }
 
     function getBookCopyId(row) {
@@ -180,7 +178,7 @@ function initBookCopiesArea() {
     }
 
     function syncAllStatusSelectColors(root = bookCopiesArea) {
-        root.querySelectorAll(".book-detail-copy-status-edit").forEach(select => {
+        root?.querySelectorAll(".book-detail-copy-status-edit").forEach(select => {
             syncStatusSelectColor(select);
         });
     }
@@ -253,11 +251,6 @@ function initBookCopiesArea() {
         if (!row) {
             console.error("신규 재고 빈 행 템플릿 안에서 .table-layout__row를 찾을 수 없습니다.");
             return null;
-        }
-
-        const emptyCell = row.querySelector(".table-layout__cell--empty");
-        if (emptyCell) {
-            emptyCell.colSpan = getColumnCount();
         }
 
         return row;
@@ -1058,9 +1051,7 @@ function initBookCopiesArea() {
             };
         }
 
-        const emptyCreateLocationCopy = createItems.find(copy => {
-            return copy.location.length === 0;
-        });
+        const emptyCreateLocationCopy = createItems.find(copy => copy.location.length === 0);
         if (emptyCreateLocationCopy) {
             return {
                 valid: false,
@@ -1086,9 +1077,7 @@ function initBookCopiesArea() {
             };
         }
 
-        const emptyUpdateLocationCopy = updateItems.find(copy => {
-            return copy.location.length === 0;
-        });
+        const emptyUpdateLocationCopy = updateItems.find(copy => copy.location.length === 0);
         if (emptyUpdateLocationCopy) {
             return {
                 valid: false,

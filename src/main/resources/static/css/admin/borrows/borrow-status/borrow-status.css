@@ -1,6 +1,32 @@
 /* ==========================================================================
-   BORROW TABLE LAYOUT
-   - 공용 table-layout 기준
+   BORROW STATUS PAGE
+   - 화면 배치와 테이블 컬럼 비율만 담당
+   - 공용 panel-layout / table-layout 내부 구조는 재정의하지 않는다
+   ========================================================================== */
+
+.borrow-page {
+    min-width: 0;
+}
+
+.borrow-page__content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.borrow-page__section {
+    min-width: 0;
+}
+
+.borrow-page__loading {
+    flex: 1;
+}
+
+/* ==========================================================================
+   BORROW TABLE COLUMNS
+   - 컬럼 비율만 화면별로 지정한다
+   - No 컬럼은 table-layout의 leading column이 담당한다
    ========================================================================== */
 
 .borrow-table-layout {
@@ -10,84 +36,33 @@
 
 .borrow-table-layout .table-layout__table {
     min-width: 1280px;
+    --table-leading-column: 56px;
 }
 
-/* 대출 목록 Grid - 10 columns */
+/* 대출 목록: No 제외 9 columns */
 .borrow-table-layout--list .table-layout__table {
     --table-columns:
-            0.85fr   /* No */
-            0.95fr   /* 대출 ID */
-            1.05fr   /* 재고 ID */
-            2.40fr   /* 도서명 */
-            1.00fr   /* 위치 */
-            1.05fr   /* 회원명 */
-            1.15fr   /* 상태 */
-            1.20fr   /* 대출일 */
-            1.20fr   /* 반납 예정일 */
-            1.20fr;  /* 반납일 */
+            minmax(72px, 0.85fr)    /* 대출 ID */
+            minmax(72px, 0.95fr)    /* 재고 ID */
+            minmax(0, 2.4fr)        /* 도서명 */
+            minmax(80px, 1fr)       /* 위치 */
+            minmax(80px, 1fr)       /* 회원명 */
+            minmax(88px, 1fr)       /* 상태 */
+            minmax(96px, 1fr)       /* 대출일 */
+            minmax(96px, 1fr)       /* 반납 예정일 */
+            minmax(96px, 1fr);      /* 반납일 */
 }
 
-/* 연체 목록 Grid - 10 columns */
+/* 연체 목록: No 제외 9 columns */
 .borrow-table-layout--overdue .table-layout__table {
     --table-columns:
-            0.85fr   /* No */
-            0.95fr   /* 대출 ID */
-            1.05fr   /* 재고 ID */
-            2.40fr   /* 도서명 */
-            1.00fr   /* 위치 */
-            1.05fr   /* 회원명 */
-            1.20fr   /* 대출일 */
-            1.20fr   /* 반납 예정일 */
-            1.00fr   /* 연체일 */
-            1.00fr;  /* 상태 */
-}
-
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(1) {
-    justify-content: center;
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-}
-
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(4) {
-    justify-content: flex-start;
-    box-sizing: border-box;
-    text-align: left;
-}
-
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(4) .table-layout__text {
-    display: block;
-    width: min(100%, 260px);
-    text-align: left;
-}
-
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(2),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(3),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(5),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(6),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(7),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(8),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(9),
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(10) {
-    justify-content: center;
-    text-align: center;
-}
-
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(2) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(3) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(5) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(6) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(7) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(8) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(9) .table-layout__text,
-.borrow-table-layout .table-layout__row .table-layout__cell:nth-child(10) .table-layout__text {
-    display: inline-block;
-    width: auto;
-    max-width: 100%;
-    text-align: center;
-}
-
-.borrow-table-layout .table-layout__cell--danger {
-    color: var(--color-danger);
-    font-weight: 800;
+            minmax(72px, 0.85fr)    /* 대출 ID */
+            minmax(72px, 0.95fr)    /* 재고 ID */
+            minmax(0, 2.4fr)        /* 도서명 */
+            minmax(80px, 1fr)       /* 위치 */
+            minmax(80px, 1fr)       /* 회원명 */
+            minmax(96px, 1fr)       /* 대출일 */
+            minmax(96px, 1fr)       /* 반납 예정일 */
+            minmax(72px, 0.8fr)     /* 연체일 */
+            minmax(80px, 0.9fr);    /* 상태 */
 }

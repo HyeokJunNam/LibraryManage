@@ -17,7 +17,7 @@
             eyebrow='BOOK MANAGEMENT',
             title='도서 목록 관리',
             desc='전체 도서를 조회하고 도서 정보를 확인할 수 있습니다.'
-            )}">
+        )}">
         </th:block>
 
         <section class="statistics-grid">
@@ -58,98 +58,100 @@
             </article>
         </section>
 
-        <section class="panel-layout">
-            <div class="panel-layout__body">
-                <section class="books-table-layout table-layout">
+        <section class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height books-table-layout">
 
-                    <th:block th:replace="~{common/table-layout :: tableHeader(
+            <th:block th:replace="~{common/table-layout :: tableHeader(
                 title='도서 목록',
                 caption='등록된 도서를 검색하고, 선택한 도서의 상세 정보와 재고 현황을 확인할 수 있습니다.',
                 actions=null
             )}"></th:block>
 
-                    <th:block th:replace="~{common/table-layout :: tableToolbar(searchMode='server')}"></th:block>
+            <th:block th:replace="~{common/table-layout :: tableToolbar(searchMode='server')}"></th:block>
 
-                    <div class="table-layout__body">
-                        <table class="table-layout__table">
-                            <thead class="table-layout__thead">
-                            <tr class="table-layout__row table-layout__row--head">
-                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
-                                    <span class="table-layout__text"></span>
-                                </th>
-                                <th class="table-layout__cell table-layout__cell--head">
-                                    <span class="table-layout__text">도서명</span>
-                                </th>
-                                <th class="table-layout__cell table-layout__cell--head">
-                                    <span class="table-layout__text">ISBN</span>
-                                </th>
-                                <th class="table-layout__cell table-layout__cell--head">
-                                    <span class="table-layout__text">저자</span>
-                                </th>
-                                <th class="table-layout__cell table-layout__cell--head">
-                                    <span class="table-layout__text">출판사</span>
-                                </th>
-                            </tr>
-                            </thead>
+            <div class="table-layout__body">
+                <table class="table-layout__table">
+                    <thead class="table-layout__thead">
+                    <tr class="table-layout__row table-layout__row--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                            <span class="table-layout__text"></span>
+                        </th>
 
-                            <tbody class="table-layout__tbody">
-                            <tr
-                                    class="table-layout__row table-layout__row--clickable"
-                                    th:each="row : ${content}"
-                                    th:attr="data-book-url=@{/admin/books/{id}(id=${row.id})},
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
+                            <span class="table-layout__text">도서명</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">ISBN</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">저자</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">출판사</span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="table-layout__tbody">
+                    <tr
+                            class="table-layout__row table-layout__row--clickable"
+                            th:each="row : ${content}"
+                            th:attr="data-book-url=@{/admin/books/{id}(id=${row.id})},
                                      tabindex=0,
                                      role='link',
                                      aria-label=${row.title + ' 상세 정보 보기'}">
 
-                                <td class="table-layout__cell table-layout__cell--leading"></td>
+                        <td class="table-layout__cell table-layout__cell--leading"></td>
 
-                                <td class="table-layout__cell table-layout__cell--primary">
+                        <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
                             <span
                                     class="table-layout__text"
                                     th:text="${row.title}">
+                                도서명
                             </span>
-                                </td>
+                        </td>
 
-                                <td class="table-layout__cell">
+                        <td class="table-layout__cell table-layout__cell--center-start">
                             <span
                                     class="table-layout__text"
                                     th:text="${row.isbn != null ? row.isbn : '-'}">
+                                ISBN
                             </span>
-                                </td>
+                        </td>
 
-                                <td class="table-layout__cell">
+                        <td class="table-layout__cell table-layout__cell--center-start">
                             <span
                                     class="table-layout__text"
                                     th:text="${row.author != null ? row.author : '-'}">
+                                저자
                             </span>
-                                </td>
+                        </td>
 
-                                <td class="table-layout__cell">
+                        <td class="table-layout__cell table-layout__cell--center-start">
                             <span
                                     class="table-layout__text"
                                     th:text="${row.publisher != null ? row.publisher : '-'}">
+                                출판사
                             </span>
-                                </td>
-                            </tr>
+                        </td>
+                    </tr>
 
-                            <tr
-                                    class="table-layout__row table-layout__row--empty"
-                                    th:if="${content == null or #lists.isEmpty(content)}">
-                                <td
-                                        class="table-layout__cell table-layout__cell--empty"
-                                        colspan="5">
-                                    조회 된 데이터가 없습니다.
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <tr
+                            class="table-layout__row table-layout__row--empty"
+                            th:if="${content == null or #lists.isEmpty(content)}">
+                        <td class="table-layout__cell table-layout__cell--empty">
+                            조회 된 데이터가 없습니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                    <th:block th:replace="~{common/table-layout :: tablePagination(
+            <th:block th:replace="~{common/table-layout :: tablePagination(
                 paginationMode='server'
             )}"></th:block>
-                </section>
-            </div>
         </section>
 
     </main>
