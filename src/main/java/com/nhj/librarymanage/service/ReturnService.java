@@ -25,9 +25,7 @@ public class ReturnService {
             /*if (!isBorrowed(bookItem)) {
                 throw new NotReturnableException(BookErrorCode.BOOK_NOT_RETURNABLE);
             }*/
-
-            BookCopy bookCopy = borrowRecord.getBookCopy();
-            bookCopy.returnBook();
+            borrowRecord.returnBook();
         }
 
 

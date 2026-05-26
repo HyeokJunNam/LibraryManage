@@ -31,7 +31,7 @@ public class MemberResponse {
                     .memberNo(member.getMemberNo())
                     .name(member.getName())
                     .email(member.getEmail())
-                    .phone("010-4582-8903")
+                    .phone(member.getPhoneNumber())
                     .role(member.getRole().name())
                     .createdAt(member.getCreatedAt())
                     .build();
@@ -46,10 +46,30 @@ public class MemberResponse {
 
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class Detail {
 
+    @Builder(access = AccessLevel.PRIVATE)
+    public record Detail (
+            Long id,
+            String loginId,
+            String memberNo,
+            String name,
+            String email,
+            String phone,
+            String role,
+            LocalDateTime createdAt
+    ) {
+        public static Detail from(Member member) {
+            return Detail.builder()
+                    .id(member.getId())
+                    .loginId(member.getLoginId())
+                    .memberNo(member.getMemberNo())
+                    .name(member.getName())
+                    .email(member.getEmail())
+                    .phone(member.getPhoneNumber())
+                    .role(member.getRole().name())
+                    .createdAt(member.getCreatedAt())
+                    .build();
+        }
     }
 
     @Builder(access = AccessLevel.PRIVATE)

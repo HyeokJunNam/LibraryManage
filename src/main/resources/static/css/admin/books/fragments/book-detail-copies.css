@@ -7,11 +7,10 @@
 #bookDetailCopiesCard .table-layout__table {
     min-width: 900px;
 
-    --table-leading-column: 56px;
     --table-columns:
-            minmax(64px, 0.7fr)     /* 재고 ID */
-            minmax(86px, 1fr)       /* 도서 상태 */
-            minmax(120px, 1.5fr)    /* 재고 위치 */
+            minmax(72px, 0.85fr)    /* 재고 ID */
+            minmax(92px, 1fr)       /* 재고 상태 */
+            minmax(100px, 1.2fr)    /* 재고 위치 */
             minmax(92px, 1fr)       /* 등록일 */
             minmax(86px, 1fr)       /* 대출 상태 */
             minmax(86px, 0.9fr);    /* 관리 */
@@ -62,14 +61,13 @@
     opacity: 0.55;
 }
 
-.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-status-view,
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-condition-view,
 .book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-location-view {
     color: var(--gray-400);
     text-decoration: line-through;
 }
 
-.book-detail-copies-table__row--created,
-.table-layout__row--created {
+.book-detail-copies-table__row--created {
     background: rgba(47, 158, 91, 0.02);
 }
 
@@ -80,8 +78,7 @@
     letter-spacing: 0.05em;
 }
 
-.book-detail-copy-row__state,
-.book-detail-copy-row__empty-value {
+.book-detail-copy-row__state {
     color: var(--gray-500);
     font-size: 13px;
     font-weight: 700;
@@ -92,11 +89,11 @@
    ========================================================================== */
 
 .book-detail-copies-add-row {
-    display: none;
     width: calc(100% - 36px);
     height: 46px;
     margin: 16px 18px 0;
 
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;

@@ -1,9 +1,15 @@
 export function createReturnBookProcess({
+                                            root,
                                             onActivateReturnMode,
                                             reloadReturnPanel
                                         } = {}) {
-    // [최적화] 무거운 Map 대신 대출 ID(string)만 저장하는 Set을 사용하여 메모리 및 로직 경량화
     const selectedBorrowIds = new Set();
+
+    let bound = false;
+
+    function getPanel() {
+        return document.getElementById("bookReturnModePanel") || root || null;
+    }
 
     function getElements() {
         return {
@@ -29,7 +35,7 @@ export function createReturnBookProcess({
     }
 
     function isReturnPanelTarget(target) {
-        const panel = document.getElementById("bookReturnModePanel");
+        const panel = getPanel();
         return !!panel && panel.contains(target);
     }
 
@@ -47,7 +53,6 @@ export function createReturnBookProcess({
         setElementDisabled(confirmReturnBookButton, !hasSelection);
     }
 
-    // [추가] AJAX 페이지네이션 후 새 DOM이 그려졌을 때, 기존 선택 상태를 체크박스와 Row에 복원
     function syncRowStatesWithSelection() {
         getReturnRows().forEach((row) => {
             const borrowRecordId = toIdString(row.dataset.borrowRecordId);
@@ -57,6 +62,7 @@ export function createReturnBookProcess({
             const checkbox = row.querySelector('[data-role="return-book-checkbox"]');
 
             row.classList.toggle("is-selected", isSelected);
+
             if (checkbox) {
                 checkbox.checked = isSelected;
             }
@@ -183,55 +189,82 @@ export function createReturnBookProcess({
         });
     }
 
+    function isReturnPanelUpdatedEvent(event) {
+        return event.target?.id === "bookReturnModePanel"
+            || event.detail?.targetId === "bookReturnModePanel";
+    }
+
+    function handleClick(event) {
+        if (!isReturnPanelTarget(event.target)) return;
+
+        const checkbox = event.target.closest('[data-role="return-book-checkbox"]');
+
+        if (checkbox) {
+            event.stopPropagation();
+
+            const row = checkbox.closest('[data-role="select-return-book"]');
+            if (!row) return;
+
+            setReturnBookSelection(row, checkbox.checked);
+            return;
+        }
+
+        if (event.target.id === "resetReturnBookButton") {
+            clearSelectedReturnBooks();
+            return;
+        }
+
+        if (event.target.id === "confirmReturnBookButton") {
+            requestReturn();
+            return;
+        }
+
+        const row = event.target.closest('#returnBookList [data-role="select-return-book"]');
+        if (!row) return;
+
+        toggleReturnBookSelection(row);
+    }
+
+    function handleKeydown(event) {
+        if (!isReturnPanelTarget(event.target)) return;
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        const row = event.target.closest('#returnBookList [data-role="select-return-book"]');
+        if (!row) return;
+
+        event.preventDefault();
+        toggleReturnBookSelection(row);
+    }
+
+    function handleTableLayoutUpdated(event) {
+        if (!isReturnPanelUpdatedEvent(event)) return;
+
+        syncRowStatesWithSelection();
+        updateReturnActionButtons();
+    }
+
     function bindReturnBookEvents() {
-        document.addEventListener("click", (event) => {
-            if (!isReturnPanelTarget(event.target)) return;
+        if (bound) {
+            return;
+        }
 
-            const checkbox = event.target.closest('[data-role="return-book-checkbox"]');
+        document.addEventListener("click", handleClick);
+        document.addEventListener("keydown", handleKeydown);
+        document.addEventListener("table-layout:updated", handleTableLayoutUpdated);
 
-            if (checkbox) {
-                event.stopPropagation();
-                const row = checkbox.closest('[data-role="select-return-book"]');
-                if (!row) return;
+        bound = true;
+    }
 
-                setReturnBookSelection(row, checkbox.checked);
-                return;
-            }
+    function destroy() {
+        if (!bound) {
+            return;
+        }
 
-            if (event.target.id === "resetReturnBookButton") {
-                clearSelectedReturnBooks();
-                return;
-            }
+        document.removeEventListener("click", handleClick);
+        document.removeEventListener("keydown", handleKeydown);
+        document.removeEventListener("table-layout:updated", handleTableLayoutUpdated);
 
-            if (event.target.id === "confirmReturnBookButton") {
-                requestReturn();
-                return;
-            }
-
-            const row = event.target.closest('#returnBookList [data-role="select-return-book"]');
-            if (!row) return;
-
-            toggleReturnBookSelection(row);
-        });
-
-        document.addEventListener("keydown", (event) => {
-            if (!isReturnPanelTarget(event.target)) return;
-            if (event.key !== "Enter" && event.key !== " ") return;
-
-            const row = event.target.closest('#returnBookList [data-role="select-return-book"]');
-            if (!row) return;
-
-            event.preventDefault();
-            toggleReturnBookSelection(row);
-        });
-
-        // [최적화] 페이지 이동 시 무조건 선택 해제(clear)되던 버그 제거.
-        // 새로운 페이지의 DOM에 기존 선택 상태를 복원(sync)하도록 수정하여 다중 페이지 선택 지원.
-        document.addEventListener("table-layout:updated", (event) => {
-            if (event.target?.id !== "bookReturnModePanel") return;
-            syncRowStatesWithSelection();
-            updateReturnActionButtons();
-        });
+        bound = false;
     }
 
     async function activate() {
@@ -247,6 +280,7 @@ export function createReturnBookProcess({
 
     function clear() {
         selectedBorrowIds.clear();
+        syncRowStatesWithSelection();
         updateReturnActionButtons();
     }
 
@@ -256,6 +290,7 @@ export function createReturnBookProcess({
     return {
         activate,
         clear,
-        refresh: syncRowStatesWithSelection // 부모 컨트롤러가 안전하게 호출할 수 있도록 매핑
+        refresh: syncRowStatesWithSelection,
+        destroy
     };
 }

@@ -1,9 +1,9 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.dto.BorrowRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.NotBorrowableException;
 import com.nhj.librarymanage.repository.BookRepository;

@@ -28,10 +28,10 @@
                 </th>
 
                 <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                    <span class="table-layout__text">도서 상태</span>
+                    <span class="table-layout__text">재고 상태</span>
                 </th>
 
-                <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
+                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                     <span class="table-layout__text">재고 위치</span>
                 </th>
 
@@ -54,12 +54,12 @@
                     class="table-layout__tbody">
 
             <tr
-                    th:each="bookCopy, stat : ${bookCopies}"
+                    th:each="bookCopy, stat : ${content}"
                     class="table-layout__row book-detail-copies-table__row"
                     data-row-mode="clean"
                     th:data-book-copy-id="${bookCopy.bookCopyId}"
                     th:data-borrowed="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}"
-                    th:data-original-status="${bookCopy.bookCopyStatus != null ? bookCopy.bookCopyStatus.value : ''}"
+                    th:data-original-condition="${bookCopy.bookCopyCondition != null ? bookCopy.bookCopyCondition.value : ''}"
                     th:data-original-location="${bookCopy.location != null ? bookCopy.location : ''}">
 
                 <td class="table-layout__cell table-layout__cell--leading">
@@ -82,35 +82,35 @@
 
                 <td class="table-layout__cell table-layout__cell--center-start">
                     <span
-                            class="book-detail-copy-status-view status-badge"
-                            th:classappend="${bookCopy.bookCopyStatus != null
-                                           ? ' status-badge--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value)
+                            class="book-detail-copy-condition-view status-badge"
+                            th:classappend="${bookCopy.bookCopyCondition != null
+                                           ? ' status-badge--' + #strings.toLowerCase(bookCopy.bookCopyCondition.value)
                                            : ' status-badge--default'}"
-                            th:text="${(bookCopy.bookCopyStatus != null
-                                    and bookCopy.bookCopyStatus.label != null
-                                    and !#strings.isEmpty(bookCopy.bookCopyStatus.label))
-                                   ? bookCopy.bookCopyStatus.label
+                            th:text="${(bookCopy.bookCopyCondition != null
+                                    and bookCopy.bookCopyCondition.label != null
+                                    and !#strings.isEmpty(bookCopy.bookCopyCondition.label))
+                                   ? bookCopy.bookCopyCondition.label
                                    : '-'}">
-                        상태
+                        재고 상태
                     </span>
 
                     <select
-                            class="book-detail-copy-control book-detail-copy-status-edit is-hidden"
-                            data-field="status"
-                            th:classappend="${bookCopy.bookCopyStatus != null
-                                               ? ' book-detail-copy-status-edit--' + #strings.toLowerCase(bookCopy.bookCopyStatus.value)
+                            class="book-detail-copy-control book-detail-copy-condition-edit is-hidden"
+                            data-field="condition"
+                            th:classappend="${bookCopy.bookCopyCondition != null
+                                               ? ' book-detail-copy-condition-edit--' + #strings.toLowerCase(bookCopy.bookCopyCondition.value)
                                                : ''}">
                         <option
-                                th:each="statusOption : ${options.bookCopyStatuses}"
-                                th:value="${statusOption.value}"
-                                th:text="${statusOption.label}"
-                                th:selected="${bookCopy.bookCopyStatus != null and bookCopy.bookCopyStatus.value == statusOption.value}">
-                            상태
+                                th:each="conditionOption : ${conditionOptions}"
+                                th:value="${conditionOption.value}"
+                                th:text="${conditionOption.label}"
+                                th:selected="${bookCopy.bookCopyCondition != null and bookCopy.bookCopyCondition.value == conditionOption.value}">
+                            재고 상태
                         </option>
                     </select>
                 </td>
 
-                <td class="table-layout__cell table-layout__cell--fill-start">
+                <td class="table-layout__cell table-layout__cell--center-start">
                     <span
                             class="book-detail-copy-location-view table-layout__text"
                             th:text="${(bookCopy.location != null and !#strings.isEmpty(bookCopy.location))
@@ -172,7 +172,7 @@
 
             <tr
                     class="table-layout__row table-layout__row--empty"
-                    th:if="${bookCopies == null or #lists.isEmpty(bookCopies)}">
+                    th:if="${content == null or #lists.isEmpty(content)}">
                 <td class="table-layout__cell table-layout__cell--empty">
                     등록된 재고가 없습니다.
                 </td>
@@ -204,14 +204,13 @@
 
             <td class="table-layout__cell table-layout__cell--center-start">
                 <select
-                        class="book-detail-copy-control book-detail-copy-status-edit book-detail-copy-status-edit--available"
-                        data-field="status">
+                        class="book-detail-copy-control book-detail-copy-condition-edit"
+                        data-field="condition">
                     <option
-                            th:each="statusOption : ${options.bookCopyStatuses}"
-                            th:value="${statusOption.value}"
-                            th:text="${statusOption.label}"
-                            th:selected="${statusOption.value == 'AVAILABLE'}">
-                        상태
+                            th:each="conditionOption : ${conditionOptions}"
+                            th:value="${conditionOption.value}"
+                            th:text="${conditionOption.label}">
+                        재고 상태
                     </option>
                 </select>
             </td>

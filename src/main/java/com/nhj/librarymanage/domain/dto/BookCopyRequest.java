@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.domain.dto;
 
-import com.nhj.librarymanage.domain.code.BookCopyStatus;
+import com.nhj.librarymanage.domain.code.BookCopyCondition;
+import com.nhj.librarymanage.domain.code.BorrowStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -15,14 +16,14 @@ public class BookCopyRequest {
             List<Long> deleteIds
     ) {
         public record CreateItem(
-                BookCopyStatus status,
+                BookCopyCondition bookCopyCondition,
                 String location
         ) {
         }
 
         public record UpdateItem(
                 Long bookItemId,
-                BookCopyStatus status,
+                BookCopyCondition bookCopyCondition,
                 String location
         ) {
         }

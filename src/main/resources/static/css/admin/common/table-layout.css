@@ -81,7 +81,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    min-height: 77px;
+    min-height: var(--panel-control-section-height, 80px);
     box-sizing: border-box;
 
     padding: 16px 28px 18px;
@@ -201,7 +201,7 @@
     border-collapse: collapse;
     background: var(--white);
 
-    --table-leading-column: 120px;
+    --table-leading-column: 80px;
     --table-columns: repeat(4, minmax(120px, 1fr));
 }
 
@@ -558,11 +558,10 @@
 
 /*
    table-layout--fixed-height
-   = panel-layout--fixed-height 규칙을 테이블 구조에 적용하는 modifier.
+   = fixed-height 패널 안에서 테이블 구조의 높이 기준을 맞추는 modifier.
 
-   주의:
-   header/control 높이 기준은 panel-layout이 소유한다.
-   table-layout은 테이블 내부 영역만 계산한다.
+   panel-layout은 패널 공통 변수만 제공하고,
+   table-layout 내부 요소의 실제 적용은 여기서 담당한다.
 */
 .table-layout--fixed-height {
     --table-head-row-height: var(--panel-table-head-row-height, 45px);
@@ -578,6 +577,29 @@
     );
 
     --table-row-min-height: var(--table-body-row-height);
+}
+
+.table-layout--fixed-height .table-layout__header {
+    min-height: var(--panel-header-section-height, 110px);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+}
+
+.table-layout--fixed-height .table-layout__toolbar,
+.table-layout--fixed-height .table-layout__pagination,
+.table-layout--fixed-height .table-layout__footer {
+    min-height: var(--panel-control-section-height, 80px);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+}
+
+.table-layout--fixed-height .table-layout__pagination,
+.table-layout--fixed-height .table-layout__footer {
+    justify-content: center;
 }
 
 .table-layout--fixed-height .table-layout__body {

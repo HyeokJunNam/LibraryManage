@@ -1,0 +1,21 @@
+/* ==========================================================================
+   OVERDUE LIST PANEL
+   - 연체 목록 테이블 컬럼 비율만 담당
+   - 공용 panel-layout / table-layout 내부 구조는 재정의하지 않는다
+   ========================================================================== */
+
+.overdue-borrows-table {
+    min-width: 1600px;
+
+    --table-columns:
+            minmax(40px, 0.4fr)   /* 대출 ID */
+            minmax(40px, 0.4fr)   /* 재고 ID */
+            minmax(80px, 0.8fr)   /* 회원 번호 */
+            minmax(60px, 0.6fr)   /* 회원명 */
+            minmax(200px, 2.0fr)  /* 도서명 */
+            minmax(80px, 0.8fr)   /* 대출일 */
+            minmax(80px, 0.8fr)   /* 반납 예정일 */
+            minmax(80px, 0.8fr)   /* 연체일 */
+
+
+}

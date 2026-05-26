@@ -1,4 +1,4 @@
-const STATUS_SELECT_CLASS_PREFIX = "book-detail-copy-status-edit--";
+const CONDITION_SELECT_CLASS_PREFIX = "book-detail-copy-condition-edit--";
 const DEFAULT_COPY_PAGE_SIZE = 5;
 const PAGE_BLOCK_SIZE = 3;
 
@@ -96,6 +96,7 @@ function initBookCopiesArea() {
 
     function getRows() {
         const rowsContainer = getRowsContainer();
+
         if (!rowsContainer) {
             return [];
         }
@@ -118,6 +119,7 @@ function initBookCopiesArea() {
 
     function getBookCopyId(row) {
         const bookCopyId = Number(row.dataset.bookCopyId);
+
         return Number.isFinite(bookCopyId) && bookCopyId > 0
             ? bookCopyId
             : null;
@@ -135,16 +137,30 @@ function initBookCopiesArea() {
         return row?.dataset.rowMode === "created";
     }
 
-    function getRowStatus(row) {
-        return row.querySelector('[data-field="status"]')?.value || "";
+    function getFirstConditionValue(select) {
+        if (!select || select.options.length === 0) {
+            return "";
+        }
+
+        return select.options[0].value || "";
+    }
+
+    function getRowCondition(row) {
+        const conditionControl = row.querySelector('[data-field="condition"]');
+
+        if (!conditionControl) {
+            return "";
+        }
+
+        return conditionControl.value || getFirstConditionValue(conditionControl);
     }
 
     function getRowLocation(row) {
         return row.querySelector('[data-field="location"]')?.value.trim() || "";
     }
 
-    function getOriginalStatus(row) {
-        return row.dataset.originalStatus || "";
+    function getOriginalCondition(row) {
+        return row.dataset.originalCondition || "";
     }
 
     function getOriginalLocation(row) {
@@ -152,41 +168,42 @@ function initBookCopiesArea() {
     }
 
     function isRowChanged(row) {
-        return getRowStatus(row) !== getOriginalStatus(row)
+        return getRowCondition(row) !== getOriginalCondition(row)
             || getRowLocation(row) !== getOriginalLocation(row);
     }
 
-    function syncStatusSelectColor(select) {
+    function syncConditionSelectColor(select) {
         if (!select) {
             return;
         }
 
         [...select.classList].forEach(className => {
-            if (className.startsWith(STATUS_SELECT_CLASS_PREFIX)) {
+            if (className.startsWith(CONDITION_SELECT_CLASS_PREFIX)) {
                 select.classList.remove(className);
             }
         });
 
-        const status = select.value;
-        if (!status) {
+        const condition = select.value || getFirstConditionValue(select);
+
+        if (!condition) {
             return;
         }
 
         select.classList.add(
-            `${STATUS_SELECT_CLASS_PREFIX}${status.toLowerCase()}`
+            `${CONDITION_SELECT_CLASS_PREFIX}${condition.toLowerCase()}`
         );
     }
 
-    function syncAllStatusSelectColors(root = bookCopiesArea) {
-        root?.querySelectorAll(".book-detail-copy-status-edit").forEach(select => {
-            syncStatusSelectColor(select);
+    function syncAllConditionSelectColors(root = bookCopiesArea) {
+        root?.querySelectorAll(".book-detail-copy-condition-edit").forEach(select => {
+            syncConditionSelectColor(select);
         });
     }
 
     function createCreatedRowData() {
         return {
             createdRowId: String(createdState.nextTempId++),
-            status: "AVAILABLE",
+            condition: "",
             location: ""
         };
     }
@@ -204,12 +221,18 @@ function initBookCopiesArea() {
         row.dataset.borrowed = "false";
         row.dataset.createdRowId = item.createdRowId;
 
-        const statusControl = row.querySelector('[data-field="status"]');
+        const conditionControl = row.querySelector('[data-field="condition"]');
         const locationControl = row.querySelector('[data-field="location"]');
 
-        if (statusControl) {
-            statusControl.value = item.status || "AVAILABLE";
-            syncStatusSelectColor(statusControl);
+        if (conditionControl) {
+            if (item.condition) {
+                conditionControl.value = item.condition;
+            } else {
+                conditionControl.selectedIndex = 0;
+                item.condition = getFirstConditionValue(conditionControl);
+            }
+
+            syncConditionSelectColor(conditionControl);
         }
 
         if (locationControl) {
@@ -264,12 +287,13 @@ function initBookCopiesArea() {
             return;
         }
 
-        item.status = getRowStatus(row) || "AVAILABLE";
+        item.condition = getRowCondition(row);
         item.location = getRowLocation(row);
     }
 
     function removeCreatedRowsFromDom() {
         const rowsContainer = getRowsContainer();
+
         if (!rowsContainer) {
             return;
         }
@@ -444,6 +468,7 @@ function initBookCopiesArea() {
 
     function markActivePage(page) {
         const pagination = getPaginationArea();
+
         if (!pagination) {
             return;
         }
@@ -470,6 +495,7 @@ function initBookCopiesArea() {
 
     function renderCreatedRowsOnCurrentPage() {
         const rowsContainer = getRowsContainer();
+
         if (!rowsContainer) {
             return;
         }
@@ -491,6 +517,7 @@ function initBookCopiesArea() {
         removeCreatedRowsFromDom();
 
         const emptyRow = rowsContainer.querySelector(".table-layout__row--empty");
+
         if (emptyRow && createdState.items.length > 0) {
             emptyRow.remove();
         }
@@ -507,11 +534,12 @@ function initBookCopiesArea() {
         markActivePage(createdState.targetPage);
         refreshRowIndexes();
         refreshEmptyState();
-        syncAllStatusSelectColors(getCopiesCard());
+        syncAllConditionSelectColors(getCopiesCard());
     }
 
     function renderCreatedVirtualPage(page) {
         const rowsContainer = getRowsContainer();
+
         if (!rowsContainer) {
             return;
         }
@@ -519,6 +547,7 @@ function initBookCopiesArea() {
         captureVisibleState();
 
         const virtualPageIndex = page - getServerPageCount();
+
         if (virtualPageIndex < 0) {
             return;
         }
@@ -558,7 +587,7 @@ function initBookCopiesArea() {
         markActivePage(page);
         refreshRowIndexes();
         refreshEmptyState();
-        syncAllStatusSelectColors(getCopiesCard());
+        syncAllConditionSelectColors(getCopiesCard());
     }
 
     function captureVisibleState() {
@@ -573,6 +602,7 @@ function initBookCopiesArea() {
             }
 
             const bookCopyId = getBookCopyId(row);
+
             if (!bookCopyId) {
                 return;
             }
@@ -588,7 +618,7 @@ function initBookCopiesArea() {
             if (isRowChanged(row)) {
                 editState.updatedCopies.set(bookCopyId, {
                     bookCopyId,
-                    status: getRowStatus(row),
+                    condition: getRowCondition(row),
                     location: getRowLocation(row)
                 });
             } else {
@@ -715,6 +745,7 @@ function initBookCopiesArea() {
             } else {
                 renderCreatedRowsOnCurrentPage();
             }
+
             return;
         }
 
@@ -722,12 +753,12 @@ function initBookCopiesArea() {
     }
 
     function applyUpdatedVisualState(row, updatedCopy) {
-        const statusControl = row.querySelector('[data-field="status"]');
+        const conditionControl = row.querySelector('[data-field="condition"]');
         const locationControl = row.querySelector('[data-field="location"]');
 
-        if (statusControl) {
-            statusControl.value = updatedCopy.status || "";
-            syncStatusSelectColor(statusControl);
+        if (conditionControl) {
+            conditionControl.value = updatedCopy.condition || "";
+            syncConditionSelectColor(conditionControl);
         }
 
         if (locationControl) {
@@ -753,6 +784,7 @@ function initBookCopiesArea() {
 
     function setEditMode(editing, options = {}) {
         const copiesCard = getCopiesCard();
+
         if (!copiesCard) {
             return;
         }
@@ -794,22 +826,22 @@ function initBookCopiesArea() {
             const isDeleted = row.dataset.rowMode === "deleted";
             const rowMode = row.dataset.rowMode || "clean";
 
-            const statusView = row.querySelector(".book-detail-copy-status-view");
+            const conditionView = row.querySelector(".book-detail-copy-condition-view");
             const locationView = row.querySelector(".book-detail-copy-location-view");
-            const statusEdit = row.querySelector(".book-detail-copy-status-edit");
+            const conditionEdit = row.querySelector(".book-detail-copy-condition-edit");
             const locationEdit = row.querySelector(".book-detail-copy-location-edit");
             const deleteButton = row.querySelector('[data-role="mark-delete-row"]');
             const cancelDeleteButton = row.querySelector('[data-role="cancel-delete-row"]');
             const stateLabel = row.querySelector(".book-detail-copy-row__state");
 
-            statusView?.classList.toggle("is-hidden", editing);
+            conditionView?.classList.toggle("is-hidden", editing);
             locationView?.classList.toggle("is-hidden", editing);
 
-            statusEdit?.classList.toggle("is-hidden", !editing || isDeleted);
+            conditionEdit?.classList.toggle("is-hidden", !editing || isDeleted);
             locationEdit?.classList.toggle("is-hidden", !editing || isDeleted);
 
-            if (statusEdit) {
-                statusEdit.disabled = !editing || borrowed || isDeleted;
+            if (conditionEdit) {
+                conditionEdit.disabled = !editing || borrowed || isDeleted;
             }
 
             if (locationEdit) {
@@ -835,13 +867,14 @@ function initBookCopiesArea() {
             }
         });
 
-        syncAllStatusSelectColors(copiesCard);
+        syncAllConditionSelectColors(copiesCard);
         refreshRowIndexes();
         refreshEmptyState();
     }
 
     function applyEditStateToCurrentPage() {
         const copiesCard = getCopiesCard();
+
         if (!copiesCard) {
             return;
         }
@@ -861,6 +894,7 @@ function initBookCopiesArea() {
             }
 
             const bookCopyId = getBookCopyId(row);
+
             if (!bookCopyId) {
                 return;
             }
@@ -871,6 +905,7 @@ function initBookCopiesArea() {
             }
 
             const updatedCopy = editState.updatedCopies.get(bookCopyId);
+
             if (updatedCopy) {
                 applyUpdatedVisualState(row, updatedCopy);
             }
@@ -878,7 +913,7 @@ function initBookCopiesArea() {
 
         refreshRowIndexes();
         refreshEmptyState();
-        syncAllStatusSelectColors(copiesCard);
+        syncAllConditionSelectColors(copiesCard);
     }
 
     function updateRowDirtyState(row) {
@@ -891,6 +926,7 @@ function initBookCopiesArea() {
         }
 
         const dirty = isRowChanged(row);
+
         row.dataset.rowMode = dirty ? "updated" : "clean";
         row.classList.toggle("table-layout__row--dirty", dirty);
     }
@@ -901,6 +937,7 @@ function initBookCopiesArea() {
         }
 
         const bookCopyId = getBookCopyId(row);
+
         if (!bookCopyId) {
             return;
         }
@@ -925,11 +962,13 @@ function initBookCopiesArea() {
         }
 
         const bookCopyId = getBookCopyId(row);
+
         if (!bookCopyId) {
             return;
         }
 
         editState.deletedCopyIds.delete(bookCopyId);
+
         const previousMode = row.dataset.beforeDeleteMode || "clean";
 
         row.dataset.rowMode = previousMode === "updated" ? "updated" : "clean";
@@ -956,6 +995,7 @@ function initBookCopiesArea() {
         }
 
         const bookCopyId = getBookCopyId(row);
+
         if (!bookCopyId) {
             return;
         }
@@ -971,7 +1011,7 @@ function initBookCopiesArea() {
         if (isRowChanged(row)) {
             editState.updatedCopies.set(bookCopyId, {
                 bookCopyId,
-                status: getRowStatus(row),
+                condition: getRowCondition(row),
                 location: getRowLocation(row)
             });
         } else {
@@ -997,6 +1037,7 @@ function initBookCopiesArea() {
 
     function refreshEmptyState() {
         const rowsContainer = getRowsContainer();
+
         if (!rowsContainer) {
             return;
         }
@@ -1015,12 +1056,12 @@ function initBookCopiesArea() {
 
         return {
             createItems: createdState.items.map(item => ({
-                status: item.status,
+                bookCopyCondition: item.condition,
                 location: item.location
             })),
             updateItems: [...editState.updatedCopies.values()].map(copy => ({
-                bookItemId: copy.bookCopyId,
-                status: copy.status,
+                bookCopyId: copy.bookCopyId,
+                bookCopyCondition: copy.condition,
                 location: copy.location
             })),
             deleteIds: [...editState.deletedCopyIds]
@@ -1043,15 +1084,17 @@ function initBookCopiesArea() {
             };
         }
 
-        const invalidCreateStatusCopy = createItems.find(copy => !copy.status);
-        if (invalidCreateStatusCopy) {
+        const invalidCreateConditionCopy = createItems.find(copy => !copy.bookCopyCondition);
+
+        if (invalidCreateConditionCopy) {
             return {
                 valid: false,
-                message: "추가할 재고의 도서 상태를 선택해 주세요."
+                message: "추가할 재고의 재고 상태를 선택해 주세요."
             };
         }
 
         const emptyCreateLocationCopy = createItems.find(copy => copy.location.length === 0);
+
         if (emptyCreateLocationCopy) {
             return {
                 valid: false,
@@ -1059,17 +1102,19 @@ function initBookCopiesArea() {
             };
         }
 
-        const invalidUpdateStatusCopy = updateItems.find(copy => !copy.status);
-        if (invalidUpdateStatusCopy) {
+        const invalidUpdateConditionCopy = updateItems.find(copy => !copy.bookCopyCondition);
+
+        if (invalidUpdateConditionCopy) {
             return {
                 valid: false,
-                message: "수정할 재고의 도서 상태를 선택해 주세요."
+                message: "수정할 재고의 재고 상태를 선택해 주세요."
             };
         }
 
         const invalidUpdateCopy = updateItems.find(copy => {
-            return !Number.isFinite(copy.bookItemId) || copy.bookItemId <= 0;
+            return !Number.isFinite(copy.bookCopyId) || copy.bookCopyId <= 0;
         });
+
         if (invalidUpdateCopy) {
             return {
                 valid: false,
@@ -1078,6 +1123,7 @@ function initBookCopiesArea() {
         }
 
         const emptyUpdateLocationCopy = updateItems.find(copy => copy.location.length === 0);
+
         if (emptyUpdateLocationCopy) {
             return {
                 valid: false,
@@ -1085,9 +1131,10 @@ function initBookCopiesArea() {
             };
         }
 
-        const invalidDeleteCopyId = deleteIds.find(bookItemId => {
-            return !Number.isFinite(bookItemId) || bookItemId <= 0;
+        const invalidDeleteCopyId = deleteIds.find(bookCopyId => {
+            return !Number.isFinite(bookCopyId) || bookCopyId <= 0;
         });
+
         if (invalidDeleteCopyId) {
             return {
                 valid: false,
@@ -1119,6 +1166,7 @@ function initBookCopiesArea() {
         }
 
         const confirmed = await showConfirm("저장 하시겠습니까?");
+
         if (!confirmed) {
             return;
         }
@@ -1160,6 +1208,7 @@ function initBookCopiesArea() {
 
     function setSaving(saving) {
         const copiesCard = getCopiesCard();
+
         if (!copiesCard) {
             return;
         }
@@ -1192,6 +1241,7 @@ function initBookCopiesArea() {
             }
 
             const text = await response.text();
+
             return text || `재고 저장에 실패했습니다. (${response.status})`;
         } catch {
             return `재고 저장에 실패했습니다. (${response.status})`;
@@ -1200,6 +1250,7 @@ function initBookCopiesArea() {
 
     function initBookDetailCopies() {
         const copiesCard = getCopiesCard();
+
         if (!copiesCard || copiesCard.dataset.editorInitialized === "true") {
             return;
         }
@@ -1220,6 +1271,7 @@ function initBookCopiesArea() {
             const confirmed = await showConfirm(
                 "저장하지 않은 변경사항을 취소하시겠습니까?"
             );
+
             if (!confirmed) {
                 return;
             }
@@ -1241,11 +1293,13 @@ function initBookCopiesArea() {
 
         rowsContainer?.addEventListener("input", event => {
             const control = event.target.closest(".book-detail-copy-control");
+
             if (!control) {
                 return;
             }
 
             const row = control.closest(".table-layout__row");
+
             if (!row || row.classList.contains("table-layout__row--empty")) {
                 return;
             }
@@ -1256,17 +1310,19 @@ function initBookCopiesArea() {
 
         rowsContainer?.addEventListener("change", event => {
             const control = event.target.closest(".book-detail-copy-control");
+
             if (!control) {
                 return;
             }
 
             const row = control.closest(".table-layout__row");
+
             if (!row || row.classList.contains("table-layout__row--empty")) {
                 return;
             }
 
-            if (control.dataset.field === "status") {
-                syncStatusSelectColor(control);
+            if (control.dataset.field === "condition") {
+                syncConditionSelectColor(control);
             }
 
             updateRowDirtyState(row);
@@ -1336,7 +1392,8 @@ function initBookCopiesArea() {
             }
         });
 
-        syncAllStatusSelectColors(copiesCard);
+        syncAllConditionSelectColors(copiesCard);
+
         setEditMode(editState.editing, {
             resetState: false,
             captureBefore: false
@@ -1345,10 +1402,12 @@ function initBookCopiesArea() {
 
     bookCopiesArea.addEventListener("click", async event => {
         const createdPageButton = event.target.closest("[data-created-page]");
+
         if (createdPageButton) {
             event.preventDefault();
 
             const page = Number(createdPageButton.dataset.page);
+
             if (Number.isFinite(page) && page >= getServerPageCount()) {
                 renderCreatedVirtualPage(page);
             }
@@ -1357,6 +1416,7 @@ function initBookCopiesArea() {
         }
 
         const pageButton = event.target.closest("[data-table-pagination-page-button]");
+
         if (!pageButton) {
             return;
         }
@@ -1364,6 +1424,7 @@ function initBookCopiesArea() {
         event.preventDefault();
 
         const page = Number(pageButton.dataset.page);
+
         if (!Number.isFinite(page) || page < 0) {
             return;
         }

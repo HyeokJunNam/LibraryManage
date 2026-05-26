@@ -5,7 +5,6 @@
 .book-borrow-table__table {
     min-width: 820px;
 
-    --table-leading-column: 56px;
     --table-columns:
             minmax(240px, 2fr)
             minmax(160px, 1.35fr)

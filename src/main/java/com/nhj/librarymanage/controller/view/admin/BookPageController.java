@@ -1,8 +1,9 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.code.AdminPageOptions;
+import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.dto.*;
+import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
@@ -56,18 +57,19 @@ public class BookPageController {
         PageResponse<BookCopyResponse.Info> pageResponse = bookCopyService.getBookCopies(id, pageable); // 여기서 레코드 한번 더 조회 타는거 있음. 근데 1번 더타는건 그래프 탐색 특성 상 허용되어야 함
 
         model.addAttribute("bookId", id);
-        model.addAttribute("bookCopies", pageResponse.content());
+        model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
-        model.addAttribute("options", AdminPageOptions.options());
+        model.addAttribute("conditionOptions", BookCopyCondition.options());
 
         return "admin/books/fragments/book-detail-copies :: bookCopies";
     }
 
     @Description(value = "도서 별 도서 대출 목록 패널")
     @GetMapping("/books/{id}/borrows")
-    public String borrowListByBookPanel(Model model, @PathVariable Long id, Pageable pageable) {
-        PageResponse<BorrowHistoryResponse.InfoByBook> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, pageable);
+    public String bookBorrowHistoryPanel(Model model, @PathVariable Long id, Pageable pageable) {
+        PageResponse<BorrowResponse.BookHistory> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, pageable);
 
+        model.addAttribute("bookId", id);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 

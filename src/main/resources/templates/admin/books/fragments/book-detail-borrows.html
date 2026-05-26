@@ -5,12 +5,12 @@
 
     <section
             id="bookDetailBorrowsPanel"
-            class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height book-borrow-card"
+            class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height"
             th:data-fragment-url="@{/admin/books/{id}/borrows(id=${bookId})}">
 
         <th:block th:replace="~{common/table-layout :: tableHeader(
             title='대출 현황',
-            caption='이 도서의 재고별 대출 상태와 반납 여부를 확인합니다.',
+            caption='이 도서의 재고별 대출 이력과 반납 상태를 확인합니다.',
             actions=null
         )}"></th:block>
 
@@ -33,11 +33,11 @@
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                        <span class="table-layout__text">회원 ID</span>
+                        <span class="table-layout__text">회원 번호</span>
                     </th>
 
-                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
-                        <span class="table-layout__text">회원 이름</span>
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">회원명</span>
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
@@ -49,7 +49,11 @@
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                        <span class="table-layout__text">대출 상태</span>
+                        <span class="table-layout__text">반납일</span>
+                    </th>
+
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                        <span class="table-layout__text">반납 상태</span>
                     </th>
                 </tr>
                 </thead>
@@ -73,55 +77,75 @@
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
-                        <span class="table-layout__text"
-                              th:text="${borrowRecord.borrowRecordId != null ? borrowRecord.borrowRecordId : '-'}">
+                        <span
+                                class="table-layout__text"
+                                th:text="${borrowRecord.borrowRecordId != null ? borrowRecord.borrowRecordId : '-'}">
                             1
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
-                        <span class="table-layout__text"
-                              th:text="${borrowRecord.bookCopyId != null ? borrowRecord.bookCopyId : '-'}">
+                        <span
+                                class="table-layout__text"
+                                th:text="${borrowRecord.bookCopyId != null ? borrowRecord.bookCopyId : '-'}">
                             1
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
-                        <span class="table-layout__text"
-                              th:text="${borrowRecord.memberId != null ? borrowRecord.memberId : '-'}">
+                        <span
+                                class="table-layout__text"
+                                th:text="${borrowRecord.memberNo != null ? borrowRecord.memberNo : '-'}">
                             100
                         </span>
                     </td>
 
-                    <td class="table-layout__cell table-layout__cell--fill-start">
-                        <span class="table-layout__text"
-                              th:text="${borrowRecord.memberName != null ? borrowRecord.memberName : '-'}">
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span
+                                class="table-layout__text"
+                                th:text="${(borrowRecord.memberName != null and !#strings.isEmpty(borrowRecord.memberName))
+                                      ? borrowRecord.memberName
+                                      : '-'}">
                             홍길동
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
-                        <span class="table-layout__text"
-                              th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">
+                        <span
+                                class="table-layout__text"
+                                th:text="${borrowRecord.borrowedAt != null ? #temporals.format(borrowRecord.borrowedAt, 'yyyy-MM-dd') : '-'}">
                             2026-04-30
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
-                        <span class="table-layout__text"
-                              th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">
+                        <span
+                                class="table-layout__text"
+                                th:text="${borrowRecord.dueAt != null ? #temporals.format(borrowRecord.dueAt, 'yyyy-MM-dd') : '-'}">
                             2026-05-14
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span
+                                class="table-layout__text"
+                                th:text="${borrowRecord.returnedAt != null ? #temporals.format(borrowRecord.returnedAt, 'yyyy-MM-dd') : '-'}">
+                            2026-05-10
+                        </span>
+                    </td>
+
+                    <td class="table-layout__cell table-layout__cell--center-start">
+                        <span
                                 class="status-badge"
-                                th:classappend="${borrowRecord.borrowStatus != null
-                                               ? ' status-badge--' + #strings.toLowerCase(borrowRecord.borrowStatus.value)
+                                th:classappend="${borrowRecord.returnStatus != null
+                                               ? ' status-badge--' + #strings.toLowerCase(borrowRecord.returnStatus.value)
                                                : ' status-badge--default'}"
-                                th:text="${!#strings.isEmpty(borrowRecord.borrowStatusLabel) ? borrowRecord.borrowStatusLabel : '-'}">
-                            대출 상태
+                                th:text="${(borrowRecord.returnStatus != null
+                                        and borrowRecord.returnStatus.label != null
+                                        and !#strings.isEmpty(borrowRecord.returnStatus.label))
+                                       ? borrowRecord.returnStatus.label
+                                       : '-'}">
+                            반납 상태
                         </span>
                     </td>
                 </tr>

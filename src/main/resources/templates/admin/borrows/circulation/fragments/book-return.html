@@ -23,7 +23,7 @@
 
     <section class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height"
              id="bookReturnModePanel"
-             th:attr="data-fragment-url=@{/admin/members/{memberId}/borrows/list(memberId=${memberId})}">
+             th:attr="data-fragment-url=@{admin/circulation/return/members/{memberId}/borrows(memberId=${memberId})}">
 
         <th:block th:replace="~{common/table-layout :: tableHeader(
             title='반납 도서 목록',
@@ -52,12 +52,12 @@
                         <span class="table-layout__text">재고 ID</span>
                     </th>
 
-                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                         <span class="table-layout__text">도서명</span>
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                        <span class="table-layout__text">시작일</span>
+                        <span class="table-layout__text">대출일</span>
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
@@ -65,7 +65,7 @@
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                        <span class="table-layout__text">상태</span>
+                        <span class="table-layout__text">연체 상태</span>
                     </th>
                 </tr>
                 </thead>
@@ -84,53 +84,67 @@
                                data-role="return-book-checkbox"
                                tabindex="-1"
                                th:value="${borrow.borrowRecordId}"
-                               th:attr="aria-label=${borrow.bookTitle + ' 반납 선택'}">
+                               th:attr="aria-label=${(borrow.bookTitle != null and !#strings.isEmpty(borrow.bookTitle))
+                                      ? borrow.bookTitle + ' 반납 선택'
+                                      : '반납 도서 선택'}">
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.borrowRecordId}">
+                              th:text="${borrow.borrowRecordId != null ? borrow.borrowRecordId : '-'}">
                             101
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.bookCopyId}">
+                              th:text="${borrow.bookCopyId != null ? borrow.bookCopyId : '-'}">
                             1001
                         </span>
                     </td>
 
-                    <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
+                    <td class="table-layout__cell table-layout__cell--primary table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.bookTitle}">
+                              th:text="${(borrow.bookTitle != null and !#strings.isEmpty(borrow.bookTitle))
+                                    ? borrow.bookTitle
+                                    : '-'}">
                             도서명
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.borrowedAt != null ? #temporals.format(borrow.borrowedAt, 'yyyy-MM-dd') : '-'}">
+                              th:text="${borrow.borrowedAt != null
+                                    ? #temporals.format(borrow.borrowedAt, 'yyyy-MM-dd')
+                                    : '-'}">
                             2026-05-21
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.dueAt != null ? #temporals.format(borrow.dueAt, 'yyyy-MM-dd') : '-'}">
+                              th:text="${borrow.dueAt != null
+                                    ? #temporals.format(borrow.dueAt, 'yyyy-MM-dd')
+                                    : '-'}">
                             2026-05-28
                         </span>
                     </td>
 
-                    <td class="table-layout__cell table-layout__cell--center-start">
+                    <td class="table-layout__cell table-layout__cell--center-start"
+                        th:with="
+                            returnStatusValue=${(borrow.returnStatus != null and borrow.returnStatus.value != null)
+                                ? #strings.toLowerCase(borrow.returnStatus.value.toString())
+                                : 'default'},
+                            returnStatusLabel=${(borrow.returnStatus != null
+                                    and borrow.returnStatus.label != null
+                                    and !#strings.isEmpty(borrow.returnStatus.label))
+                                ? borrow.returnStatus.label
+                                : '-'}
+                        ">
                         <span class="status-badge"
-                              th:classappend="${borrow.borrowStatus == null}
-                                    ? ' status-badge--default'
-                                    : (${borrow.borrowStatus.value.name() == 'OVERDUE'}
-                                        ? ' status-badge--overdue'
-                                        : ' status-badge--borrowed')"
-                              th:text="${borrow.borrowStatusLabel != null ? borrow.borrowStatusLabel : '-'}">
-                            진행 중
+                              th:classappend="${' status-badge--' + returnStatusValue}"
+                              th:text="${returnStatusLabel}">
+                            연체 상태
                         </span>
                     </td>
                 </tr>

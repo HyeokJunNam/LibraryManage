@@ -28,16 +28,16 @@ public class CirculationPageController {
     }
 
     @Description("대출 처리 패널")
-    @GetMapping("/circulation/borrows")
+    @GetMapping("/circulation/borrow")
     public String bookBorrowPanel() {
         return "admin/borrows/circulation/fragments/book-borrow :: bookBorrowPanel";
     }
 
 
     @Description("반납 처리 패널")
-    @GetMapping("/circulation/members/{id}/returns")
-    public String bookReturnPanel(Model model, @PathVariable String id, BorrowHistoryRequest.SearchConditionByMember searchCondition, Pageable pageable) {
-        PageResponse<BorrowHistoryResponse.InfoByMember> pageResponse = borrowRecordService.getBorrowHistoryByMember(NumberParser.parseLong(id), searchCondition, pageable);
+    @GetMapping("/circulation/return/members/{id}/borrows")
+    public String bookReturnPanel(Model model, @PathVariable String id, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+        PageResponse<BorrowResponse.Returnable> pageResponse = borrowRecordService.getReturnableBooksByMember(NumberParser.parseLong(id), searchCondition, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("memberId", id);
@@ -46,8 +46,6 @@ public class CirculationPageController {
 
         return "admin/borrows/circulation/fragments/book-return :: bookReturnPanel";
     }
-
-
 
 
     @Description("도서 대출 목록")
@@ -88,8 +86,8 @@ public class CirculationPageController {
 
     @Description("도서 대출 목록")
     @GetMapping("/borrows/list")
-    public String borrowList(Model model, BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BorrowHistoryResponse.Info> pageResponse = borrowRecordService.getBorrowHistory(searchCondition, pageable);
+    public String borrowList(Model model, BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BorrowResponse.History> pageResponse = borrowRecordService.getBorrowHistory(searchCondition, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
@@ -100,8 +98,8 @@ public class CirculationPageController {
 
     @Description("도서 대출 연체 목록")
     @GetMapping("/borrows/overdue")
-    public String overdueBorrowList(Model model, BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BorrowHistoryResponse.Info> pageResponse = borrowRecordService.getOverdueBorrowRecords(searchCondition, pageable);
+    public String overdueBorrowList(Model model, BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BorrowResponse.OverdueHistory> pageResponse = borrowRecordService.getOverdueBorrowRecords(searchCondition, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 

@@ -35,6 +35,10 @@ html {
     --green-700: #1d6e3d;
     --green-800: #165732;
 
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-700: #1d4ed8;
+
     --gray-50: #f8faf9;
     --gray-100: #edf1ee;
     --gray-200: #d9e1db;
@@ -182,4 +186,8 @@ textarea.field__control {
     color: var(--color-text-muted);
     font-size: 14px;
     line-height: 1.7;
+}
+
+.is-hidden {
+    display: none !important;
 }

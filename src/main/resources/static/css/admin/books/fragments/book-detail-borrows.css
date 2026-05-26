@@ -5,22 +5,22 @@
    ========================================================================== */
 
 #bookDetailBorrowsPanel .table-layout__table {
-    min-width: 1000px;
+    min-width: 1120px;
 
-    --table-leading-column: 56px;
     --table-columns:
-            minmax(72px, 0.85fr)    /* 대출 ID */
-            minmax(72px, 0.85fr)    /* 재고 ID */
-            minmax(72px, 0.9fr)     /* 회원 ID */
-            minmax(96px, 1.2fr)     /* 회원명 */
+            minmax(40px, 0.4fr)    /* 대출 ID */
+            minmax(40px, 0.4fr)    /* 재고 ID */
+            minmax(80px, 0.8fr)     /* 회원 번호 */
+            minmax(80px, 0.8fr)     /* 회원명 */
             minmax(96px, 1fr)       /* 대출일 */
             minmax(96px, 1fr)       /* 반납예정일 */
-            minmax(88px, 0.9fr);    /* 대출 상태 */
+            minmax(96px, 1fr)       /* 반납일 */
+            minmax(88px, 0.9fr);    /* 반납 상태 */
 }
 
 /* ==========================================================================
-   LOADING / EMPTY DETAIL TEXT
-   - 패널 중앙정렬은 panel-layout__empty가 담당
+   DETAIL PANEL MESSAGE
+   - 패널 중앙 정렬은 panel-layout__empty가 담당
    ========================================================================== */
 
 .book-borrow-loading__icon,

@@ -1,8 +1,10 @@
 package com.nhj.librarymanage.domain.entity;
 
+import com.nhj.librarymanage.domain.code.ReturnStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -33,6 +35,23 @@ public class BorrowRecord extends BaseEntity {
 
     public void returnBook() {
         this.returnedAt = LocalDateTime.now();
+        bookCopy.releaseBorrow();
+    }
+
+    public ReturnStatus getReturnStatus() {
+        if (returnedAt != null) {
+            return ReturnStatus.RETURNED;
+        }
+        else {
+            LocalDate dueDate = dueAt.toLocalDate();
+            boolean overdue = dueDate.isBefore(LocalDate.now());
+
+            if (overdue) {
+                return  ReturnStatus.OVERDUE;
+            }
+        }
+
+        return  ReturnStatus.BORROWED;
     }
 
 }

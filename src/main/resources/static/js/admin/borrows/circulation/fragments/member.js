@@ -48,7 +48,7 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         const metaParts = [];
 
         if (member.memberNo) {
-            metaParts.push(`회원번호 ${member.memberNo}`);
+            metaParts.push(`회원 번호 ${member.memberNo}`);
         }
 
         if (member.email) {

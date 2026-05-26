@@ -1,280 +1,199 @@
-:root {
-    --bg: #f6faf7;
-    --surface: var(--white);
-    --border: var(--gray-100);
-    --text: var(--gray-900);
-    --text-subtle: var(--gray-600);
-}
+/* =========================
+   MEMBER DETAIL PAGE
+========================= */
 
-.profile-card,
-.info-card {
-    background: var(--white);
-    border: 1px solid var(--gray-100);
-    border-radius: 24px;
-    box-shadow: var(--shadow);
-}
-
-.profile-card {
-    padding: 28px;
-    margin-bottom: 24px;
-}
-
-.profile-card__main {
+.member-detail-layout {
+    min-width: 0;
     display: flex;
-    align-items: flex-start;
-    gap: 20px;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.profile-card__avatar {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background: var(--green-50);
-    color: var(--green-700);
+/* =========================
+   MEMBER PROFILE
+========================= */
+
+.member-detail-profile__content {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 30px;
+}
+
+.member-detail-profile__summary {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: 800;
-    flex-shrink: 0;
-}
-
-.profile-card__info {
-    flex: 1;
+    gap: 22px;
     min-width: 0;
 }
 
-.profile-card__top {
+.member-detail-profile__avatar {
+    flex: 0 0 auto;
+
+    width: 76px;
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--green-50), #f7fff9);
+    border: 1px solid var(--green-100);
+
+    color: var(--green-700);
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+
+    box-shadow: 0 12px 24px rgba(37, 135, 76, 0.08);
+}
+
+.member-detail-profile__identity {
+    min-width: 0;
+    flex: 1;
+}
+
+.member-detail-profile__top {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
     flex-wrap: wrap;
+    min-width: 0;
 }
 
-.profile-card__name {
-    font-size: 24px;
-    font-weight: 800;
+.member-detail-profile__name {
+    margin: 0;
+    color: var(--gray-900);
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 
-.profile-card__details {
-    margin-top: 8px;
+.member-detail-profile__meta {
+    margin: 10px 0 0;
+    max-width: 680px;
+
+    color: var(--gray-600);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.7;
 }
 
-.detail-grid {
+/* =========================
+   MEMBER INFO GRID
+========================= */
+
+.member-detail-info-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
 }
 
-.info-card {
-    padding: 24px;
-}
+.member-detail-info-card {
+    min-width: 0;
 
-.info-card__title {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 16px;
-}
-
-.info-list__item {
     display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--gray-100);
-}
-
-.info-list__item:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
-}
-
-.info-list__label {
-    color: var(--gray-600);
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.info-list__value {
-    font-weight: 800;
-    color: var(--gray-900);
-    text-align: right;
-    word-break: break-all;
-}
-
-.btn {
-    height: 48px;
-    padding: 0 18px;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.btn--secondary {
-    background: var(--gray-50);
-    color: var(--gray-700);
-    border: 1px solid var(--gray-200);
-}
-
-.btn--secondary:hover {
-    background: #f2f6f3;
-}
-
-.role-badge--admin {
-    background: var(--green-50);
-    color: var(--green-700);
-}
-
-.role-badge--user {
-    background: var(--gray-50);
-    color: var(--gray-700);
-}
-
-.borrow-history__status {
-    margin-bottom: 16px;
-    color: var(--gray-600);
-    font-weight: 700;
-}
-
-.borrow-history__table-wrap {
-    overflow-x: auto;
-}
-
-.borrow-history__table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.borrow-history__table th,
-.borrow-history__table td {
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--gray-100);
-    text-align: left;
-    white-space: nowrap;
-}
-
-.borrow-history__table th {
-    color: var(--gray-600);
-    font-size: 14px;
-    font-weight: 800;
-}
-
-.borrow-history__table td {
-    color: var(--gray-900);
-    font-weight: 600;
-}
-
-.borrow-history__empty {
-    text-align: center;
-    color: var(--gray-600);
-    padding: 24px;
-    font-weight: 600;
-}
-
-.borrow-history__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
-.borrow-history__summary {
-    color: var(--gray-600);
-    font-weight: 700;
-}
-
-.pagination {
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
-    flex-wrap: wrap;
+
+    padding: 18px 20px;
+    border: 1px solid var(--gray-100);
+    border-radius: 18px;
+    background: #fbfcfb;
 }
 
-.pagination__button {
-    min-width: 40px;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid var(--gray-200);
-    border-radius: 12px;
-    background: var(--white);
-    color: var(--gray-700);
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.pagination__button:hover:not(:disabled) {
-    background: var(--gray-50);
-}
-
-.pagination__button:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-}
-
-.pagination__button.is-active {
-    border-color: var(--green-200);
-    background: var(--green-50);
-    color: var(--green-700);
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 72px;
-    height: 32px;
-    padding: 0 10px;
-    border-radius: 999px;
-    font-size: 13px;
+.member-detail-info-card__label {
+    color: var(--gray-500);
+    font-size: 12px;
     font-weight: 800;
+    line-height: 1.3;
 }
 
-.status-badge--borrowing {
-    background: #eef6ff;
-    color: #2563eb;
+.member-detail-info-card__value {
+    min-width: 0;
+
+    color: var(--gray-900);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.5;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-.status-badge--returned {
-    background: #ecfdf3;
-    color: #15803d;
-}
+/* =========================
+   MEMBER ROLE BADGE
+========================= */
 
-.status-badge--overdue {
-    background: #fef2f2;
-    color: #dc2626;
-}
-
-.status-badge--default {
+.member-role-badge--user {
+    border: 1px solid var(--gray-200);
     background: var(--gray-50);
     color: var(--gray-700);
 }
 
-[hidden] {
-    display: none !important;
+.member-role-badge--admin {
+    border: 1px solid var(--green-100);
+    background: var(--green-50);
+    color: var(--green-800);
+}
+
+/* =========================
+   MEMBER BORROW HISTORY
+========================= */
+
+.member-borrow-history-panel .table-layout__table {
+    min-width: 980px;
+
+    --table-columns:
+            minmax(76px, 0.8fr)
+            minmax(84px, 0.8fr)
+            minmax(0, 2.6fr)
+            minmax(104px, 1fr)
+            minmax(104px, 1fr)
+            minmax(104px, 1fr)
+            minmax(96px, 0.9fr);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+    .member-detail-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
-    .profile-card__main {
-        flex-direction: column;
+    .member-detail-profile__content {
+        padding: 24px;
+    }
+
+    .member-detail-profile__summary {
         align-items: flex-start;
     }
 
-    .info-list__item {
-        flex-direction: column;
-        align-items: flex-start;
+    .member-detail-profile__avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        font-size: 26px;
     }
 
-    .info-list__value {
-        text-align: left;
+    .member-detail-profile__name {
+        font-size: 24px;
     }
 
-    .borrow-history__footer {
+    .member-detail-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .member-detail-profile__summary {
         flex-direction: column;
-        align-items: flex-start;
     }
 }

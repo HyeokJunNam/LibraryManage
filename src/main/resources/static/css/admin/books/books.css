@@ -2,17 +2,12 @@
    BOOK TABLE COLUMNS
 ========================= */
 
-/*
-   도서 목록 테이블 전용 컬럼 비율만 정의한다.
-   정렬, row 높이, header, body, pagination은 table-layout 공용 CSS를 사용한다.
-*/
-.books-table-layout .table-layout__table {
+.books-table {
     min-width: 760px;
 
-    --table-leading-column: 56px;
     --table-columns:
-            minmax(0, 2.5fr)        /* 도서명 */
-            minmax(140px, 2fr)      /* ISBN */
+            minmax(200px, 2.2fr)        /* 도서명 */
+            minmax(150px, 1.5fr)      /* ISBN */
             minmax(120px, 1.6fr)    /* 저자 */
             minmax(140px, 1.8fr);   /* 출판사 */
 }

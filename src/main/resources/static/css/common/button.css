@@ -36,7 +36,7 @@
 }
 
 .btn:focus-visible {
-    outline: 3px solid rgba(47, 158, 91, 0.18);
+    outline: 3px solid var(--green-focus-ring, rgba(47, 158, 91, 0.18));
     outline-offset: 2px;
 }
 
@@ -96,7 +96,7 @@
 }
 
 .btn--outline:hover:not(:disabled) {
-    background: #f2f6f3;
+    background: var(--green-50);
 }
 
 .btn--danger {

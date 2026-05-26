@@ -8,11 +8,12 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public enum BorrowStatus implements LabelEnum {
+public enum BookCopyCondition implements LabelEnum  {
 
-    AVAILABLE("대출 가능"),
-    BORROWED("대출 중"),
-    UNAVAILABLE("대출 불가"),
+    NORMAL("정상"),
+    DAMAGED("파손"),
+    LOST("분실"),
+    DISCARDED("폐기"),
     ;
 
     private final String label;
@@ -21,7 +22,7 @@ public enum BorrowStatus implements LabelEnum {
         return name();
     }
 
-    public static List<EnumOption<BorrowStatus>> options() {
+    public static List<EnumOption<BookCopyCondition>> options() {
         return Arrays.stream(values())
                 .map(status -> new EnumOption<>(status, status.getLabel()))
                 .toList();

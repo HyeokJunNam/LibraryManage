@@ -2,60 +2,108 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
+
     min-width: 78px;
     height: 28px;
     padding: 0 10px;
+
     border-radius: 999px;
+
     font-size: 12px;
     font-weight: 900;
     white-space: nowrap;
 }
 
-/* 정상 / 가능 */
-.status-badge--available {
+/* ==========================================================================
+   BOOK COPY CONDITION
+   - 재고의 물리적 상태
+   - NORMAL / DAMAGED / LOST / DISCARDED
+   ========================================================================== */
+
+/* 정상 */
+.status-badge--normal {
     border: 1px solid var(--green-100);
     background: var(--green-50);
     color: var(--green-800);
 }
 
-/* 진행 중 */
-.status-badge--borrowed {
-    border: 1px solid #dbeafe;
-    background: #eff6ff;
-    color: #1d4ed8;
-}
-
-/* 기한 초과 */
-.status-badge--overdue {
+/* 파손 */
+.status-badge--damaged {
     border: 1px solid var(--color-danger-line);
     background: var(--color-danger-soft);
     color: var(--color-danger);
 }
 
-/* 반납 */
-.status-badge--returned {
-    border: 1px solid var(--gray-200);
-    background: var(--gray-50);
-    color: var(--gray-500);
-}
-
-/* 불가 / 문제 */
-.status-badge--unavailable,
-.status-badge--damaged,
+/* 분실 */
 .status-badge--lost {
     border: 1px solid var(--color-danger-line);
     background: var(--color-danger-soft);
     color: var(--color-danger);
 }
 
-/* 비활성 / 폐기 */
+/* 폐기 */
 .status-badge--discarded {
     border: 1px solid var(--gray-200);
     background: var(--gray-50);
     color: var(--gray-500);
 }
 
-/* fallback */
+/* ==========================================================================
+   BORROW STATUS
+   - 대출 가능 여부
+   - AVAILABLE / BORROWED / UNAVAILABLE
+   ========================================================================== */
+
+/* 대출 가능 */
+.status-badge--available {
+    border: 1px solid var(--green-100);
+    background: var(--green-50);
+    color: var(--green-800);
+}
+
+/* 대출 중 */
+.status-badge--borrowed {
+    border: 1px solid var(--blue-100, #dbeafe);
+    background: var(--blue-50, #eff6ff);
+    color: var(--blue-700, #1d4ed8);
+}
+
+/* 대출 불가 */
+.status-badge--unavailable {
+    border: 1px solid var(--color-danger-line);
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+/* ==========================================================================
+   RETURN STATUS
+   - 대출 이력 기준 반납 상태
+   - BORROWED / OVERDUE / RETURNED
+   ========================================================================== */
+
+/*
+   BORROWED는 BorrowStatus와 ReturnStatus 양쪽에서 쓰므로
+   .status-badge--borrowed 하나를 공유한다.
+*/
+
+/* 연체 */
+.status-badge--overdue {
+    border: 1px solid var(--color-danger-line);
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+/* 반납 완료 */
+.status-badge--returned {
+    border: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    color: var(--gray-500);
+}
+
+/* ==========================================================================
+   FALLBACK
+   ========================================================================== */
+
 .status-badge--default {
     border: 1px solid var(--gray-200);
     background: var(--gray-50);

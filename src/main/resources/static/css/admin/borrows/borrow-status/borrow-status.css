@@ -1,7 +1,7 @@
 /* ==========================================================================
    BORROW STATUS PAGE
-   - 화면 배치와 테이블 컬럼 비율만 담당
-   - 공용 panel-layout / table-layout 내부 구조는 재정의하지 않는다
+   - 대출/연체 현황 화면의 전체 배치만 담당
+   - 패널 내부 구조와 테이블 컬럼 비율은 각 패널 CSS에서 담당
    ========================================================================== */
 
 .borrow-page {
@@ -10,6 +10,7 @@
 
 .borrow-page__content {
     min-width: 0;
+
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -21,48 +22,4 @@
 
 .borrow-page__loading {
     flex: 1;
-}
-
-/* ==========================================================================
-   BORROW TABLE COLUMNS
-   - 컬럼 비율만 화면별로 지정한다
-   - No 컬럼은 table-layout의 leading column이 담당한다
-   ========================================================================== */
-
-.borrow-table-layout {
-    width: 100%;
-    min-width: 0;
-}
-
-.borrow-table-layout .table-layout__table {
-    min-width: 1280px;
-    --table-leading-column: 56px;
-}
-
-/* 대출 목록: No 제외 9 columns */
-.borrow-table-layout--list .table-layout__table {
-    --table-columns:
-            minmax(72px, 0.85fr)    /* 대출 ID */
-            minmax(72px, 0.95fr)    /* 재고 ID */
-            minmax(0, 2.4fr)        /* 도서명 */
-            minmax(80px, 1fr)       /* 위치 */
-            minmax(80px, 1fr)       /* 회원명 */
-            minmax(88px, 1fr)       /* 상태 */
-            minmax(96px, 1fr)       /* 대출일 */
-            minmax(96px, 1fr)       /* 반납 예정일 */
-            minmax(96px, 1fr);      /* 반납일 */
-}
-
-/* 연체 목록: No 제외 9 columns */
-.borrow-table-layout--overdue .table-layout__table {
-    --table-columns:
-            minmax(72px, 0.85fr)    /* 대출 ID */
-            minmax(72px, 0.95fr)    /* 재고 ID */
-            minmax(0, 2.4fr)        /* 도서명 */
-            minmax(80px, 1fr)       /* 위치 */
-            minmax(80px, 1fr)       /* 회원명 */
-            minmax(96px, 1fr)       /* 대출일 */
-            minmax(96px, 1fr)       /* 반납 예정일 */
-            minmax(72px, 0.8fr)     /* 연체일 */
-            minmax(80px, 0.9fr);    /* 상태 */
 }

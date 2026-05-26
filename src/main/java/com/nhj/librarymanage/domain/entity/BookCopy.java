@@ -1,9 +1,13 @@
 package com.nhj.librarymanage.domain.entity;
 
-import com.nhj.librarymanage.domain.code.BookCopyStatus;
+import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.code.BorrowStatus;
+import com.nhj.librarymanage.domain.code.ReturnStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,20 +28,21 @@ public class BookCopy extends BaseEntity {
     private String location;
 
     @Enumerated(EnumType.STRING)
-    private BookCopyStatus status;
+    @Column(name = "condition")
+    private BookCopyCondition bookCopyCondition;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private BorrowRecord borrowRecord;
 
     @Builder
-    public BookCopy(Book book, BookCopyStatus status, String location) {
+    public BookCopy(Book book, BookCopyCondition bookCopyCondition, String location) {
         this.book = book;
-        this.status = status;
+        this.bookCopyCondition = bookCopyCondition;
         this.location = location;
     }
 
-    public void update(BookCopyStatus status, String location) {
-        this.status = status;
+    public void update(BookCopyCondition bookCopyCondition, String location) {
+        this.bookCopyCondition = bookCopyCondition;
         this.location = location;
     }
 
@@ -52,30 +57,42 @@ public class BookCopy extends BaseEntity {
                 .build();
     }
 
-    public void returnBook() {
-        this.borrowRecord.returnBook();
+    public void releaseBorrow() {
         this.borrowRecord = null;
     }
 
     public BorrowStatus getBorrowStatus() {
-        if (status == BookCopyStatus.AVAILABLE) {
-            if (borrowRecord == null) {
+        if (borrowRecord != null) {
+            return BorrowStatus.BORROWED;
+        }
+        else {
+            if (BookCopyCondition.NORMAL.equals(bookCopyCondition)) {
                 return BorrowStatus.AVAILABLE;
+            }
+            else {
+                return BorrowStatus.UNAVAILABLE;
+            }
+        }
+    }
+
+    public ReturnStatus getReturnStatus() {
+        if (borrowRecord != null) {
+            if (borrowRecord.getReturnedAt() != null) {
+                return ReturnStatus.RETURNED;
             }
             else {
                 LocalDate dueDate = borrowRecord.getDueAt().toLocalDate();
                 boolean overdue = dueDate.isBefore(LocalDate.now());
 
                 if (overdue) {
-                    return BorrowStatus.OVERDUE;
-                }
-                else {
-                    return BorrowStatus.BORROWED; //이건데 여기 절대올수없다는거지.
+                    return  ReturnStatus.OVERDUE;
                 }
             }
+
+            return  ReturnStatus.BORROWED;
         }
         else {
-            return BorrowStatus.UNAVAILABLE;
+            return null;
         }
     }
 

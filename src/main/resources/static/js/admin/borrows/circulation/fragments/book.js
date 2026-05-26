@@ -85,11 +85,49 @@ export function createBookProcess({
     }
 
     function createBorrowPanelUrl() {
-        return "/admin/circulation/borrows";
+        return "/admin/circulation/borrow";
     }
 
     function createReturnPanelUrl(memberId) {
-        return `/admin/circulation/members/${encodeURIComponent(memberId)}/returns`;
+        return `/admin/circulation/return/members/${encodeURIComponent(memberId)}/borrows`;
+    }
+
+    function getReturnPanel() {
+        return document.getElementById("bookReturnModePanel");
+    }
+
+    function resolveReturnPanelUrl(memberId) {
+        const panel = getReturnPanel();
+        const panelUrl = panel?.dataset.fragmentUrl;
+
+        return panelUrl || createReturnPanelUrl(memberId);
+    }
+
+    function syncReturnPanelUrl(panel, url) {
+        if (!panel || !url) {
+            return;
+        }
+
+        panel.dataset.fragmentUrl = url;
+        panel.dataset.currentUrl = url;
+    }
+
+    async function reloadTableLayoutPanel(panel) {
+        if (window.TableLayout && typeof window.TableLayout.reload === "function") {
+            await window.TableLayout.reload(panel);
+            return true;
+        }
+
+        return false;
+    }
+
+    function createReturnProcess(panel) {
+        returnProcess?.destroy?.();
+
+        returnProcess = createReturnBookProcess({
+            root: panel,
+            reloadReturnPanel
+        });
     }
 
     function showIdlePanel() {
@@ -141,15 +179,9 @@ export function createBookProcess({
                 "#bookReturnModePanel"
             );
 
-            panel.dataset.fragmentUrl = url;
-            panel.dataset.currentUrl = url;
-
+            syncReturnPanelUrl(panel, url);
             mountPanel(panel);
-
-            returnProcess = createReturnBookProcess({
-                root: panel,
-                onReloadReturnPanel: reloadReturnPanel
-            });
+            createReturnProcess(panel);
         } catch (error) {
             console.error(error);
             alert(error?.message || "반납 패널을 불러오는 중 오류가 발생했습니다.");
@@ -164,25 +196,36 @@ export function createBookProcess({
             return;
         }
 
-        const url = createReturnPanelUrl(memberId);
+        const panel = getReturnPanel();
 
-        const panel = await fetchFragmentElement(
-            url,
-            "#bookReturnModePanel"
-        );
+        if (!panel) {
+            await showReturnPanel();
+            return;
+        }
 
-        panel.dataset.fragmentUrl = url;
-        panel.dataset.currentUrl = url;
+        const url = resolveReturnPanelUrl(memberId);
+        syncReturnPanelUrl(panel, url);
 
-        returnProcess?.destroy?.();
-        returnProcess = null;
+        try {
+            const reloadedByTableLayout = await reloadTableLayoutPanel(panel);
 
-        mountPanel(panel);
+            if (reloadedByTableLayout) {
+                returnProcess?.refresh?.();
+                return;
+            }
 
-        returnProcess = createReturnBookProcess({
-            root: panel,
-            onReloadReturnPanel: reloadReturnPanel
-        });
+            const refreshedPanel = await fetchFragmentElement(
+                url,
+                "#bookReturnModePanel"
+            );
+
+            syncReturnPanelUrl(refreshedPanel, url);
+            mountPanel(refreshedPanel);
+            createReturnProcess(refreshedPanel);
+        } catch (error) {
+            console.error(error);
+            alert(error?.message || "반납 패널을 다시 불러오는 중 오류가 발생했습니다.");
+        }
     }
 
     async function activateBorrowMode() {
@@ -191,18 +234,6 @@ export function createBookProcess({
 
     async function activateReturnMode() {
         await showReturnPanel();
-    }
-
-    async function replaceBorrowBooks(books) {
-        if (currentMode !== "borrow") {
-            await showBorrowPanel();
-        }
-
-        borrowProcess?.replaceBooks?.(books);
-    }
-
-    function clearBorrowBooks() {
-        borrowProcess?.clear?.();
     }
 
     function reset() {
@@ -216,8 +247,6 @@ export function createBookProcess({
     return {
         activateBorrowMode,
         activateReturnMode,
-        replaceBorrowBooks,
-        clearBorrowBooks,
         reset
     };
 }

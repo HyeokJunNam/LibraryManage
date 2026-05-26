@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.repository;
 
-import com.nhj.librarymanage.domain.code.BookCopyStatus;
+import com.nhj.librarymanage.domain.code.BookCopyCondition;
+import com.nhj.librarymanage.domain.code.BorrowStatus;
 import com.nhj.librarymanage.domain.dto.BookRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
@@ -60,13 +61,13 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     @Override
     public List<Book> findBorrowableBook(List<Long> bookIds) {
         BooleanExpression inBook = QuerydslFilterHelper.in(book.id, bookIds);
-        BooleanExpression likeAvailable = QuerydslFilterHelper.like(bookCopy.status.stringValue(), BookCopyStatus.AVAILABLE.getCode());
+        BooleanExpression likeNormal = QuerydslFilterHelper.like(bookCopy.bookCopyCondition.stringValue(), BookCopyCondition.NORMAL.getCode());
         BooleanExpression isNullBorrowRecord = QuerydslFilterHelper.isNull(bookCopy.borrowRecord);
 
         return jpaQueryFactory
                 .selectFrom(book)
                 .join(book.bookCopies, bookCopy).fetchJoin()
-                .where(inBook, likeAvailable, isNullBorrowRecord)
+                .where(inBook, likeNormal, isNullBorrowRecord)
                 .fetch();
     }
 

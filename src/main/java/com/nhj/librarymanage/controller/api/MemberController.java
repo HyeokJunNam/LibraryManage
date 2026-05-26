@@ -22,9 +22,9 @@ public class MemberController {
 
     @Description(value = "회원 조회")
     @GetMapping("/members/{id}")
-    public ResponseEntity<ApiResponse> getMember(@PathVariable long id) {
-        MemberResponse.Info info = memberService.getMember(id);
-        ApiResponse apiResponse = ApiResponse.result(info);
+    public ResponseEntity<ApiResponse> getMember(@PathVariable Long id) {
+        MemberResponse.Detail detail = memberService.getMember(id);
+        ApiResponse apiResponse = ApiResponse.result(detail);
 
         return ResponseEntity.ok().body(apiResponse);
     }
@@ -48,7 +48,7 @@ public class MemberController {
 
     @Description(value = "회원 삭제")
     @DeleteMapping("/members/{id}")
-    public ResponseEntity<Void> deleteMember(@PathVariable long id) {
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

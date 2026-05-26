@@ -1,16 +1,14 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.dto.BorrowHistoryRequest;
-import com.nhj.librarymanage.domain.dto.BorrowStatistics;
+import com.nhj.librarymanage.domain.dto.BorrowRequest;
+import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +48,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     }
 
     @Override
-    public Page<BorrowRecord> search(BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+    public Page<BorrowRecord> search(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression likeMemberName = QuerydslFilterHelper.like(borrowRecord.member.name, searchCondition.memberName());
@@ -70,7 +68,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     }
 
     @Override
-    public Page<BorrowRecord> searchByMemberId(Long memberId, BorrowHistoryRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+    public Page<BorrowRecord> searchByMemberId(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression eqMemberId = QuerydslFilterHelper.eq(borrowRecord.member.id, memberId);
@@ -87,6 +85,29 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 .select(borrowRecord.id.count())
                 .from(borrowRecord)
                 .where(eqMemberId, eqBookRecordId, likeBookTitle);
+
+        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<BorrowRecord> searchReturnableByMemberId(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+        OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
+
+        BooleanExpression eqMemberId = QuerydslFilterHelper.eq(borrowRecord.member.id, memberId);
+        BooleanExpression isNullReturnAt = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);
+
+        BooleanExpression eqBookRecordId = QuerydslFilterHelper.eq(borrowRecord.id, searchCondition.bookRecordId());
+        BooleanExpression likeBookTitle = QuerydslFilterHelper.like(book.title, searchCondition.bookTitle());
+
+        List<BorrowRecord> query = searchQuery(pageable)
+                .where(eqMemberId, eqBookRecordId, likeBookTitle, isNullReturnAt)
+                .orderBy(order)
+                .fetch();
+
+        JPAQuery<Long> countQuery = jpaQueryFactory
+                .select(borrowRecord.id.count())
+                .from(borrowRecord)
+                .where(eqMemberId, eqBookRecordId, likeBookTitle, isNullReturnAt);
 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
@@ -112,7 +133,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     }
 
     public BorrowStatistics getBorrowStatistics() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
 
         Long totalBookItemCount = jpaQueryFactory
                 .select(bookCopy.id.count())
@@ -121,36 +142,40 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
 
         totalBookItemCount = totalBookItemCount != null ? totalBookItemCount : 0L;
 
+        NumberExpression<Long> currentBorrowCount = countWhen(borrowRecord.returnedAt.isNull());
+        NumberExpression<Long> overdueBorrowCount = countWhen(borrowRecord.returnedAt.isNull()
+                .and(toDate(borrowRecord.dueAt).before(now)));
+
         return jpaQueryFactory
                 .select(Projections.constructor(
                         BorrowStatistics.class,
                         Expressions.constant(totalBookItemCount),
-                        // 누적 대출 수
                         borrowRecord.id.count(),
-                        // 현재 대출 수
-                        new CaseBuilder()
-                                .when(borrowRecord.returnedAt.isNull())
-                                .then(1L)
-                                .otherwise(0L)
-                                .sumLong()
-                                .coalesce(0L),
-
-                        // 연체 대출 수
-                        new CaseBuilder()
-                                .when(
-                                        borrowRecord.returnedAt.isNull()
-                                                .and(borrowRecord.dueAt.before(now))
-                                )
-                                .then(1L)
-                                .otherwise(0L)
-                                .sumLong()
-                                .coalesce(0L)
+                        currentBorrowCount,
+                        overdueBorrowCount
                 ))
                 .from(borrowRecord)
                 .fetchOne();
     }
 
-    public Page<BorrowRecord> searchOverdueBorrowRecords(BorrowHistoryRequest.SearchCondition searchCondition, Pageable pageable) {
+    private NumberExpression<Long> countWhen(BooleanExpression condition) {
+        return new CaseBuilder()
+                .when(condition)
+                .then(1L)
+                .otherwise(0L)
+                .sumLong()
+                .coalesce(0L);
+    }
+
+    private DateExpression<LocalDate> toDate(Expression<? extends LocalDateTime> localDateTime) {
+        return Expressions.dateTemplate(
+                LocalDate.class,
+                "cast({0} as date)",
+                localDateTime
+        );
+    }
+
+    public Page<BorrowRecord> searchOverdueBorrowRecords(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression notReturned = QuerydslFilterHelper.isNull(borrowRecord.returnedAt);

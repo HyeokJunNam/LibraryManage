@@ -1,7 +1,8 @@
 package com.nhj.librarymanage.domain.dto;
 
-import com.nhj.librarymanage.domain.code.BookCopyStatus;
+import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.code.BorrowStatus;
+import com.nhj.librarymanage.domain.code.ReturnStatus;
 import com.nhj.librarymanage.domain.code.EnumOption;
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ public class BookCopyResponse {
     public record Info(
             Long bookCopyId,
             String location,
-            EnumOption<BookCopyStatus> bookCopyStatus,
+            EnumOption<BookCopyCondition> bookCopyCondition,
             EnumOption<BorrowStatus> borrowStatus,
             LocalDateTime createdAt
     ) {
@@ -23,7 +24,7 @@ public class BookCopyResponse {
             return new Info(
                     bookCopy.getId(),
                     bookCopy.getLocation(),
-                    EnumOption.from(bookCopy.getStatus()),
+                    EnumOption.from(bookCopy.getBookCopyCondition()),
                     EnumOption.from(bookCopy.getBorrowStatus()),
                     bookCopy.getCreatedAt()
             );

@@ -6,6 +6,7 @@ import com.nhj.librarymanage.domain.dto.MemberRequest;
 import com.nhj.librarymanage.domain.dto.MemberResponse;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
+import com.nhj.librarymanage.model.vo.MemberStatistics;
 import com.nhj.librarymanage.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +32,6 @@ public class MemberService {
         return memberRepository.existsByLoginId(loginId);
     }
 
-    public MemberResponse.Info getMember(Long id) {
-        return MemberResponse.Info.from(memberRepository.getById(id));
-    }
-
     @Transactional
     public PageResponse<MemberResponse.Info> getMembers(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<Member> members =  memberRepository.search(searchCondition, pageable);
@@ -48,6 +45,10 @@ public class MemberService {
         if (isLoginIdDuplicated(loginId)) {
             throw new EntityAlreadyExistsException(MemberErrorCode.ALREADY_MEMBER);
         }
+    }
+
+    public MemberResponse.Detail getMember(Long id) {
+        return MemberResponse.Detail.from(memberRepository.getById(id));
     }
 
     @Transactional
@@ -76,6 +77,11 @@ public class MemberService {
     @Transactional
     public void deleteMember(long id) {
         memberRepository.deleteById(id);
+    }
+
+
+    public MemberStatistics getMemberStatistics() {
+        return memberRepository.getMemberStatistics();
     }
 
 }

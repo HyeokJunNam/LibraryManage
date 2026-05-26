@@ -175,15 +175,10 @@
 /*
    패널 카드 공통 fixed-height 규칙.
 
-   - header section = 110px
-   - control section = 80px
-
-   주의:
-   이 규칙은 table-layout 전용이 아니다.
-   일반 패널, 테이블 패널 모두 같은 기준을 공유한다.
+   panel-layout은 panel-layout 내부 요소만 제어한다.
+   table-layout 내부 요소의 fixed-height 처리는 table-layout.css가 담당한다.
 */
-.panel-layout--fixed-height .panel-layout__header,
-.panel-layout--fixed-height .table-layout__header {
+.panel-layout--fixed-height .panel-layout__header {
     min-height: var(--panel-header-section-height);
     box-sizing: border-box;
 
@@ -192,10 +187,7 @@
 }
 
 .panel-layout--fixed-height .panel-layout__control,
-.panel-layout--fixed-height .panel-layout__footer,
-.panel-layout--fixed-height .table-layout__toolbar,
-.panel-layout--fixed-height .table-layout__pagination,
-.panel-layout--fixed-height .table-layout__footer {
+.panel-layout--fixed-height .panel-layout__footer {
     min-height: var(--panel-control-section-height);
     box-sizing: border-box;
 
@@ -203,8 +195,6 @@
     align-items: center;
 }
 
-.panel-layout--fixed-height .panel-layout__footer,
-.panel-layout--fixed-height .table-layout__footer,
-.panel-layout--fixed-height .table-layout__pagination {
+.panel-layout--fixed-height .panel-layout__footer {
     justify-content: center;
 }

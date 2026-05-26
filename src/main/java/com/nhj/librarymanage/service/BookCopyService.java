@@ -90,7 +90,7 @@ public class BookCopyService {
         for (BookCopyRequest.Upsert.CreateItem entry : createItems) {
             BookCopy bookCopy = BookCopy.builder()
                     .book(book)
-                    .status(entry.status())
+                    .bookCopyCondition(entry.bookCopyCondition())
                     .location(entry.location())
                     .build();
 
@@ -116,7 +116,7 @@ public class BookCopyService {
             BookCopy bookCopy = bookItemMap.get(entry.bookItemId());
             validateNotBorrowed(bookCopy);
 
-            bookCopy.update(entry.status(), entry.location());
+            bookCopy.update(entry.bookCopyCondition(), entry.location());
         }
     }
 
