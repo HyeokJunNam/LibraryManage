@@ -2,7 +2,6 @@ package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.dto.MemberRequest;
-import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import com.nhj.librarymanage.model.vo.MemberStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
@@ -19,12 +18,12 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import static com.nhj.librarymanage.domain.entity.QBorrowRecord.borrowRecord;
 import static com.nhj.librarymanage.domain.entity.QMember.member;
+import static com.nhj.librarymanage.util.QuerydslFilterHelper.toDate;
 
 @RequiredArgsConstructor
 @Repository
@@ -104,13 +103,5 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .then(borrowRecord.member.id)
                 .otherwise((Long) null)
                 .countDistinct();
-    }
-
-    private DateExpression<LocalDate> toDate(Expression<? extends LocalDateTime> localDateTime) {
-        return Expressions.dateTemplate(
-                LocalDate.class,
-                "cast({0} as date)",
-                localDateTime
-        );
     }
 }

@@ -136,6 +136,8 @@
 
 <body>
 <div class="admin-page">
+    <aside th:replace="~{admin/common/sidebar :: sidebar()}"></aside>
+
     <main class="admin-main">
         <th:block th:replace="~{admin/common/fragments/page-hero :: pageHero(
             eyebrow='COMING SOON',
@@ -164,7 +166,7 @@
                 </p>
 
                 <div class="work-in-progress__actions">
-                    <a th:href="@{/admin/dashboard}" class="work-in-progress__button work-in-progress__button--primary">
+                    <a th:href="@{/admin}" class="work-in-progress__button work-in-progress__button--primary">
                         대시보드로 이동
                     </a>
 

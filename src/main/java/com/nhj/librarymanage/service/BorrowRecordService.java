@@ -18,7 +18,6 @@ public class BorrowRecordService {
 
     private final BorrowRecordRepository borrowRecordRepository;
 
-    @Transactional
     public PageResponse<BorrowResponse.History> getBorrowHistory(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.search(searchCondition, pageable);
         Page<BorrowResponse.History> histories = borrowRecords.map(BorrowResponse.History::from);
@@ -26,7 +25,6 @@ public class BorrowRecordService {
         return PageResponse.from(histories);
     }
 
-    @Transactional
     public PageResponse<BorrowResponse.MemberHistory> getBorrowHistoryByMember(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, searchCondition, pageable);
         Page<BorrowResponse.MemberHistory> histories = borrowRecords.map(BorrowResponse.MemberHistory::from);
@@ -34,7 +32,6 @@ public class BorrowRecordService {
         return PageResponse.from(histories);
     }
 
-    @Transactional
     public PageResponse<BorrowResponse.Returnable> getReturnableBooksByMember(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchReturnableByMemberId(memberId, searchCondition, pageable);
         Page<BorrowResponse.Returnable> returnables = borrowRecords.map(BorrowResponse.Returnable::from);
@@ -42,25 +39,22 @@ public class BorrowRecordService {
         return PageResponse.from(returnables);
     }
 
-    @Transactional
     public PageResponse<BorrowResponse.BookHistory> getBorrowHistoryByBook(Long bookId, BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByBookId(bookId, searchCondition, pageable);
-        Page<BorrowResponse.BookHistory> infos = borrowRecords.map(BorrowResponse.BookHistory::from);
+        Page<BorrowResponse.BookHistory> histories = borrowRecords.map(BorrowResponse.BookHistory::from);
 
-        return PageResponse.from(infos);
-    }
-
-
-    public BorrowStatistics getBorrowStatistics() {
-        return borrowRecordRepository.getBorrowStatistics();
+        return PageResponse.from(histories);
     }
 
     public PageResponse<BorrowResponse.OverdueHistory> getOverdueBorrowRecords(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchOverdueBorrowRecords(searchCondition, pageable);
-        Page<BorrowResponse.OverdueHistory> infos = borrowRecords.map(BorrowResponse.OverdueHistory::from);
+        Page<BorrowResponse.OverdueHistory> histories = borrowRecords.map(BorrowResponse.OverdueHistory::from);
 
-        return PageResponse.from(infos);
+        return PageResponse.from(histories);
+    }
 
+    public BorrowStatistics getBorrowStatistics() {
+        return borrowRecordRepository.getBorrowStatistics();
     }
 
 

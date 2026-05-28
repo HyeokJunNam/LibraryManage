@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.util;
 
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -145,5 +146,22 @@ public class QuerydslFilterHelper {
         return targetExpression.goe(baseDate.atStartOfDay());
     }
 
+
+    public static NumberExpression<Long> countWhen(BooleanExpression condition) {
+        return new CaseBuilder()
+                .when(condition)
+                .then(1L)
+                .otherwise(0L)
+                .sumLong()
+                .coalesce(0L);
+    }
+
+    public static DateExpression<LocalDate> toDate(Expression<? extends LocalDateTime> localDateTime) {
+        return Expressions.dateTemplate(
+                LocalDate.class,
+                "cast({0} as date)",
+                localDateTime
+        );
+    }
 
 }

@@ -22,7 +22,7 @@
 
         <section class="statistics-grid">
             <article class="statistics-card">
-                <p class="statistics-card__label">전체 도서 재고 수</p>
+                <p class="statistics-card__label">전체 회원 수</p>
                 <strong
                         class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.totalBookItemCount : 0}">
@@ -31,7 +31,7 @@
             </article>
 
             <article class="statistics-card">
-                <p class="statistics-card__label">누적 대출 도서 수</p>
+                <p class="statistics-card__label">등록 도서 수</p>
                 <strong
                         class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.totalBorrowCount : 0}">
@@ -49,7 +49,7 @@
             </article>
 
             <article class="statistics-card">
-                <p class="statistics-card__label">연체 도서 수</p>
+                <p class="statistics-card__label">현재 연체 도서 수</p>
                 <strong
                         class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.overdueBorrowCount : 0}">
