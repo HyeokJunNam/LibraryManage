@@ -113,9 +113,13 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     }
 
     @Override
-    public Page<BorrowRecord> searchByBookId(Long bookId, Pageable pageable) {
+    public Page<BorrowRecord> searchByBookId(Long bookId, BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
         BooleanExpression eqBookId = QuerydslFilterHelper.eq(borrowRecord.bookCopy.book.id, bookId); // 얘때문??
+
+        BooleanExpression likeMemberName = QuerydslFilterHelper.like(member.name, searchCondition.memberName());
+        BooleanExpression likeMemberNo = QuerydslFilterHelper.like(member.memberNo, searchCondition.memberNo());
+
 
         List<BorrowRecord> query = searchQuery(pageable)
                 .where(eqBookId)
@@ -125,6 +129,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(borrowRecord.id.count())
                 .from(borrowRecord)
+                .where(likeMemberName, likeMemberNo)
                 .innerJoin(borrowRecord.bookCopy, bookCopy)
                 .innerJoin(bookCopy.book, book)
                 .where(eqBookId);

@@ -21,7 +21,7 @@
 <th:block th:fragment="bookReturnPanel"
           th:with="TABLE_MODE_AJAX='ajax'">
 
-    <section class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height"
+    <section class="panel-layout table-layout table-layout--fixed-height"
              id="bookReturnModePanel"
              th:attr="data-fragment-url=@{admin/circulation/return/members/{memberId}/borrows(memberId=${memberId})}">
 
@@ -42,6 +42,10 @@
                 <tr class="table-layout__row table-layout__row--head">
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--checkbox">
                         <span class="table-layout__text"></span>
+                    </th>
+
+                    <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                        <span class="table-layout__text">No</span>
                     </th>
 
                     <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
@@ -71,42 +75,52 @@
                 </thead>
 
                 <tbody class="table-layout__tbody" id="returnBookList">
-                <tr th:each="borrow : ${content}"
+                <tr th:each="item, itemStatus : ${content}"
                     class="table-layout__row table-layout__row--clickable return-table__row"
                     data-role="select-return-book"
                     role="button"
                     tabindex="0"
-                    th:attr="data-borrow-record-id=${borrow.borrowRecordId}">
+                    th:attr="data-borrow-record-id=${item.borrowRecordId}">
 
                     <td class="table-layout__cell table-layout__cell--checkbox">
                         <input type="checkbox"
                                class="return-table__checkbox"
                                data-role="return-book-checkbox"
                                tabindex="-1"
-                               th:value="${borrow.borrowRecordId}"
-                               th:attr="aria-label=${(borrow.bookTitle != null and !#strings.isEmpty(borrow.bookTitle))
-                                      ? borrow.bookTitle + ' 반납 선택'
+                               th:value="${item.borrowRecordId}"
+                               th:attr="aria-label=${(item.bookTitle != null and !#strings.isEmpty(item.bookTitle))
+                                      ? item.bookTitle + ' 반납 선택'
                                       : '반납 도서 선택'}">
+                    </td>
+
+                    <td class="table-layout__cell table-layout__cell--leading">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${pageMetadata != null
+                                        ? pageMetadata.page * pageMetadata.size + itemStatus.count
+                                        : itemStatus.count}">
+                                1
+                            </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.borrowRecordId != null ? borrow.borrowRecordId : '-'}">
+                              th:text="${item.borrowRecordId != null ? item.borrowRecordId : '-'}">
                             101
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.bookCopyId != null ? borrow.bookCopyId : '-'}">
+                              th:text="${item.bookCopyId != null ? item.bookCopyId : '-'}">
                             1001
                         </span>
                     </td>
 
                     <td class="table-layout__cell table-layout__cell--primary table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${(borrow.bookTitle != null and !#strings.isEmpty(borrow.bookTitle))
-                                    ? borrow.bookTitle
+                              th:text="${(item.bookTitle != null and !#strings.isEmpty(item.bookTitle))
+                                    ? item.bookTitle
                                     : '-'}">
                             도서명
                         </span>
@@ -114,8 +128,8 @@
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.borrowedAt != null
-                                    ? #temporals.format(borrow.borrowedAt, 'yyyy-MM-dd')
+                              th:text="${item.borrowedAt != null
+                                    ? #temporals.format(item.borrowedAt, 'yyyy-MM-dd')
                                     : '-'}">
                             2026-05-21
                         </span>
@@ -123,8 +137,8 @@
 
                     <td class="table-layout__cell table-layout__cell--center-start">
                         <span class="table-layout__text"
-                              th:text="${borrow.dueAt != null
-                                    ? #temporals.format(borrow.dueAt, 'yyyy-MM-dd')
+                              th:text="${item.dueAt != null
+                                    ? #temporals.format(item.dueAt, 'yyyy-MM-dd')
                                     : '-'}">
                             2026-05-28
                         </span>
@@ -132,13 +146,13 @@
 
                     <td class="table-layout__cell table-layout__cell--center-start"
                         th:with="
-                            returnStatusValue=${(borrow.returnStatus != null and borrow.returnStatus.value != null)
-                                ? #strings.toLowerCase(borrow.returnStatus.value.toString())
+                            returnStatusValue=${(item.returnStatus != null and item.returnStatus.value != null)
+                                ? #strings.toLowerCase(item.returnStatus.value.toString())
                                 : 'default'},
-                            returnStatusLabel=${(borrow.returnStatus != null
-                                    and borrow.returnStatus.label != null
-                                    and !#strings.isEmpty(borrow.returnStatus.label))
-                                ? borrow.returnStatus.label
+                            returnStatusLabel=${(item.returnStatus != null
+                                    and item.returnStatus.label != null
+                                    and !#strings.isEmpty(item.returnStatus.label))
+                                ? item.returnStatus.label
                                 : '-'}
                         ">
                         <span class="status-badge"

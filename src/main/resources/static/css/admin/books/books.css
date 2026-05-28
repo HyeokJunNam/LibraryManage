@@ -3,11 +3,11 @@
 ========================= */
 
 .books-table {
-    min-width: 760px;
+    min-width: 800px;
 
     --table-columns:
-            minmax(200px, 2.2fr)        /* 도서명 */
-            minmax(150px, 1.5fr)      /* ISBN */
-            minmax(120px, 1.6fr)    /* 저자 */
-            minmax(140px, 1.8fr);   /* 출판사 */
+            minmax(300px, 10fr)        /* 도서명 */
+            minmax(150px, 6fr)      /* ISBN */
+            minmax(150px, 6fr)    /* 저자 */
+            minmax(150px, 6fr);   /* 출판사 */
 }

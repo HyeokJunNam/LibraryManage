@@ -66,12 +66,14 @@ public class BookPageController {
 
     @Description(value = "도서 별 도서 대출 목록 패널")
     @GetMapping("/books/{id}/borrows")
-    public String bookBorrowHistoryPanel(Model model, @PathVariable Long id, Pageable pageable) {
-        PageResponse<BorrowResponse.BookHistory> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, pageable);
+    public String bookBorrowHistoryPanel(Model model, @PathVariable Long id, @ModelAttribute BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
+        PageResponse<BorrowResponse.BookHistory> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, searchCondition, pageable);
 
         model.addAttribute("bookId", id);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
+
+        searchCondition.applySearchFields(model);
 
         return "admin/books/fragments/book-detail-borrows :: bookBorrows";
     }

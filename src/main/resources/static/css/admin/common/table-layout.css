@@ -8,16 +8,6 @@
     display: flex;
     flex-direction: column;
 
-    /*
-       기본 정책:
-       모든 table-layout은 최소 5개 row 높이만큼 tbody 공간을 확보한다.
-
-       예외적으로 row 개수만큼만 높이를 쓰고 싶으면
-       .table-layout--auto-height 를 함께 사용한다.
-
-       row는 고정 height가 아니라 min-height 기준이다.
-       내용이 많아지면 row는 자연스럽게 커질 수 있다.
-    */
     --table-row-min-height: var(--panel-table-body-row-height, 57px);
     --table-visible-rows: var(--panel-visible-rows, 5);
 }
@@ -201,7 +191,7 @@
     border-collapse: collapse;
     background: var(--white);
 
-    --table-leading-column: 80px;
+    --table-leading-column: 100px;
     --table-columns: repeat(4, minmax(120px, 1fr));
 }
 
@@ -301,7 +291,10 @@
 
     min-width: 0;
     overflow: hidden;
-    padding: 0 8px;
+    padding: 0;
+
+    border-collapse: separate;
+    border-spacing: 16px 0;
 
     text-align: left;
     vertical-align: middle;

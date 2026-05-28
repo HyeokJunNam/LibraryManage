@@ -223,16 +223,3 @@
     font-size: 15px;
     flex-shrink: 0;
 }
-
-@media (max-width: 980px) {
-    .admin-sidebar {
-        border-right: 0;
-        border-bottom: 1px solid var(--gray-100);
-    }
-}
-
-@media (max-width: 768px) {
-    .admin-sidebar {
-        padding: 20px 14px;
-    }
-}

@@ -23,20 +23,27 @@
 
         <section class="member-detail-layout">
 
-            <section class="panel-layout member-detail-profile">
-                <div class="member-detail-profile__content">
+            <section class="panel-layout table-layout table-layout--fixed-height member-detail-profile">
 
-                    <div class="member-detail-profile__summary">
-                        <div class="member-detail-profile__avatar"
+                <th:block th:replace="~{common/table-layout :: tableHeader(
+                    title='회원 정보',
+                    caption='회원의 기본 정보를 확인합니다.',
+                    actions=null
+                )}"></th:block>
+
+                <div class="member-detail-profile__body">
+
+                    <div class="member-profile-card">
+                        <div class="member-profile-card__avatar"
                              th:text="${content.name != null and !#strings.isEmpty(content.name)
                                     ? #strings.substring(content.name, 0, 1)
                                     : '?'}">
                             홍
                         </div>
 
-                        <div class="member-detail-profile__identity">
-                            <div class="member-detail-profile__top">
-                                <h3 class="member-detail-profile__name"
+                        <div class="member-profile-card__info">
+                            <div class="member-profile-card__top">
+                                <h3 class="member-profile-card__name"
                                     th:text="${content.name != null ? content.name : '-'}">
                                     홍길동
                                 </h3>
@@ -51,63 +58,61 @@
                                     일반 회원
                                 </span>
                             </div>
-
-                            <p class="member-detail-profile__meta">
-                                회원의 기본 정보와 도서 대출 이력을 확인할 수 있습니다.
-                            </p>
                         </div>
                     </div>
 
-                    <div class="member-detail-info-grid">
-                        <div class="member-detail-info-card">
-                            <span class="member-detail-info-card__label">회원 ID</span>
-                            <strong class="member-detail-info-card__value"
+                    <div class="member-info-list">
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">회원 ID</span>
+                            <strong class="member-info-list__value"
                                     th:text="${content.id != null ? content.id : '-'}">
                                 1
                             </strong>
                         </div>
 
-                        <div class="member-detail-info-card">
-                            <span class="member-detail-info-card__label">회원 번호</span>
-                            <strong class="member-detail-info-card__value"
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">회원 번호</span>
+                            <strong class="member-info-list__value"
                                     th:text="${content.memberNo != null ? content.memberNo : '-'}">
                                 M000001
                             </strong>
                         </div>
 
-                        <div class="member-detail-info-card">
-                            <span class="member-detail-info-card__label">로그인 ID</span>
-                            <strong class="member-detail-info-card__value"
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">로그인 ID</span>
+                            <strong class="member-info-list__value"
                                     th:text="${content.loginId != null ? content.loginId : '-'}">
                                 hong
                             </strong>
                         </div>
 
-                        <div class="member-detail-info-card">
-                            <span class="member-detail-info-card__label">이메일</span>
-                            <strong class="member-detail-info-card__value"
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">이메일</span>
+                            <strong class="member-info-list__value"
                                     th:text="${content.email != null ? content.email : '-'}">
                                 hong@example.com
                             </strong>
                         </div>
 
-                        <div class="member-detail-info-card">
-                            <span class="member-detail-info-card__label">연락처</span>
-                            <strong class="member-detail-info-card__value"
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">연락처</span>
+                            <strong class="member-info-list__value"
                                     th:text="${content.phone != null ? content.phone : '-'}">
                                 010-1234-5678
                             </strong>
                         </div>
 
-                        <div class="member-detail-info-card">
-                            <span class="member-detail-info-card__label">가입일</span>
-                            <strong class="member-detail-info-card__value"
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">가입일</span>
+                            <strong class="member-info-list__value"
                                     th:text="${content.createdAt != null
                                             ? #temporals.format(content.createdAt, 'yyyy-MM-dd HH:mm')
                                             : '-'}">
                                 2026-04-07 10:30
                             </strong>
                         </div>
+
                     </div>
 
                 </div>

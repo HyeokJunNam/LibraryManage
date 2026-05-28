@@ -43,8 +43,8 @@ public class BorrowRecordService {
     }
 
     @Transactional
-    public PageResponse<BorrowResponse.BookHistory> getBorrowHistoryByBook(Long bookId, Pageable pageable) {
-        Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByBookId(bookId, pageable);
+    public PageResponse<BorrowResponse.BookHistory> getBorrowHistoryByBook(Long bookId, BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
+        Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByBookId(bookId, searchCondition, pageable);
         Page<BorrowResponse.BookHistory> infos = borrowRecords.map(BorrowResponse.BookHistory::from);
 
         return PageResponse.from(infos);

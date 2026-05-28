@@ -172,12 +172,6 @@
 
 .member-search-result .table-layout__table {
     min-width: 620px;
-
-    /*
-       leading: 순번
-       columns: 회원번호 / 회원명 / 이메일
-    */
-    --table-leading-column: 80px;
     --table-columns: 1.2fr 1.1fr 1.6fr;
 }
 
@@ -215,59 +209,4 @@
     padding: 16px 18px 18px;
     background: var(--white);
     border-top: 1px solid var(--gray-100);
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-    .member-search-modal {
-        padding: 8px;
-    }
-
-    .member-search-modal__dialog {
-        width: min(100vw, 100%);
-        max-height: calc(100vh - 16px);
-        border-radius: 20px;
-    }
-
-    .member-search-modal__header {
-        padding: 20px;
-    }
-
-    .member-search-modal__title {
-        font-size: 23px;
-    }
-
-    .member-search-result .table-layout__toolbar {
-        padding: 16px 20px;
-    }
-
-    .member-search-result .table-layout__search {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .member-search-result .table-layout__search-field--select,
-    .member-search-result .table-layout__search-field--keyword {
-        flex: initial;
-    }
-
-    .member-search-result .table-layout__search-select,
-    .member-search-result .table-layout__search-input,
-    .member-search-result .table-layout__search-button {
-        width: 100%;
-    }
-
-    .member-search-result .table-layout__table {
-        min-width: 620px;
-        --table-leading-column: 70px;
-        --table-columns: 0.9fr 0.9fr 1.4fr;
-    }
-
-    .member-search-result .table-layout__row {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
 }

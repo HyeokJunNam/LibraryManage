@@ -63,34 +63,3 @@
     font-weight: 700;
     color: var(--gray-500);
 }
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 1180px) {
-    .circulation-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .circulation-card {
-        min-height: 420px;
-    }
-
-    .circulation-card__placeholder {
-        min-height: 260px;
-    }
-}
-
-@media (max-width: 768px) {
-    .circulation-layout {
-        gap: 20px;
-    }
-
-    .circulation-card__header {
-        padding: 24px 20px 18px;
-    }
-
-    .circulation-card__body {
-        padding: 20px;
-    }
-}

@@ -8,14 +8,14 @@
     min-width: 1120px;
 
     --table-columns:
-            minmax(40px, 0.4fr)    /* 대출 ID */
-            minmax(40px, 0.4fr)    /* 재고 ID */
-            minmax(80px, 0.8fr)     /* 회원 번호 */
-            minmax(80px, 0.8fr)     /* 회원명 */
-            minmax(96px, 1fr)       /* 대출일 */
-            minmax(96px, 1fr)       /* 반납예정일 */
-            minmax(96px, 1fr)       /* 반납일 */
-            minmax(88px, 0.9fr);    /* 반납 상태 */
+            minmax(80px, 3fr)    /* 대출 ID */
+            minmax(80px, 3fr)    /* 재고 ID */
+            minmax(200px, 7fr)     /* 회원 번호 */
+            minmax(200px, 7fr)     /* 회원명 */
+            minmax(150px, 5fr)       /* 대출일 */
+            minmax(150px, 5fr)       /* 반납예정일 */
+            minmax(150px, 5fr)       /* 반납일 */
+            minmax(150px, 5fr);    /* 반납 상태 */
 }
 
 /* ==========================================================================

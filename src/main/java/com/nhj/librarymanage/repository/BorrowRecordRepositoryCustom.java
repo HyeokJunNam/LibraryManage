@@ -14,7 +14,7 @@ public interface BorrowRecordRepositoryCustom {
 
     Page<BorrowRecord> searchReturnableByMemberId(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable);
 
-    Page<BorrowRecord> searchByBookId(Long bookId, Pageable pageable);
+    Page<BorrowRecord> searchByBookId(Long bookId, BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable);
 
     BorrowStatistics getBorrowStatistics();
 

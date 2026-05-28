@@ -80,30 +80,3 @@
 .field {
     text-align: left;
 }
-
-@media (max-width: 960px) {
-    .search-card__row {
-        grid-template-columns: 1fr;
-    }
-
-    .search-card__submit {
-        justify-content: flex-start;
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 720px) {
-    .main {
-        padding: 24px 16px 64px;
-        align-items: flex-start;
-    }
-
-    .hero__inner {
-        padding: 40px 20px;
-        border-radius: 24px;
-    }
-
-    .search-card {
-        padding: 20px;
-    }
-}

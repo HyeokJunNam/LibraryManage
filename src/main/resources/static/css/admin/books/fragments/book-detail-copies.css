@@ -8,12 +8,12 @@
     min-width: 900px;
 
     --table-columns:
-            minmax(72px, 0.85fr)    /* 재고 ID */
-            minmax(92px, 1fr)       /* 재고 상태 */
-            minmax(100px, 1.2fr)    /* 재고 위치 */
-            minmax(92px, 1fr)       /* 등록일 */
-            minmax(86px, 1fr)       /* 대출 상태 */
-            minmax(86px, 0.9fr);    /* 관리 */
+            minmax(80px, 3fr)    /* 재고 ID */
+            minmax(100px, 5fr)       /* 재고 상태 */
+            minmax(100px, 5fr)    /* 재고 위치 */
+            minmax(100px, 5fr)       /* 등록일 */
+            minmax(100px, 5fr)       /* 대출 상태 */
+            minmax(100px, 3fr);    /* 관리 */
 }
 
 /* ==========================================================================

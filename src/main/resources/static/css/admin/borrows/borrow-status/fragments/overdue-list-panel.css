@@ -5,17 +5,17 @@
    ========================================================================== */
 
 .overdue-borrows-table {
-    min-width: 1600px;
+    min-width: 800px;
 
     --table-columns:
-            minmax(40px, 0.4fr)   /* 대출 ID */
-            minmax(40px, 0.4fr)   /* 재고 ID */
-            minmax(80px, 0.8fr)   /* 회원 번호 */
-            minmax(60px, 0.6fr)   /* 회원명 */
-            minmax(200px, 2.0fr)  /* 도서명 */
-            minmax(80px, 0.8fr)   /* 대출일 */
-            minmax(80px, 0.8fr)   /* 반납 예정일 */
-            minmax(80px, 0.8fr)   /* 연체일 */
+            minmax(80px, 3fr)   /* 대출 ID */
+            minmax(80px, 3fr)   /* 재고 ID */
+            minmax(150px, 6fr)   /* 회원 번호 */
+            minmax(150px, 6fr)   /* 회원명 */
+            minmax(400px, 10fr)  /* 도서명 */
+            minmax(120px, 7fr)   /* 대출일 */
+            minmax(120px, 7fr)   /* 반납 예정일 */
+            minmax(120px, 7fr)   /* 연체일 */
 
 
 }

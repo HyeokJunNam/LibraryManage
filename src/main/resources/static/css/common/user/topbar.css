@@ -73,15 +73,3 @@
 .topbar .btn--ghost:hover {
     background: #ffffff;
 }
-
-@media (max-width: 768px) {
-    .topbar__inner {
-        padding: 12px 16px;
-        flex-wrap: wrap;
-    }
-
-    .topbar__actions,
-    .auth-menu {
-        flex-wrap: wrap;
-    }
-}

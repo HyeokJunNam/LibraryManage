@@ -168,15 +168,3 @@
 .btn--fixed {
     width: 120px;
 }
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 720px) {
-    .btn,
-    .btn--xl,
-    .btn--action {
-        width: 100%;
-    }
-}

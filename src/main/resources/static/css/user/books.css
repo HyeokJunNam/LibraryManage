@@ -225,36 +225,3 @@
     font-size: 14px;
     color: var(--color-text-muted);
 }
-
-/* ==============================
-   Responsive
-============================== */
-
-@media (max-width: 960px) {
-    .book-list__page {
-        padding: 22px;
-    }
-
-    .book-list .search-form__row {
-        grid-template-columns: 1fr;
-    }
-
-    .book-list .search-form__actions {
-        justify-content: flex-start;
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 720px) {
-    .book-list__page {
-        padding: 16px;
-    }
-
-    .book-list .search-panel {
-        padding: 20px;
-    }
-
-    .book-list .table-panel__head {
-        margin-bottom: 12px;
-    }
-}

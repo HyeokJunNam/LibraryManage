@@ -5,7 +5,7 @@
 
     <section
             id="bookDetailBorrowsPanel"
-            class="panel-layout panel-layout--fixed-height table-layout table-layout--fixed-height"
+            class="panel-layout table-layout table-layout--fixed-height"
             th:data-fragment-url="@{/admin/books/{id}/borrows(id=${bookId})}">
 
         <th:block th:replace="~{common/table-layout :: tableHeader(

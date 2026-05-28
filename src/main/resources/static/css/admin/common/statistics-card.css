@@ -37,15 +37,3 @@
     font-weight: 700;
     color: var(--green-700);
 }
-
-@media (max-width: 1400px) {
-    .statistics-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .statistics-grid {
-        grid-template-columns: 1fr;
-    }
-}

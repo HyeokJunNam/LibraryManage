@@ -7,16 +7,16 @@
    정렬, row 높이, header, body, pagination은 table-layout 공용 CSS를 사용한다.
 */
 .members-table {
-    min-width: 900px;
+    min-width: 800px;
 
     --table-columns:
-            minmax(80px, 0.8fr)     /* 회원 번호 */
-            minmax(100px, 1fr)       /* ID */
-            minmax(100px, 1fr)       /* 이름 */
-            minmax(150px, 1.5fr)    /* 이메일 */
-            minmax(120px, 1.2fr)    /* 연락처 */
-            minmax(100px, 1fr)       /* 권한 */
-            minmax(150px, 1.5fr);   /* 가입일 */
+            minmax(150px, 4fr)       /* 회원번호  */
+            minmax(150px, 4fr)       /* ID      */
+            minmax(150px, 4fr)     /* 이름      */
+            minmax(300px, 10fr)      /* 이메일    */
+            minmax(150px, 4fr)       /* 연락처    */
+            minmax(150px, 4fr)       /* 권한     */
+            minmax(200px, 6fr);      /* 가입일    */
 }
 
 /* =========================

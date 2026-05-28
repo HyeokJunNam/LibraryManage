@@ -7,13 +7,16 @@
    table-layout의 구조, 크기, overflow, header, toolbar, body, pagination은 공용 CSS를 그대로 사용한다.
 */
 .return-table {
+    min-width: 600px;
+
     --table-columns:
-            minmax(60px, 0.6fr)     /* 대출 ID */
-            minmax(60px, 0.6fr)     /* 재고 ID */
-            minmax(0, 2.4fr)        /* 도서명 */
-            minmax(92px, 1fr)       /* 시작일 */
-            minmax(92px, 1fr)       /* 반납 예정일 */
-            minmax(72px, 0.8fr);    /* 상태 */
+            minmax(80px, 2fr)     /* No */
+            minmax(80px, 4fr)     /* 대출 ID */
+            minmax(80px, 4fr)     /* 재고 ID */
+            minmax(200px, 10fr)        /* 도서명 */
+            minmax(120px, 5fr)       /* 시작일 */
+            minmax(120px, 5fr)       /* 반납 예정일 */
+            minmax(120px, 5fr);    /* 상태 */
 }
 
 .return-table__row.is-selected,

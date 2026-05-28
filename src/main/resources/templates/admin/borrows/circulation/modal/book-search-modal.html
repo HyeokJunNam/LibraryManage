@@ -64,26 +64,26 @@
                     <thead class="table-layout__thead">
                     <tr class="table-layout__row table-layout__row--head">
                         <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
-                            <span class="table-layout__text">선택</span>
+                            <span class="table-layout__text"></span>
                         </th>
 
-                        <th class="table-layout__cell table-layout__cell--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
                             <span class="table-layout__text">도서명</span>
                         </th>
 
-                        <th class="table-layout__cell table-layout__cell--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                             <span class="table-layout__text">ISBN</span>
                         </th>
 
-                        <th class="table-layout__cell table-layout__cell--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                             <span class="table-layout__text">저자</span>
                         </th>
 
-                        <th class="table-layout__cell table-layout__cell--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                             <span class="table-layout__text">보유 재고</span>
                         </th>
 
-                        <th class="table-layout__cell table-layout__cell--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                             <span class="table-layout__text">대출 가능</span>
                         </th>
                     </tr>
@@ -112,35 +112,35 @@
                                    th:disabled="${book.availableQuantity <= 0}">
                         </td>
 
-                        <td class="table-layout__cell table-layout__cell--primary">
+                        <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
                             <span class="table-layout__text"
                                   th:text="${book.title}">
                                 도서명
                             </span>
                         </td>
 
-                        <td class="table-layout__cell">
+                        <td class="table-layout__cell table-layout__cell--center-start">
                             <span class="table-layout__text"
                                   th:text="${book.isbn}">
                                 ISBN
                             </span>
                         </td>
 
-                        <td class="table-layout__cell">
+                        <td class="table-layout__cell table-layout__cell--center-start">
                             <span class="table-layout__text"
                                   th:text="${book.author}">
                                 저자
                             </span>
                         </td>
 
-                        <td class="table-layout__cell book-search-result__stock">
+                        <td class="table-layout__cell book-search-result__stock table-layout__cell--center-start">
                             <span class="table-layout__text"
                                   th:text="${book.stockQuantity}">
                                 0
                             </span>
                         </td>
 
-                        <td class="table-layout__cell book-search-result__available"
+                        <td class="table-layout__cell book-search-result__available table-layout__cell--center-start"
                             th:classappend="${book.availableQuantity <= 0} ? ' is-zero' : ' is-positive'">
                             <span class="table-layout__text"
                                   th:text="${book.availableQuantity}">

@@ -172,33 +172,3 @@
 .member-panel__action-btn {
     min-width: 96px;
 }
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 768px) {
-    .member-panel__body {
-        padding: 20px;
-    }
-
-    .member-info-card__top,
-    .member-info-card__body {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    .member-info-card__name {
-        font-size: 23px;
-    }
-
-    .member-info-card__info-row {
-        grid-template-columns: 1fr;
-        gap: 6px;
-        padding: 14px 0;
-    }
-
-    .member-panel__action-btn {
-        flex: 1 1 140px;
-    }
-}

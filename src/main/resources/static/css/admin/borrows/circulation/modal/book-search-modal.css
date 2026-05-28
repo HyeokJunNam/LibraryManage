@@ -148,7 +148,6 @@
 
 .book-search-result .table-layout__table {
     min-width: 980px;
-    --table-leading-column: 72px;
     --table-columns: 2.4fr 1.4fr 1.1fr 0.7fr 0.8fr;
 }
 
@@ -253,62 +252,4 @@
     opacity: 0.45;
     cursor: not-allowed;
     pointer-events: none;
-}
-
-@media (max-width: 768px) {
-    .book-search-modal {
-        padding: 8px;
-    }
-
-    .book-search-modal__dialog {
-        width: min(100vw, 100%);
-        max-height: calc(100vh - 16px);
-        border-radius: 20px;
-    }
-
-    .book-search-modal__header {
-        padding: 20px;
-    }
-
-    .book-search-result .table-layout__toolbar {
-        padding: 16px 20px;
-    }
-
-    .book-search-result .table-layout__search {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .book-search-result .table-layout__search-field--select,
-    .book-search-result .table-layout__search-field--keyword {
-        flex: initial;
-    }
-
-    .book-search-result .table-layout__search-select,
-    .book-search-result .table-layout__search-input,
-    .book-search-result .table-layout__search-button {
-        width: 100%;
-    }
-
-    .book-search-result .table-layout__table {
-        min-width: 840px;
-        --table-leading-column: 64px;
-        --table-columns: 2.2fr 1.3fr 1fr 0.7fr 0.8fr;
-    }
-
-    .book-search-result .table-layout__row {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-
-    .book-search-modal__footer {
-        padding: 16px 20px 20px;
-        justify-content: stretch;
-        flex-wrap: wrap;
-    }
-
-    .book-search-modal__footer-btn {
-        flex: 1 1 140px;
-    }
 }
