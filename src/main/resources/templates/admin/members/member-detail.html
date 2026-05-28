@@ -28,7 +28,7 @@
                 <th:block th:replace="~{common/table-layout :: tableHeader(
                     title='회원 정보',
                     caption='회원의 기본 정보를 확인합니다.',
-                    actions=null
+                    actions=~{::headerActions}
                 )}"></th:block>
 
                 <div class="member-detail-profile__body">
@@ -149,5 +149,13 @@
         </section>
     </main>
 </div>
+
+<th:block th:fragment="headerActions">
+    <a th:href="@{/admin/members/{memberId}/edit(memberId=${content.id})}"
+       class="btn btn--primary">
+        회원 수정
+    </a>
+</th:block>
+
 </body>
 </html>

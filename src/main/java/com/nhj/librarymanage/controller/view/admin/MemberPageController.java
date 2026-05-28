@@ -62,6 +62,13 @@ public class MemberPageController {
         return "admin/members/fragments/member-borrow-history :: memberBorrowHistoryPanel";
     }
 
+    @Description("회원 정보 수정 화면")
+    @GetMapping("/members/{id}/edit")
+    public String memberEditPage(Model model, @PathVariable Long id) {
+
+        return "admin/members/member-edit";
+    }
+
 
 
 }
