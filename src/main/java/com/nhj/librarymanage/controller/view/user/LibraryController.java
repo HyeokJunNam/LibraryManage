@@ -33,7 +33,7 @@ public class LibraryController {
     @GetMapping("/library")
     public String libraryMain() {
 
-        return "user/home/index";
+        return "user/home/home-backup";
     }
 
     @Description("도서 목록 화면")
