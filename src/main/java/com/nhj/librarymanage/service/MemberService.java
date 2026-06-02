@@ -61,6 +61,7 @@ public class MemberService {
                 .role(create.role())
                 .name(create.name())
                 .email(create.email())
+                .phoneNumber(create.phoneNumber())
                 .memberNo(numberSequenceService.nextMemberNumber())
                 .build();
 

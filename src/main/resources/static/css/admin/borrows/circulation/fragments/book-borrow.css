@@ -8,9 +8,9 @@
     --table-columns:
             minmax(200px, 8fr)
             minmax(150px, 5fr)
+            minmax(100px, 3fr)
             minmax(120px, 4fr)
-            minmax(120px, 4fr)
-            minmax(120px, 4fr);
+            minmax(100px, 3fr);
 }
 
 .book-borrow-table__quantity {

@@ -2,8 +2,8 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.BookRequest;
-import com.nhj.librarymanage.domain.dto.BookResponse;
+import com.nhj.librarymanage.domain.dto.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.BookManageResponse;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,22 +21,22 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public BookResponse.Detail getBook(long id) {
-        return BookResponse.Detail.from(bookRepository.getById(id));
+    public BookManageResponse.Detail getBook(long id) {
+        return BookManageResponse.Detail.from(bookRepository.getById(id));
     }
 
     @Transactional
-    public PageResponse<BookResponse.Info> getBooks(BookRequest.SearchCondition searchCondition, Pageable pageable) {
+    public PageResponse<BookManageResponse.Info> getBooks(BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<Book> books = bookRepository.findAll(searchCondition, pageable);
-        return PageResponse.from(books.map(BookResponse.Info::from));
+        return PageResponse.from(books.map(BookManageResponse.Info::from));
     }
 
 
     @Transactional
-    public void createBooks(BookRequest.Create create) {
+    public void createBooks(BookManageRequest.Create create) {
         List<Book> books = new ArrayList<>();
 
-        for (BookRequest.Create.Item item : create.items()) {
+        for (BookManageRequest.Create.Item item : create.items()) {
         Book book = Book.builder()
                 .isbn(item.isbn())
                 .title(item.title())
@@ -53,7 +53,7 @@ public class BookService {
     }
 
     @Transactional
-    public void updateBook(BookRequest.Update update) {
+    public void updateBook(BookManageRequest.Update update) {
         Book book = bookRepository.getById(update.getId());
 
         book.changeTitle(update.getName());

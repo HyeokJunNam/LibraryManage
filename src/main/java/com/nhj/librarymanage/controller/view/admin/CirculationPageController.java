@@ -69,8 +69,8 @@ public class CirculationPageController {
 
     @Description("도서 검색(모달)")
     @GetMapping("/books/search")
-    public String bookSearchModal(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BookResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
+    public String bookSearchModal(Model model, @ModelAttribute BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 

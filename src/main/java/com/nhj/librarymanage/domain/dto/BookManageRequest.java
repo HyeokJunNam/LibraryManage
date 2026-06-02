@@ -4,12 +4,11 @@ import com.nhj.librarymanage.model.table.SearchField;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.ui.Model;
-import org.thymeleaf.spring6.expression.Fields;
 
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BookRequest {
+public class BookManageRequest {
 
     @FieldNameConstants
     public record SearchCondition(

@@ -27,10 +27,10 @@ public class BookPageController {
     private final BookCopyService bookCopyService;
     private final BorrowRecordService borrowRecordService;
 
-    @Description("도서 목록 화면")
+    @Description("도서 관리 도서 목록 화면")
     @GetMapping("/books")
-    public String bookListPage(Model model, @ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BookResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
+    public String bookListPage(Model model, @ModelAttribute BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
         model.addAttribute("content", pageResponse.content());
@@ -42,10 +42,10 @@ public class BookPageController {
         return "admin/books/books";
     }
 
-    @Description("도서 상세 화면")
+    @Description("도서 관리 도서 상세 화면")
     @GetMapping("/books/{id}")
     public String bookDetailPage(Model model, @PathVariable Long id) {
-        BookResponse.Detail detail = bookService.getBook(id);
+        BookManageResponse.Detail detail = bookService.getBook(id);
         model.addAttribute("content", detail);
 
         return "admin/books/book-detail";
@@ -88,7 +88,7 @@ public class BookPageController {
     @Description("도서 수정 화면")
     @GetMapping("/books/{id}/edit")
     public String editBookPage(Model model, @PathVariable Long id) {
-        BookResponse.Detail detail = bookService.getBook(id);
+        BookManageResponse.Detail detail = bookService.getBook(id);
         model.addAttribute("book", detail);
 
         return "admin/books/books-edit";

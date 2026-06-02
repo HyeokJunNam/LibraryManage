@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 검색</title>
-    <link rel="stylesheet" th:href="@{/css/common/common.css}">
-    <link rel="stylesheet" th:href="@{/css/common/user/topbar.css}">
+    <th:block th:replace="~{user/common/user-page-assets :: assets}"></th:block>
+
     <link rel="stylesheet" th:href="@{/css/user/home.css}">
 </head>
 <body>
-<div class="app">
+<div class="layout">
+
+    <div th:replace="~{/user/common/topbar :: topbar}"></div>
 
     <main class="main">
         <section class="hero">
@@ -23,7 +25,7 @@
                 <form id="searchForm" class="search-card">
                     <div class="search-card__row">
                         <div class="field field--select">
-                            <label for="condition" class="field__label">검색 조건</label>
+                            <label for="condition" class="visually-hidden">검색 조건</label>
                             <select id="condition" class="field__control">
                                 <option value="title">도서명</option>
                                 <option value="isbn">ISBN</option>
@@ -33,7 +35,7 @@
                         </div>
 
                         <div class="field field--input">
-                            <label for="keyword" class="field__label">검색어</label>
+                            <label for="keyword" class="visually-hidden">검색어</label>
                             <input id="keyword"
                                    type="text"
                                    class="field__control"
@@ -41,13 +43,9 @@
                         </div>
 
                         <div class="search-card__submit">
-                            <button type="submit" class="btn btn--primary btn--xl">검색</button>
-                            <button type="button" id="resetBtn" class="btn btn--ghost btn--xl">초기화</button>
+                            <button type="submit" class="btn btn--primary">검색</button>
+                            <button type="button" id="resetBtn" class="btn btn--outline">초기화</button>
                         </div>
-                    </div>
-
-                    <div class="search-card__actions">
-                        <a th:href="@{/library/books}" class="btn btn--secondary btn--xl">전체 도서 보기</a>
                     </div>
                 </form>
             </div>

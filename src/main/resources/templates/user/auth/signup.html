@@ -75,7 +75,7 @@
                                 type="text"
                                 class="form-input"
                                 placeholder="아이디를 입력하세요"
-                                autocomplete="username"
+                                autocomplete="off"
                                 required
                         >
                     </div>
@@ -88,6 +88,19 @@
                                 type="password"
                                 class="form-input"
                                 placeholder="비밀번호를 입력하세요"
+                                autocomplete="new-password"
+                                required
+                        >
+                    </div>
+
+                    <div id="passwordConfirmGroup" class="form-group">
+                        <label for="passwordConfirm" class="form-label">비밀번호 확인</label>
+                        <input
+                                id="passwordConfirm"
+                                name="passwordConfirm"
+                                type="password"
+                                class="form-input"
+                                placeholder="비밀번호를 다시 입력하세요"
                                 autocomplete="new-password"
                                 required
                         >
@@ -106,6 +119,21 @@
                         >
                     </div>
 
+                    <div id="phoneGroup" class="form-group">
+                        <label for="phoneNumber" class="form-label">휴대폰 번호</label>
+                        <input
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                type="text"
+                                class="form-input"
+                                placeholder="010-0000-0000"
+                                autocomplete="tel"
+                                inputmode="numeric"
+                                maxlength="13"
+                                required
+                        >
+                    </div>
+
                     <div id="emailGroup" class="form-group">
                         <label for="email" class="form-label">이메일</label>
                         <div class="form-inline">
@@ -115,7 +143,7 @@
                                     type="email"
                                     class="form-input"
                                     placeholder="이메일을 입력하세요"
-                                    autocomplete="email"
+                                    autocomplete="off"
                                     required
                             >
                             <button

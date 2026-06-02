@@ -1,5 +1,5 @@
 /* =========================
-   BUTTON
+   BUTTON BASE
 ========================= */
 
 .btn {
@@ -15,7 +15,9 @@
     border: 1px solid transparent;
     border-radius: var(--radius-md);
 
+    background: transparent;
     color: inherit;
+
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
@@ -35,15 +37,10 @@
     transform: translateY(-1px);
 }
 
-.btn:focus-visible {
-    outline: 3px solid var(--green-focus-ring, rgba(47, 158, 91, 0.18));
-    outline-offset: 2px;
-}
-
 .btn:disabled,
 .btn[disabled] {
-    cursor: default;
     opacity: 0.55;
+    cursor: default;
     transform: none;
     box-shadow: none;
 }
@@ -53,118 +50,130 @@
     transform: none;
 }
 
+
 /* =========================
-   BUTTON COLOR
+   SEARCH
 ========================= */
 
-.btn--primary {
-    background: linear-gradient(135deg, var(--green-500), var(--green-600));
-    color: var(--white);
-    box-shadow: 0 10px 20px rgba(37, 135, 76, 0.18);
-}
-
-.btn--primary:hover:not(:disabled) {
-    box-shadow: 0 14px 24px rgba(37, 135, 76, 0.24);
-}
-
-.btn--secondary {
-    background: var(--color-secondary);
-    color: var(--white);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn--secondary:hover:not(:disabled) {
-    background: var(--color-secondary-strong);
-}
-
-.btn--ghost {
-    background: rgba(255, 255, 255, 0.82);
-    border-color: var(--color-line-strong);
-    color: var(--color-text);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn--ghost:hover:not(:disabled) {
-    background: var(--color-surface);
-    border-color: var(--green-200);
-}
-
-.btn--outline {
-    border-color: var(--gray-200);
-    background: var(--gray-50);
-    color: var(--gray-700);
-}
-
-.btn--outline:hover:not(:disabled) {
-    background: var(--green-50);
-}
-
-.btn--danger {
-    background: var(--color-danger);
-    color: var(--white);
-    box-shadow: 0 10px 20px rgba(217, 72, 95, 0.18);
-}
-
-.btn--danger:hover:not(:disabled) {
-    box-shadow: 0 14px 24px rgba(217, 72, 95, 0.24);
-}
-
 .btn--search {
-    height: 38px;
-    min-width: 76px;
-    padding: 0 14px;
-
-    border: 1px solid var(--green-200);
-    border-radius: 10px;
+    border-color: var(--green-200);
     background: var(--green-50);
     color: var(--green-800);
-
-    font-size: 13px;
-    font-weight: 700;
-    box-shadow: none;
 }
 
 .btn--search:hover:not(:disabled) {
     background: var(--green-100);
     border-color: var(--green-300);
-    color: var(--green-800);
+
     box-shadow: 0 8px 16px rgba(37, 135, 76, 0.12);
 }
 
 
 /* =========================
-   BUTTON SIZE
+   SUBMIT (등록/저장)
 ========================= */
 
-.btn--sm {
-    height: 38px;
-    min-width: 72px;
-    padding: 0 14px;
-    font-size: 13px;
+.btn--submit {
+    background: linear-gradient(
+            135deg,
+            var(--green-500),
+            var(--green-600)
+    );
+
+    color: var(--white);
+
+    box-shadow: 0 10px 20px rgba(37, 135, 76, 0.18);
 }
 
-.btn--xl {
+.btn--submit:hover:not(:disabled) {
+    box-shadow: 0 14px 24px rgba(37, 135, 76, 0.24);
+}
+
+
+/* =========================
+   CONFIRM (확인)
+========================= */
+
+.btn--confirm {
+    background: var(--color-secondary);
+    color: var(--white);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--confirm:hover:not(:disabled) {
+    background: var(--color-secondary-strong);
+}
+
+
+/* =========================
+   CANCEL (취소)
+========================= */
+
+.btn--cancel {
+    border-color: var(--gray-200);
+    background: var(--gray-50);
+    color: var(--gray-700);
+}
+
+.btn--cancel:hover:not(:disabled) {
+    background: var(--gray-100);
+}
+
+
+/* =========================
+   ACTION (추가/적용/승인 등)
+========================= */
+
+.btn--action {
+    border-color: var(--green-300);
+    background: var(--white);
+    color: var(--green-700);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--action:hover:not(:disabled) {
+    background: var(--green-50);
+    border-color: var(--green-500);
+    color: var(--green-800);
+}
+
+
+/* =========================
+   ACCENT (강조 작업)
+========================= */
+
+.btn--accent {
+    background: var(--green-100);
+    border-color: var(--green-300);
+    color: var(--green-800);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--accent:hover:not(:disabled) {
+    background: var(--green-200);
+    border-color: var(--green-500);
+}
+
+
+/* =========================
+   OPTIONAL
+========================= */
+
+.btn--wide {
+    min-width: 120px;
+}
+
+.btn--fixed {
+    width: 120px;
+}
+
+.btn--lg {
     height: 52px;
     min-width: 112px;
     padding: 0 22px;
+
     font-size: 15px;
-}
-
-/*
-   하단 처리 영역용 버튼.
-   글자 길이가 짧아도 버튼 폭이 너무 작아지지 않게 고정감 있게 사용.
-*/
-.btn--action {
-    height: 48px;
-    min-width: 120px;
-    padding: 0 22px;
-    font-size: 14px;
-}
-
-/*
-   정말 같은 폭이 필요한 경우에만 사용.
-   예: 확인 / 취소 / 초기화 버튼 폭을 완전히 동일하게 맞출 때.
-*/
-.btn--fixed {
-    width: 120px;
 }

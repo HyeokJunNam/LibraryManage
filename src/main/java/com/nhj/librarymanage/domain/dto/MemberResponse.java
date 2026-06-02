@@ -20,7 +20,7 @@ public class MemberResponse {
         private String memberNo;
         private String name;
         private String email;
-        private String phone;
+        private String phoneNumber;
         private String role;
         private LocalDateTime createdAt;
 
@@ -31,7 +31,7 @@ public class MemberResponse {
                     .memberNo(member.getMemberNo())
                     .name(member.getName())
                     .email(member.getEmail())
-                    .phone(member.getPhoneNumber())
+                    .phoneNumber(member.getPhoneNumber())
                     .role(member.getRole().name())
                     .createdAt(member.getCreatedAt())
                     .build();
@@ -54,7 +54,7 @@ public class MemberResponse {
             String memberNo,
             String name,
             String email,
-            String phone,
+            String phoneNumber,
             String role,
             LocalDateTime createdAt
     ) {
@@ -65,7 +65,7 @@ public class MemberResponse {
                     .memberNo(member.getMemberNo())
                     .name(member.getName())
                     .email(member.getEmail())
-                    .phone(member.getPhoneNumber())
+                    .phoneNumber(member.getPhoneNumber())
                     .role(member.getRole().name())
                     .createdAt(member.getCreatedAt())
                     .build();

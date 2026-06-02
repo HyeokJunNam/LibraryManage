@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+<header class="topbar" th:fragment="topbar">
+    <div class="topbar__inner">
+
+        <!-- 좌측 로고 -->
+        <a th:href="@{/}" class="topbar__brand" aria-label="메인으로 이동">
+            <img th:src="@{/images/library-pill-logo.svg}"
+                 src="/images/library-pill-logo.svg"
+                 alt="LIBRARY"
+                 class="topbar__logo">
+
+            <span class="topbar__title">LIBRARY</span>
+        </a>
+
+        <!-- 비로그인 -->
+        <div class="topbar__actions" sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="topbar__auth-link">로그인</a>
+
+            <span class="topbar__auth-divider" aria-hidden="true">|</span>
+
+            <a th:href="@{/signup}" class="topbar__auth-link">회원가입</a>
+        </div>
+
+        <!-- 로그인 -->
+        <div class="topbar__user" sec:authorize="isAuthenticated()">
+
+            <a th:href="@{/mypage}" class="topbar__mypage-link">
+
+                <svg
+                        class="topbar__mypage-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+
+                    <path d="M18 20a6 6 0 0 0-12 0"/>
+                    <circle cx="12" cy="10" r="4"/>
+                    <circle cx="12" cy="12" r="10"/>
+
+                </svg>
+
+                <span class="topbar__mypage-name"
+                      sec:authentication="name">
+            username
+        </span>
+
+                <span class="topbar__mypage-arrow">›</span>
+
+            </a>
+
+            <span class="topbar__auth-divider">|</span>
+
+            <a th:href="@{/logout}"
+               class="topbar__logout-link">
+                로그아웃
+            </a>
+
+        </div>
+
+    </div>
+</header>
+
+</body>
+
+</html>

@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 상세</title>
 
-    <link rel="stylesheet" th:href="@{/css/common/common.css}">
-    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
-    <link rel="stylesheet" th:href="@{/css/common/user/topbar.css}">
+    <th:block th:replace="~{/user/common/user-page-assets :: assets}"></th:block>
     <link rel="stylesheet" th:href="@{/css/user/book-detail.css}">
 </head>
 <body>
 <div class="app">
-    <div th:replace="~{common/user/fragments/topbar :: topbar}"></div>
+    <div th:replace="~{/user/common/topbar :: topbar}"></div>
 
     <div class="book-detail">
         <main class="page"
@@ -86,26 +84,26 @@
                         <div class="action-card__section">
                             <span class="action-card__label">현재 상태</span>
 
-                            <strong class="action-card__status action-card__status--signal action-card__status--unknown"
+                            <!--<strong class="action-card__status action-card__status&#45;&#45;signal action-card__status&#45;&#45;unknown"
                                     th:if="${book == null or book.canBorrow == null}">
                                 상태 미확인
                             </strong>
 
-                            <strong class="action-card__status action-card__status--signal action-card__status--available"
+                            <strong class="action-card__status action-card__status&#45;&#45;signal action-card__status&#45;&#45;available"
                                     th:if="${book != null and book.canBorrow == true}">
                                 대출 가능
                             </strong>
 
-                            <strong class="action-card__status action-card__status--signal action-card__status--unavailable"
+                            <strong class="action-card__status action-card__status&#45;&#45;signal action-card__status&#45;&#45;unavailable"
                                     th:if="${book != null and book.canBorrow == false}">
                                 대출 불가
-                            </strong>
+                            </strong>-->
                         </div>
 
                         <div class="action-card__section">
                             <span class="action-card__label">도서 위치</span>
-                            <strong class="action-card__location"
-                                    th:text="${book != null and book.location != null and !#strings.isEmpty(book.location) ? book.location : '-'}">
+                            <strong class="action-card__location">
+                                    <!--th:text="${book != null and book.location != null and !#strings.isEmpty(book.location) ? book.location : '-'}">-->
                                 -
                             </strong>
                         </div>
@@ -116,14 +114,10 @@
                                     class="notify-btn"
                                     data-role="notify-button"
                                     th:classappend="
-                                    ${(book != null and book.canBorrow == false) ? ' notify-btn--enabled' : ''}
+                                    ${false ? ' notify-btn--enabled' : ''}
                                     + ${(notification != null and notification.requested) ? ' notify-btn--done' : ''}
                                 "
-                                    th:disabled="
-                                    ${book == null
-                                    or book.canBorrow == null
-                                    or book.canBorrow}
-                                "
+
                                     th:attr="data-completed=${notification != null and notification.requested}">
 
                                 <span class="notify-btn__icon" aria-hidden="true"

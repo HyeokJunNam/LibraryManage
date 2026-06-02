@@ -1,124 +1,213 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const signupForm = document.getElementById("signupForm");
-    const signupButton = document.getElementById("signupButton");
-    const sendVerificationButton = document.getElementById("sendVerificationButton");
-    const sendVerificationButtonTextElement = document.getElementById("sendVerificationButtonText");
-    const verifyCodeButton = document.getElementById("verifyCodeButton");
+document.addEventListener("DOMContentLoaded", () => {
+    const $ = (id) => document.getElementById(id);
+    const form = $("signupForm");
 
-    const loginIdGroupElement = document.getElementById("loginIdGroup");
-    const passwordGroupElement = document.getElementById("passwordGroup");
-    const nameGroupElement = document.getElementById("nameGroup");
-    const emailGroupElement = document.getElementById("emailGroup");
-    const verificationCodeGroupElement = document.getElementById("verificationCodeGroup");
+    if (!form) {
+        return;
+    }
 
-    const loginIdElement = document.getElementById("loginId");
-    const passwordElement = document.getElementById("password");
-    const nameElement = document.getElementById("name");
-    const emailElement = document.getElementById("email");
-    const verificationCodeElement = document.getElementById("verificationCode");
-    const roleElement = document.getElementById("role");
-    const emailVerifiedElement = document.getElementById("emailVerified");
+    const elements = {
+        form,
+        signupButton: $("signupButton"),
+        loginId: $("loginId"),
+        password: $("password"),
+        passwordConfirm: $("passwordConfirm"),
+        name: $("name"),
+        phoneNumber: $("phoneNumber"),
+        email: $("email"),
+        verificationCode: $("verificationCode"),
+        role: $("role"),
+        emailVerified: $("emailVerified"),
+        formError: $("formError"),
+        verificationStatus: $("verificationStatus"),
+        sendVerificationButton: $("sendVerificationButton"),
+        sendVerificationButtonText: $("sendVerificationButtonText"),
+        verifyCodeButton: $("verifyCodeButton")
+    };
 
-    const formErrorElement = document.getElementById("formError");
-    const verificationStatusElement = document.getElementById("verificationStatus");
+    const groups = {
+        loginId: $("loginIdGroup"),
+        password: $("passwordGroup"),
+        passwordConfirm: $("passwordConfirmGroup"),
+        name: $("nameGroup"),
+        phoneNumber: $("phoneGroup"),
+        email: $("emailGroup"),
+        verificationCode: $("verificationCodeGroup")
+    };
+
+    const requiredElementKeys = [
+        "signupButton",
+        "loginId",
+        "password",
+        "passwordConfirm",
+        "name",
+        "phoneNumber",
+        "email",
+        "verificationCode",
+        "role",
+        "emailVerified",
+        "formError",
+        "verificationStatus",
+        "sendVerificationButton",
+        "verifyCodeButton"
+    ];
+
+    const missingKeys = requiredElementKeys.filter((key) => !elements[key]);
+
+    if (missingKeys.length > 0) {
+        console.error("회원가입 폼 초기화 실패: 필수 요소가 없습니다.", missingKeys);
+        return;
+    }
+
+    const API = {
+        checkLoginId: "/api/public/auth/check-id",
+        sendEmail: "/api/public/auth/email-verifications",
+        verifyEmail: "/api/public/auth/email-verifications/confirm",
+        signup: "/api/public/signup"
+    };
+
+    const REGEX = {
+        loginId: /^[a-zA-Z0-9._-]{4,20}$/,
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        phoneNumber: /^010[0-9]{8}$/
+    };
+
+    const TEXT = {
+        sendCode: "코드 발송",
+        verifyComplete: "인증 완료",
+
+        requiredLoginId: "아이디를 입력해주세요.",
+        invalidLoginId: "아이디는 4~20자의 영문, 숫자, ., _, - 만 사용할 수 있습니다.",
+        availableLoginId: "사용 가능한 아이디입니다.",
+        duplicatedLoginId: "이미 사용 중인 아이디입니다.",
+        needLoginIdCheck: "아이디 중복 확인을 완료해주세요.",
+        loginIdChecking: "아이디 중복 확인이 아직 진행 중입니다.",
+
+        requiredPassword: "비밀번호를 입력해주세요.",
+        requiredPasswordConfirm: "비밀번호 확인을 입력해주세요.",
+        passwordMismatch: "비밀번호가 일치하지 않습니다.",
+
+        requiredName: "이름을 입력해주세요.",
+
+        requiredPhone: "휴대폰 번호를 입력해주세요.",
+        invalidPhone: "휴대폰 번호는 010으로 시작하는 11자리 숫자여야 합니다.",
+
+        requiredEmail: "이메일을 입력해주세요.",
+        invalidEmail: "올바른 이메일 형식을 입력해주세요.",
+        sendCodeFirst: "인증코드를 먼저 발송해주세요.",
+        needEmailVerification: "이메일 인증을 완료해주세요.",
+        expiredEmailVerification: "인증 시간이 만료되었습니다. 다시 인증해주세요.",
+        missingSignupToken: "이메일 인증 토큰이 없습니다. 다시 인증해주세요.",
+
+        requiredVerificationCode: "인증코드를 입력해주세요.",
+        sentVerificationCode: "인증코드를 발송했습니다. 3분 안에 인증을 완료해주세요.",
+        verifiedEmail: "이메일 인증이 완료되었습니다.",
+        missingVerificationToken: "인증 토큰을 받지 못했습니다. 다시 인증해주세요.",
+
+        loginIdCheckFail: "아이디 중복 확인에 실패했습니다.",
+        loginIdCheckNetworkFail: "아이디 중복 확인 중 네트워크 오류가 발생했습니다.",
+
+        sendCodeFail: "인증코드 발송에 실패했습니다.",
+        sendCodeNetworkFail: "인증코드 발송 중 네트워크 오류가 발생했습니다.",
+
+        verifyCodeFail: "인증코드 확인에 실패했습니다.",
+        verifyCodeNetworkFail: "인증코드 확인 중 네트워크 오류가 발생했습니다.",
+
+        signupFail: "회원가입 처리 중 오류가 발생했습니다.",
+        signupNetworkFail: "네트워크 오류가 발생했습니다."
+    };
+
+    const EMAIL_VERIFIED = {
+        TRUE: "true",
+        FALSE: "false"
+    };
+
+    const VERIFICATION_TIMEOUT_MS = 180000;
+
+    const state = {
+        checkedLoginId: "",
+        loginIdAvailable: false,
+        loginIdChecking: false,
+        loginIdChanged: false,
+        requestedEmail: "",
+        verifiedEmail: "",
+        signupToken: "",
+        timerId: null,
+        deadline: null
+    };
 
     const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
     const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
 
-    const LOGIN_ID_CHECK_API = "/api/public/auth/check-id";
-    const EMAIL_SEND_API = "/api/public/auth/email-verifications";
-    const EMAIL_VERIFY_API = "/api/public/auth/email-verifications/confirm";
-    const SIGNUP_API = "/api/public/signup";
+    const isBlank = (value) => !value || value.trim() === "";
+    const trimValue = (element) => element.value.trim();
+    const onlyNumbers = (value) => value.replace(/[^0-9]/g, "");
+    const isValidLoginId = (value) => REGEX.loginId.test(value);
+    const isValidEmail = (value) => REGEX.email.test(value);
+    const isValidPhone = (value) => REGEX.phoneNumber.test(value);
+    const isEmailVerified = () => elements.emailVerified.value === EMAIL_VERIFIED.TRUE;
 
-    const VERIFICATION_TIMEOUT_SECONDS = 180;
-
-    const SEND_BUTTON_DEFAULT_TEXT = "코드 발송";
-    const SEND_BUTTON_DONE_TEXT = "인증 완료";
-
-    let verifiedEmail = "";
-    let requestedEmail = "";
-    let signupToken = "";
-    let verificationTimerId = null;
-    let verificationDeadline = null;
-
-    let checkedLoginId = "";
-    let isLoginIdAvailable = false;
-    let loginIdCheckInProgress = false;
-    let loginIdModifiedSinceCheck = false;
-
-    if (!signupForm) {
-        return;
-    }
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-            }
-        },
-        true
-    );
-
-    function buildHeaders() {
-        const headers = {};
-
-        if (csrfTokenMeta && csrfHeaderMeta) {
-            headers[csrfHeaderMeta.content] = csrfTokenMeta.content;
+    const getHeaders = () => {
+        if (!csrfTokenMeta || !csrfHeaderMeta) {
+            return {};
         }
 
-        return headers;
-    }
+        return {
+            [csrfHeaderMeta.content]: csrfTokenMeta.content
+        };
+    };
 
-    function isBlank(value) {
-        return !value || value.trim() === "";
-    }
+    const getValues = () => ({
+        loginId: trimValue(elements.loginId),
+        password: elements.password.value,
+        passwordConfirm: elements.passwordConfirm.value,
+        name: trimValue(elements.name),
+        phoneNumber: formatPhone(elements.phoneNumber.value),
+        phoneNumberDigits: onlyNumbers(elements.phoneNumber.value),
+        email: trimValue(elements.email),
+        verificationCode: trimValue(elements.verificationCode)
+    });
 
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+    const formatPhone = (value) => {
+        const numbers = onlyNumbers(value).slice(0, 11);
 
-    function isValidLoginId(loginId) {
-        return /^[a-zA-Z0-9._-]{4,20}$/.test(loginId);
-    }
-
-    function showElement(element) {
-        if (element) {
-            element.classList.remove("is-hidden");
+        if (numbers.length <= 3) {
+            return numbers;
         }
-    }
 
-    function hideElement(element) {
-        if (element) {
-            element.classList.add("is-hidden");
+        if (numbers.length <= 7) {
+            return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
         }
-    }
 
-    function formatCountdown(seconds) {
-        const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
-        const remainSeconds = String(seconds % 60).padStart(2, "0");
-        return `${minutes}:${remainSeconds}`;
-    }
+        return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+    };
 
-    function getFieldMessageElement(groupElement) {
-        if (!groupElement) {
+    const toggleHidden = (element, hidden) => {
+        element?.classList.toggle("is-hidden", hidden);
+    };
+
+    const getMessageElement = (field) => {
+        const group = groups[field];
+
+        if (!group) {
             return null;
         }
 
-        let messageElement = groupElement.querySelector("[data-field-message='true']");
+        let message = group.querySelector("[data-field-message='true']");
 
-        if (!messageElement) {
-            messageElement = document.createElement("div");
-            messageElement.setAttribute("data-field-message", "true");
-            messageElement.className = "field-error is-hidden";
-            groupElement.appendChild(messageElement);
+        if (!message) {
+            message = document.createElement("div");
+            message.dataset.fieldMessage = "true";
+            message.className = "field-error is-hidden";
+            group.appendChild(message);
         }
 
-        return messageElement;
-    }
+        return message;
+    };
 
-    function setFieldMessage(groupElement, type, message) {
-        const messageElement = getFieldMessageElement(groupElement);
+    const setFieldMessage = (field, message = "", type = "error") => {
+        const messageElement = getMessageElement(field);
+        const inputElement = elements[field];
 
         if (!messageElement) {
             return;
@@ -127,692 +216,576 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isBlank(message)) {
             messageElement.textContent = "";
             messageElement.className = "field-error is-hidden";
+            inputElement?.classList.remove("input-error");
             return;
         }
 
-        const nextClassName = type === "error" ? "field-error" : "field-success";
-
-        if (
-            messageElement.textContent === message &&
-            messageElement.className === nextClassName
-        ) {
-            return;
-        }
+        const isError = type === "error";
 
         messageElement.textContent = message;
-        messageElement.className = nextClassName;
-    }
+        messageElement.className = isError ? "field-error" : "field-success";
+        inputElement?.classList.toggle("input-error", isError);
+    };
 
-    function clearFieldMessage(groupElement) {
-        const messageElement = groupElement?.querySelector("[data-field-message='true']");
+    const clearField = (field) => setFieldMessage(field);
+    const clearAllFieldMessages = () => Object.keys(groups).forEach(clearField);
 
-        if (!messageElement) {
-            return;
-        }
+    const showFormError = (message) => {
+        elements.formError.textContent = message;
+        toggleHidden(elements.formError, false);
+    };
 
-        if (messageElement.textContent === "" && messageElement.classList.contains("is-hidden")) {
-            return;
-        }
+    const clearFormError = () => {
+        elements.formError.textContent = "";
+        toggleHidden(elements.formError, true);
+    };
 
-        messageElement.textContent = "";
-        messageElement.className = "field-error is-hidden";
-    }
-
-    function clearInputError(inputElement) {
-        if (inputElement) {
-            inputElement.classList.remove("input-error");
-        }
-    }
-
-    function setInputError(inputElement) {
-        if (inputElement) {
-            inputElement.classList.add("input-error");
-        }
-    }
-
-    function clearLoginIdMessages() {
-        clearInputError(loginIdElement);
-        clearFieldMessage(loginIdGroupElement);
-    }
-
-    function showLoginIdError(message) {
-        setInputError(loginIdElement);
-        setFieldMessage(loginIdGroupElement, "error", message);
-    }
-
-    function showLoginIdStatus(message) {
-        clearInputError(loginIdElement);
-        setFieldMessage(loginIdGroupElement, "success", message);
-    }
-
-    function clearPasswordMessage() {
-        clearInputError(passwordElement);
-        clearFieldMessage(passwordGroupElement);
-    }
-
-    function clearNameMessage() {
-        clearInputError(nameElement);
-        clearFieldMessage(nameGroupElement);
-    }
-
-    function clearEmailMessage() {
-        clearInputError(emailElement);
-        clearFieldMessage(emailGroupElement);
-    }
-
-    function clearVerificationCodeMessage() {
-        clearInputError(verificationCodeElement);
-        clearFieldMessage(verificationCodeGroupElement);
-    }
-
-    function resetLoginIdCheckState() {
-        checkedLoginId = "";
-        isLoginIdAvailable = false;
-        loginIdCheckInProgress = false;
-        loginIdModifiedSinceCheck = false;
-        clearLoginIdMessages();
-    }
-
-    function clearFieldErrors() {
-        clearLoginIdMessages();
-        clearPasswordMessage();
-        clearNameMessage();
-        clearEmailMessage();
-        clearVerificationCodeMessage();
-    }
-
-    function clearFormError() {
-        if (!formErrorElement) {
-            return;
-        }
-
-        formErrorElement.textContent = "";
-        hideElement(formErrorElement);
-    }
-
-    function showFormError(message) {
-        if (!formErrorElement) {
-            return;
-        }
-
-        formErrorElement.textContent = message;
-        showElement(formErrorElement);
-    }
-
-    function clearVerificationStatus() {
-        if (!verificationStatusElement) {
-            return;
-        }
-
-        verificationStatusElement.textContent = "";
-        verificationStatusElement.className = "is-hidden";
-    }
-
-    function showVerificationStatus(message, isError = false) {
-        if (!verificationStatusElement) {
-            return;
-        }
-
-        const nextClassName = isError ? "field-error" : "field-success";
-
-        if (
-            verificationStatusElement.textContent === message &&
-            verificationStatusElement.className === nextClassName
-        ) {
-            return;
-        }
-
-        verificationStatusElement.textContent = message;
-        verificationStatusElement.className = nextClassName;
-    }
-
-    function showFieldError(field, message) {
-        if (field === "loginId") {
-            showLoginIdError(message);
-            return;
-        }
-
-        if (field === "password") {
-            setInputError(passwordElement);
-            setFieldMessage(passwordGroupElement, "error", message);
-            return;
-        }
-
-        if (field === "name") {
-            setInputError(nameElement);
-            setFieldMessage(nameGroupElement, "error", message);
-            return;
-        }
-
-        if (field === "email") {
-            setInputError(emailElement);
-            setFieldMessage(emailGroupElement, "error", message);
-            return;
-        }
-
-        if (field === "verificationCode") {
-            setInputError(verificationCodeElement);
-            setFieldMessage(verificationCodeGroupElement, "error", message);
+    const showFieldError = (field, message) => {
+        if (groups[field]) {
+            setFieldMessage(field, message, "error");
             return;
         }
 
         showFormError(message);
-    }
+    };
 
-    function handleApiError(error, fallbackMessage) {
-        if (error instanceof ApiError) {
-            const field = error?.data?.field || null;
-            const message = error?.message || fallbackMessage;
+    const showFieldSuccess = (field, message) => {
+        setFieldMessage(field, message, "success");
+    };
 
-            if (field) {
-                showFieldError(field, message);
+    const setVerificationStatus = (message = "", type = "success") => {
+        elements.verificationStatus.textContent = message;
+        elements.verificationStatus.className = message
+            ? (type === "error" ? "field-error" : "field-success")
+            : "is-hidden";
+    };
+
+    const setSendButton = ({ text, disabled = false, complete = false }) => {
+        elements.sendVerificationButton.disabled = disabled;
+        elements.sendVerificationButton.classList.toggle("is-complete", complete);
+
+        if (elements.sendVerificationButtonText) {
+            elements.sendVerificationButtonText.textContent = text;
+            return;
+        }
+
+        elements.sendVerificationButton.textContent = text;
+    };
+
+    const setEmailLock = (locked) => {
+        elements.email.disabled = locked;
+        elements.sendVerificationButton.disabled = locked;
+    };
+
+    const setEmailVerifiedValue = (verified) => {
+        elements.emailVerified.value = verified ? EMAIL_VERIFIED.TRUE : EMAIL_VERIFIED.FALSE;
+    };
+
+    const stopTimer = () => {
+        if (state.timerId) {
+            clearInterval(state.timerId);
+        }
+
+        state.timerId = null;
+        state.deadline = null;
+    };
+
+    const resetLoginIdCheckState = ({ changed = false } = {}) => {
+        state.checkedLoginId = "";
+        state.loginIdAvailable = false;
+        state.loginIdChecking = false;
+        state.loginIdChanged = changed;
+    };
+
+    const invalidateLoginIdCheck = () => {
+        resetLoginIdCheckState({ changed: true });
+    };
+
+    const resetEmailVerificationState = () => {
+        state.requestedEmail = "";
+        state.verifiedEmail = "";
+        state.signupToken = "";
+        setEmailVerifiedValue(false);
+    };
+
+    const resetEmailVerificationUI = () => {
+        elements.verificationCode.value = "";
+        elements.verificationCode.disabled = false;
+        elements.verifyCodeButton.disabled = false;
+
+        clearField("verificationCode");
+        setVerificationStatus();
+        toggleHidden(groups.verificationCode, true);
+        setEmailLock(false);
+        setSendButton({ text: TEXT.sendCode });
+    };
+
+    const resetEmailVerification = () => {
+        stopTimer();
+        resetEmailVerificationState();
+        resetEmailVerificationUI();
+    };
+
+    const formatCountdown = (seconds) => {
+        const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const remainSeconds = String(seconds % 60).padStart(2, "0");
+
+        return `${minutes}:${remainSeconds}`;
+    };
+
+    const expireEmailVerification = () => {
+        resetEmailVerification();
+        showFieldError("email", TEXT.expiredEmailVerification);
+    };
+
+    const updateTimer = () => {
+        if (!state.deadline) {
+            return;
+        }
+
+        const remainingSeconds = Math.ceil((state.deadline - Date.now()) / 1000);
+
+        if (remainingSeconds <= 0) {
+            if (isEmailVerified()) {
+                stopTimer();
+                setEmailLock(true);
+                setSendButton({
+                    text: TEXT.verifyComplete,
+                    disabled: true,
+                    complete: true
+                });
             } else {
-                showFormError(message);
+                expireEmailVerification();
             }
 
+            return;
+        }
+
+        if (!isEmailVerified()) {
+            setSendButton({
+                text: formatCountdown(remainingSeconds),
+                disabled: true
+            });
+        }
+    };
+
+    const startTimer = () => {
+        stopTimer();
+        state.deadline = Date.now() + VERIFICATION_TIMEOUT_MS;
+        setEmailLock(true);
+        updateTimer();
+        state.timerId = setInterval(updateTimer, 1000);
+    };
+
+    const handleRequestError = (
+        error,
+        {
+            field = null,
+            apiMessage,
+            networkMessage,
+            networkToField = false
+        }
+    ) => {
+        if (error instanceof ApiError) {
+            showFieldError(error?.data?.field || field, error.message || apiMessage);
             return;
         }
 
         console.error(error);
-        showFormError(fallbackMessage);
-    }
 
-    function stopVerificationTimer() {
-        if (verificationTimerId) {
-            clearInterval(verificationTimerId);
-            verificationTimerId = null;
-        }
-
-        verificationDeadline = null;
-    }
-
-    function setSendButtonText(text) {
-        if (sendVerificationButtonTextElement) {
-            if (sendVerificationButtonTextElement.textContent !== text) {
-                sendVerificationButtonTextElement.textContent = text;
-            }
+        if (networkToField && field) {
+            showFieldError(field, networkMessage);
             return;
         }
 
-        if (sendVerificationButton.textContent !== text) {
-            sendVerificationButton.textContent = text;
-        }
-    }
+        showFormError(networkMessage);
+    };
 
-    function setSendButtonDefaultState() {
-        sendVerificationButton.disabled = false;
-        setSendButtonText(SEND_BUTTON_DEFAULT_TEXT);
-        sendVerificationButton.classList.remove("is-complete");
-    }
+    const validatePasswordMatch = () => {
+        const password = elements.password.value;
+        const passwordConfirm = elements.passwordConfirm.value;
 
-    function setSendButtonCountdownState(remainingSeconds) {
-        sendVerificationButton.disabled = true;
-        setSendButtonText(formatCountdown(remainingSeconds));
-        sendVerificationButton.classList.remove("is-complete");
-    }
-
-    function setSendButtonCompleteState() {
-        sendVerificationButton.disabled = true;
-        setSendButtonText(SEND_BUTTON_DONE_TEXT);
-        sendVerificationButton.classList.add("is-complete");
-    }
-
-    function lockEmailSection() {
-        emailElement.disabled = true;
-        sendVerificationButton.disabled = true;
-    }
-
-    function unlockEmailSection() {
-        emailElement.disabled = false;
-        sendVerificationButton.disabled = false;
-    }
-
-    function resetEmailVerificationState() {
-        stopVerificationTimer();
-
-        emailVerifiedElement.value = "false";
-        verifiedEmail = "";
-        requestedEmail = "";
-        signupToken = "";
-
-        verificationCodeElement.value = "";
-        verificationCodeElement.disabled = false;
-        verifyCodeButton.disabled = false;
-
-        clearVerificationStatus();
-        clearVerificationCodeMessage();
-        hideElement(verificationCodeGroupElement);
-
-        unlockEmailSection();
-        setSendButtonDefaultState();
-    }
-
-    function expireEmailVerificationState() {
-        stopVerificationTimer();
-
-        emailVerifiedElement.value = "false";
-        verifiedEmail = "";
-        requestedEmail = "";
-        signupToken = "";
-
-        verificationCodeElement.value = "";
-        verificationCodeElement.disabled = false;
-        verifyCodeButton.disabled = false;
-
-        clearVerificationStatus();
-        hideElement(verificationCodeGroupElement);
-
-        unlockEmailSection();
-        setSendButtonDefaultState();
-        showFieldError("email", "인증 시간이 만료되었습니다. 다시 인증해주세요.");
-    }
-
-    function updateVerificationCountdown() {
-        if (!verificationDeadline) {
-            return;
+        if (isBlank(passwordConfirm)) {
+            clearField("passwordConfirm");
+            return true;
         }
 
-        const remainingMilliseconds = verificationDeadline - Date.now();
-        const remainingSeconds = Math.ceil(remainingMilliseconds / 1000);
-
-        if (remainingSeconds <= 0) {
-            if (emailVerifiedElement.value !== "true") {
-                expireEmailVerificationState();
-            } else {
-                stopVerificationTimer();
-                lockEmailSection();
-                setSendButtonCompleteState();
-            }
-            return;
+        if (password !== passwordConfirm) {
+            showFieldError("passwordConfirm", TEXT.passwordMismatch);
+            return false;
         }
 
-        if (emailVerifiedElement.value !== "true") {
-            setSendButtonCountdownState(remainingSeconds);
+        clearField("passwordConfirm");
+        return true;
+    };
+
+    const validateForm = () => {
+        const values = getValues();
+        let valid = true;
+
+        const invalidate = (field, message) => {
+            showFieldError(field, message);
+            valid = false;
+        };
+
+        if (isBlank(values.loginId)) {
+            invalidate("loginId", TEXT.requiredLoginId);
+        } else if (!isValidLoginId(values.loginId)) {
+            invalidate("loginId", TEXT.invalidLoginId);
+        } else if (state.checkedLoginId !== values.loginId || !state.loginIdAvailable) {
+            invalidate("loginId", TEXT.needLoginIdCheck);
         }
-    }
 
-    function startVerificationTimer() {
-        stopVerificationTimer();
+        if (isBlank(values.password)) {
+            invalidate("password", TEXT.requiredPassword);
+        }
 
-        verificationDeadline = Date.now() + VERIFICATION_TIMEOUT_SECONDS * 1000;
+        if (isBlank(values.passwordConfirm)) {
+            invalidate("passwordConfirm", TEXT.requiredPasswordConfirm);
+        } else if (values.password !== values.passwordConfirm) {
+            invalidate("passwordConfirm", TEXT.passwordMismatch);
+        }
 
-        lockEmailSection();
-        updateVerificationCountdown();
+        if (isBlank(values.name)) {
+            invalidate("name", TEXT.requiredName);
+        }
 
-        verificationTimerId = setInterval(function () {
-            updateVerificationCountdown();
-        }, 1000);
-    }
+        if (isBlank(values.phoneNumberDigits)) {
+            invalidate("phoneNumber", TEXT.requiredPhone);
+        } else if (!isValidPhone(values.phoneNumberDigits)) {
+            invalidate("phoneNumber", TEXT.invalidPhone);
+        }
 
-    async function checkLoginIdDuplicate() {
-        const loginId = loginIdElement.value.trim();
+        if (isBlank(values.email)) {
+            invalidate("email", TEXT.requiredEmail);
+        } else if (!isValidEmail(values.email)) {
+            invalidate("email", TEXT.invalidEmail);
+        } else if (state.requestedEmail !== values.email) {
+            invalidate("email", TEXT.sendCodeFirst);
+        } else if (!isEmailVerified() || state.verifiedEmail !== values.email) {
+            invalidate("email", TEXT.needEmailVerification);
+        } else if (isBlank(state.signupToken)) {
+            invalidate("email", TEXT.missingSignupToken);
+        }
 
+        return { valid, values };
+    };
+
+    const validateLoginIdBeforeCheck = (loginId) => {
         if (isBlank(loginId)) {
             resetLoginIdCheckState();
-            return;
+            clearField("loginId");
+            return false;
         }
 
         if (!isValidLoginId(loginId)) {
-            checkedLoginId = "";
-            isLoginIdAvailable = false;
-            loginIdModifiedSinceCheck = false;
-            showLoginIdError("아이디는 4~20자의 영문, 숫자, ., _, - 만 사용할 수 있습니다.");
-            return;
+            resetLoginIdCheckState();
+            showFieldError("loginId", TEXT.invalidLoginId);
+            return false;
         }
 
-        loginIdCheckInProgress = true;
+        return true;
+    };
+
+    const checkLoginIdDuplicate = async () => {
+        const { loginId } = getValues();
+
+        if (!validateLoginIdBeforeCheck(loginId) || state.loginIdChecking) {
+            return false;
+        }
+
+        state.loginIdChecking = true;
 
         try {
             const data = await apiGet(
-                `${LOGIN_ID_CHECK_API}?loginId=${encodeURIComponent(loginId)}`,
-                {
-                    headers: buildHeaders()
-                }
+                `${API.checkLoginId}?loginId=${encodeURIComponent(loginId)}`,
+                { headers: getHeaders() }
             );
 
-            const responseLoginId = data?.result?.loginId ?? loginId;
-            const available = Boolean(data?.result?.available);
+            const result = data?.result || {};
+            const available = Boolean(result.available);
 
-            checkedLoginId = responseLoginId;
-            isLoginIdAvailable = available;
-            loginIdModifiedSinceCheck = false;
+            state.checkedLoginId = result.loginId ?? loginId;
+            state.loginIdAvailable = available;
+            state.loginIdChanged = false;
 
             if (available) {
-                showLoginIdStatus("사용 가능한 아이디입니다.");
+                showFieldSuccess("loginId", TEXT.availableLoginId);
             } else {
-                showLoginIdError("이미 사용 중인 아이디입니다.");
+                showFieldError("loginId", TEXT.duplicatedLoginId);
             }
+
+            return available;
         } catch (error) {
-            if (error instanceof ApiError) {
-                checkedLoginId = loginId;
-                isLoginIdAvailable = false;
-                loginIdModifiedSinceCheck = false;
-                showLoginIdError(error.message || "아이디 중복 확인에 실패했습니다.");
-            } else {
-                console.error(error);
-                checkedLoginId = "";
-                isLoginIdAvailable = false;
-                loginIdModifiedSinceCheck = true;
-                showLoginIdError("아이디 중복 확인 중 네트워크 오류가 발생했습니다.");
-            }
+            invalidateLoginIdCheck();
+
+            handleRequestError(error, {
+                field: "loginId",
+                apiMessage: TEXT.loginIdCheckFail,
+                networkMessage: TEXT.loginIdCheckNetworkFail,
+                networkToField: true
+            });
+
+            return false;
         } finally {
-            loginIdCheckInProgress = false;
+            state.loginIdChecking = false;
         }
-    }
+    };
 
-    function validateSignupForm() {
-        let valid = true;
-        const loginId = loginIdElement.value.trim();
-        const email = emailElement.value.trim();
-
-        if (isBlank(loginId)) {
-            showFieldError("loginId", "아이디를 입력해주세요.");
-            valid = false;
-        } else if (!isValidLoginId(loginId)) {
-            showFieldError("loginId", "아이디는 4~20자의 영문, 숫자, ., _, - 만 사용할 수 있습니다.");
-            valid = false;
-        } else if (checkedLoginId !== loginId || !isLoginIdAvailable) {
-            showFieldError("loginId", "아이디 중복 확인을 완료해주세요.");
-            valid = false;
-        }
-
-        if (isBlank(passwordElement.value)) {
-            showFieldError("password", "비밀번호를 입력해주세요.");
-            valid = false;
-        }
-
-        if (isBlank(nameElement.value)) {
-            showFieldError("name", "이름을 입력해주세요.");
-            valid = false;
-        }
-
-        if (isBlank(email)) {
-            showFieldError("email", "이메일을 입력해주세요.");
-            valid = false;
-        } else if (!isValidEmail(email)) {
-            showFieldError("email", "올바른 이메일 형식을 입력해주세요.");
-            valid = false;
-        }
-
-        if (requestedEmail !== email) {
-            showFieldError("email", "인증코드를 먼저 발송해주세요.");
-            valid = false;
-        } else if (emailVerifiedElement.value !== "true" || verifiedEmail !== email) {
-            showFieldError("email", "이메일 인증을 완료해주세요.");
-            valid = false;
-        } else if (isBlank(signupToken)) {
-            showFieldError("email", "이메일 인증 토큰이 없습니다. 다시 인증해주세요.");
-            valid = false;
-        }
-
-        return valid;
-    }
-
-    sendVerificationButton.addEventListener("click", async function () {
+    const sendVerificationCode = async () => {
         clearFormError();
+        clearField("email");
+        setVerificationStatus();
 
-        const email = emailElement.value.trim();
+        const { email } = getValues();
 
         if (isBlank(email)) {
-            clearVerificationStatus();
-            showFieldError("email", "이메일을 입력해주세요.");
+            showFieldError("email", TEXT.requiredEmail);
             return;
         }
 
         if (!isValidEmail(email)) {
-            clearVerificationStatus();
-            showFieldError("email", "올바른 이메일 형식을 입력해주세요.");
+            showFieldError("email", TEXT.invalidEmail);
             return;
         }
 
-        sendVerificationButton.disabled = true;
-        emailElement.disabled = true;
-        verifyCodeButton.disabled = true;
+        elements.sendVerificationButton.disabled = true;
+        elements.email.disabled = true;
+        elements.verifyCodeButton.disabled = true;
 
         try {
-            await apiPost(
-                EMAIL_SEND_API,
-                { email: email },
-                { headers: buildHeaders() }
-            );
+            await apiPost(API.sendEmail, { email }, { headers: getHeaders() });
 
-            clearEmailMessage();
-            clearVerificationCodeMessage();
-            clearVerificationStatus();
+            state.requestedEmail = email;
+            state.verifiedEmail = "";
+            state.signupToken = "";
+            setEmailVerifiedValue(false);
 
-            requestedEmail = email;
-            verifiedEmail = "";
-            signupToken = "";
-            emailVerifiedElement.value = "false";
+            elements.verificationCode.value = "";
+            elements.verificationCode.disabled = false;
+            elements.verifyCodeButton.disabled = false;
 
-            verificationCodeElement.value = "";
-            verificationCodeElement.disabled = false;
-            verifyCodeButton.disabled = false;
+            clearField("verificationCode");
+            toggleHidden(groups.verificationCode, false);
+            setVerificationStatus(TEXT.sentVerificationCode);
 
-            showElement(verificationCodeGroupElement);
-            showVerificationStatus("인증코드를 발송했습니다. 3분 안에 인증을 완료해주세요.");
-
-            startVerificationTimer();
-            verificationCodeElement.focus();
+            startTimer();
+            elements.verificationCode.focus();
         } catch (error) {
-            unlockEmailSection();
-            setSendButtonDefaultState();
-            verifyCodeButton.disabled = false;
+            setEmailLock(false);
+            setSendButton({ text: TEXT.sendCode });
+            elements.verifyCodeButton.disabled = false;
 
-            if (error instanceof ApiError) {
-                const field = error?.data?.field || "email";
-
-                if (field === "email") {
-                    clearVerificationStatus();
-                }
-
-                showFieldError(field, error.message || "인증코드 발송에 실패했습니다.");
-                return;
-            }
-
-            console.error(error);
-            showFormError("인증코드 발송 중 네트워크 오류가 발생했습니다.");
+            handleRequestError(error, {
+                field: "email",
+                apiMessage: TEXT.sendCodeFail,
+                networkMessage: TEXT.sendCodeNetworkFail
+            });
         }
-    });
+    };
 
-    verifyCodeButton.addEventListener("click", async function () {
+    const verifyEmailCode = async () => {
         clearFormError();
-        clearEmailMessage();
+        clearField("email");
+        clearField("verificationCode");
 
-        const email = emailElement.value.trim();
-        const verificationCode = verificationCodeElement.value.trim();
+        const { email, verificationCode } = getValues();
 
         if (isBlank(email)) {
-            showFieldError("email", "이메일을 입력해주세요.");
+            showFieldError("email", TEXT.requiredEmail);
             return;
         }
 
         if (!isValidEmail(email)) {
-            showFieldError("email", "올바른 이메일 형식을 입력해주세요.");
+            showFieldError("email", TEXT.invalidEmail);
             return;
         }
 
-        if (requestedEmail !== email) {
-            showFieldError("email", "먼저 인증코드를 발송해주세요.");
+        if (state.requestedEmail !== email) {
+            showFieldError("email", TEXT.sendCodeFirst);
             return;
         }
 
         if (isBlank(verificationCode)) {
-            clearVerificationStatus();
-            showFieldError("verificationCode", "인증코드를 입력해주세요.");
+            setVerificationStatus();
+            showFieldError("verificationCode", TEXT.requiredVerificationCode);
             return;
         }
 
-        verifyCodeButton.disabled = true;
+        elements.verifyCodeButton.disabled = true;
 
         try {
-            const result = await apiPost(
-                EMAIL_VERIFY_API,
+            const data = await apiPost(
+                API.verifyEmail,
                 {
-                    email: email,
+                    email,
                     code: verificationCode
                 },
-                { headers: buildHeaders() }
+                { headers: getHeaders() }
             );
 
-            const verifyToken = result?.result?.token;
+            const token = data?.result?.token;
 
-            if (isBlank(verifyToken)) {
-                verifyCodeButton.disabled = false;
-                showFormError("인증 토큰을 받지 못했습니다. 다시 인증해주세요.");
+            if (isBlank(token)) {
+                elements.verifyCodeButton.disabled = false;
+                showFormError(TEXT.missingVerificationToken);
                 return;
             }
 
-            stopVerificationTimer();
+            stopTimer();
 
-            clearVerificationCodeMessage();
-            clearVerificationStatus();
+            state.verifiedEmail = email;
+            state.signupToken = token;
+            setEmailVerifiedValue(true);
 
-            emailVerifiedElement.value = "true";
-            verifiedEmail = email;
-            signupToken = verifyToken;
+            elements.verificationCode.disabled = true;
+            elements.verifyCodeButton.disabled = true;
 
-            verificationCodeElement.disabled = true;
-            verifyCodeButton.disabled = true;
-
-            lockEmailSection();
-            setSendButtonCompleteState();
-            showVerificationStatus("이메일 인증이 완료되었습니다.");
+            setEmailLock(true);
+            setSendButton({
+                text: TEXT.verifyComplete,
+                disabled: true,
+                complete: true
+            });
+            setVerificationStatus(TEXT.verifiedEmail);
         } catch (error) {
-            verifyCodeButton.disabled = false;
+            elements.verifyCodeButton.disabled = false;
+            setVerificationStatus();
 
-            if (error instanceof ApiError) {
-                const field = error?.data?.field || "verificationCode";
-
-                if (field === "verificationCode") {
-                    clearVerificationStatus();
-                }
-
-                showFieldError(field, error.message || "인증코드 확인에 실패했습니다.");
-                return;
-            }
-
-            console.error(error);
-            showFormError("인증코드 확인 중 네트워크 오류가 발생했습니다.");
+            handleRequestError(error, {
+                field: "verificationCode",
+                apiMessage: TEXT.verifyCodeFail,
+                networkMessage: TEXT.verifyCodeNetworkFail
+            });
         }
-    });
+    };
 
-    loginIdElement.addEventListener("input", function () {
-        const currentLoginId = loginIdElement.value.trim();
-
-        if (currentLoginId !== checkedLoginId) {
-            loginIdModifiedSinceCheck = true;
-            checkedLoginId = "";
-            isLoginIdAvailable = false;
-            clearLoginIdMessages();
-        }
-    });
-
-    loginIdElement.addEventListener("blur", async function () {
-        const currentLoginId = loginIdElement.value.trim();
-
-        if (isBlank(currentLoginId)) {
-            resetLoginIdCheckState();
-            return;
-        }
-
-        if (!isValidLoginId(currentLoginId)) {
-            checkedLoginId = "";
-            isLoginIdAvailable = false;
-            loginIdModifiedSinceCheck = false;
-            showLoginIdError("아이디는 4~20자의 영문, 숫자, ., _, - 만 사용할 수 있습니다.");
-            return;
-        }
-
-        const neverChecked = checkedLoginId === "";
-        const changedAfterCheck = loginIdModifiedSinceCheck;
-
-        if (neverChecked || changedAfterCheck) {
-            await checkLoginIdDuplicate();
-        }
-    });
-
-    passwordElement.addEventListener("input", function () {
-        clearPasswordMessage();
-    });
-
-    nameElement.addEventListener("input", function () {
-        clearNameMessage();
-    });
-
-    emailElement.addEventListener("input", function () {
-        clearEmailMessage();
-
-        if (!emailElement.disabled && (requestedEmail || verifiedEmail || signupToken)) {
-            resetEmailVerificationState();
-        }
-    });
-
-    verificationCodeElement.addEventListener("input", function () {
-        clearVerificationCodeMessage();
-    });
-
-    signupForm.addEventListener("submit", async function (event) {
+    const submitSignup = async (event) => {
         event.preventDefault();
 
-        clearFieldErrors();
+        clearAllFieldMessages();
         clearFormError();
-        clearVerificationStatus();
+        setVerificationStatus();
 
-        const currentLoginId = loginIdElement.value.trim();
+        const { loginId } = getValues();
         const needsLoginIdCheck =
-            !isBlank(currentLoginId) &&
-            isValidLoginId(currentLoginId) &&
-            (checkedLoginId !== currentLoginId || loginIdModifiedSinceCheck);
+            !isBlank(loginId) &&
+            isValidLoginId(loginId) &&
+            (state.checkedLoginId !== loginId || state.loginIdChanged);
 
         if (needsLoginIdCheck) {
             await checkLoginIdDuplicate();
         }
 
-        if (loginIdCheckInProgress) {
-            showFieldError("loginId", "아이디 중복 확인이 아직 진행 중입니다.");
+        if (state.loginIdChecking) {
+            showFieldError("loginId", TEXT.loginIdChecking);
             return;
         }
 
-        if (!validateSignupForm()) {
+        const { valid, values } = validateForm();
+
+        if (!valid) {
             return;
         }
 
-        signupButton.disabled = true;
+        elements.signupButton.disabled = true;
 
         const payload = {
-            loginId: loginIdElement.value.trim(),
-            password: passwordElement.value,
-            name: nameElement.value.trim(),
-            email: emailElement.value.trim(),
-            role: roleElement.value,
-            signupToken: signupToken
+            loginId: values.loginId,
+            password: values.password,
+            name: values.name,
+            phoneNumber: values.phoneNumber,
+            email: values.email,
+            role: elements.role.value,
+            signupToken: state.signupToken
         };
 
         try {
-            await apiPost(SIGNUP_API, payload, {
-                headers: buildHeaders()
+            await apiPost(API.signup, payload, {
+                headers: getHeaders()
             });
 
             window.location.replace("/login");
         } catch (error) {
-            if (error instanceof ApiError) {
-                const field = error?.data?.field || null;
-                const message = error?.message || "회원가입 처리 중 오류가 발생했습니다.";
-
-                if (field) {
-                    showFieldError(field, message);
-                } else {
-                    showFormError(message);
-                }
-
-                return;
-            }
-
-            console.error(error);
-            showFormError("네트워크 오류가 발생했습니다.");
+            handleRequestError(error, {
+                apiMessage: TEXT.signupFail,
+                networkMessage: TEXT.signupNetworkFail
+            });
         } finally {
-            signupButton.disabled = false;
+            elements.signupButton.disabled = false;
+        }
+    };
+
+    const on = (element, eventName, handler, options) => {
+        element?.addEventListener(eventName, handler, options);
+    };
+
+    on(document, "keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    }, true);
+
+    on(elements.loginId, "input", () => {
+        const { loginId } = getValues();
+
+        if (loginId !== state.checkedLoginId) {
+            invalidateLoginIdCheck();
+            clearField("loginId");
         }
     });
+
+    on(elements.loginId, "blur", () => {
+        const { loginId } = getValues();
+
+        if (isBlank(loginId)) {
+            resetLoginIdCheckState();
+            clearField("loginId");
+            return;
+        }
+
+        if (!isValidLoginId(loginId)) {
+            resetLoginIdCheckState();
+            showFieldError("loginId", TEXT.invalidLoginId);
+            return;
+        }
+
+        if (!state.checkedLoginId || state.loginIdChanged) {
+            void checkLoginIdDuplicate();
+        }
+    });
+
+    on(elements.password, "input", () => {
+        clearField("password");
+        validatePasswordMatch();
+    });
+
+    on(elements.passwordConfirm, "input", () => {
+        validatePasswordMatch();
+    });
+
+    on(elements.name, "input", () => {
+        clearField("name");
+    });
+
+    on(elements.phoneNumber, "input", () => {
+        elements.phoneNumber.value = formatPhone(elements.phoneNumber.value);
+        clearField("phoneNumber");
+    });
+
+    on(elements.email, "input", () => {
+        clearField("email");
+
+        if (!elements.email.disabled && (state.requestedEmail || state.verifiedEmail || state.signupToken)) {
+            resetEmailVerification();
+        }
+    });
+
+    on(elements.verificationCode, "input", () => {
+        clearField("verificationCode");
+    });
+
+    on(elements.sendVerificationButton, "click", sendVerificationCode);
+    on(elements.verifyCodeButton, "click", verifyEmailCode);
+    on(elements.form, "submit", submitSignup);
 });

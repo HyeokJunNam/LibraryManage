@@ -33,9 +33,10 @@ public class MemberRequest {
     public record Create(
             String loginId,
             String password,
-            Role role,
             String name,
             String email,
+            String phoneNumber,
+            Role role,
             String signupToken
     ) {
     }

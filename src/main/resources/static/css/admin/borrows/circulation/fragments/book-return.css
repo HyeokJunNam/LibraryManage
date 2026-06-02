@@ -9,6 +9,7 @@
 .return-table {
     min-width: 600px;
 
+    --table-leading-column: 40px;
     --table-columns:
             minmax(80px, 2fr)     /* No */
             minmax(80px, 4fr)     /* 대출 ID */

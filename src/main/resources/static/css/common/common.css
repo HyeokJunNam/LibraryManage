@@ -30,10 +30,12 @@ html {
     --green-100: #def4e5;
     --green-200: #bfe8cc;
     --green-300: #93d5aa;
+    --green-400: #63bf86;
     --green-500: #2f9e5b;
     --green-600: #25874c;
     --green-700: #1d6e3d;
     --green-800: #165732;
+    --green-900: #0f4124;
 
     --blue-50: #eff6ff;
     --blue-100: #dbeafe;
@@ -113,11 +115,6 @@ svg {
     gap: 8px;
 }
 
-.field__label {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--color-text);
-}
 
 .field__control {
     width: 100%;
@@ -190,4 +187,20 @@ textarea.field__control {
 
 .is-hidden {
     display: none !important;
+}
+
+/* 접근성 숨김 */
+.visually-hidden {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    margin: -1px;
+    padding: 0;
+
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+
+    border: 0;
 }

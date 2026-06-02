@@ -4,8 +4,8 @@ import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.ApiResponse;
 import com.nhj.librarymanage.domain.dto.PageResponse;
 import com.nhj.librarymanage.domain.dto.BookCopyRequest;
-import com.nhj.librarymanage.domain.dto.BookRequest;
-import com.nhj.librarymanage.domain.dto.BookResponse;
+import com.nhj.librarymanage.domain.dto.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.BookManageResponse;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class BookController {
     @Description(value = "도서 조회")
     @GetMapping("/books/{id}")
     public ResponseEntity<ApiResponse> getBook(@PathVariable long id) {
-        BookResponse.Detail detail = bookService.getBook(id);
+        BookManageResponse.Detail detail = bookService.getBook(id);
         ApiResponse apiResponse = ApiResponse.result(detail);
 
         return ResponseEntity.ok().body(apiResponse);
@@ -33,8 +33,8 @@ public class BookController {
 
     @Description(value = "도서 목록 조회")
     @GetMapping("/books")
-    public ResponseEntity<ApiResponse> getBooks(@ModelAttribute BookRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BookResponse.Info> books = bookService.getBooks(searchCondition, pageable);
+    public ResponseEntity<ApiResponse> getBooks(@ModelAttribute BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<BookManageResponse.Info> books = bookService.getBooks(searchCondition, pageable);
         ApiResponse apiResponse = ApiResponse.result(books);
 
         return ResponseEntity.ok().body(apiResponse);
@@ -42,7 +42,7 @@ public class BookController {
 
     @Description(value = "도서 생성")
     @PostMapping("/books")
-    public ResponseEntity<HttpStatus> createBook(@RequestBody BookRequest.Create create) {
+    public ResponseEntity<HttpStatus> createBook(@RequestBody BookManageRequest.Create create) {
         bookService.createBooks(create);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -50,7 +50,7 @@ public class BookController {
 
     @Description(value = "도서 수정")
     @PutMapping("/books")
-    public ResponseEntity<HttpStatus> updateBook(@RequestBody BookRequest.Update update) {
+    public ResponseEntity<HttpStatus> updateBook(@RequestBody BookManageRequest.Update update) {
         bookService.updateBook(update);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

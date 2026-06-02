@@ -384,8 +384,12 @@
 ========================= */
 
 .table-layout__row--empty {
-    display: block;
-    padding: 0;
+    display: grid;
+    grid-template-columns: var(--table-leading-column) var(--table-columns);
+
+    padding-right: 18px;
+    padding-left: 18px;
+
     border-bottom: none;
     background: var(--white);
     min-height: calc(var(--table-row-min-height) * var(--table-visible-rows));
@@ -397,6 +401,8 @@
 }
 
 .table-layout__cell--empty {
+    grid-column: 1 / -1;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -549,13 +555,6 @@
    TABLE FIXED HEIGHT
 ========================= */
 
-/*
-   table-layout--fixed-height
-   = fixed-height 패널 안에서 테이블 구조의 높이 기준을 맞추는 modifier.
-
-   panel-layout은 패널 공통 변수만 제공하고,
-   table-layout 내부 요소의 실제 적용은 여기서 담당한다.
-*/
 .table-layout--fixed-height {
     --table-head-row-height: var(--panel-table-head-row-height, 45px);
     --table-body-row-height: var(--panel-table-body-row-height, 57px);
