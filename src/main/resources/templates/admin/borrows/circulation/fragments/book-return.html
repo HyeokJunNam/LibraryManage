@@ -25,13 +25,13 @@
              id="bookReturnModePanel"
              th:attr="data-fragment-url=@{admin/circulation/return/members/{memberId}/borrows(memberId=${memberId})}">
 
-        <th:block th:replace="~{common/table-layout :: tableHeader(
+        <th:block th:replace="~{admin/common/table-layout :: tableHeader(
             title='반납 도서 목록',
             caption='회원의 반납 대상 도서를 선택해 반납 처리할 수 있습니다.',
             actions=~{::returnBookHeaderActions}
         )}"></th:block>
 
-        <th:block th:replace="~{common/table-layout :: tableToolbar(
+        <th:block th:replace="~{admin/common/table-layout :: tableToolbar(
             searchMode=${TABLE_MODE_AJAX}
         )}"></th:block>
 
@@ -175,7 +175,7 @@
             </table>
         </div>
 
-        <th:block th:replace="~{common/table-layout :: tablePagination(
+        <th:block th:replace="~{admin/common/table-layout :: tablePagination(
             paginationMode=${TABLE_MODE_AJAX}
         )}"></th:block>
 

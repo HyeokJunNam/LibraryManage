@@ -12,14 +12,14 @@
             class="panel-layout table-layout table-layout--fixed-height borrow-table-layout borrow-table-layout--overdue"
             th:attr="data-fragment-url=@{/admin/borrows/overdue}">
 
-        <th:block th:replace="~{common/table-layout :: tableHeader(
+        <th:block th:replace="~{admin/common/table-layout :: tableHeader(
             title='연체 목록',
             caption='반납 예정일이 지난 현재 대출 건을 빠르게 확인할 수 있습니다.',
             actions=null
         )}"></th:block>
 
         <th:block
-                th:replace="~{common/table-layout :: tableToolbar(searchMode='ajax')}"
+                th:replace="~{admin/common/table-layout :: tableToolbar(searchMode='ajax')}"
                 th:with="searchFields=${safeSearchFields}">
         </th:block>
 
@@ -165,7 +165,7 @@
         </div>
 
         <th:block
-                th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"
+                th:replace="~{admin/common/table-layout :: tablePagination(paginationMode='ajax')}"
                 th:with="
                     pageMetaData=${resolvedPageMetaData},
                     searchFields=${safeSearchFields}

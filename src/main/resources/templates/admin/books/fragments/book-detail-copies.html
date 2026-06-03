@@ -9,7 +9,7 @@
         th:data-book-id="${bookId}"
         th:data-fragment-url="@{/admin/books/{id}/copies(id=${bookId})}">
 
-    <th:block th:replace="~{common/table-layout :: tableHeader(
+    <th:block th:replace="~{admin/common/table-layout :: tableHeader(
         title='도서 재고 현황',
         caption='이 도서에 등록된 개별 재고의 상태를 확인합니다.',
         actions=~{::bookDetailActions}
@@ -189,7 +189,7 @@
         </button>
     </div>
 
-    <th:block th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"></th:block>
+    <th:block th:replace="~{admin/common/table-layout :: tablePagination(paginationMode='ajax')}"></th:block>
 
     <template id="bookDetailCopyRowTemplate">
         <tr class="table-layout__row book-detail-copies-table__row book-detail-copies-table__row--created">

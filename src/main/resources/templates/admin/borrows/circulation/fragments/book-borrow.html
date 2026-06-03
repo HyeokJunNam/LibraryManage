@@ -31,7 +31,7 @@
     <section class="panel-layout table-layout table-layout--fixed-height book-borrow-table"
              id="bookBorrowModePanel">
 
-        <th:block th:replace="~{common/table-layout :: tableHeader(
+        <th:block th:replace="~{admin/common/table-layout :: tableHeader(
             title='대출 도서 목록',
             caption='도서 검색으로 대출할 도서를 추가한 뒤 수량을 지정할 수 있습니다.',
             actions=~{::borrowBookHeaderActions}
@@ -89,7 +89,7 @@
                  aria-label="대출 도서 페이지네이션"></nav>
         </div>
 
-        <th:block th:replace="~{common/table-layout :: tableFooter(~{::borrowBookFooterActions})}"></th:block>
+        <th:block th:replace="~{admin/common/table-layout :: tableFooter(~{::borrowBookFooterActions})}"></th:block>
 
         <template id="borrowBookRowTemplate">
             <tr class="table-layout__row book-borrow-table__row">

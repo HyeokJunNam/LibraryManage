@@ -25,7 +25,7 @@
 
             <section class="panel-layout table-layout table-layout--fixed-height member-detail-profile">
 
-                <th:block th:replace="~{common/table-layout :: tableHeader(
+                <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                     title='회원 정보',
                     caption='회원의 기본 정보를 확인합니다.',
                     actions=~{::headerActions}
@@ -126,7 +126,7 @@
                         data-member-id=${content.id}
                     ">
 
-                <th:block th:replace="~{common/table-layout :: tableHeader(
+                <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                     title='대출 이력',
                     caption='회원의 도서 대출 및 반납 이력을 불러오는 중입니다.',
                     actions=null

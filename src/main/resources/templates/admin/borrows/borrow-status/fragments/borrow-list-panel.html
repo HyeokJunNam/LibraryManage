@@ -12,14 +12,14 @@
             class="panel-layout table-layout table-layout--fixed-height borrow-table-layout borrow-table-layout--list"
             th:attr="data-fragment-url=@{/admin/borrows/list}">
 
-        <th:block th:replace="~{common/table-layout :: tableHeader(
+        <th:block th:replace="~{admin/common/table-layout :: tableHeader(
             title='대출 목록',
             caption='전체 도서 대출 이력을 확인할 수 있습니다.',
             actions=null
         )}"></th:block>
 
         <th:block
-                th:replace="~{common/table-layout :: tableToolbar(searchMode='ajax')}"
+                th:replace="~{admin/common/table-layout :: tableToolbar(searchMode='ajax')}"
                 th:with="searchFields=${safeSearchFields}">
         </th:block>
 
@@ -186,7 +186,7 @@
         </div>
 
         <th:block
-                th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"
+                th:replace="~{admin/common/table-layout :: tablePagination(paginationMode='ajax')}"
                 th:with="
                     pageMetaData=${resolvedPageMetaData},
                     searchFields=${safeSearchFields}

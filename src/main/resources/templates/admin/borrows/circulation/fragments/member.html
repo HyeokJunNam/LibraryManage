@@ -35,7 +35,7 @@
 
         <div class="panel-layout__content">
 
-            <th:block th:replace="~{common/table-layout :: tableHeader(
+            <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                 title='회원 조회',
                 caption='선택된 회원의 정보를 확인할 수 있습니다.',
                 actions=~{::memberPanelHeaderActions}
@@ -104,7 +104,7 @@
                  id="memberActionFooter"
                  aria-hidden="true">
 
-                <th:block th:replace="~{common/table-layout :: tableFooter(~{::memberPanelFooterActions})}"></th:block>
+                <th:block th:replace="~{admin/common/table-layout :: tableFooter(~{::memberPanelFooterActions})}"></th:block>
 
             </div>
 

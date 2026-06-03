@@ -55,7 +55,7 @@
 
         <div class="table-layout table-layout--auto-height">
 
-            <th:block th:replace="~{common/table-layout :: tableToolbar(
+            <th:block th:replace="~{admin/common/table-layout :: tableToolbar(
                 searchMode=${TABLE_MODE_AJAX}
             )}"></th:block>
 
@@ -160,7 +160,7 @@
                 </table>
             </div>
 
-            <th:block th:replace="~{common/table-layout :: tablePagination(
+            <th:block th:replace="~{admin/common/table-layout :: tablePagination(
                 paginationMode=${TABLE_MODE_AJAX}
             )}"></th:block>
 

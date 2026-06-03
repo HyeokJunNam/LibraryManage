@@ -8,13 +8,13 @@
             class="panel-layout table-layout table-layout--fixed-height"
             th:data-fragment-url="@{/admin/books/{id}/borrows(id=${bookId})}">
 
-        <th:block th:replace="~{common/table-layout :: tableHeader(
+        <th:block th:replace="~{admin/common/table-layout :: tableHeader(
             title='대출 현황',
             caption='이 도서의 재고별 대출 이력과 반납 상태를 확인합니다.',
             actions=null
         )}"></th:block>
 
-        <th:block th:replace="~{common/table-layout :: tableToolbar(searchMode='ajax')}"></th:block>
+        <th:block th:replace="~{admin/common/table-layout :: tableToolbar(searchMode='ajax')}"></th:block>
 
         <div class="table-layout__body">
             <table class="table-layout__table">
@@ -161,7 +161,7 @@
             </table>
         </div>
 
-        <th:block th:replace="~{common/table-layout :: tablePagination(paginationMode='ajax')}"></th:block>
+        <th:block th:replace="~{admin/common/table-layout :: tablePagination(paginationMode='ajax')}"></th:block>
 
     </section>
 </th:block>
