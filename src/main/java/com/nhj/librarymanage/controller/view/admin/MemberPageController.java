@@ -3,9 +3,8 @@ package com.nhj.librarymanage.controller.view.admin;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.*;
 import com.nhj.librarymanage.model.vo.MemberStatistics;
-import com.nhj.librarymanage.service.BorrowRecordService;
 import com.nhj.librarymanage.service.MemberService;
-import com.nhj.librarymanage.util.NumberParser;
+import com.nhj.librarymanage.service.BorrowRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -25,8 +24,8 @@ public class MemberPageController {
 
     @Description("회원 목록 화면")
     @GetMapping("/members")
-    public String memberListPage(Model model, @ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<MemberResponse.Info> pageResponse = memberService.getMembers(searchCondition, pageable);
+    public String memberListPage(Model model, @ModelAttribute MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<MemberManageResponse.Info> pageResponse = memberService.getMembers(searchCondition, pageable);
         MemberStatistics memberStatistics = memberService.getMemberStatistics();
 
         model.addAttribute("content", pageResponse.content());
@@ -41,7 +40,7 @@ public class MemberPageController {
     @Description("회원 상세 화면")
     @GetMapping("/members/{id}")
     public String memberDetailPage(Model model, @PathVariable Long id) {
-        MemberResponse.Detail content = memberService.getMember(id);
+        MemberManageResponse.Detail content = memberService.getMember(id);
         model.addAttribute("content", content);
 
         return "admin/members/member-detail";
@@ -50,7 +49,7 @@ public class MemberPageController {
     @Description("회원 별 도서 대출 목록 패널")
     @GetMapping("/members/{id}/borrows")
     public String memberBorrowHistoryPanel(Model model, @PathVariable Long id, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
-        PageResponse<BorrowResponse.MemberHistory> pageResponse = borrowRecordService.getBorrowHistoryByMember(id, searchCondition, pageable);
+        PageResponse<BorrowResponse.MemberHistory> pageResponse = borrowRecordService.getBorrowsByMember(id, searchCondition, pageable);
 
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());

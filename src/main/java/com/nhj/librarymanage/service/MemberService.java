@@ -1,9 +1,10 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.dto.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.MemberRequest;
-import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.MemberManageResponse;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.model.vo.MemberStatistics;
@@ -33,10 +34,10 @@ public class MemberService {
     }
 
     @Transactional
-    public PageResponse<MemberResponse.Info> getMembers(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+    public PageResponse<MemberManageResponse.Info> getMembers(MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<Member> members =  memberRepository.search(searchCondition, pageable);
 
-        return PageResponse.from(members.map(MemberResponse.Info::from));
+        return PageResponse.from(members.map(MemberManageResponse.Info::from));
     }
 
     private void validateSignup(String email, String loginId, String token) {
@@ -47,12 +48,16 @@ public class MemberService {
         }
     }
 
-    public MemberResponse.Detail getMember(Long id) {
-        return MemberResponse.Detail.from(memberRepository.getById(id));
+    public MemberManageResponse.Detail getMember(Long id) {
+        return MemberManageResponse.Detail.from(memberRepository.getById(id));
+    }
+
+    public MyInfoResponse.Detail getMyInfo(Long id) {
+        return MyInfoResponse.Detail.from(memberRepository.getById(id));
     }
 
     @Transactional
-    public void createMember(MemberRequest.Create create) {
+    public void createMember(MemberManageRequest.Create create) {
         validateSignup(create.email(), create.loginId(), create.signupToken());
 
         Member member = Member.builder()
@@ -69,7 +74,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void updateMember(MemberRequest.Update update) {
+    public void updateMember(MemberManageRequest.Update update) {
         Member member = memberRepository.getById(update.id());
 
         member.changeName(update.name());

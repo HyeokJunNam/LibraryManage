@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberRequest {
+public class MemberManageRequest {
 
     @FieldNameConstants
     public record SearchCondition(

@@ -25,7 +25,7 @@ public class BorrowController {
     @GetMapping("/members/{memberId}/borrows")
     public ResponseEntity<ApiResponse> getMemberBorrowHistory(@PathVariable Long memberId, Pageable pageable) {
         // TODO 할일입니다.
-        PageResponse<BorrowResponse.MemberHistory> pageResponse = borrowRecordService.getBorrowHistoryByMember(memberId, null, pageable);
+        PageResponse<BorrowResponse.MemberHistory> pageResponse = borrowRecordService.getBorrowsByMember(memberId, null, pageable);
         ApiResponse apiResponse = ApiResponse.result(pageResponse);
 
         return ResponseEntity.ok().body(apiResponse);

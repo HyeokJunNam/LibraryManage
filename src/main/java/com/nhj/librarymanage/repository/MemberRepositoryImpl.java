@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.domain.dto.MemberRequest;
+import com.nhj.librarymanage.domain.dto.MemberManageRequest;
 import com.nhj.librarymanage.model.vo.MemberStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
@@ -35,7 +35,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             QuerydslSortHelper.buildOrderColumnMap(List.of());
 
     @Override
-    public Page<Member> search(MemberRequest.SearchCondition searchCondition, Pageable pageable) {
+    public Page<Member> search(MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(member.id, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression likeName = QuerydslFilterHelper.like(member.name, searchCondition.name());

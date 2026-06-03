@@ -4,8 +4,8 @@ import com.nhj.librarymanage.domain.dto.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.EmailVerificationRequest;
 import com.nhj.librarymanage.domain.dto.EmailVerificationResponse;
-import com.nhj.librarymanage.domain.dto.MemberRequest;
-import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.MemberManageResponse;
 import com.nhj.librarymanage.service.MemberService;
 import com.nhj.librarymanage.service.SignupEmailVerificationService;
 import com.nhj.librarymanage.service.SignupTokenService;
@@ -25,7 +25,7 @@ public class SignupController {
 
     @Description(value = "회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody MemberRequest.Create create) {
+    public ResponseEntity<Void> signup(@RequestBody MemberManageRequest.Create create) {
         memberService.createMember(create);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -35,7 +35,7 @@ public class SignupController {
     @GetMapping("/auth/check-id")
     public ResponseEntity<ApiResponse> verifyDuplicateLoginId(@RequestParam String loginId) {
         boolean duplicatedLoginId = memberService.isLoginIdDuplicated(loginId);
-        MemberResponse.LoginIdCheck loginIdCheck = MemberResponse.LoginIdCheck.of(loginId, !duplicatedLoginId);
+        MemberManageResponse.LoginIdCheck loginIdCheck = MemberManageResponse.LoginIdCheck.of(loginId, !duplicatedLoginId);
 
         ApiResponse apiResponse = ApiResponse.result(loginIdCheck);
 

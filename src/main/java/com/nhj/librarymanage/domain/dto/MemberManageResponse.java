@@ -8,7 +8,7 @@ import tools.jackson.databind.ser.std.ToStringSerializer;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberResponse {
+public class MemberManageResponse {
 
     // Service → Controller
     @Builder(access = AccessLevel.PRIVATE)

@@ -57,6 +57,21 @@ public class BorrowRequest {
         }
     }
 
+    @FieldNameConstants
+    public record SearchConditionByMe(
+            String bookTitle,
+            Long bookRecordId
+    ) {
+        public void applySearchFields(Model model) {
+            List<SearchField> searchFields = List.of(
+                    SearchField.of(Fields.bookTitle, "도서명"),
+                    SearchField.of(Fields.bookRecordId, "재고 ID")
+            );
+
+            model.addAttribute("searchFields", searchFields);
+        }
+    }
+
     public record Create(
             String memberId,
             List<Item> items

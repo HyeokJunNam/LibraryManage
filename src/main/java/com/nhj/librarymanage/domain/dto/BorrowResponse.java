@@ -1,16 +1,15 @@
 package com.nhj.librarymanage.domain.dto;
 
-import com.nhj.librarymanage.domain.code.BookCopyCondition;
-import com.nhj.librarymanage.domain.code.BorrowStatus;
-import com.nhj.librarymanage.domain.code.ReturnStatus;
 import com.nhj.librarymanage.domain.code.EnumOption;
+import com.nhj.librarymanage.domain.code.ReturnStatus;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.entity.Member;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -97,6 +96,32 @@ public class BorrowResponse {
             Book book = bookCopy.getBook();
 
             return MemberHistory.builder()
+                    .borrowRecordId(borrowRecord.getId())
+                    .bookCopyId(bookCopy.getId())
+                    .bookTitle(book.getTitle())
+                    .borrowedAt(borrowRecord.getBorrowedAt())
+                    .dueAt(borrowRecord.getDueAt())
+                    .returnedAt(borrowRecord.getReturnedAt())
+                    .returnStatus(EnumOption.from(borrowRecord.getReturnStatus()))
+                    .build();
+        }
+    }
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public record MyRecord(
+            Long borrowRecordId,
+            Long bookCopyId,
+            String bookTitle,
+            LocalDateTime borrowedAt,
+            LocalDateTime dueAt,
+            LocalDateTime returnedAt,
+            EnumOption<ReturnStatus> returnStatus
+    ) {
+        public static MyRecord from(BorrowRecord borrowRecord) {
+            BookCopy bookCopy = borrowRecord.getBookCopy();
+            Book book = bookCopy.getBook();
+
+            return MyRecord.builder()
                     .borrowRecordId(borrowRecord.getId())
                     .bookCopyId(bookCopy.getId())
                     .bookTitle(book.getTitle())

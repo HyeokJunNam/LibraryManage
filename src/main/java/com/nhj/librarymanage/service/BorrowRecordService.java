@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -18,35 +17,42 @@ public class BorrowRecordService {
 
     private final BorrowRecordRepository borrowRecordRepository;
 
-    public PageResponse<BorrowResponse.History> getBorrowHistory(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
+    public PageResponse<BorrowResponse.History> getBorrows(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.search(searchCondition, pageable);
         Page<BorrowResponse.History> histories = borrowRecords.map(BorrowResponse.History::from);
 
         return PageResponse.from(histories);
     }
 
-    public PageResponse<BorrowResponse.MemberHistory> getBorrowHistoryByMember(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+    public PageResponse<BorrowResponse.MemberHistory> getBorrowsByMember(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, searchCondition, pageable);
         Page<BorrowResponse.MemberHistory> histories = borrowRecords.map(BorrowResponse.MemberHistory::from);
 
         return PageResponse.from(histories);
     }
 
-    public PageResponse<BorrowResponse.Returnable> getReturnableBooksByMember(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+    public PageResponse<BorrowResponse.MyRecord> getMyBorrows(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
+        Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByMemberId(memberId, searchCondition, pageable);
+        Page<BorrowResponse.MyRecord> histories = borrowRecords.map(BorrowResponse.MyRecord::from);
+
+        return PageResponse.from(histories);
+    }
+
+    public PageResponse<BorrowResponse.Returnable> getReturnableBorrowsByMember(Long memberId, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchReturnableByMemberId(memberId, searchCondition, pageable);
         Page<BorrowResponse.Returnable> returnables = borrowRecords.map(BorrowResponse.Returnable::from);
 
         return PageResponse.from(returnables);
     }
 
-    public PageResponse<BorrowResponse.BookHistory> getBorrowHistoryByBook(Long bookId, BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
+    public PageResponse<BorrowResponse.BookHistory> getBorrowsByBook(Long bookId, BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchByBookId(bookId, searchCondition, pageable);
         Page<BorrowResponse.BookHistory> histories = borrowRecords.map(BorrowResponse.BookHistory::from);
 
         return PageResponse.from(histories);
     }
 
-    public PageResponse<BorrowResponse.OverdueHistory> getOverdueBorrowRecords(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
+    public PageResponse<BorrowResponse.OverdueHistory> getOverdueBorrows(BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
         Page<BorrowRecord> borrowRecords = borrowRecordRepository.searchOverdueBorrowRecords(searchCondition, pageable);
         Page<BorrowResponse.OverdueHistory> histories = borrowRecords.map(BorrowResponse.OverdueHistory::from);
 

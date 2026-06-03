@@ -3,8 +3,8 @@ package com.nhj.librarymanage.controller.api;
 import com.nhj.librarymanage.domain.dto.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.MemberRequest;
-import com.nhj.librarymanage.domain.dto.MemberResponse;
+import com.nhj.librarymanage.domain.dto.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.MemberManageResponse;
 import com.nhj.librarymanage.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +23,7 @@ public class MemberController {
     @Description(value = "회원 조회")
     @GetMapping("/members/{id}")
     public ResponseEntity<ApiResponse> getMember(@PathVariable Long id) {
-        MemberResponse.Detail detail = memberService.getMember(id);
+        MemberManageResponse.Detail detail = memberService.getMember(id);
         ApiResponse apiResponse = ApiResponse.result(detail);
 
         return ResponseEntity.ok().body(apiResponse);
@@ -31,8 +31,8 @@ public class MemberController {
 
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
-    public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<MemberResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
+    public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
+        PageResponse<MemberManageResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
         ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);
@@ -40,7 +40,7 @@ public class MemberController {
 
     @Description(value = "회원 수정")
     @PutMapping("/members")
-    public ResponseEntity<Void> updateMember(@RequestBody MemberRequest.Update update) {
+    public ResponseEntity<Void> updateMember(@RequestBody MemberManageRequest.Update update) {
         memberService.updateMember(update);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

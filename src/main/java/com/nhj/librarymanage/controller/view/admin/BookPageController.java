@@ -67,7 +67,7 @@ public class BookPageController {
     @Description(value = "도서 별 도서 대출 목록 패널")
     @GetMapping("/books/{id}/borrows")
     public String bookBorrowHistoryPanel(Model model, @PathVariable Long id, @ModelAttribute BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
-        PageResponse<BorrowResponse.BookHistory> pageResponse = borrowRecordService.getBorrowHistoryByBook(id, searchCondition, pageable);
+        PageResponse<BorrowResponse.BookHistory> pageResponse = borrowRecordService.getBorrowsByBook(id, searchCondition, pageable);
 
         model.addAttribute("bookId", id);
         model.addAttribute("content", pageResponse.content());
