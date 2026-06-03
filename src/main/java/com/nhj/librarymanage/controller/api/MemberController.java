@@ -1,10 +1,10 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.dto.ApiResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.MemberManageRequest;
-import com.nhj.librarymanage.domain.dto.MemberManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageResponse;
 import com.nhj.librarymanage.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +31,8 @@ public class MemberController {
 
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
-    public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<MemberManageResponse.Info> infos = memberService.getMembers(searchCondition, pageable);
+    public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberManageRequest.Search search, Pageable pageable) {
+        PageResponse<MemberManageResponse.Info> infos = memberService.getMembers(search, pageable);
         ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);

@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.dto.ApiResponse;
-import com.nhj.librarymanage.domain.dto.BookLookupResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
+import com.nhj.librarymanage.domain.dto.temp.BookLookupResponse;
 import com.nhj.librarymanage.service.BookMetadataLookupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

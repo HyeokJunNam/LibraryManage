@@ -19,7 +19,7 @@ public class DashboardController {
     @Description("대시보드")
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        DashboardStatistics dashboardStatistics = dashboardService.getTodayBorrowStatistics();
+        DashboardStatistics dashboardStatistics = dashboardService.getBorrowStatistics();
 
         model.addAttribute("statistics", dashboardStatistics);
 

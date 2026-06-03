@@ -2,7 +2,8 @@ package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
 import com.nhj.librarymanage.domain.code.BookCopyCondition;
-import com.nhj.librarymanage.domain.dto.*;
+import com.nhj.librarymanage.domain.dto.admin.book.*;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
@@ -39,7 +40,7 @@ public class BookPageController {
 
         searchCondition.applySearchFields(model);
 
-        return "admin/books/books";
+        return "admin/book/books";
     }
 
     @Description("도서 관리 도서 상세 화면")
@@ -48,7 +49,7 @@ public class BookPageController {
         BookManageResponse.Detail detail = bookService.getBook(id);
         model.addAttribute("content", detail);
 
-        return "admin/books/book-detail";
+        return "admin/book/book-detail";
     }
 
     @Description(value = "도서 재고 목록 패널")
@@ -61,28 +62,28 @@ public class BookPageController {
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("conditionOptions", BookCopyCondition.options());
 
-        return "admin/books/fragments/book-detail-copies :: bookCopies";
+        return "admin/book/fragments/book-detail-copies :: bookCopies";
     }
 
     @Description(value = "도서 별 도서 대출 목록 패널")
     @GetMapping("/books/{id}/borrows")
-    public String bookBorrowHistoryPanel(Model model, @PathVariable Long id, @ModelAttribute BorrowRequest.SearchConditionByBook searchCondition, Pageable pageable) {
-        PageResponse<BorrowResponse.BookHistory> pageResponse = borrowRecordService.getBorrowsByBook(id, searchCondition, pageable);
+    public String borrowListPanel(Model model, @PathVariable Long id, @ModelAttribute BookBorrowRequest.Search search, Pageable pageable) {
+        PageResponse<BookBorrowResponse.ListItem> pageResponse = borrowRecordService.getBorrowsByBook(id, search, pageable);
 
         model.addAttribute("bookId", id);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        searchCondition.applySearchFields(model);
+        search.applySearchFields(model);
 
-        return "admin/books/fragments/book-detail-borrows :: bookBorrows";
+        return "admin/book/fragments/book-detail-borrows :: bookBorrows";
     }
 
     @Description("도서 등록 화면")
     @GetMapping("/books/new")
     public String newBookPage() {
 
-        return "admin/books/books-new";
+        return "admin/book/books-new";
     }
 
     @Description("도서 수정 화면")
@@ -91,7 +92,7 @@ public class BookPageController {
         BookManageResponse.Detail detail = bookService.getBook(id);
         model.addAttribute("book", detail);
 
-        return "admin/books/books-edit";
+        return "admin/book/books-edit";
     }
 
 }

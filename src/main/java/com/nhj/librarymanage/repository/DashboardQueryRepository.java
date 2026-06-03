@@ -21,12 +21,11 @@ public class DashboardQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public DashboardStatistics getCurrentBorrowStatistics() {
+    public DashboardStatistics getBorrowStatistics() {
         LocalDate now = LocalDate.now();
 
         NumberExpression<Long> currentBorrowCount = countWhen(
                 borrowRecord.returnedAt.isNull()
-                        .and(toDate(borrowRecord.borrowedAt).eq(now))
         );
 
         NumberExpression<Long> currentOverdueCount = countWhen(
@@ -36,7 +35,6 @@ public class DashboardQueryRepository {
 
         NumberExpression<Long> currentBorrowMemberCount = countDistinctMemberWhen(
                 borrowRecord.returnedAt.isNull()
-                        .and(toDate(borrowRecord.borrowedAt).eq(now))
         );
         NumberExpression<Long> currentOverdueMemberCount = countDistinctMemberWhen(
                 borrowRecord.returnedAt.isNull()

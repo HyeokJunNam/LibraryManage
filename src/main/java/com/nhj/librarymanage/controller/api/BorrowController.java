@@ -1,7 +1,10 @@
 package com.nhj.librarymanage.controller.api;
 
-import com.nhj.librarymanage.domain.dto.*;
 import com.nhj.librarymanage.domain.annotations.Description;
+import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.borrow.ReturnRequest;
+import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
 import com.nhj.librarymanage.service.BorrowRecordService;
 import com.nhj.librarymanage.service.BorrowService;
 import com.nhj.librarymanage.service.ReturnService;
@@ -18,18 +21,6 @@ public class BorrowController {
 
     private final BorrowService borrowService;
     private final ReturnService returnService;
-    private final BorrowRecordService borrowRecordService;
-
-
-    @Description(value = "회원 도서 대여 현황 조회")
-    @GetMapping("/members/{memberId}/borrows")
-    public ResponseEntity<ApiResponse> getMemberBorrowHistory(@PathVariable Long memberId, Pageable pageable) {
-        // TODO 할일입니다.
-        PageResponse<BorrowResponse.MemberHistory> pageResponse = borrowRecordService.getBorrowsByMember(memberId, null, pageable);
-        ApiResponse apiResponse = ApiResponse.result(pageResponse);
-
-        return ResponseEntity.ok().body(apiResponse);
-    }
 
     @Description(value = "도서 대여")
     @PostMapping("/borrows")

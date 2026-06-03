@@ -1,9 +1,9 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.BookManageRequest;
-import com.nhj.librarymanage.domain.dto.BookManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,6 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    @Transactional
     public BookManageResponse.Detail getBook(long id) {
         return BookManageResponse.Detail.from(bookRepository.getById(id));
     }

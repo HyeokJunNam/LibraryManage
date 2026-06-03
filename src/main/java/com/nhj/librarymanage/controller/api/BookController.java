@@ -1,11 +1,11 @@
 package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.ApiResponse;
-import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.BookCopyRequest;
-import com.nhj.librarymanage.domain.dto.BookManageRequest;
-import com.nhj.librarymanage.domain.dto.BookManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookCopyRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;

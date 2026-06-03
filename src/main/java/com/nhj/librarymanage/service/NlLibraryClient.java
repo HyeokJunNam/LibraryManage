@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.config.properties.NlLibraryProperties;
-import com.nhj.librarymanage.domain.dto.NlLibraryBookSearchApi;
+import com.nhj.librarymanage.domain.dto.temp.NlLibraryBookSearchApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;

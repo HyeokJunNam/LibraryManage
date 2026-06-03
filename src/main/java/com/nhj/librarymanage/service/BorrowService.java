@@ -1,6 +1,6 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import com.nhj.librarymanage.domain.entity.Member;

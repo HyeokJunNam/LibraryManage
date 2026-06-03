@@ -1,10 +1,10 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.dto.MyInfoResponse;
+import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.MemberManageRequest;
-import com.nhj.librarymanage.domain.dto.MemberManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageResponse;
 import com.nhj.librarymanage.error.code.MemberErrorCode;
 import com.nhj.librarymanage.error.exception.EntityAlreadyExistsException;
 import com.nhj.librarymanage.model.vo.MemberStatistics;
@@ -34,8 +34,8 @@ public class MemberService {
     }
 
     @Transactional
-    public PageResponse<MemberManageResponse.Info> getMembers(MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<Member> members =  memberRepository.search(searchCondition, pageable);
+    public PageResponse<MemberManageResponse.Info> getMembers(MemberManageRequest.Search search, Pageable pageable) {
+        Page<Member> members =  memberRepository.search(search, pageable);
 
         return PageResponse.from(members.map(MemberManageResponse.Info::from));
     }

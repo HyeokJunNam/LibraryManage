@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.dto.BookLookupResponse;
-import com.nhj.librarymanage.domain.dto.NlLibraryBookSearchApi;
+import com.nhj.librarymanage.domain.dto.temp.BookLookupResponse;
+import com.nhj.librarymanage.domain.dto.temp.NlLibraryBookSearchApi;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.BookMetadataNotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -2,9 +2,9 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
-import com.nhj.librarymanage.domain.dto.PageResponse;
-import com.nhj.librarymanage.domain.dto.BookCopyRequest;
-import com.nhj.librarymanage.domain.dto.BookCopyResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookCopyRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookCopyResponse;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.BookItemAlreadyBorrowedException;
 import com.nhj.librarymanage.repository.BookCopyRepository;
@@ -48,30 +48,6 @@ public class BookCopyService {
         ).map(BookCopyResponse.Info::from);
 
         return PageResponse.from(page);
-    }
-
-    @Transactional
-    public BookCopyResponse.Quantity getBookQuantity(Long bookId) {
-        List<BookCopy> bookCopies = bookCopyRepository.findAllByBookId(bookId);
-
-        int stockQuantity = 0;
-        int borrowedQuantity = 0;
-        int availableQuantity = 0;
-
-        for (BookCopy bookCopy : bookCopies) {
-            stockQuantity++;
-
-            switch (bookCopy.getBorrowStatus()) {
-                case AVAILABLE -> availableQuantity++;
-                case BORROWED -> borrowedQuantity++;
-            }
-        }
-
-        return new BookCopyResponse.Quantity(
-                stockQuantity,
-                borrowedQuantity,
-                availableQuantity
-        );
     }
 
 

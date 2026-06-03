@@ -3,7 +3,7 @@ package com.nhj.librarymanage.service;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.entity.Notification;
-import com.nhj.librarymanage.domain.dto.NotificationRequest;
+import com.nhj.librarymanage.domain.dto.temp.NotificationRequest;
 import com.nhj.librarymanage.error.code.NotificationErrorCode;
 import com.nhj.librarymanage.error.exception.notification.AlreadyRequestedNotificationException;
 import com.nhj.librarymanage.repository.BookRepository;

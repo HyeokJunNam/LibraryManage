@@ -1,10 +1,12 @@
 package com.nhj.librarymanage.controller.view.user;
 
 import com.nhj.librarymanage.domain.code.BorrowStatus;
-import com.nhj.librarymanage.domain.dto.BorrowRequest;
-import com.nhj.librarymanage.domain.dto.BorrowResponse;
-import com.nhj.librarymanage.domain.dto.MyInfoResponse;
-import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowResponse;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
+import com.nhj.librarymanage.domain.dto.member.borrow.MyBorrowResponse;
+import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.domain.entity.MemberPrincipal;
 import com.nhj.librarymanage.service.BorrowRecordService;
 import com.nhj.librarymanage.service.MemberService;
@@ -34,11 +36,11 @@ public class MyController {
 
     @GetMapping("/my/borrows")
     public String borrowListPanel(Model model, @AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                  BorrowRequest.SearchConditionByMember searchCondition,
+                                  MemberBorrowRequest.Search search,
                                   Pageable pageable,
                                   @RequestParam(required = false) BorrowStatus borrowStatus) {
 
-        PageResponse<BorrowResponse.MyRecord> pageResponse = borrowRecordService.getMyBorrows(memberPrincipal.getId(), searchCondition, pageable);
+        PageResponse<MyBorrowResponse.ListItem> pageResponse = borrowRecordService.getMyBorrows(memberPrincipal.getId(), search, pageable);
 
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());

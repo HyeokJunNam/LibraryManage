@@ -1,7 +1,15 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.*;
+import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageResponse;
 import com.nhj.librarymanage.service.MemberService;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
@@ -24,47 +32,47 @@ public class CirculationPageController {
     @Description("대출/반납 화면")
     @GetMapping("/circulation")
     public String circulationPage() {
-        return "admin/borrows/circulation/circulation";
+        return "admin/circulation/circulation";
     }
 
     @Description("대출 처리 패널")
     @GetMapping("/circulation/borrow")
-    public String bookBorrowPanel() {
-        return "admin/borrows/circulation/fragments/book-borrow :: bookBorrowPanel";
+    public String borrowPanel() {
+        return "admin/circulation/fragments/borrow-panel :: bookBorrowPanel";
     }
 
 
     @Description("반납 처리 패널")
     @GetMapping("/circulation/return/members/{id}/borrows")
-    public String bookReturnPanel(Model model, @PathVariable String id, BorrowRequest.SearchConditionByMember searchCondition, Pageable pageable) {
-        PageResponse<BorrowResponse.Returnable> pageResponse = borrowRecordService.getReturnableBorrowsByMember(NumberParser.parseLong(id), searchCondition, pageable);
+    public String returnPanel(Model model, @PathVariable String id, MemberBorrowRequest.Search search, Pageable pageable) {
+        PageResponse<BorrowResponse.ReturnableListItem> pageResponse = borrowRecordService.getReturnableBorrowsByMember(NumberParser.parseLong(id), search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("memberId", id);
 
-        searchCondition.applySearchFields(model);
+        search.applySearchFields(model);
 
-        return "admin/borrows/circulation/fragments/book-return :: bookReturnPanel";
+        return "admin/circulation/fragments/return-panel :: bookReturnPanel";
     }
 
 
-    @Description("도서 대출 목록")
+    @Description("도서 대출 현황 화면")
     @GetMapping("/borrows/status")
-    public String borrowHistory() {
-        return "admin/borrows/borrow-status/borrow-status";
+    public String borrowStatus() {
+        return "admin/borrow-status/borrow-status";
     }
 
 
     @Description("멤버 검색(모달)")
     @GetMapping("/members/search")
-    public String memberSearchModal(Model model, @ModelAttribute MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<MemberManageResponse.Info> pageResponse = memberService.getMembers(searchCondition, pageable);
+    public String memberSearchModal(Model model, @ModelAttribute MemberManageRequest.Search search, Pageable pageable) {
+        PageResponse<MemberManageResponse.Info> pageResponse = memberService.getMembers(search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        searchCondition.applySearchFields(model);
+        search.applySearchFields(model);
 
-        return "admin/borrows/circulation/modal/member-search-modal :: memberSearchResultPanel";
+        return "admin/circulation/modal/member-search-modal :: memberSearchResultPanel";
     }
 
     @Description("도서 검색(모달)")
@@ -76,36 +84,34 @@ public class CirculationPageController {
 
         searchCondition.applySearchFields(model);
 
-        return "admin/borrows/circulation/modal/book-search-modal :: bookSearchResultPanel";
+        return "admin/circulation/modal/book-search-modal :: bookSearchResultPanel";
     }
-
-
 
 
     // 도서 대출 현황
 
-    @Description("도서 대출 목록")
+    @Description("도서 대출 목록 패널")
     @GetMapping("/borrows/list")
-    public String borrowList(Model model, BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BorrowResponse.History> pageResponse = borrowRecordService.getBorrows(searchCondition, pageable);
+    public String borrowListPanel(Model model, BorrowRequest.Search search, Pageable pageable) {
+        PageResponse<BorrowResponse.ListItem> pageResponse = borrowRecordService.getBorrows(search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        searchCondition.applySearchFields(model);
+        search.applySearchFields(model);
 
-        return "admin/borrows/borrow-status/fragments/borrow-list-panel :: borrowListPanel";
+        return "admin/borrow-status/fragments/borrow-list-panel :: borrowListPanel";
     }
 
-    @Description("도서 대출 연체 목록")
+    @Description("도서 대출 연체 목록 패널")
     @GetMapping("/borrows/overdue")
-    public String overdueBorrowList(Model model, BorrowRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BorrowResponse.OverdueHistory> pageResponse = borrowRecordService.getOverdueBorrows(searchCondition, pageable);
+    public String overdueBorrowListPanel(Model model, BorrowRequest.Search search, Pageable pageable) {
+        PageResponse<BorrowResponse.OverdueListItem> pageResponse = borrowRecordService.getOverdueBorrows(search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        searchCondition.applySearchFields(model);
+        search.applySearchFields(model);
 
-        return "admin/borrows/borrow-status/fragments/overdue-list-panel :: overdueListPanel";
+        return "admin/borrow-status/fragments/overdue-list-panel :: overdueListPanel";
     }
 
 

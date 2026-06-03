@@ -11,8 +11,8 @@ public class DashboardService {
 
     private final DashboardQueryRepository dashboardQueryRepository;
 
-    public DashboardStatistics getTodayBorrowStatistics() {
-        return dashboardQueryRepository.getCurrentBorrowStatistics();
+    public DashboardStatistics getBorrowStatistics() {
+        return dashboardQueryRepository.getBorrowStatistics();
     }
 
 }

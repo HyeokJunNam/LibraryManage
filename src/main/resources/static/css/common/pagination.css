@@ -1,0 +1,106 @@
+/* =========================
+   TABLE PAGINATION
+========================= */
+
+.table-layout__pagination {
+    flex-shrink: 0;
+    box-sizing: border-box;
+
+    padding: 12px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+}
+
+/*
+   데이터가 없어도 pagination 영역은 항상 보인다.
+
+   empty pagination은 숨김 상태가 아니라,
+   페이지 이동이 불가능한 비활성 상태를 의미한다.
+*/
+.table-layout__pagination--empty {
+    visibility: visible;
+    pointer-events: none;
+}
+
+.table-layout__pagination-form {
+    margin: 0;
+}
+
+.table-layout__pagination-nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 0;
+}
+
+.table-layout__page-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 44px;
+    height: 44px;
+    padding: 0 14px;
+
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    background: var(--white);
+
+    color: var(--gray-700);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.table-layout__page-button:hover:not(:disabled) {
+    border-color: var(--green-300);
+    background: #fbfefc;
+    color: var(--green-700);
+}
+
+.table-layout__page-button--active,
+.table-layout__page-button--active:hover,
+.table-layout__page-button--active:disabled {
+    border-color: var(--green-600);
+    background: linear-gradient(135deg, var(--green-500), var(--green-600));
+    color: var(--white);
+    box-shadow: 0 10px 20px rgba(37, 135, 76, 0.2);
+    cursor: default;
+}
+
+.table-layout__page-button:disabled:not(.table-layout__page-button--active) {
+    background: var(--gray-50);
+    color: #b1bbb4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.table-layout__page-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 44px;
+    height: 44px;
+
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* =========================
+   TABLE FIXED HEIGHT
+========================= */
+
+.table-layout--fixed-height .table-layout__pagination {
+    min-height: var(--panel-control-section-height, 80px);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

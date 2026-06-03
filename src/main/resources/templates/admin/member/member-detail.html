@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 상세 정보</title>
+
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/member/member-detail.css}">
+    <script defer th:src="@{/js/admin/member/member-detail.js}"></script>
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/common/sidebar :: sidebar('members')}"></aside>
+
+    <main class="admin-main">
+        <th:block th:replace="~{admin/common/fragments/page-hero :: pageHero(
+            eyebrow='MEMBER DETAIL',
+            title='회원 상세 정보',
+            desc='회원 기본 정보와 대출 이력을 확인할 수 있습니다.'
+        )}">
+        </th:block>
+
+        <section class="member-detail-layout">
+
+            <section class="panel-layout table-layout table-layout--fixed-height member-detail-profile">
+
+                <th:block th:replace="~{admin/common/table-layout :: tableHeader(
+                    title='회원 정보',
+                    caption='회원의 기본 정보를 확인합니다.',
+                    actions=~{::headerActions}
+                )}"></th:block>
+
+                <div class="member-detail-profile__body">
+
+                    <div class="member-profile-card">
+                        <div class="member-profile-card__avatar"
+                             th:text="${content.name != null and !#strings.isEmpty(content.name)
+                                    ? #strings.substring(content.name, 0, 1)
+                                    : '?'}">
+                            홍
+                        </div>
+
+                        <div class="member-profile-card__info">
+                            <div class="member-profile-card__top">
+                                <h3 class="member-profile-card__name"
+                                    th:text="${content.name != null ? content.name : '-'}">
+                                    홍길동
+                                </h3>
+
+                                <span class="status-badge member-role-badge"
+                                      th:classappend="${content.role == 'ROLE_ADMIN' or content.role == 'ADMIN'}
+                                            ? ' member-role-badge--admin'
+                                            : ' member-role-badge--user'"
+                                      th:text="${content.role == 'ROLE_ADMIN' or content.role == 'ADMIN'}
+                                            ? '관리자'
+                                            : '일반 회원'">
+                                    일반 회원
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="member-info-list">
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">회원 ID</span>
+                            <strong class="member-info-list__value"
+                                    th:text="${content.id != null ? content.id : '-'}">
+                                1
+                            </strong>
+                        </div>
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">회원 번호</span>
+                            <strong class="member-info-list__value"
+                                    th:text="${content.memberNo != null ? content.memberNo : '-'}">
+                                M000001
+                            </strong>
+                        </div>
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">로그인 ID</span>
+                            <strong class="member-info-list__value"
+                                    th:text="${content.loginId != null ? content.loginId : '-'}">
+                                hong
+                            </strong>
+                        </div>
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">이메일</span>
+                            <strong class="member-info-list__value"
+                                    th:text="${content.email != null ? content.email : '-'}">
+                                hong@example.com
+                            </strong>
+                        </div>
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">연락처</span>
+                            <strong class="member-info-list__value"
+                                    th:text="${content.phoneNumber != null ? content.phoneNumber : '-'}">
+                                010-1234-5678
+                            </strong>
+                        </div>
+
+                        <div class="member-info-list__row">
+                            <span class="member-info-list__label">가입일</span>
+                            <strong class="member-info-list__value"
+                                    th:text="${content.createdAt != null
+                                            ? #temporals.format(content.createdAt, 'yyyy-MM-dd HH:mm')
+                                            : '-'}">
+                                2026-04-07 10:30
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section
+                    id="memberBorrowHistoryHost"
+                    class="panel-layout table-layout member-borrow-history-loading"
+                    th:attr="
+                        data-fragment-url=@{/admin/members/{memberId}/borrows(memberId=${content.id})},
+                        data-member-id=${content.id}
+                    ">
+
+                <th:block th:replace="~{admin/common/table-layout :: tableHeader(
+                    title='대출 이력',
+                    caption='회원의 도서 대출 및 반납 이력을 불러오는 중입니다.',
+                    actions=null
+                )}"></th:block>
+
+                <div class="table-layout__body">
+                    <table class="table-layout__table">
+                        <tbody class="table-layout__tbody">
+                        <tr class="table-layout__row table-layout__row--empty">
+                            <td class="table-layout__cell table-layout__cell--empty">
+                                대출 이력을 불러오고 있습니다.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+        </section>
+    </main>
+</div>
+
+<th:block th:fragment="headerActions">
+    <a th:href="@{/admin/members/{memberId}/edit(memberId=${content.id})}"
+       class="btn btn--action">
+        회원 수정
+    </a>
+</th:block>
+
+</body>
+</html>

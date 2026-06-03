@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="pagination(paginationMode)">
+    <div class="table-layout__pagination"
+         th:classappend="${pageMetaData == null} ? ' table-layout__pagination--empty' : ''"
+         th:data-pagination-mode="${paginationMode != null ? paginationMode : 'server'}"
+         th:data-page-size="${pageMetaData != null ? pageMetaData.size : 5}"
+         th:data-current-page="${pageMetaData != null ? pageMetaData.page : 0}"
+         th:data-total-pages="${pageMetaData != null ? pageMetaData.totalPages : 0}">
+
+        <form class="table-layout__pagination-form"
+              method="get"
+              data-table-pagination-form
+              th:if="${pageMetaData != null}"
+              th:with="
+                  currentPage=${pageMetaData.page},
+                  totalPages=${pageMetaData.totalPages},
+                  pageSize=${pageMetaData.size},
+                  pageBlockSize=${3},
+                  startPage=${currentPage - (currentPage % pageBlockSize)},
+                  endPage=${startPage + pageBlockSize - 1 >= totalPages ? totalPages - 1 : startPage + pageBlockSize - 1}
+              ">
+
+            <th:block th:if="${searchFields != null and !#lists.isEmpty(searchFields)}">
+                <input th:each="field : ${searchFields}"
+                       type="hidden"
+                       th:name="${field.name}"
+                       data-table-pagination-hidden
+                       disabled>
+            </th:block>
+
+            <input type="hidden"
+                   name="page"
+                   th:value="${currentPage}"
+                   data-table-pagination-page>
+
+            <input type="hidden"
+                   name="size"
+                   th:value="${pageSize}"
+                   data-table-pagination-size>
+
+            <nav class="table-layout__pagination-nav"
+                 aria-label="페이지네이션">
+
+                <button type="submit"
+                        th:data-page="${currentPage - 1}"
+                        class="table-layout__page-button"
+                        data-table-pagination-page-button
+                        th:disabled="${pageMetaData.first or totalPages == 0}">
+                    이전
+                </button>
+
+                <button type="submit"
+                        th:if="${totalPages == 0}"
+                        data-page="0"
+                        class="table-layout__page-button table-layout__page-button--active"
+                        data-table-pagination-page-button
+                        data-table-pagination-number-button
+                        disabled
+                        aria-current="page">
+                    1
+                </button>
+
+                <button type="submit"
+                        th:if="${totalPages > 0}"
+                        th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
+                        th:data-page="${pageNumber}"
+                        class="table-layout__page-button"
+                        data-table-pagination-page-button
+                        data-table-pagination-number-button
+                        th:classappend="${pageNumber == currentPage} ? ' table-layout__page-button--active' : ''"
+                        th:disabled="${pageNumber == currentPage}"
+                        th:text="${pageNumber + 1}"
+                        th:attr="aria-current=${pageNumber == currentPage ? 'page' : null}">
+                    1
+                </button>
+
+                <button type="submit"
+                        th:data-page="${currentPage + 1}"
+                        class="table-layout__page-button"
+                        data-table-pagination-page-button
+                        data-table-pagination-next-button
+                        th:disabled="${pageMetaData.last or totalPages == 0}">
+                    다음
+                </button>
+            </nav>
+        </form>
+    </div>
+</th:block>
+
+
+</html>

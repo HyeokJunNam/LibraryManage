@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.code.BookCopyCondition;
-import com.nhj.librarymanage.domain.dto.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대출 / 반납 처리</title>
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/fragments/member-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/fragments/circulation-empty-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/fragments/borrow-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/fragments/return-panel.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/modal/member-search-modal.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/modal/book-search-modal.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/circulation/circulation.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/common/sidebar :: sidebar('circulation')}"></aside>
+
+    <main class="admin-main">
+        <th:block th:replace="~{admin/common/fragments/page-hero :: pageHero(
+            eyebrow='BORROW MANAGEMENT',
+            title='대출 / 반납 처리',
+            desc='회원 조회 후 도서 대출 및 반납 처리를 진행합니다.'
+            )}">
+        </th:block>
+
+        <section class="circulation-layout">
+            <div th:replace="~{admin/circulation/fragments/member-panel :: memberPanel}"></div>
+            <div th:replace="~{admin/circulation/fragments/circulation-empty-panel :: circulationEmptyPanel}"></div>
+        </section>
+    </main>
+
+    <div th:replace="~{common/modal-alert :: alertModal}"></div>
+    <div th:replace="~{admin/circulation/modal/member-search-modal :: memberSearchModal}"></div>
+    <div th:replace="~{admin/circulation/modal/book-search-modal :: bookSearchModal}"></div>
+</div>
+
+<script type="module" th:src="@{/js/admin/circulation/circulation.js}"></script>
+</body>
+</html>

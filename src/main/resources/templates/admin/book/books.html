@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 관리</title>
+
+    <th:block th:replace="~{admin/common/admin-page-assets :: assets}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/book/books.css}">
+</head>
+<body>
+<div class="admin-page">
+    <aside th:replace="~{admin/common/sidebar :: sidebar('books')}"></aside>
+
+    <main class="admin-main">
+        <th:block th:replace="~{admin/common/fragments/page-hero :: pageHero(
+            eyebrow='BOOK MANAGEMENT',
+            title='도서 목록 관리',
+            desc='전체 도서를 조회하고 도서 정보를 확인할 수 있습니다.'
+        )}">
+        </th:block>
+
+        <section class="statistics-grid">
+            <article class="statistics-card">
+                <p class="statistics-card__label">전체 회원 수</p>
+                <strong
+                        class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.totalBookItemCount : 0}">
+                    0
+                </strong>
+            </article>
+
+            <article class="statistics-card">
+                <p class="statistics-card__label">등록 도서 수</p>
+                <strong
+                        class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.totalBorrowCount : 0}">
+                    0
+                </strong>
+            </article>
+
+            <article class="statistics-card">
+                <p class="statistics-card__label">현재 대출 도서 수</p>
+                <strong
+                        class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.currentBorrowCount : 0}">
+                    0
+                </strong>
+            </article>
+
+            <article class="statistics-card">
+                <p class="statistics-card__label">현재 연체 도서 수</p>
+                <strong
+                        class="statistics-card__value"
+                        th:text="${borrowStatistics != null ? borrowStatistics.overdueBorrowCount : 0}">
+                    0
+                </strong>
+            </article>
+        </section>
+
+        <section class="panel-layout table-layout table-layout--fixed-height">
+
+            <th:block th:replace="~{admin/common/table-layout :: tableHeader(
+                title='도서 목록',
+                caption='등록된 도서를 검색하고, 선택한 도서의 상세 정보와 재고 현황을 확인할 수 있습니다.',
+                actions=null
+            )}"></th:block>
+
+            <th:block th:replace="~{admin/common/table-layout :: tableToolbar(searchMode='server')}"></th:block>
+
+            <div class="table-layout__body">
+                <table class="table-layout__table books-table">
+                    <thead class="table-layout__thead">
+                    <tr class="table-layout__row table-layout__row--head">
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                            <span class="table-layout__text">No</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
+                            <span class="table-layout__text">도서명</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">ISBN</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">저자</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">출판사</span>
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody class="table-layout__tbody">
+                    <tr
+                            class="table-layout__row table-layout__row--clickable"
+                            th:each="row : ${content}"
+                            th:attr="data-book-url=@{/admin/books/{id}(id=${row.id})},
+                                     tabindex=0,
+                                     role='link',
+                                     aria-label=${row.title + ' 상세 정보 보기'}">
+
+                        <td class="table-layout__cell table-layout__cell--leading">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${pageMetadata != null
+                                        ? pageMetadata.page * pageMetadata.size + rowStat.count
+                                        : rowStat.count}">
+                                1
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${row.title}">
+                                도서명
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${row.isbn != null ? row.isbn : '-'}">
+                                ISBN
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${row.author != null ? row.author : '-'}">
+                                저자
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${row.publisher != null ? row.publisher : '-'}">
+                                출판사
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr
+                            class="table-layout__row table-layout__row--empty"
+                            th:if="${content == null or #lists.isEmpty(content)}">
+                        <td class="table-layout__cell table-layout__cell--empty">
+                            조회 된 데이터가 없습니다.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <th:block th:replace="~{common/pagination :: pagination(
+                paginationMode='server'
+            )}"></th:block>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll(".table-layout__row--clickable");
+
+        rows.forEach((row) => {
+            const moveToDetail = () => {
+                const url = row.dataset.bookUrl;
+
+                if (url) {
+                    window.location.href = url;
+                }
+            };
+
+            row.addEventListener("click", moveToDetail);
+
+            row.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    moveToDetail();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

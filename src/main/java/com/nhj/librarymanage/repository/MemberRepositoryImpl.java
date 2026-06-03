@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Member;
-import com.nhj.librarymanage.domain.dto.MemberManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.member.MemberManageRequest;
 import com.nhj.librarymanage.model.vo.MemberStatistics;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
@@ -35,12 +35,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             QuerydslSortHelper.buildOrderColumnMap(List.of());
 
     @Override
-    public Page<Member> search(MemberManageRequest.SearchCondition searchCondition, Pageable pageable) {
+    public Page<Member> search(MemberManageRequest.Search search, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(member.id, ORDER_COLUMN_MAP, pageable);
 
-        BooleanExpression likeName = QuerydslFilterHelper.like(member.name, searchCondition.name());
-        BooleanExpression likePhoneNumber = QuerydslFilterHelper.like(member.phoneNumber, searchCondition.phoneNumber());
-        BooleanExpression likeEmail = QuerydslFilterHelper.like(member.email, searchCondition.email());
+        BooleanExpression likeName = QuerydslFilterHelper.like(member.name, search.name());
+        BooleanExpression likePhoneNumber = QuerydslFilterHelper.like(member.phoneNumber, search.phoneNumber());
+        BooleanExpression likeEmail = QuerydslFilterHelper.like(member.email, search.email());
 
         List<Member> query = jpaQueryFactory
                 .selectFrom(member)

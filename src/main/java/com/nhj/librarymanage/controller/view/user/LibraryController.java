@@ -1,10 +1,10 @@
 package com.nhj.librarymanage.controller.view.user;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.BookManageRequest;
-import com.nhj.librarymanage.domain.dto.BookManageResponse;
-import com.nhj.librarymanage.domain.dto.NotificationResponse;
-import com.nhj.librarymanage.domain.dto.PageResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
+import com.nhj.librarymanage.domain.dto.temp.NotificationResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.security.member.CurrentAuthenticatedUserProvider;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.NotificationService;
@@ -51,7 +51,7 @@ public class LibraryController {
 
 
 
-        return "user/books/books";
+        return "user/book/books";
     }
 
 
@@ -66,7 +66,7 @@ public class LibraryController {
         model.addAttribute("book", detail);
         model.addAttribute("notification", status);
 
-        return "user/books/book-detail";
+        return "user/book/book-detail";
     }
 
 
