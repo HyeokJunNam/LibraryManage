@@ -8,7 +8,6 @@ import com.nhj.librarymanage.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.List;
@@ -21,11 +20,10 @@ public class NotificationDispatchService {
     private final EmailSender emailSender;
 
     private final MailTemplateRenderer mailTemplateRenderer;
-    private final TemplateEngine templateEngine;
 
     @Transactional
     public void dispatchBorrowableNotifications(Long bookId) {
-        List<Notification> notifications = notificationRepository.findAllByBookId(bookId);
+        List<Notification> notifications = notificationRepository.findAllByBookIdAndNotifiedAtIsNull(bookId);
 
         for (Notification notification : notifications) {
             if (notification.getChannel() == NotificationChannel.EMAIL) {
@@ -34,14 +32,14 @@ public class NotificationDispatchService {
                 Context context = new Context();
                 context.setVariable("bookTitle", book.getTitle());
                 context.setVariable("author", book.getAuthor());
-                context.setVariable("requestDate", notification.getCreatedAt());
+                context.setVariable("requestDate", notification.getCreatedAt().toLocalDate());
 
-                String html = templateEngine.process("mail/book-available", context);
-                String text = templateEngine.process("mail/book-available.txt", context);
+                String htmlURL = "mail/book-borrowable.html";
+                String textURL = "mail/book-borrowable.txt";
 
                 String toEmail = notification.getMember().getEmail();
 
-                MailContent mailContent = mailTemplateRenderer.renderMailContent(toEmail, html, text, context);
+                MailContent mailContent = mailTemplateRenderer.renderMailContent(toEmail, htmlURL, textURL, context);
 
                 emailSender.send(mailContent);
             }

@@ -24,6 +24,24 @@ public class BookController {
     private final AdminBookService adminBookService;
     private final BookCopyService bookCopyService;
 
+    @Description(value = "도서 재고 정보 등록 및 수정, 삭제")
+    @PostMapping("/books/{bookId}/copies/batch")
+    public ResponseEntity<HttpStatus> createBookItem(@PathVariable Long bookId, @RequestBody BookCopyRequest.Upsert upsert) {
+        bookCopyService.upsetBookCopy(bookId, upsert);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+
+    // 현재 미사용 추정 *하단*
+
+
+
+
+
+
+
     @Description(value = "도서 조회")
     @GetMapping("/books/{id}")
     public ResponseEntity<ApiResponse> getBook(@PathVariable long id) {
@@ -66,12 +84,6 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Description(value = "도서 재고 정보 등록 및 수정, 삭제")
-    @PostMapping("/books/{bookId}/copies/batch")
-    public ResponseEntity<HttpStatus> createBookItem(@PathVariable Long bookId, @RequestBody BookCopyRequest.Upsert upsert) {
-        bookCopyService.upsetBookCopy(bookId, upsert);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
 
 }

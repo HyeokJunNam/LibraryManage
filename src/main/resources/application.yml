@@ -70,7 +70,7 @@ app:
     personal: '관리자'
     app-name: '도서 관리 시스템'
     from-name: '도서 관리 시스템'
-    subject: '[도서 관리 시스템] 이메일 인증 요청 입니다.'
+    subject: '[도서 관리 시스템] 안녕하세요. 도서 관리 시스템 입니다.'
     default-user-name: '회원'
 
   signup:

@@ -22,4 +22,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     void deleteByBookIdAndMemberId(Long bookId, Long memberId);
 
     List<Notification> findAllByBookId(Long bookId);
+
+    List<Notification> findAllByBookIdAndNotifiedAtIsNull(Long bookId);
 }

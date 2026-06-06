@@ -10,6 +10,7 @@ import com.nhj.librarymanage.error.exception.book.BookItemAlreadyBorrowedExcepti
 import com.nhj.librarymanage.repository.BookCopyRepository;
 import com.nhj.librarymanage.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,8 @@ public class BookCopyService {
 
     private final BookRepository bookRepository;
     private final BookCopyRepository bookCopyRepository;
+
+    private final NotificationDispatchService notificationDispatchService;
 
     @Transactional
     public PageResponse<BookCopyResponse.ListItem> getBookCopies(Long bookId, Pageable pageable) {
@@ -73,6 +76,11 @@ public class BookCopyService {
         }
 
         bookCopyRepository.saveAll(bookCopies);
+
+
+        // TODO
+
+        notificationDispatchService.dispatchBorrowableNotifications(bookId);
     }
 
     @Transactional
