@@ -30,7 +30,7 @@ public class BookCopyService {
     private final BookCopyRepository bookCopyRepository;
 
     @Transactional
-    public PageResponse<BookCopyResponse.Info> getBookCopies(Long bookId, Pageable pageable) {
+    public PageResponse<BookCopyResponse.ListItem> getBookCopies(Long bookId, Pageable pageable) {
         List<BookCopy> bookCopies = bookCopyRepository.findAllByBookId(bookId);
 
         int start = (int) pageable.getOffset();
@@ -41,11 +41,11 @@ public class BookCopyService {
                         ? List.of()
                         : bookCopies.subList(start, end);
 
-        Page<BookCopyResponse.Info> page = new PageImpl<>(
+        Page<BookCopyResponse.ListItem> page = new PageImpl<>(
                 pageContent,
                 pageable,
                 bookCopies.size()
-        ).map(BookCopyResponse.Info::from);
+        ).map(BookCopyResponse.ListItem::from);
 
         return PageResponse.from(page);
     }

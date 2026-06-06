@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalControllerAdvice {
 
     @ModelAttribute("loginMember")
-    public MemberManageResponse.Info loginMember(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+    public MemberManageResponse.ListItem loginMember(@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
         if (authenticatedUser == null) {
             return null;
         }
 
-        return MemberManageResponse.Info.of(authenticatedUser.getLoginId(), authenticatedUser.getName());
+        return MemberManageResponse.ListItem.of(authenticatedUser.getLoginId(), authenticatedUser.getName());
     }
 
 }

@@ -41,7 +41,7 @@ public class LibraryController {
     @Description("도서 검색 결과 화면")
     @GetMapping("/library/books")
     public String bookSearchResultPage(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
-        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(search, pageable);
+        PageResponse<BookManageResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
 
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());

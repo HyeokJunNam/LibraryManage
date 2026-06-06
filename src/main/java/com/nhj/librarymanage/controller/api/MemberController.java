@@ -32,7 +32,7 @@ public class MemberController {
     @Description(value = "회원 목록 조회")
     @GetMapping("/members")
     public ResponseEntity<ApiResponse> getMembers(@ModelAttribute MemberManageRequest.Search search, Pageable pageable) {
-        PageResponse<MemberManageResponse.Info> infos = memberService.getMembers(search, pageable);
+        PageResponse<MemberManageResponse.ListItem> infos = memberService.getMembers(search, pageable);
         ApiResponse apiResponse = ApiResponse.result(infos);
 
         return ResponseEntity.ok().body(apiResponse);

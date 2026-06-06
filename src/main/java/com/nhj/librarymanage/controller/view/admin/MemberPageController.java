@@ -29,7 +29,7 @@ public class MemberPageController {
     @Description("회원 목록 화면")
     @GetMapping("/members")
     public String memberListPage(Model model, @ModelAttribute MemberManageRequest.Search search, Pageable pageable) {
-        PageResponse<MemberManageResponse.Info> pageResponse = memberService.getMembers(search, pageable);
+        PageResponse<MemberManageResponse.ListItem> pageResponse = memberService.getMembers(search, pageable);
         MemberStatistics memberStatistics = memberService.getMemberStatistics();
 
         model.addAttribute("content", pageResponse.content());

@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookCopyResponse {
 
-    public record Info(
+    public record ListItem(
             Long bookCopyId,
             String location,
             EnumOption<BookCopyCondition> bookCopyCondition,
             EnumOption<BorrowStatus> borrowStatus,
             LocalDateTime createdAt
     ) {
-        public static Info from(BookCopy bookCopy) {
-            return new Info(
+        public static ListItem from(BookCopy bookCopy) {
+            return new ListItem(
                     bookCopy.getId(),
                     bookCopy.getLocation(),
                     EnumOption.from(bookCopy.getBookCopyCondition()),
@@ -28,13 +28,6 @@ public class BookCopyResponse {
                     bookCopy.getCreatedAt()
             );
         }
-    }
-
-    public record Quantity(
-            int stockQuantity,
-            int borrowedQuantity,
-            int availableQuantity
-    ) {
     }
 
 }

@@ -12,20 +12,19 @@ public class MemberManageResponse {
 
     // Service → Controller
     @Builder(access = AccessLevel.PRIVATE)
-    @Getter
-    public static class Info {
-        @JsonSerialize(using = ToStringSerializer.class)
-        private Long id;
-        private String loginId;
-        private String memberNo;
-        private String name;
-        private String email;
-        private String phoneNumber;
-        private String role;
-        private LocalDateTime createdAt;
-
-        public static Info from(Member member) {
-            return Info.builder()
+    public record ListItem(
+            @JsonSerialize(using = ToStringSerializer.class)
+            Long id,
+            String loginId,
+            String memberNo,
+            String name,
+            String email,
+            String phoneNumber,
+            String role,
+            LocalDateTime createdAt
+    ) {
+        public static ListItem from(Member member) {
+            return ListItem.builder()
                     .id(member.getId())
                     .loginId(member.getLoginId())
                     .memberNo(member.getMemberNo())
@@ -37,8 +36,8 @@ public class MemberManageResponse {
                     .build();
         }
 
-        public static Info of(String loginId, String name) {
-            return Info.builder()
+        public static ListItem of(String loginId, String name) {
+            return ListItem.builder()
                     .loginId(loginId)
                     .name(name)
                     .build();
@@ -73,11 +72,10 @@ public class MemberManageResponse {
     }
 
     @Builder(access = AccessLevel.PRIVATE)
-    @Getter
-    public static class LoginIdCheck {
-        private String loginId;
-        private boolean available;
-
+    public record LoginIdCheck(
+            String loginId,
+            boolean available
+    ) {
         public static LoginIdCheck of(String loginId, boolean available) {
             return LoginIdCheck.builder()
                     .loginId(loginId)

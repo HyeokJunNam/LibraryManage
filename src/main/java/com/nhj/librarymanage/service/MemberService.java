@@ -36,10 +36,10 @@ public class MemberService {
     }
 
     @Transactional
-    public PageResponse<MemberManageResponse.Info> getMembers(MemberManageRequest.Search search, Pageable pageable) {
+    public PageResponse<MemberManageResponse.ListItem> getMembers(MemberManageRequest.Search search, Pageable pageable) {
         Page<Member> members =  memberRepository.search(search, pageable);
 
-        return PageResponse.from(members.map(MemberManageResponse.Info::from));
+        return PageResponse.from(members.map(MemberManageResponse.ListItem::from));
     }
 
     private void validateSignup(String email, String loginId, String token) {

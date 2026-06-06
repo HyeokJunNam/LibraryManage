@@ -31,7 +31,7 @@ public class BookPageController {
     @Description("도서 관리 도서 목록 화면")
     @GetMapping("/books")
     public String bookListPage(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
-        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(search, pageable);
+        PageResponse<BookManageResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
         model.addAttribute("content", pageResponse.content());
@@ -55,7 +55,7 @@ public class BookPageController {
     @Description(value = "도서 재고 목록 패널")
     @GetMapping("/books/{id}/copies")
     public String bookCopyListPanel(Model model, @PathVariable Long id, Pageable pageable) {
-        PageResponse<BookCopyResponse.Info> pageResponse = bookCopyService.getBookCopies(id, pageable); // 여기서 레코드 한번 더 조회 타는거 있음. 근데 1번 더타는건 그래프 탐색 특성 상 허용되어야 함
+        PageResponse<BookCopyResponse.ListItem> pageResponse = bookCopyService.getBookCopies(id, pageable); // 여기서 레코드 한번 더 조회 타는거 있음. 근데 1번 더타는건 그래프 탐색 특성 상 허용되어야 함
 
         model.addAttribute("bookId", id);
         model.addAttribute("content", pageResponse.content());

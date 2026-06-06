@@ -65,7 +65,7 @@ public class CirculationPageController {
     @Description("멤버 검색(모달)")
     @GetMapping("/members/search")
     public String memberSearchModal(Model model, @ModelAttribute MemberManageRequest.Search search, Pageable pageable) {
-        PageResponse<MemberManageResponse.Info> pageResponse = memberService.getMembers(search, pageable);
+        PageResponse<MemberManageResponse.ListItem> pageResponse = memberService.getMembers(search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
@@ -77,7 +77,7 @@ public class CirculationPageController {
     @Description("도서 검색(모달)")
     @GetMapping("/books/search")
     public String bookSearchModal(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
-        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(search, pageable);
+        PageResponse<BookManageResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 

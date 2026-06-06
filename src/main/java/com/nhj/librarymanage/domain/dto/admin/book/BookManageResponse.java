@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookManageResponse {
 
-    public record Info(
+    public record ListItem(
             Long id,
             String isbn,
             String title,
@@ -18,7 +18,7 @@ public class BookManageResponse {
             int stockQuantity,
             int availableQuantity
     ) {
-        public static Info from(Book book) {
+        public static ListItem from(Book book) {
             int availableQuantity = 0;
             int stockQuantity = 0;
 
@@ -31,7 +31,7 @@ public class BookManageResponse {
                 }
             }
 
-            return new Info(
+            return new ListItem(
                     book.getId(),
                     book.getIsbn(),
                     book.getTitle(),
