@@ -1,11 +1,12 @@
 .book-list {
-    min-height: calc(100vh - 64px);
+    width: 100%;
     background: var(--color-bg, #f6f7f5);
     color: var(--color-text, #222);
 }
 
 .book-list__page {
-    max-width: 1200px;
+    width: 100%;
+    max-width: var(--container-width, 1200px);
     margin: 0 auto;
     padding: 28px;
 }

@@ -1,58 +1,94 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 검색</title>
-    <th:block th:replace="~{user/common/user-page-assets :: assets}"></th:block>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/user-layout}">
 
+<head>
+    <title>도서 검색</title>
     <link rel="stylesheet" th:href="@{/css/user/home/home.css}">
 </head>
+
 <body>
-<div class="layout">
 
-    <div th:replace="~{/user/common/topbar :: topbar}"></div>
+<main layout:fragment="content" class="main-content">
 
-    <main class="main">
-        <section class="hero">
-            <div class="hero__inner">
-                <p class="hero__eyebrow">도서 검색 서비스</p>
-                <h1 class="hero__title">찾고 싶은 책을 검색하세요</h1>
-                <p class="hero__desc">
-                    도서명, ISBN, 저자, 출판사 기준으로 원하는 도서를 빠르게 찾을 수 있습니다.
+    <section class="home-section flex-center">
+
+        <article class="search-card">
+
+            <header class="search-card__header">
+                <p class="search-card__label">
+                    도서 검색 서비스
                 </p>
 
-                <form id="searchForm" class="search-card">
-                    <div class="search-card__row">
-                        <div class="field field--select">
-                            <label for="condition" class="visually-hidden">검색 조건</label>
-                            <select id="condition" class="field__control">
-                                <option value="title">도서명</option>
-                                <option value="isbn">ISBN</option>
-                                <option value="author">저자</option>
-                                <option value="publisher">출판사</option>
-                            </select>
-                        </div>
+                <h1 class="search-card__title">
+                    찾고 싶은 책을 검색하세요
+                </h1>
 
-                        <div class="field field--input">
-                            <label for="keyword" class="visually-hidden">검색어</label>
-                            <input id="keyword"
-                                   type="text"
-                                   class="field__control"
-                                   placeholder="검색어를 입력하세요">
-                        </div>
+                <p class="search-card__description">
+                    도서명, ISBN, 저자, 출판사 기준으로 원하는 도서를 빠르게 찾을 수 있습니다.
+                </p>
+            </header>
 
-                        <div class="search-card__submit">
-                            <button type="submit" class="btn btn--primary">검색</button>
-                            <button type="button" id="resetBtn" class="btn btn--outline">초기화</button>
-                        </div>
+            <form id="searchForm"
+                  class="search-form"
+                  method="get"
+                  th:action="@{/library/books}">
+
+                <div class="search-form__row">
+
+                    <div class="search-form__condition">
+                        <label for="condition" class="visually-hidden">
+                            검색 조건
+                        </label>
+
+                        <select id="condition" class="field__control">
+                            <option th:each="field : ${searchFields}"
+                                    th:value="${field.name}"
+                                    th:text="${field.label}">
+                                검색조건
+                            </option>
+                        </select>
                     </div>
-                </form>
-            </div>
-        </section>
-    </main>
-</div>
 
-<script th:src="@{/js/user/home.js}"></script>
+                    <div class="search-form__keyword">
+                        <label for="keyword" class="visually-hidden">
+                            검색어
+                        </label>
+
+                        <input id="keyword"
+                               type="text"
+                               class="field__control"
+                               placeholder="검색어를 입력하세요">
+                    </div>
+
+                    <div class="search-form__actions">
+                        <button type="submit"
+                                class="btn btn--search">
+                            검색
+                        </button>
+
+                        <button type="button"
+                                id="resetBtn"
+                                class="btn btn--cancel">
+                            초기화
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </article>
+
+    </section>
+
+</main>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/js/user/home/home.js}"></script>
+</th:block>
+
 </body>
 </html>

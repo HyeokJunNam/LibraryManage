@@ -11,13 +11,13 @@ import java.util.List;
 public class BookManageRequest {
 
     @FieldNameConstants
-    public record SearchCondition(
+    public record Search(
             String title,
             String isbn,
             String author,
             String publisher
     ) {
-        public void applySearchFields(Model model) {
+        public static void addSearchFieldsTo(Model model) {
             List<SearchField> searchFields = List.of(
                     SearchField.of(Fields.title, "도서명"),
                     SearchField.of(Fields.isbn, "ISBN"),
@@ -26,6 +26,11 @@ public class BookManageRequest {
             );
 
             model.addAttribute("searchFields", searchFields);
+        }
+
+        public void applyTo(Model model) {
+            addSearchFieldsTo(model);
+            model.addAttribute("searchCondition", this);
         }
     }
 

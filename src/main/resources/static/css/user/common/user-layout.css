@@ -1,0 +1,32 @@
+:root {
+    --topbar-height: 55px;
+    --container-width: 1360px;
+}
+
+.main-content {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+.flex-center {
+    min-height: calc(100vh - var(--topbar-height));
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-section__divider {
+    height: 1px;
+
+    margin: 0 0 24px;
+
+    background: linear-gradient(
+            to right,
+            transparent,
+            #e5eee8 12%,
+            #e5eee8 88%,
+            transparent
+    );
+}

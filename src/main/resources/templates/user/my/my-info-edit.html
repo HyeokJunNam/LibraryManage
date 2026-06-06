@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/user-layout}">
+
+<head>
+    <title>내 정보 수정</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/user/my/my-info-edit.css}">
+</head>
+
+<body>
+
+<main layout:fragment="content" class="main-content">
+
+    <section class="my-info-edit flex-center">
+
+        <article class="my-info-edit__card">
+
+            <header class="my-info-edit__header">
+                <h2 class="my-info-edit__title">
+                    내 정보 수정
+                </h2>
+
+                <p class="my-info-edit__description">
+                    회원님의 정보를 수정할 수 있습니다.
+                </p>
+            </header>
+
+            <form id="myInfoEditForm"
+                  th:action="@{/my/edit}"
+                  method="post"
+                  class="info-edit-form">
+
+                <!-- 기본 정보 -->
+                <section class="info-section">
+
+                    <h3 class="info-section__title">
+                        기본 정보
+                    </h3>
+
+                    <p class="info-section__description">
+                        내 정보를 확인하고 필요한 정보를 수정할 수 있습니다.
+                    </p>
+
+                    <div class="info-section__divider"></div>
+
+                    <div class="form-field">
+                        <label for="loginId"
+                               class="form-field__label">
+                            ID
+                        </label>
+
+                        <input id="loginId"
+                               type="text"
+                               class="form-field__input form-field__input--readonly"
+                               th:value="${member.loginId}"
+                               readonly>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="name"
+                               class="form-field__label">
+                            이름
+                        </label>
+
+                        <input id="name"
+                               name="name"
+                               type="text"
+                               class="form-field__input form-field__input--readonly"
+                               th:value="${member.name}"
+                               required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="email"
+                               class="form-field__label">
+                            이메일
+                        </label>
+
+                        <input id="email"
+                               name="email"
+                               type="email"
+                               class="form-field__input form-field__input--readonly"
+                               th:value="${member.email}"
+                               required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="phoneNumber"
+                               class="form-field__label">
+                            휴대폰번호
+                        </label>
+
+                        <input id="phoneNumber"
+                               name="phoneNumber"
+                               type="text"
+                               class="form-field__input"
+                               th:value="${member.phoneNumber}"
+                               inputmode="numeric"
+                               maxlength="13"
+                               autocomplete="tel"
+                               required>
+                    </div>
+
+                </section>
+
+                <!-- 비밀번호 변경 -->
+                <section class="info-section">
+
+                    <h3 class="info-section__title">
+                        비밀번호 변경
+                    </h3>
+
+                    <p class="info-section__description">
+                        비밀번호를 변경하지 않으려면 비워두세요.
+                    </p>
+
+                    <div class="info-section__divider"></div>
+
+                    <div class="form-field">
+                        <label for="newPassword"
+                               class="form-field__label">
+                            새 비밀번호
+                        </label>
+
+                        <input id="newPassword"
+                               name="newPassword"
+                               type="password"
+                               class="form-field__input"
+                               autocomplete="new-password">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="newPasswordConfirm"
+                               class="form-field__label">
+                            새 비밀번호 확인
+                        </label>
+
+                        <input id="newPasswordConfirm"
+                               name="newPasswordConfirm"
+                               type="password"
+                               class="form-field__input"
+                               autocomplete="new-password">
+
+                        <p id="passwordMatchMessage"
+                           class="form-field__message"
+                           aria-live="polite"></p>
+                    </div>
+
+                </section>
+
+                <div class="my-info-edit__actions">
+
+                    <a th:href="@{/my}"
+                       class="btn btn--cancel">
+                        취소
+                    </a>
+
+                    <button type="button"
+                            id="editConfirmOpenButton"
+                            class="btn btn--edit">
+                        저장
+                    </button>
+
+                </div>
+
+            </form>
+
+        </article>
+
+    </section>
+
+
+</main>
+
+<th:block layout:fragment="script">
+    <script defer th:src="@{/js/user/my/my-info-edit.js}"></script>
+</th:block>
+
+</body>
+
+</html>

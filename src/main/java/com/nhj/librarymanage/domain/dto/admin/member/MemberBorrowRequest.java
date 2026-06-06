@@ -17,7 +17,7 @@ public class MemberBorrowRequest {
             String bookTitle,
             Long bookRecordId
     ) {
-        public void applySearchFields(Model model) {
+        public static void applySearchFields(Model model) {
             List<SearchField> searchFields = List.of(
                     SearchField.of(Fields.bookTitle, "도서명"),
                     SearchField.of(Fields.bookRecordId, "재고 ID")

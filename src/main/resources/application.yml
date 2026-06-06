@@ -1,7 +1,17 @@
+server:
+  port: 9000
+
 spring:
   config:
     import:
       - optional:classpath:application-secret.yml
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
 
   security:
     oauth2:

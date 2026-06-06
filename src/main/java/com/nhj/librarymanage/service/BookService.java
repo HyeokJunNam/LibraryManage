@@ -25,8 +25,8 @@ public class BookService {
     }
 
     @Transactional
-    public PageResponse<BookManageResponse.Info> getBooks(BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(searchCondition, pageable);
+    public PageResponse<BookManageResponse.Info> getBooks(BookManageRequest.Search search, Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(search, pageable);
         return PageResponse.from(books.map(BookManageResponse.Info::from));
     }
 

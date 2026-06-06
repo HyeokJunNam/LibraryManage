@@ -69,6 +69,7 @@ export function createMemberSearchModal({ onSelectMember } = {}) {
     function selectRow(row) {
         const member = {
             id: row.dataset.memberId ?? "",
+            loginId: row.dataset.loginId ?? "",
             memberNo: row.dataset.memberNo ?? "",
             name: row.dataset.memberName ?? "",
             email: row.dataset.memberEmail ?? ""

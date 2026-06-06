@@ -33,8 +33,8 @@ public class BookController {
 
     @Description(value = "도서 목록 조회")
     @GetMapping("/books")
-    public ResponseEntity<ApiResponse> getBooks(@ModelAttribute BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BookManageResponse.Info> books = bookService.getBooks(searchCondition, pageable);
+    public ResponseEntity<ApiResponse> getBooks(@ModelAttribute BookManageRequest.Search search, Pageable pageable) {
+        PageResponse<BookManageResponse.Info> books = bookService.getBooks(search, pageable);
         ApiResponse apiResponse = ApiResponse.result(books);
 
         return ResponseEntity.ok().body(apiResponse);

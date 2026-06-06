@@ -105,10 +105,6 @@ svg {
     max-width: 100%;
 }
 
-.app {
-    min-height: 100vh;
-}
-
 .field {
     display: flex;
     flex-direction: column;

@@ -1,68 +1,139 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/user-layout}">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>내 정보</title>
+    <link rel="stylesheet" th:href="@{/css/user/my/my-info.css}">
 </head>
+
 <body>
-<div class="my-page">
-    <div class="my-page__bg"></div>
 
-    <main class="my-layout">
-        <section class="my-hero">
-            <a th:href="@{/}" href="/" class="my-hero__brand-link" aria-label="메인으로 이동">
-                <span class="my-hero__brand-text">LIBRARY</span>
-            </a>
+<main layout:fragment="content" class="main-content">
 
-            <div class="my-hero__content">
-                <p class="my-hero__eyebrow">MY PAGE</p>
-                <h1 class="my-hero__title">내 정보</h1>
-                <p class="my-hero__description">
-                    회원 정보와 도서 대출 현황을 확인할 수 있습니다.
+    <section class="my-info flex-center">
+
+        <article class="my-info__card">
+
+            <header class="my-info__header">
+                <h2 class="my-info__title">
+                    내 정보
+                </h2>
+
+                <p class="my-info__description">
+                    회원님의 기본 정보와 대출 현황을 확인할 수 있습니다.
                 </p>
-            </div>
-        </section>
+            </header>
 
-        <section class="my-content">
-            <section class="my-card">
-                <div class="my-card__header">
-                    <p class="my-card__eyebrow">ACCOUNT INFO</p>
-                    <h2 class="my-card__title">회원 정보</h2>
-                </div>
+            <section class="info-section">
+                <h3 class="info-section__title">
+                    기본 정보
+                </h3>
 
-                <div class="profile-box">
-                    <div class="profile-box__avatar" aria-hidden="true">👤</div>
-                    <div class="profile-box__text">
-                        <strong th:text="${member.name}">홍길동</strong>
-                        <span th:text="${member.loginId}">user01</span>
-                    </div>
-                </div>
+                <p class="info-section__description">
+                    내 기본 정보를 확인할 수 있습니다.
+                </p>
 
-                <div class="info-list">
-                    <div class="info-item">
-                        <span class="info-item__label">아이디</span>
-                        <strong class="info-item__value" th:text="${member.loginId}">user01</strong>
+                <div class="info-section__divider"></div>
+
+                <dl class="info-list">
+                    <div class="info-list__item">
+                        <dt class="info-list__label">ID</dt>
+                        <dd class="info-list__value" th:text="${member.loginId}">
+                            user01
+                        </dd>
                     </div>
 
-                    <div class="info-item">
-                        <span class="info-item__label">이름</span>
-                        <strong class="info-item__value" th:text="${member.name}">홍길동</strong>
+                    <div class="info-list__item">
+                        <dt class="info-list__label">이름</dt>
+                        <dd class="info-list__value" th:text="${member.name}">
+                            홍길동
+                        </dd>
                     </div>
 
-                    <div class="info-item">
-                        <span class="info-item__label">휴대폰 번호</span>
-                        <strong class="info-item__value" th:text="${member.phoneNumber}">010-1234-5678</strong>
+                    <div class="info-list__item">
+                        <dt class="info-list__label">이메일</dt>
+                        <dd class="info-list__value" th:text="${member.email}">
+                            user@email.com
+                        </dd>
                     </div>
 
-                    <div class="info-item">
-                        <span class="info-item__label">이메일</span>
-                        <strong class="info-item__value" th:text="${member.email}">user@email.com</strong>
+                    <div class="info-list__item">
+                        <dt class="info-list__label">휴대폰번호</dt>
+                        <dd class="info-list__value" th:text="${member.phoneNumber}">
+                            010-1234-5678
+                        </dd>
                     </div>
-                </div>
+                </dl>
             </section>
-        </section>
-    </main>
-</div>
+
+            <section class="info-section">
+                <h3 class="info-section__title">
+                    대출 정보
+                </h3>
+
+                <p class="info-section__description">
+                    내 대출 현황을 확인할 수 있습니다.
+                </p>
+
+                <div class="info-section__divider"></div>
+
+                <dl class="info-list">
+                    <div class="info-list__item info-list__item--link">
+                        <dt class="info-list__label">누적 대출 도서 수</dt>
+
+                        <dd class="info-list__value-group">
+                            <span class="info-list__value info-list__value--total"
+                                  th:text="${borrowStatistics.totalBorrowCount()}">9</span>
+                            <span class="info-list__unit">권</span>
+                            <span class="info-list__arrow">›</span>
+                        </dd>
+                    </div>
+
+                    <div class="info-list__item info-list__item--link">
+                        <dt class="info-list__label">대출 중인 도서 수</dt>
+
+                        <dd class="info-list__value-group">
+                            <span class="info-list__value info-list__value--borrowed"
+                                  th:text="${borrowStatistics.currentBorrowCount()}">3</span>
+                            <span class="info-list__unit">권</span>
+                            <span class="info-list__arrow">›</span>
+                        </dd>
+                    </div>
+
+                    <div class="info-list__item info-list__item--link">
+                        <dt class="info-list__label">연체 도서 수</dt>
+
+                        <dd class="info-list__value-group">
+                            <span class="info-list__value info-list__value--overdue"
+                                  th:text="${borrowStatistics.overdueCount()}">1</span>
+                            <span class="info-list__unit">권</span>
+                            <span class="info-list__arrow">›</span>
+                        </dd>
+                    </div>
+                </dl>
+            </section>
+
+            <div class="my-info__actions">
+                <a href="/my/edit/password-check" class="btn btn--edit">
+                    정보 수정
+                </a>
+
+                <button type="button" class="btn btn--danger">
+                    회원 탈퇴
+                </button>
+            </div>
+
+        </article>
+
+    </section>
+
+</main>
+
+<th:block layout:fragment="script">
+</th:block>
+
 </body>
 </html>

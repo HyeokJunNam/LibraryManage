@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface BookRepositoryCustom {
 
-    Page<Book> findAll(BookManageRequest.SearchCondition searchCondition, Pageable pageable);
+    Page<Book> findAll(BookManageRequest.Search search, Pageable pageable);
 
     List<Book> findBorrowableBook(List<Long> bookIds);
 

@@ -172,7 +172,7 @@
 
 .member-search-result .table-layout__table {
     min-width: 620px;
-    --table-columns: 1.2fr 1.1fr 1.6fr;
+    --table-columns: 1.2fr 1.5fr 1.1fr 1.6fr;
 }
 
 .member-search-result .table-layout__row {

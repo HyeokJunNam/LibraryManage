@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.dto.member.info.MyInfoRequest;
 import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -74,10 +76,25 @@ public class MemberService {
     }
 
     @Transactional
+    public void updateMyInfo(Long memberId, MyInfoRequest.Update update) {
+        Member member = memberRepository.getById(memberId);
+        member.changePhoneNumber(update.phoneNumber());
+
+        if (StringUtils.hasText(update.newPassword())) {
+            member.changePassword(passwordEncoder.encode(update.newPassword()));
+        }
+    }
+
+    @Transactional
     public void updateMember(MemberManageRequest.Update update) {
         Member member = memberRepository.getById(update.id());
 
-        member.changeName(update.name());
+    }
+
+    public boolean matchesCurrentPassword(Long memberId, String currentPassword) {
+        Member member = memberRepository.getById(memberId);
+
+        return passwordEncoder.matches(currentPassword, member.getPassword());
     }
 
     @Transactional

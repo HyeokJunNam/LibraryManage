@@ -2,6 +2,7 @@ package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
+import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
 import com.nhj.librarymanage.model.vo.BorrowStatistics;
@@ -19,6 +20,8 @@ public interface BorrowRecordRepositoryCustom {
     Page<BorrowRecord> searchReturnableByMemberId(Long memberId, MemberBorrowRequest.Search search, Pageable pageable);
 
     BorrowStatistics getBorrowStatistics();
+
+    MyInfoResponse.BorrowStatistics getBorrowStatisticsByMemberId(Long memberId);
 
     Page<BorrowRecord> searchOverdue(BorrowRequest.Search search, Pageable pageable);
 

@@ -32,8 +32,12 @@ public class Member extends BaseEntity {
 
     private String phoneNumber;
 
-    public void changeName(String name) {
-        this.name = name;
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
 }

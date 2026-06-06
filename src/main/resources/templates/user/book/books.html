@@ -1,57 +1,77 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 목록</title>
-    <th:block th:replace="~{/user/common/user-page-assets :: assets}"></th:block>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/user-layout}">
 
+<head>
+    <title>도서 목록</title>
     <link rel="stylesheet" th:href="@{/css/user/book/books.css}">
 </head>
+
 <body>
-<div class="layout">
 
-    <div th:replace="~{/user/common/topbar :: topbar}"></div>
+<main layout:fragment="content" class="main-content">
 
-    <div class="book-list">
-        <main class="book-list__page">
+    <section class="book-list"
+             th:data-fragment-url="@{/library/books}">
+        <div class="book-list__page">
 
-            <section class="search-panel">
+            <section class="search-panel" >
                 <div class="search-panel__head">
                     <div>
                         <h1 class="search-panel__title">도서 검색</h1>
-                        <p class="search-panel__desc">전체 도서와 검색 결과를 이 화면에서 바로 확인할 수 있습니다.</p>
+                        <p class="search-panel__desc">
+                            전체 도서와 검색 결과를 이 화면에서 바로 확인할 수 있습니다.
+                        </p>
                     </div>
                 </div>
 
-                <form id="searchForm" class="search-form">
-                    <div class="search-form__row">
-                        <div class="field field--select">
-                            <label for="condition" class="visually-hidden">검색 조건</label>
-                            <select id="condition" class="field__control">
-                                <option value="title">도서명</option>
-                                <option value="isbn">ISBN</option>
-                                <option value="author">저자</option>
-                                <option value="publisher">출판사</option>
-                            </select>
-                        </div>
+                <div class="table-layout__toolbar"
+                     th:data-search-mode="'server'">
 
-                        <div class="field field--input">
-                            <label for="keyword" class="visually-hidden">검색어</label>
-                            <input
-                                    id="keyword"
-                                    type="text"
-                                    class="field__control"
-                                    placeholder="검색어를 입력하세요"
-                            >
-                        </div>
+                    <form class="search-form"
+                          method="get"
+                          th:action="@{/library/books}"
+                          th:if="${searchFields != null and !#lists.isEmpty(searchFields)}"
+                          data-table-search-form>
 
-                        <div class="search-form__actions">
-                            <button type="submit" class="btn btn--search">검색</button>
-                            <button type="button" id="resetBtn" class="btn btn--cancel">초기화</button>
+                        <div class="search-form__row">
+                            <div class="field field--select">
+                                <label for="condition" class="visually-hidden">검색 조건</label>
+
+                                <select id="condition"
+                                        class="field__control"
+                                        data-table-search-target>
+                                    <option th:each="field : ${searchFields}"
+                                            th:value="${field.name}"
+                                            th:text="${field.label}">
+                                        검색조건
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="field field--input">
+                                <label for="keyword" class="visually-hidden">검색어</label>
+
+                                <input id="keyword"
+                                       class="field__control"
+                                       type="text"
+                                       placeholder="검색어를 입력하세요"
+                                       data-table-search-keyword>
+                            </div>
+
+                            <div class="search-form__actions">
+                                <button type="submit" class="btn btn--search">
+                                    검색
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+
+                    <div class="table-layout__toolbar-spacer"
+                         th:if="${searchFields == null or #lists.isEmpty(searchFields)}"></div>
+                </div>
             </section>
 
             <section class="book-results" aria-labelledby="bookResultsTitle">
@@ -69,15 +89,13 @@
                     </div>
                 </div>
 
-                <div
-                        class="book-card-list"
-                        th:if="${content != null and !#lists.isEmpty(content)}">
+                <div class="book-card-list"
+                     th:if="${content != null and !#lists.isEmpty(content)}">
 
-                    <a
-                            class="book-card"
-                            th:each="row, rowStat : ${content}"
-                            th:href="@{/library/books/{id}(id=${row.id})}"
-                            th:attr="aria-label=${row.title + ' 상세 정보 보기'}">
+                    <a class="book-card"
+                       th:each="row : ${content}"
+                       th:href="@{/library/books/{id}(id=${row.id})}"
+                       th:attr="aria-label=${row.title + ' 상세 정보 보기'}">
 
                         <div class="book-card__image">
                             <div class="book-card__no-image">
@@ -88,9 +106,7 @@
                         <div class="book-card__body">
                             <div class="book-card__main">
                                 <div class="book-card__title-area">
-                                    <h3
-                                            class="book-card__title"
-                                            th:text="${row.title}">
+                                    <h3 class="book-card__title" th:text="${row.title}">
                                         도서명
                                     </h3>
                                 </div>
@@ -103,27 +119,24 @@
                             <div class="book-card__meta">
                                 <div class="book-card__meta-row">
                                     <span class="book-card__label">저자</span>
-                                    <span
-                                            class="book-card__value"
-                                            th:text="${row.author != null ? row.author : '-'}">
+                                    <span class="book-card__value"
+                                          th:text="${row.author != null ? row.author : '-'}">
                                         저자
                                     </span>
                                 </div>
 
                                 <div class="book-card__meta-row">
                                     <span class="book-card__label">출판사</span>
-                                    <span
-                                            class="book-card__value"
-                                            th:text="${row.publisher != null ? row.publisher : '-'}">
+                                    <span class="book-card__value"
+                                          th:text="${row.publisher != null ? row.publisher : '-'}">
                                         출판사
                                     </span>
                                 </div>
 
                                 <div class="book-card__meta-row">
                                     <span class="book-card__label">ISBN</span>
-                                    <span
-                                            class="book-card__value"
-                                            th:text="${row.isbn != null ? row.isbn : '-'}">
+                                    <span class="book-card__value"
+                                          th:text="${row.isbn != null ? row.isbn : '-'}">
                                         ISBN
                                     </span>
                                 </div>
@@ -131,23 +144,20 @@
 
                             <div class="book-card__bottom">
                                 <div class="book-card__tags">
-                                    <span
-                                            class="book-tag"
-                                            th:if="${row.author != null}"
-                                            th:text="${'#' + row.author}">
+                                    <span class="book-tag"
+                                          th:if="${row.author != null}"
+                                          th:text="${'#' + row.author}">
                                         #저자
                                     </span>
 
-                                    <span
-                                            class="book-tag"
-                                            th:if="${row.publisher != null}"
-                                            th:text="${'#' + row.publisher}">
+                                    <span class="book-tag"
+                                          th:if="${row.publisher != null}"
+                                          th:text="${'#' + row.publisher}">
                                         #출판사
                                     </span>
 
-                                    <span
-                                            class="book-tag"
-                                            th:if="${row.isbn != null}">
+                                    <span class="book-tag"
+                                          th:if="${row.isbn != null}">
                                         #ISBN
                                     </span>
                                 </div>
@@ -158,12 +168,11 @@
                     </a>
                 </div>
 
-                <div
-                        class="empty-block"
-                        th:if="${content == null or #lists.isEmpty(content)}">
+                <div class="empty-block"
+                     th:if="${content == null or #lists.isEmpty(content)}">
                     <div class="empty-block__icon">📚</div>
-                    <p class="empty-block__title">조회 된 도서가 없습니다.</p>
-                    <p class="empty-block__desc">검색어를 변경하거나 초기화 후 다시 조회해 주세요.</p>
+                    <p class="empty-block__title">조회된 도서가 없습니다.</p>
+                    <p class="empty-block__desc">검색어를 변경하거나 다시 조회해 주세요.</p>
                 </div>
 
                 <div class="book-results__pagination">
@@ -173,10 +182,14 @@
                 </div>
             </section>
 
-        </main>
-    </div>
-</div>
+        </div>
+    </section>
 
+</main>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/js/common/table-search-pagination.js}"></script>
+</th:block>
 
 </body>
 </html>

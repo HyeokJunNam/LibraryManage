@@ -92,12 +92,21 @@
     }
 
     function getContainerCurrentUrl(container) {
+        const toolbar = container?.querySelector(SELECTOR.TOOLBAR);
+        const searchMode = normalizeMode(toolbar?.dataset[DATA.SEARCH_MODE]);
+
+        if (searchMode === TABLE_MODE.SERVER) {
+            return window.location.href;
+        }
+
         if (container?.dataset[DATA.CURRENT_URL]?.trim()) {
             return toAbsoluteUrl(container.dataset[DATA.CURRENT_URL]);
         }
+
         if (container?.dataset[DATA.FRAGMENT_URL]?.trim()) {
             return toAbsoluteUrl(container.dataset[DATA.FRAGMENT_URL]);
         }
+
         return window.location.href;
     }
 

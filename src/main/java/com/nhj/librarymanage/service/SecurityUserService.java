@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -20,9 +21,9 @@ public class SecurityUserService implements UserDetailsService {
     @NonNull
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) {
-        Member member = memberRepository.findByLoginId(username).orElseThrow(() -> new AuthenticateFailureException(AuthenticateError.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByLoginId(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-         return MemberPrincipal.from(member);
+        return MemberPrincipal.from(member);
     }
 
 }

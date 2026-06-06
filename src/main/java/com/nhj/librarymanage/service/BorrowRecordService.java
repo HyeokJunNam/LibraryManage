@@ -6,6 +6,7 @@ import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowResponse;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowResponse;
 import com.nhj.librarymanage.domain.dto.member.borrow.MyBorrowResponse;
+import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
@@ -78,6 +79,10 @@ public class BorrowRecordService {
 
     public BorrowStatistics getBorrowStatistics() {
         return borrowRecordRepository.getBorrowStatistics();
+    }
+
+    public MyInfoResponse.BorrowStatistics getBorrowStatisticsByMemberId(Long memberId) {
+        return borrowRecordRepository.getBorrowStatisticsByMemberId(memberId);
     }
 
 

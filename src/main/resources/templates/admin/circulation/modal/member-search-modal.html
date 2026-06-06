@@ -72,6 +72,10 @@
                         </th>
 
                         <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">회원 ID</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                             <span class="table-layout__text">회원명</span>
                         </th>
 
@@ -87,6 +91,7 @@
                         data-role="select-member"
                         tabindex="0"
                         th:data-member-id="${member.id}"
+                        th:data-login-id="${member.loginId}"
                         th:data-member-no="${member.memberNo}"
                         th:data-member-name="${member.name}"
                         th:data-member-email="${member.email}">
@@ -102,6 +107,13 @@
                             <span class="table-layout__text"
                                   th:text="${member.memberNo}">
                                 M0001
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span class="table-layout__text"
+                                  th:text="${member.loginId}">
+                                sample
                             </span>
                         </td>
 
@@ -123,7 +135,7 @@
                     <tr class="table-layout__row table-layout__row--empty"
                         th:if="${content == null or #lists.isEmpty(content)}">
                         <td class="table-layout__cell table-layout__cell--empty"
-                            colspan="4">
+                            colspan="5">
                             검색 결과가 없습니다.
                         </td>
                     </tr>

@@ -30,15 +30,15 @@ public class BookPageController {
 
     @Description("도서 관리 도서 목록 화면")
     @GetMapping("/books")
-    public String bookListPage(Model model, @ModelAttribute BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
+    public String bookListPage(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
+        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(search, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("borrowStatistics", borrowStatistics);
 
-        searchCondition.applySearchFields(model);
+        search.applyTo(model);
 
         return "admin/book/books";
     }
@@ -74,7 +74,7 @@ public class BookPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        search.applySearchFields(model);
+        BookBorrowRequest.Search.applySearchFields(model);
 
         return "admin/book/fragments/book-detail-borrows :: bookBorrows";
     }

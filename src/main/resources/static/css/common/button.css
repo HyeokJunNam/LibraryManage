@@ -105,6 +105,25 @@
     background: var(--color-secondary-strong);
 }
 
+/* =========================
+   EDIT (정보 수정)
+========================= */
+
+.btn--edit {
+    border-color: var(--green-200);
+    background: var(--white);
+    color: var(--green-700);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--edit:hover:not(:disabled) {
+    background: var(--green-50);
+    border-color: var(--green-400);
+
+    box-shadow: 0 8px 16px rgba(37, 135, 76, 0.12);
+}
+
 
 /* =========================
    CANCEL (취소)
@@ -118,6 +137,24 @@
 
 .btn--cancel:hover:not(:disabled) {
     background: var(--gray-100);
+}
+
+/* =========================
+   DANGER (삭제/탈퇴)
+========================= */
+
+.btn--danger {
+    border-color: #f1c0c4;
+    background: #fff5f5;
+    color: #c92a2a;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.btn--danger:hover:not(:disabled) {
+    background: #ffe3e3;
+    border-color: #e57373;
+    color: #a61e1e;
 }
 
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Log4j2
-@RestControllerAdvice
+/*@RestControllerAdvice*/
 public class ApiExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)

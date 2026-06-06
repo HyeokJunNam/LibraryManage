@@ -11,46 +11,45 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    syncSearchFieldsFromQuery(conditionElement, keywordElement);
+    restoreSearchForm(conditionElement, keywordElement);
     bindSearchSubmit(searchForm, conditionElement, keywordElement);
     bindResetButton(resetButton, conditionElement, keywordElement);
 });
 
-function syncSearchFieldsFromQuery(conditionElement, keywordElement) {
+function restoreSearchForm(conditionElement, keywordElement) {
     const searchParams = new URLSearchParams(window.location.search);
-    const searchKeys = ["title", "isbn", "author", "publisher"];
+    const options = Array.from(conditionElement.options);
 
-    let selectedKey = "title";
-    let selectedValue = "";
+    const selectedOption = options.find(function (option) {
+        return searchParams.has(option.value);
+    });
 
-    for (const key of searchKeys) {
-        const value = searchParams.get(key);
-
-        if (value !== null && value.trim() !== "") {
-            selectedKey = key;
-            selectedValue = value;
-            break;
-        }
+    if (!selectedOption) {
+        conditionElement.selectedIndex = 0;
+        keywordElement.value = "";
+        return;
     }
 
-    conditionElement.value = selectedKey;
-    keywordElement.value = selectedValue;
+    conditionElement.value = selectedOption.value;
+    keywordElement.value = searchParams.get(selectedOption.value) ?? "";
 }
 
 function bindSearchSubmit(searchForm, conditionElement, keywordElement) {
     searchForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const condition = conditionElement.value;
+        const fieldName = conditionElement.value;
         const keyword = keywordElement.value.trim();
-        const params = new URLSearchParams();
 
-        if (keyword !== "") {
-            params.set(condition, keyword);
+        if (keyword === "") {
+            window.location.href = searchForm.action;
+            return;
         }
 
-        const queryString = params.toString();
-        window.location.href = queryString ? `/library/books?${queryString}` : "/library/books";
+        const params = new URLSearchParams();
+        params.set(fieldName, keyword);
+
+        window.location.href = `${searchForm.action}?${params.toString()}`;
     });
 }
 
@@ -60,7 +59,7 @@ function bindResetButton(resetButton, conditionElement, keywordElement) {
     }
 
     resetButton.addEventListener("click", function () {
-        conditionElement.value = "title";
+        conditionElement.selectedIndex = 0;
         keywordElement.value = "";
         keywordElement.focus();
     });

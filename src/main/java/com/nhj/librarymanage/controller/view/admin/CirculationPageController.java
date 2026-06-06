@@ -1,7 +1,6 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowResponse;
 import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
 import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
 import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
@@ -50,7 +49,7 @@ public class CirculationPageController {
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("memberId", id);
 
-        search.applySearchFields(model);
+        MemberBorrowRequest.Search.applySearchFields(model);
 
         return "admin/circulation/fragments/return-panel :: bookReturnPanel";
     }
@@ -70,19 +69,19 @@ public class CirculationPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        search.applySearchFields(model);
+        MemberManageRequest.Search.applySearchFields(model);
 
         return "admin/circulation/modal/member-search-modal :: memberSearchResultPanel";
     }
 
     @Description("도서 검색(모달)")
     @GetMapping("/books/search")
-    public String bookSearchModal(Model model, @ModelAttribute BookManageRequest.SearchCondition searchCondition, Pageable pageable) {
-        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(searchCondition, pageable);
+    public String bookSearchModal(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
+        PageResponse<BookManageResponse.Info> pageResponse = bookService.getBooks(search, pageable);
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        searchCondition.applySearchFields(model);
+        search.applyTo(model);
 
         return "admin/circulation/modal/book-search-modal :: bookSearchResultPanel";
     }
@@ -97,7 +96,7 @@ public class CirculationPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        search.applySearchFields(model);
+        BorrowRequest.Search.applySearchFields(model);
 
         return "admin/borrow-status/fragments/borrow-list-panel :: borrowListPanel";
     }
@@ -109,7 +108,7 @@ public class CirculationPageController {
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 
-        search.applySearchFields(model);
+        BorrowRequest.Search.applySearchFields(model);
 
         return "admin/borrow-status/fragments/overdue-list-panel :: overdueListPanel";
     }

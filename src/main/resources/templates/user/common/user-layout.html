@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE | 도서관리시스템">도서관리시스템</title>
+
+    <!-- 전체 공통 CSS -->
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common/modal-alert.css}">
+    <link rel="stylesheet" th:href="@{/css/common/button.css}">
+    <link rel="stylesheet" th:href="@{/css/common/pagination.css}">
+
+    <!-- 사용자 공통 CSS -->
+    <link rel="stylesheet" th:href="@{/css/user/common/user-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/user/common/topbar.css}">
+
+    <!-- 페이지별 CSS -->
+    <th:block layout:fragment="css"></th:block>
+
+    <!-- 전체 공통 JS -->
+    <script defer th:src="@{/js/common/api.js}"></script>
+    <script defer th:src="@{/js/common/modal-alert.js}"></script>
+    <script defer th:src="@{/js/common/table-search-pagination.js}"></script>
+
+    <!-- 페이지별 JS -->
+    <th:block layout:fragment="script"></th:block>
+</head>
+
+<body>
+
+<th:block th:replace="~{user/common/topbar :: topbar}"></th:block>
+
+<main layout:fragment="content"></main>
+
+<th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
+
+</body>
+</html>

@@ -3,10 +3,8 @@ import { createMemberSearchModal } from "../modal/member-search-modal.js";
 export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) {
     const selectedMemberEmpty = document.getElementById("selectedMemberEmpty");
     const selectedMemberResult = document.getElementById("selectedMemberResult");
-    const selectedMemberName = document.getElementById("selectedMemberName");
-    const selectedMemberMeta = document.getElementById("selectedMemberMeta");
-    const selectedMemberNo = document.getElementById("selectedMemberNo");
-    const selectedMemberEmail = document.getElementById("selectedMemberEmail");
+    const selectedMemberMeta = document.querySelector("[data-member-meta]");
+    const memberFieldElements = document.querySelectorAll("[data-member-field]");
 
     const memberActionFooter = document.getElementById("memberActionFooter");
     const borrowActionButton = document.querySelector('[data-role="borrow-action"]');
@@ -34,14 +32,31 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         }
     }
 
+    function normalizeText(value, fallback = "-") {
+        return value === null || value === undefined || value === ""
+            ? fallback
+            : String(value);
+    }
+
     function setText(element, value, fallback = "-") {
         if (!element) {
             return;
         }
 
-        element.textContent = value === null || value === undefined || value === ""
-            ? fallback
-            : String(value);
+        element.textContent = normalizeText(value, fallback);
+    }
+
+    function bindMemberFields(member = {}) {
+        memberFieldElements.forEach((element) => {
+            const fieldName = element.dataset.memberField;
+            setText(element, member[fieldName]);
+        });
+    }
+
+    function clearMemberFields() {
+        memberFieldElements.forEach((element) => {
+            setText(element, "-");
+        });
     }
 
     function createSelectedMemberMeta(member) {
@@ -58,6 +73,10 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         return metaParts.length > 0 ? metaParts.join(" · ") : "-";
     }
 
+    function getSelectedMemberId() {
+        return toIdString(selectedMemberResult?.dataset.memberId);
+    }
+
     function hasSelectedMember() {
         return !!getSelectedMemberId();
     }
@@ -70,10 +89,6 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         setDisabled(returnActionButton, disabled);
     }
 
-    function getSelectedMemberId() {
-        return toIdString(selectedMemberResult?.dataset.memberId);
-    }
-
     function clearSelectedMember() {
         if (selectedMemberResult) {
             delete selectedMemberResult.dataset.memberId;
@@ -82,10 +97,8 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
         setHidden(selectedMemberResult, true);
         setHidden(selectedMemberEmpty, false);
 
-        setText(selectedMemberName, "-");
+        clearMemberFields();
         setText(selectedMemberMeta, "선택된 회원의 기본 정보를 확인할 수 있습니다.");
-        setText(selectedMemberNo, "-");
-        setText(selectedMemberEmail, "-");
 
         updateActionButtons();
 
@@ -105,10 +118,8 @@ export function createMemberProcess({ onMemberSelected, onMemberCleared } = {}) 
             selectedMemberResult.dataset.memberId = toIdString(member.id);
         }
 
-        setText(selectedMemberName, member.name);
+        bindMemberFields(member);
         setText(selectedMemberMeta, createSelectedMemberMeta(member));
-        setText(selectedMemberNo, member.memberNo);
-        setText(selectedMemberEmail, member.email);
 
         updateActionButtons();
 

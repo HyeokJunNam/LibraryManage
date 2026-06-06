@@ -3,6 +3,7 @@ package com.nhj.librarymanage.repository;
 import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
+import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import com.querydsl.core.types.Expression;
@@ -20,7 +21,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -128,6 +128,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
 
+    @Override
     public Page<BorrowRecord> searchOverdue(BorrowRequest.Search search, Pageable pageable) {
         BooleanExpression notReturned = isNull(borrowRecord.returnedAt);
         BooleanExpression overdue = before(borrowRecord.dueAt, LocalDate.now());
@@ -144,6 +145,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
         return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
     }
 
+    @Override
     public BorrowStatistics getBorrowStatistics() {
         LocalDate now = LocalDate.now();
 
@@ -170,4 +172,25 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 .fetchOne();
     }
 
+    @Override
+    public MyInfoResponse.BorrowStatistics getBorrowStatisticsByMemberId(Long memberId) {
+        LocalDate now = LocalDate.now();
+
+        BooleanExpression eqMemberId = eq(borrowRecord.member.id, memberId);
+
+        NumberExpression<Long> currentBorrowCount = countWhen(borrowRecord.returnedAt.isNull());
+        NumberExpression<Long> overdueBorrowCount = countWhen(borrowRecord.returnedAt.isNull()
+                .and(toDate(borrowRecord.dueAt).before(now)));
+
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        MyInfoResponse.BorrowStatistics.class,
+                        borrowRecord.id.count(),
+                        currentBorrowCount,
+                        overdueBorrowCount
+                ))
+                .from(borrowRecord)
+                .where(eqMemberId)
+                .fetchOne();
+    }
 }

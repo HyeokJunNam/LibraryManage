@@ -36,7 +36,7 @@ public class MemberPageController {
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
         model.addAttribute("memberStatistics", memberStatistics);
 
-        search.applySearchFields(model);
+        MemberManageRequest.Search.applySearchFields(model);
 
         return "admin/member/members";
     }
@@ -60,7 +60,7 @@ public class MemberPageController {
         model.addAttribute("memberId", id);
 
         // TODO
-        search.applySearchFields(model);
+        MemberBorrowRequest.Search.applySearchFields(model);
 
         return "admin/member/fragments/member-borrow-history :: memberBorrowHistoryPanel";
     }

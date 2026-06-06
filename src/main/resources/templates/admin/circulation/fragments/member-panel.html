@@ -64,16 +64,16 @@
                                 </p>
 
                                 <div class="member-info-card__name-row">
-                                    <h4 class="member-info-card__name" id="selectedMemberName">
+                                    <h4 class="member-info-card__name" data-member-field="name">
                                         -
                                     </h4>
 
-                                    <span class="member-info-card__member-no-chip" id="selectedMemberNo">
+                                    <span class="member-info-card__member-no-chip" data-member-field="memberNo">
                                         -
                                     </span>
                                 </div>
 
-                                <p class="member-info-card__meta" id="selectedMemberMeta">
+                                <p class="member-info-card__meta" data-member-meta>
                                     선택된 회원의 기본 정보를 확인할 수 있습니다.
                                 </p>
                             </div>
@@ -82,8 +82,13 @@
                         <div class="member-info-card__body">
                             <div class="member-info-card__info">
                                 <div class="member-info-card__info-row">
+                                    <span class="member-info-card__label">회원 ID</span>
+                                    <span class="member-info-card__value" data-member-field="loginId">-</span>
+                                </div>
+
+                                <div class="member-info-card__info-row">
                                     <span class="member-info-card__label">이메일</span>
-                                    <span class="member-info-card__value" id="selectedMemberEmail">-</span>
+                                    <span class="member-info-card__value" data-member-field="email">-</span>
                                 </div>
 
                                 <div class="member-info-card__info-row">

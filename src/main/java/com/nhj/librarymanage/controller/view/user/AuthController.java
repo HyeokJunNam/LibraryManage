@@ -1,8 +1,10 @@
 package com.nhj.librarymanage.controller.view.user;
 
 import com.nhj.librarymanage.domain.annotations.Description;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RequiredArgsConstructor
@@ -11,7 +13,14 @@ public class AuthController {
 
     @Description(value = "로그인 view")
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpSession session, Model model) {
+        Object loginError = session.getAttribute("LOGIN_ERROR");
+
+        if (loginError != null) {
+            model.addAttribute("errorMessage", loginError);
+            session.removeAttribute("LOGIN_ERROR");
+        }
+
         return "user/auth/login";
     }
 

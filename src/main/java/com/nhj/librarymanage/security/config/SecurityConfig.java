@@ -2,6 +2,8 @@ package com.nhj.librarymanage.security.config;
 
 import com.nhj.librarymanage.security.authenticate.CustomAuthenticationEntryPoint;
 import com.nhj.librarymanage.security.authenticate.CustomRequestCache;
+import com.nhj.librarymanage.security.authenticate.LoginAuthenticationFailureHandler;
+import com.nhj.librarymanage.security.authenticate.LoginAuthenticationSuccessHandler;
 import com.nhj.librarymanage.security.authorize.CustomAccessDeniedHandler;
 import com.nhj.librarymanage.security.test.AjaxAuthenticationFailureHandler;
 import com.nhj.librarymanage.security.test.AjaxAuthenticationSuccessHandler;
@@ -90,8 +92,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
-        AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler = new AjaxAuthenticationSuccessHandler();
-        AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler = new AjaxAuthenticationFailureHandler();
+        /*AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler = new AjaxAuthenticationSuccessHandler();
+        AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler = new AjaxAuthenticationFailureHandler();*/
+        LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler =  new LoginAuthenticationSuccessHandler();
+        LoginAuthenticationFailureHandler loginAuthenticationFailureHandler = new LoginAuthenticationFailureHandler();
+
         CustomRequestCache customRequestCache = new CustomRequestCache();
 
         httpSecurity
@@ -111,8 +116,9 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("loginId")
-                        .successHandler(ajaxAuthenticationSuccessHandler)
-                        .failureHandler(ajaxAuthenticationFailureHandler)
+                        .passwordParameter("password")
+                        .successHandler(loginAuthenticationSuccessHandler)
+                        .failureHandler(loginAuthenticationFailureHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout

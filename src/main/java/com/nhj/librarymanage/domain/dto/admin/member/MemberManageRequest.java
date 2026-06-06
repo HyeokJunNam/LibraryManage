@@ -18,7 +18,7 @@ public class MemberManageRequest {
             String email,
             String phoneNumber
     ) {
-        public void applySearchFields(Model model) {
+        public static void applySearchFields(Model model) {
             List<SearchField> searchFields = List.of(
                     SearchField.of(Fields.name, "이름"),
                     SearchField.of(Fields.email, "이메일"),
