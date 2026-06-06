@@ -25,8 +25,6 @@ public class BookCopy extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    private String location;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "condition")
     private BookCopyCondition bookCopyCondition;
@@ -35,15 +33,13 @@ public class BookCopy extends BaseEntity {
     private BorrowRecord borrowRecord;
 
     @Builder
-    public BookCopy(Book book, BookCopyCondition bookCopyCondition, String location) {
+    public BookCopy(Book book, BookCopyCondition bookCopyCondition) {
         this.book = book;
         this.bookCopyCondition = bookCopyCondition;
-        this.location = location;
     }
 
-    public void update(BookCopyCondition bookCopyCondition, String location) {
+    public void update(BookCopyCondition bookCopyCondition) {
         this.bookCopyCondition = bookCopyCondition;
-        this.location = location;
     }
 
     public void startBorrow(Member member, long borrowDay) {

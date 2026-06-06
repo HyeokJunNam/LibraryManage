@@ -82,6 +82,10 @@
                         </th>
 
                         <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                            <span class="table-layout__text">위치</span>
+                        </th>
+
+                        <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                             <span class="table-layout__text">ISBN</span>
                         </th>
 
@@ -119,6 +123,14 @@
                                     class="table-layout__text"
                                     th:text="${row.title}">
                                 도서명
+                            </span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span
+                                    class="table-layout__text"
+                                    th:text="${row.location != null ? row.location : '-'}">
+                                위치
                             </span>
                         </td>
 

@@ -1,8 +1,8 @@
 package com.nhj.librarymanage.controller.view.user;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
-import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookSearch;
+import com.nhj.librarymanage.domain.dto.member.book.BookResponse;
 import com.nhj.librarymanage.domain.dto.temp.NotificationResponse;
 import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.domain.entity.MemberPrincipal;
@@ -33,15 +33,15 @@ public class LibraryController {
     @Description("메인 검색 화면")
     @GetMapping("/library")
     public String libraryMain(Model model) {
-        BookManageRequest.Search.addSearchFieldsTo(model);
+        BookSearch.addSearchFieldsTo(model);
 
         return "user/home/home";
     }
 
     @Description("도서 검색 결과 화면")
     @GetMapping("/library/books")
-    public String bookSearchResultPage(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
-        PageResponse<BookManageResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
+    public String bookSearchResultPage(Model model, @ModelAttribute BookSearch search, Pageable pageable) {
+        PageResponse<BookResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
 
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
@@ -54,11 +54,10 @@ public class LibraryController {
 
     @Description("도서 상세 화면")
     @GetMapping("/library/books/{id}")
-    public String bookDetail(Model model, @PathVariable Long id, @AuthenticationPrincipal MemberPrincipal memberPrincipal) {
-        BookManageResponse.Detail detail = bookService.getBook(id);
+    public String bookDetail(Model model, @PathVariable Long id) {
+        BookResponse.Detail detail = bookService.getBook(id);
 
-        Long memberId = memberPrincipal.getId();
-        NotificationResponse.Status status = NotificationResponse.Status.from(notificationService.hasRequested(memberId, id));
+        NotificationResponse.Status status = NotificationResponse.Status.from(notificationService.hasRequested(id));
 
         model.addAttribute("book", detail);
         model.addAttribute("notification", status);

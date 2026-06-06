@@ -15,15 +15,13 @@ public class BookCopyRequest {
             List<Long> deleteIds
     ) {
         public record CreateItem(
-                BookCopyCondition bookCopyCondition,
-                String location
+                BookCopyCondition bookCopyCondition
         ) {
         }
 
         public record UpdateItem(
                 Long bookItemId,
-                BookCopyCondition bookCopyCondition,
-                String location
+                BookCopyCondition bookCopyCondition
         ) {
         }
     }

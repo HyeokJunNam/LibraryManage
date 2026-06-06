@@ -1,13 +1,14 @@
-package com.nhj.librarymanage.domain.dto.admin.book;
+package com.nhj.librarymanage.domain.dto.member.book;
 
-import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BookManageResponse {
+public class BookResponse {
 
     public record ListItem(
             Long id,
@@ -31,22 +32,37 @@ public class BookManageResponse {
 
     public record Detail(
             Long id,
+            String location,
             String isbn,
             String title,
             String author,
             String publisher,
             String description,
-            String thumbnailUrl
+            String thumbnailUrl,
+            boolean borrowable
     ) {
         public static Detail from(Book book) {
+            List<BookCopy> bookCopies = book.getBookCopies();
+
+            boolean borrowable = false;
+
+            for (BookCopy bookCopy : bookCopies) {
+                if (bookCopy.getBorrowRecord() != null) {
+                    borrowable = true;
+                    break;
+                }
+            }
+
             return new Detail(
                     book.getId(),
+                    book.getLocation(),
                     book.getIsbn(),
                     book.getTitle(),
                     book.getAuthor(),
                     book.getPublisher(),
                     book.getDescription(),
-                    book.getThumbnailUrl()
+                    book.getThumbnailUrl(),
+                    borrowable
             );
         }
     }

@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.code.BookCopyCondition;
-import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
+import com.nhj.librarymanage.domain.dto.admin.book.BookSearch;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.util.QuerydslFilterHelper;
 import com.nhj.librarymanage.util.QuerydslSortHelper;
@@ -32,7 +32,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
             QuerydslSortHelper.buildOrderColumnMap(List.of());
 
     @Override
-    public Page<Book> findAll(BookManageRequest.Search search, Pageable pageable) {
+    public Page<Book> search(BookSearch search, Pageable pageable) {
         OrderSpecifier<?>[] order = QuerydslSortHelper.sort(book.id, ORDER_COLUMN_MAP, pageable);
 
         BooleanExpression likeIsbn = QuerydslFilterHelper.like(book.isbn, search.isbn());

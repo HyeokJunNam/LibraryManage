@@ -155,21 +155,12 @@ function initBookCopiesArea() {
         return conditionControl.value || getFirstConditionValue(conditionControl);
     }
 
-    function getRowLocation(row) {
-        return row.querySelector('[data-field="location"]')?.value.trim() || "";
-    }
-
     function getOriginalCondition(row) {
         return row.dataset.originalCondition || "";
     }
 
-    function getOriginalLocation(row) {
-        return row.dataset.originalLocation || "";
-    }
-
     function isRowChanged(row) {
-        return getRowCondition(row) !== getOriginalCondition(row)
-            || getRowLocation(row) !== getOriginalLocation(row);
+        return getRowCondition(row) !== getOriginalCondition(row);
     }
 
     function syncConditionSelectColor(select) {
@@ -203,8 +194,7 @@ function initBookCopiesArea() {
     function createCreatedRowData() {
         return {
             createdRowId: String(createdState.nextTempId++),
-            condition: "",
-            location: ""
+            condition: ""
         };
     }
 
@@ -222,7 +212,6 @@ function initBookCopiesArea() {
         row.dataset.createdRowId = item.createdRowId;
 
         const conditionControl = row.querySelector('[data-field="condition"]');
-        const locationControl = row.querySelector('[data-field="location"]');
 
         if (conditionControl) {
             if (item.condition) {
@@ -233,10 +222,6 @@ function initBookCopiesArea() {
             }
 
             syncConditionSelectColor(conditionControl);
-        }
-
-        if (locationControl) {
-            locationControl.value = item.location || "";
         }
     }
 
@@ -288,7 +273,6 @@ function initBookCopiesArea() {
         }
 
         item.condition = getRowCondition(row);
-        item.location = getRowLocation(row);
     }
 
     function removeCreatedRowsFromDom() {
@@ -618,8 +602,7 @@ function initBookCopiesArea() {
             if (isRowChanged(row)) {
                 editState.updatedCopies.set(bookCopyId, {
                     bookCopyId,
-                    condition: getRowCondition(row),
-                    location: getRowLocation(row)
+                    condition: getRowCondition(row)
                 });
             } else {
                 editState.updatedCopies.delete(bookCopyId);
@@ -754,15 +737,10 @@ function initBookCopiesArea() {
 
     function applyUpdatedVisualState(row, updatedCopy) {
         const conditionControl = row.querySelector('[data-field="condition"]');
-        const locationControl = row.querySelector('[data-field="location"]');
 
         if (conditionControl) {
             conditionControl.value = updatedCopy.condition || "";
             syncConditionSelectColor(conditionControl);
-        }
-
-        if (locationControl) {
-            locationControl.value = updatedCopy.location || "";
         }
 
         row.dataset.rowMode = "updated";
@@ -827,25 +805,16 @@ function initBookCopiesArea() {
             const rowMode = row.dataset.rowMode || "clean";
 
             const conditionView = row.querySelector(".book-detail-copy-condition-view");
-            const locationView = row.querySelector(".book-detail-copy-location-view");
             const conditionEdit = row.querySelector(".book-detail-copy-condition-edit");
-            const locationEdit = row.querySelector(".book-detail-copy-location-edit");
             const deleteButton = row.querySelector('[data-role="mark-delete-row"]');
             const cancelDeleteButton = row.querySelector('[data-role="cancel-delete-row"]');
             const stateLabel = row.querySelector(".book-detail-copy-row__state");
 
             conditionView?.classList.toggle("is-hidden", editing);
-            locationView?.classList.toggle("is-hidden", editing);
-
             conditionEdit?.classList.toggle("is-hidden", !editing || isDeleted);
-            locationEdit?.classList.toggle("is-hidden", !editing || isDeleted);
 
             if (conditionEdit) {
                 conditionEdit.disabled = !editing || borrowed || isDeleted;
-            }
-
-            if (locationEdit) {
-                locationEdit.disabled = !editing || borrowed || isDeleted;
             }
 
             deleteButton?.classList.toggle("is-hidden", !editing || borrowed || isDeleted);
@@ -1011,8 +980,7 @@ function initBookCopiesArea() {
         if (isRowChanged(row)) {
             editState.updatedCopies.set(bookCopyId, {
                 bookCopyId,
-                condition: getRowCondition(row),
-                location: getRowLocation(row)
+                condition: getRowCondition(row)
             });
         } else {
             editState.updatedCopies.delete(bookCopyId);
@@ -1056,13 +1024,11 @@ function initBookCopiesArea() {
 
         return {
             createItems: createdState.items.map(item => ({
-                bookCopyCondition: item.condition,
-                location: item.location
+                bookCopyCondition: item.condition
             })),
             updateItems: [...editState.updatedCopies.values()].map(copy => ({
                 bookCopyId: copy.bookCopyId,
-                bookCopyCondition: copy.condition,
-                location: copy.location
+                bookCopyCondition: copy.condition
             })),
             deleteIds: [...editState.deletedCopyIds]
         };
@@ -1093,15 +1059,6 @@ function initBookCopiesArea() {
             };
         }
 
-        const emptyCreateLocationCopy = createItems.find(copy => copy.location.length === 0);
-
-        if (emptyCreateLocationCopy) {
-            return {
-                valid: false,
-                message: "추가할 재고의 위치를 입력해 주세요."
-            };
-        }
-
         const invalidUpdateConditionCopy = updateItems.find(copy => !copy.bookCopyCondition);
 
         if (invalidUpdateConditionCopy) {
@@ -1119,15 +1076,6 @@ function initBookCopiesArea() {
             return {
                 valid: false,
                 message: "수정할 재고 ID를 찾을 수 없습니다."
-            };
-        }
-
-        const emptyUpdateLocationCopy = updateItems.find(copy => copy.location.length === 0);
-
-        if (emptyUpdateLocationCopy) {
-            return {
-                valid: false,
-                message: "수정할 재고의 위치를 입력해 주세요."
             };
         }
 

@@ -5,6 +5,7 @@ import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.dto.admin.book.*;
 import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.model.vo.BorrowStatistics;
+import com.nhj.librarymanage.service.AdminBookService;
 import com.nhj.librarymanage.service.BookCopyService;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
@@ -24,14 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class BookPageController {
 
-    private final BookService bookService;
+    private final AdminBookService adminBookService;
     private final BookCopyService bookCopyService;
     private final BorrowRecordService borrowRecordService;
 
     @Description("도서 관리 도서 목록 화면")
     @GetMapping("/books")
-    public String bookListPage(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
-        PageResponse<BookManageResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
+    public String bookListPage(Model model, @ModelAttribute BookSearch search, Pageable pageable) {
+        PageResponse<BookManageResponse.ListItem> pageResponse = adminBookService.getBooks(search, pageable);
         BorrowStatistics borrowStatistics = borrowRecordService.getBorrowStatistics();
 
         model.addAttribute("content", pageResponse.content());
@@ -46,7 +47,7 @@ public class BookPageController {
     @Description("도서 관리 도서 상세 화면")
     @GetMapping("/books/{id}")
     public String bookDetailPage(Model model, @PathVariable Long id) {
-        BookManageResponse.Detail detail = bookService.getBook(id);
+        BookManageResponse.Detail detail = adminBookService.getBook(id);
         model.addAttribute("content", detail);
 
         return "admin/book/book-detail";
@@ -89,7 +90,7 @@ public class BookPageController {
     @Description("도서 수정 화면")
     @GetMapping("/books/{id}/edit")
     public String editBookPage(Model model, @PathVariable Long id) {
-        BookManageResponse.Detail detail = bookService.getBook(id);
+        BookManageResponse.Detail detail = adminBookService.getBook(id);
         model.addAttribute("book", detail);
 
         return "admin/book/books-edit";

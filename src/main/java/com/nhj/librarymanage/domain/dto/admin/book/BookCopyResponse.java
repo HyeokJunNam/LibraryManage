@@ -14,7 +14,6 @@ public class BookCopyResponse {
 
     public record ListItem(
             Long bookCopyId,
-            String location,
             EnumOption<BookCopyCondition> bookCopyCondition,
             EnumOption<BorrowStatus> borrowStatus,
             LocalDateTime createdAt
@@ -22,7 +21,6 @@ public class BookCopyResponse {
         public static ListItem from(BookCopy bookCopy) {
             return new ListItem(
                     bookCopy.getId(),
-                    bookCopy.getLocation(),
                     EnumOption.from(bookCopy.getBookCopyCondition()),
                     EnumOption.from(bookCopy.getBorrowStatus()),
                     bookCopy.getCreatedAt()

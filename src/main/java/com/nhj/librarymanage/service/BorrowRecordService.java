@@ -2,14 +2,14 @@ package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowResponse;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowResponse;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowResponse;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowResponse;
 import com.nhj.librarymanage.domain.dto.member.borrow.MyBorrowResponse;
 import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
 import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowRequest;
 import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import com.nhj.librarymanage.repository.BorrowRecordRepository;
 import lombok.RequiredArgsConstructor;

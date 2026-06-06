@@ -6,8 +6,14 @@
     min-width: 800px;
 
     --table-columns:
-            minmax(300px, 10fr)        /* 도서명 */
+            minmax(250px, 10fr)        /* 도서명 */
+            minmax(150px, 6fr)      /* 위치 */
             minmax(150px, 6fr)      /* ISBN */
             minmax(150px, 6fr)    /* 저자 */
             minmax(150px, 6fr);   /* 출판사 */
+}
+
+.books-table .table-layout__cell:nth-child(2),
+.books-table .table-layout__header-cell:nth-child(2) {
+    padding-left: 30px;
 }

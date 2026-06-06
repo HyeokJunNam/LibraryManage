@@ -1,7 +1,7 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowRequest;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
 import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
@@ -28,7 +28,6 @@ import static com.nhj.librarymanage.domain.entity.QBook.book;
 import static com.nhj.librarymanage.domain.entity.QBookCopy.bookCopy;
 import static com.nhj.librarymanage.domain.entity.QBorrowRecord.borrowRecord;
 import static com.nhj.librarymanage.domain.entity.QMember.member;
-
 import static com.nhj.librarymanage.util.QuerydslFilterHelper.*;
 import static com.nhj.librarymanage.util.QuerydslSortHelper.*;
 
@@ -41,108 +40,88 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     private static final Map<String, Expression<? extends Comparable<?>>> ORDER_COLUMN_MAP =
             buildOrderColumnMap(List.of());
 
-
-    private List<BorrowRecord> searchQuery(Pageable pageable, BooleanExpression... booleanExpressions) {
-        OrderSpecifier<?>[] order = sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
-
+    private JPAQuery<BorrowRecord> baseSearchQuery() {
         return jpaQueryFactory
                 .selectFrom(borrowRecord)
                 .innerJoin(borrowRecord.bookCopy, bookCopy).fetchJoin()
                 .innerJoin(bookCopy.book, book).fetchJoin()
-                .innerJoin(borrowRecord.member, member).fetchJoin()
-                .where(booleanExpressions)
+                .innerJoin(borrowRecord.member, member).fetchJoin();
+    }
+
+    private JPAQuery<Long> baseCountQuery() {
+        return jpaQueryFactory
+                .select(borrowRecord.id.count())
+                .from(borrowRecord)
+                .innerJoin(borrowRecord.bookCopy, bookCopy)
+                .innerJoin(bookCopy.book, book)
+                .innerJoin(borrowRecord.member, member);
+    }
+
+    private Page<BorrowRecord> getPage(Pageable pageable, BooleanExpression... conditions) {
+        OrderSpecifier<?>[] order = sort(borrowRecord.createdAt, ORDER_COLUMN_MAP, pageable);
+
+        List<BorrowRecord> content = baseSearchQuery()
+                .where(conditions)
                 .orderBy(order)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-    }
 
-    private JPAQuery<Long> searchCountQuery(BooleanExpression... booleanExpressions) {
-        return jpaQueryFactory
-                .select(borrowRecord.id.count())
-                .from(borrowRecord)
-                .where(booleanExpressions);
+        JPAQuery<Long> countQuery = baseCountQuery()
+                .where(conditions);
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     @Override
     public Page<BorrowRecord> search(BorrowRequest.Search search, Pageable pageable) {
-        BooleanExpression likeMemberName = like(borrowRecord.member.name, search.memberName());
-        BooleanExpression likeBookTitle = like(book.title, search.bookTitle());
-
-        BooleanExpression[] booleanExpressions = {
-                likeMemberName, likeBookTitle
-        };
-
-        List<BorrowRecord> query = searchQuery(pageable, booleanExpressions);
-        JPAQuery<Long> countQuery = searchCountQuery(booleanExpressions);
-
-        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+        return getPage(
+                pageable,
+                like(member.name, search.memberName()),
+                like(book.title, search.bookTitle())
+        );
     }
 
     @Override
     public Page<BorrowRecord> searchByMemberId(Long memberId, MemberBorrowRequest.Search search, Pageable pageable) {
-        BooleanExpression eqMemberId = eq(borrowRecord.member.id, memberId);
-        BooleanExpression eqBookRecordId = eq(borrowRecord.id, search.bookRecordId());
-        BooleanExpression likeBookTitle = like(book.title, search.bookTitle());
-
-        BooleanExpression[] booleanExpressions = {
-                eqMemberId, eqBookRecordId, likeBookTitle
-        };
-
-        List<BorrowRecord> query = searchQuery(pageable, booleanExpressions);
-        JPAQuery<Long> countQuery = searchCountQuery(booleanExpressions);
-
-        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+        return getPage(
+                pageable,
+                eq(member.id, memberId),
+                eq(borrowRecord.id, search.bookRecordId()),
+                like(book.title, search.bookTitle())
+        );
     }
 
     @Override
     public Page<BorrowRecord> searchReturnableByMemberId(Long memberId, MemberBorrowRequest.Search search, Pageable pageable) {
-        BooleanExpression eqMemberId = eq(borrowRecord.member.id, memberId);
-        BooleanExpression likeMemberName = isNull(borrowRecord.returnedAt);
-        BooleanExpression eqBookRecordId = eq(borrowRecord.id, search.bookRecordId());
-        BooleanExpression likeBookTitle = like(book.title, search.bookTitle());
-
-        BooleanExpression[] booleanExpressions = {
-                eqMemberId, likeMemberName, eqBookRecordId, likeBookTitle
-        };
-
-        List<BorrowRecord> query = searchQuery(pageable, booleanExpressions);
-        JPAQuery<Long> countQuery = searchCountQuery(booleanExpressions);
-
-        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+        return getPage(
+                pageable,
+                eq(member.id, memberId),
+                isNull(borrowRecord.returnedAt),
+                eq(borrowRecord.id, search.bookRecordId()),
+                like(book.title, search.bookTitle())
+        );
     }
 
     @Override
     public Page<BorrowRecord> searchByBookId(Long bookId, BookBorrowRequest.Search search, Pageable pageable) {
-        BooleanExpression eqBookId = eq(borrowRecord.bookCopy.book.id, bookId); // 얘때문??
-        BooleanExpression likeMemberName = like(member.name, search.memberName());
-        BooleanExpression likeMemberNo = like(member.memberNo, search.memberNo());
-
-        BooleanExpression[] booleanExpressions = {
-                eqBookId, likeMemberName, likeMemberNo
-        };
-
-        List<BorrowRecord> query = searchQuery(pageable, booleanExpressions);
-        JPAQuery<Long> countQuery = searchCountQuery(booleanExpressions);
-
-        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+        return getPage(
+                pageable,
+                eq(book.id, bookId),
+                like(member.name, search.memberName()),
+                like(member.memberNo, search.memberNo())
+        );
     }
 
     @Override
     public Page<BorrowRecord> searchOverdue(BorrowRequest.Search search, Pageable pageable) {
-        BooleanExpression notReturned = isNull(borrowRecord.returnedAt);
-        BooleanExpression overdue = before(borrowRecord.dueAt, LocalDate.now());
-        BooleanExpression likeMemberName = like(borrowRecord.member.name, search.memberName());
-        BooleanExpression likeBookTitle = like(book.title, search.bookTitle());
-
-        BooleanExpression[] booleanExpressions = {
-                notReturned, overdue, likeMemberName, likeBookTitle
-        };
-
-        List<BorrowRecord> query = searchQuery(pageable, booleanExpressions);
-        JPAQuery<Long> countQuery = searchCountQuery(booleanExpressions);
-
-        return PageableExecutionUtils.getPage(query, pageable, countQuery::fetchOne);
+        return getPage(
+                pageable,
+                isNull(borrowRecord.returnedAt),
+                before(borrowRecord.dueAt, LocalDate.now()),
+                like(member.name, search.memberName()),
+                like(book.title, search.bookTitle())
+        );
     }
 
     @Override
@@ -154,16 +133,19 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 .from(bookCopy)
                 .fetchOne();
 
-        totalBookItemCount = totalBookItemCount != null ? totalBookItemCount : 0L;
+        NumberExpression<Long> currentBorrowCount = countWhen(
+                borrowRecord.returnedAt.isNull()
+        );
 
-        NumberExpression<Long> currentBorrowCount = countWhen(borrowRecord.returnedAt.isNull());
-        NumberExpression<Long> overdueBorrowCount = countWhen(borrowRecord.returnedAt.isNull()
-                .and(toDate(borrowRecord.dueAt).before(now)));
+        NumberExpression<Long> overdueBorrowCount = countWhen(
+                borrowRecord.returnedAt.isNull()
+                        .and(toDate(borrowRecord.dueAt).before(now))
+        );
 
         return jpaQueryFactory
                 .select(Projections.constructor(
                         BorrowStatistics.class,
-                        Expressions.constant(totalBookItemCount),
+                        Expressions.constant(totalBookItemCount != null ? totalBookItemCount : 0L),
                         borrowRecord.id.count(),
                         currentBorrowCount,
                         overdueBorrowCount
@@ -176,11 +158,14 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     public MyInfoResponse.BorrowStatistics getBorrowStatisticsByMemberId(Long memberId) {
         LocalDate now = LocalDate.now();
 
-        BooleanExpression eqMemberId = eq(borrowRecord.member.id, memberId);
+        NumberExpression<Long> currentBorrowCount = countWhen(
+                borrowRecord.returnedAt.isNull()
+        );
 
-        NumberExpression<Long> currentBorrowCount = countWhen(borrowRecord.returnedAt.isNull());
-        NumberExpression<Long> overdueBorrowCount = countWhen(borrowRecord.returnedAt.isNull()
-                .and(toDate(borrowRecord.dueAt).before(now)));
+        NumberExpression<Long> overdueBorrowCount = countWhen(
+                borrowRecord.returnedAt.isNull()
+                        .and(toDate(borrowRecord.dueAt).before(now))
+        );
 
         return jpaQueryFactory
                 .select(Projections.constructor(
@@ -190,7 +175,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                         overdueBorrowCount
                 ))
                 .from(borrowRecord)
-                .where(eqMemberId)
+                .where(eq(borrowRecord.member.id, memberId))
                 .fetchOne();
     }
 }

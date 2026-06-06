@@ -1,10 +1,10 @@
 package com.nhj.librarymanage.service;
 
-import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.entity.BookCopy;
-import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.domain.dto.admin.book.BookCopyRequest;
 import com.nhj.librarymanage.domain.dto.admin.book.BookCopyResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
+import com.nhj.librarymanage.domain.entity.Book;
+import com.nhj.librarymanage.domain.entity.BookCopy;
 import com.nhj.librarymanage.error.code.BookErrorCode;
 import com.nhj.librarymanage.error.exception.book.BookItemAlreadyBorrowedException;
 import com.nhj.librarymanage.repository.BookCopyRepository;
@@ -67,7 +67,6 @@ public class BookCopyService {
             BookCopy bookCopy = BookCopy.builder()
                     .book(book)
                     .bookCopyCondition(entry.bookCopyCondition())
-                    .location(entry.location())
                     .build();
 
             bookCopies.add(bookCopy);
@@ -92,7 +91,7 @@ public class BookCopyService {
             BookCopy bookCopy = bookItemMap.get(entry.bookItemId());
             validateNotBorrowed(bookCopy);
 
-            bookCopy.update(entry.bookCopyCondition(), entry.location());
+            bookCopy.update(entry.bookCopyCondition());
         }
     }
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{user/common/user-layout}">
 
@@ -84,21 +85,34 @@
                     <div class="action-card">
                         <div class="action-card__section">
                             <span class="action-card__label">현재 상태</span>
+
+                            <strong th:if="${book.borrowable}"
+                                    class="action-card__status action-card__status--signal action-card__status--available">
+                                대출 가능
+                            </strong>
+
+                            <strong th:unless="${book.borrowable}"
+                                    class="action-card__status action-card__status--signal action-card__status--unavailable">
+                                대출 불가
+                            </strong>
                         </div>
 
                         <div class="action-card__section">
                             <span class="action-card__label">도서 위치</span>
-                            <strong class="action-card__location">-</strong>
+                            <strong class="action-card__location"
+                                    th:text="${book != null and book.location != null and !#strings.isEmpty(book.location) ? book.location : '위치 미등록'}">
+                                위치 미등록
+                            </strong>
                         </div>
 
                         <div class="action-card__section">
-                            <button type="button"
+                            <button sec:authorize="isAuthenticated()"
+                                    type="button"
                                     class="notify-btn"
                                     data-role="notify-button"
-                                    th:classappend="
-                                        ${false ? ' notify-btn--enabled' : ''}
-                                        + ${(notification != null and notification.requested) ? ' notify-btn--done' : ''}
-                                    "
+                                    data-authenticated="true"
+                                    th:disabled="${book.borrowable}"
+                                    th:classappend="${notification != null and notification.requested} ? ' notify-btn--done' : ''"
                                     th:attr="data-completed=${notification != null and notification.requested}">
 
                                 <span class="notify-btn__icon"
@@ -111,6 +125,18 @@
                                       th:text="${notification != null and notification.requested} ? '신청 완료' : '알림 신청'">
                                     알림 신청
                                 </span>
+                            </button>
+
+                            <button sec:authorize="isAnonymous()"
+                                    type="button"
+                                    class="notify-btn"
+                                    data-role="notify-button"
+                                    data-authenticated="false"
+                                    th:disabled="${book.borrowable}"
+                                    data-completed="false">
+
+                                <span class="notify-btn__icon" aria-hidden="true">🔔</span>
+                                <span class="notify-btn__text">알림 신청</span>
                             </button>
 
                             <p class="notify-help" data-role="notify-help-text">

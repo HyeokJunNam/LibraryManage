@@ -1,14 +1,15 @@
 package com.nhj.librarymanage.controller.view.admin;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
-import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookSearch;
+import com.nhj.librarymanage.domain.dto.admin.book.BookModalResponse;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowResponse;
 import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberManageRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberManageResponse;
+import com.nhj.librarymanage.service.AdminBookService;
 import com.nhj.librarymanage.service.MemberService;
 import com.nhj.librarymanage.service.BookService;
 import com.nhj.librarymanage.service.BorrowRecordService;
@@ -26,7 +27,7 @@ public class CirculationPageController {
 
     private final BorrowRecordService borrowRecordService;
     private final MemberService memberService;
-    private final BookService bookService;
+    private final AdminBookService adminBookService;
 
     @Description("대출/반납 화면")
     @GetMapping("/circulation")
@@ -76,8 +77,9 @@ public class CirculationPageController {
 
     @Description("도서 검색(모달)")
     @GetMapping("/books/search")
-    public String bookSearchModal(Model model, @ModelAttribute BookManageRequest.Search search, Pageable pageable) {
-        PageResponse<BookManageResponse.ListItem> pageResponse = bookService.getBooks(search, pageable);
+    public String bookSearchModal(Model model, @ModelAttribute BookSearch search, Pageable pageable) {
+        PageResponse<BookModalResponse.ListItem> pageResponse = adminBookService.getBooksForSearchModal(search, pageable);
+
         model.addAttribute("content", pageResponse.content());
         model.addAttribute("pageMetaData", pageResponse.pageMetaData());
 

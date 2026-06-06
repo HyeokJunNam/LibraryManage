@@ -33,15 +33,17 @@ function bindDetailPageEvents() {
 }
 
 function initializeNotifyButtonState(notifyButton) {
+    if (notifyButton.disabled) {
+        return;
+    }
+
     if (notifyButton.dataset.completed === "true") {
         notifyButton.disabled = false;
         applyNotifyCompletedState(notifyButton);
         return;
     }
 
-    if (!notifyButton.disabled) {
-        applyNotifyRequestEnabledState(notifyButton);
-    }
+    applyNotifyRequestEnabledState(notifyButton);
 }
 
 function bindNotifyHoverEvents(notifyButton) {
@@ -72,6 +74,11 @@ function bindNotifyClickEvent(notifyButton) {
             return;
         }
 
+        if (!isAuthenticated(notifyButton)) {
+            openLoginRequiredModal();
+            return;
+        }
+
         const bookId = getBookId();
 
         if (!bookId) {
@@ -89,6 +96,18 @@ function bindNotifyClickEvent(notifyButton) {
         }
 
         openNotifyConfirmModal(notifyButton, bookId);
+    });
+}
+
+function isAuthenticated(notifyButton) {
+    return notifyButton.dataset.authenticated === "true";
+}
+
+function openLoginRequiredModal() {
+    openAlertModal({
+        title: "알림 신청",
+        message: "로그인 후 신청 가능합니다.",
+        confirmText: "확인"
     });
 }
 
@@ -185,15 +204,7 @@ function showNotificationRequestError(error) {
     const message = error?.message || "요청 처리 중 오류가 발생했습니다.";
 
     if (error?.status === 401) {
-        openAlertModal({
-            title: "회원만 신청 가능합니다.",
-            message,
-            confirmText: "로그인",
-            cancelText: "취소",
-            onConfirm: () => {
-                window.location.href = buildLoginUrl();
-            }
-        });
+        openLoginRequiredModal();
         return;
     }
 
@@ -208,15 +219,7 @@ function showNotificationCancelError(error) {
     const message = error?.message || "요청 처리 중 오류가 발생했습니다.";
 
     if (error?.status === 401) {
-        openAlertModal({
-            title: "로그인이 필요합니다.",
-            message,
-            confirmText: "로그인",
-            cancelText: "취소",
-            onConfirm: () => {
-                window.location.href = buildLoginUrl();
-            }
-        });
+        openLoginRequiredModal();
         return;
     }
 
@@ -228,7 +231,7 @@ function showNotificationCancelError(error) {
 }
 
 function getBookId() {
-    const page = document.querySelector(".page");
+    const page = document.querySelector("[data-book-id]");
     const bookId = page?.dataset?.bookId;
 
     if (!bookId || String(bookId).trim() === "") {

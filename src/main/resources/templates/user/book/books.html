@@ -17,7 +17,7 @@
              th:data-fragment-url="@{/library/books}">
         <div class="book-list__page">
 
-            <section class="search-panel" >
+            <section class="search-panel">
                 <div class="search-panel__head">
                     <div>
                         <h1 class="search-panel__title">도서 검색</h1>
@@ -106,6 +106,12 @@
                         <div class="book-card__body">
                             <div class="book-card__main">
                                 <div class="book-card__title-area">
+                                    <p class="book-card__location"
+                                       th:if="${row.location != null and !#strings.isEmpty(row.location)}"
+                                       th:text="${row.location}">
+                                        도서 위치
+                                    </p>
+
                                     <h3 class="book-card__title" th:text="${row.title}">
                                         도서명
                                     </h3>
@@ -140,24 +146,38 @@
                                         ISBN
                                     </span>
                                 </div>
+
+                                <div class="book-card__meta-row">
+                                    <span class="book-card__label">위치</span>
+                                    <span class="book-card__value"
+                                          th:text="${row.location != null and !#strings.isEmpty(row.location) ? row.location : '-'}">
+                                        위치
+                                    </span>
+                                </div>
                             </div>
 
                             <div class="book-card__bottom">
                                 <div class="book-card__tags">
                                     <span class="book-tag"
-                                          th:if="${row.author != null}"
+                                          th:if="${row.author != null and !#strings.isEmpty(row.author)}"
                                           th:text="${'#' + row.author}">
                                         #저자
                                     </span>
 
                                     <span class="book-tag"
-                                          th:if="${row.publisher != null}"
+                                          th:if="${row.publisher != null and !#strings.isEmpty(row.publisher)}"
                                           th:text="${'#' + row.publisher}">
                                         #출판사
                                     </span>
 
                                     <span class="book-tag"
-                                          th:if="${row.isbn != null}">
+                                          th:if="${row.location != null and !#strings.isEmpty(row.location)}"
+                                          th:text="${'#' + row.location}">
+                                        #위치
+                                    </span>
+
+                                    <span class="book-tag"
+                                          th:if="${row.isbn != null and !#strings.isEmpty(row.isbn)}">
                                         #ISBN
                                     </span>
                                 </div>

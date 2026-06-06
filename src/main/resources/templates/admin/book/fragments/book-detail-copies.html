@@ -32,10 +32,6 @@
                 </th>
 
                 <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
-                    <span class="table-layout__text">재고 위치</span>
-                </th>
-
-                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
                     <span class="table-layout__text">등록일</span>
                 </th>
 
@@ -59,8 +55,7 @@
                     data-row-mode="clean"
                     th:data-book-copy-id="${bookCopy.bookCopyId}"
                     th:data-borrowed="${bookCopy.borrowStatus != null and bookCopy.borrowStatus.value == 'BORROWED'}"
-                    th:data-original-condition="${bookCopy.bookCopyCondition != null ? bookCopy.bookCopyCondition.value : ''}"
-                    th:data-original-location="${bookCopy.location != null ? bookCopy.location : ''}">
+                    th:data-original-condition="${bookCopy.bookCopyCondition != null ? bookCopy.bookCopyCondition.value : ''}">
 
                 <td class="table-layout__cell table-layout__cell--leading">
                     <span
@@ -108,24 +103,6 @@
                             재고 상태
                         </option>
                     </select>
-                </td>
-
-                <td class="table-layout__cell table-layout__cell--center-start">
-                    <span
-                            class="book-detail-copy-location-view table-layout__text"
-                            th:text="${(bookCopy.location != null and !#strings.isEmpty(bookCopy.location))
-                                  ? bookCopy.location
-                                  : '-'}">
-                        A-01
-                    </span>
-
-                    <input
-                            type="text"
-                            class="book-detail-copy-control book-detail-copy-location-edit is-hidden"
-                            data-field="location"
-                            placeholder="예: A-01"
-                            autocomplete="off"
-                            th:value="${bookCopy.location != null ? bookCopy.location : ''}">
                 </td>
 
                 <td class="table-layout__cell table-layout__cell--center-start">
@@ -213,15 +190,6 @@
                         재고 상태
                     </option>
                 </select>
-            </td>
-
-            <td class="table-layout__cell table-layout__cell--fill-start">
-                <input
-                        type="text"
-                        class="book-detail-copy-control book-detail-copy-location-edit"
-                        data-field="location"
-                        placeholder="예: A-01"
-                        autocomplete="off">
             </td>
 
             <td class="table-layout__cell table-layout__cell--center-start">

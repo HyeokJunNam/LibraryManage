@@ -4,7 +4,7 @@ import com.nhj.librarymanage.domain.dto.admin.book.BookBorrowRequest;
 import com.nhj.librarymanage.domain.dto.admin.member.MemberBorrowRequest;
 import com.nhj.librarymanage.domain.dto.member.info.MyInfoResponse;
 import com.nhj.librarymanage.domain.entity.BorrowRecord;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowRequest;
 import com.nhj.librarymanage.model.vo.BorrowStatistics;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

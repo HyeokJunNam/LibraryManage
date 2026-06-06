@@ -29,6 +29,8 @@ public class Book extends BaseEntity {
 
     private String description;
 
+    private String location;
+
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "book")
@@ -37,6 +39,10 @@ public class Book extends BaseEntity {
 
     public void changeTitle(String title) {
         this.title = title;
+    }
+
+    public void changeLocation(String location) {
+        this.location = location;
     }
 
 }

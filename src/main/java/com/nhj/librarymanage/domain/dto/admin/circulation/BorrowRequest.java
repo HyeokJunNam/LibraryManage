@@ -1,4 +1,4 @@
-package com.nhj.librarymanage.domain.dto.admin.borrow;
+package com.nhj.librarymanage.domain.dto.admin.circulation;
 
 import com.nhj.librarymanage.model.table.SearchField;
 import com.nhj.librarymanage.util.NumberParser;

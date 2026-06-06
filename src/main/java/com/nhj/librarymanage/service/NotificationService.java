@@ -32,18 +32,20 @@ public class NotificationService {
 
     }
 
-    // TODO 이름이랑 내용 바꾸자
+    // TODO 이름이랑 내용 바꾸자..  알림 신청했는지 아닌지 체크하는거구나.
+    public boolean hasRequested(Long bookId) {
+        Long memberId = currentAuthenticatedUserProvider.findCurrentUserId().orElse(null);
+
+        return hasRequested(memberId, bookId);
+    }
+
     public boolean hasRequested(Long memberId, Long bookId) {
-        boolean requested;
-
         if (memberId != null) {
-            requested = notificationRepository.existsByBookIdAndMemberId(bookId, memberId);
+            return notificationRepository.existsByBookIdAndMemberId(bookId, memberId);
         }
-        else{
-            requested = false;
+        else {
+            return false;
         }
-
-        return requested;
     }
 
     // 실제 발송인데..  그러니까 Borrowable 을 type으로 바꾸라고? 공용으로 쓸 수 있게끔? 그리고 팩토리로 바꾸고? 하하하 좋은데?

@@ -5,15 +5,14 @@
    ========================================================================== */
 
 #bookDetailCopiesCard .table-layout__table {
-    min-width: 900px;
+    min-width: 800px;
 
     --table-columns:
-            minmax(80px, 3fr)    /* 재고 ID */
-            minmax(100px, 5fr)       /* 재고 상태 */
-            minmax(100px, 5fr)    /* 재고 위치 */
-            minmax(100px, 5fr)       /* 등록일 */
-            minmax(100px, 5fr)       /* 대출 상태 */
-            minmax(100px, 3fr);    /* 관리 */
+            minmax(80px, 3fr)     /* 재고 ID */
+            minmax(100px, 5fr)    /* 재고 상태 */
+            minmax(100px, 5fr)    /* 등록일 */
+            minmax(100px, 5fr)    /* 대출 상태 */
+            minmax(100px, 3fr);   /* 관리 */
 }
 
 /* ==========================================================================
@@ -61,8 +60,7 @@
     opacity: 0.55;
 }
 
-.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-condition-view,
-.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-location-view {
+.book-detail-copies-card.is-editing .table-layout__row--deleted .book-detail-copy-condition-view {
     color: var(--gray-400);
     text-decoration: line-through;
 }

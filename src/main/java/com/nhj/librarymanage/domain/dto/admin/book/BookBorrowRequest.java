@@ -1,6 +1,5 @@
 package com.nhj.librarymanage.domain.dto.admin.book;
 
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
 import com.nhj.librarymanage.model.table.SearchField;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

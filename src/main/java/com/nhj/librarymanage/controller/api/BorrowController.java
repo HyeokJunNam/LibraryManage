@@ -1,15 +1,11 @@
 package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.admin.borrow.BorrowRequest;
-import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
-import com.nhj.librarymanage.domain.dto.admin.borrow.ReturnRequest;
-import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
-import com.nhj.librarymanage.service.BorrowRecordService;
+import com.nhj.librarymanage.domain.dto.admin.circulation.BorrowRequest;
+import com.nhj.librarymanage.domain.dto.admin.circulation.ReturnRequest;
 import com.nhj.librarymanage.service.BorrowService;
 import com.nhj.librarymanage.service.ReturnService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
