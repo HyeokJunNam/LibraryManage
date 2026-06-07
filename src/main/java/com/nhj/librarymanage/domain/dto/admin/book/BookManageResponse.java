@@ -1,8 +1,6 @@
 package com.nhj.librarymanage.domain.dto.admin.book;
 
-import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.entity.Book;
-import com.nhj.librarymanage.domain.entity.BookCopy;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -36,7 +34,8 @@ public class BookManageResponse {
             String author,
             String publisher,
             String description,
-            String thumbnailUrl
+            String thumbnailUrl,
+            String location
     ) {
         public static Detail from(Book book) {
             return new Detail(
@@ -46,7 +45,8 @@ public class BookManageResponse {
                     book.getAuthor(),
                     book.getPublisher(),
                     book.getDescription(),
-                    book.getThumbnailUrl()
+                    book.getThumbnailUrl(),
+                    book.getLocation()
             );
         }
     }

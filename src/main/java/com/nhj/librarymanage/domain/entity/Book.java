@@ -36,12 +36,19 @@ public class Book extends BaseEntity {
     @OneToMany(mappedBy = "book")
     private List<BookCopy> bookCopies = new ArrayList<>();
 
-
-    public void changeTitle(String title) {
+    public void updateBookInfo(String isbn,
+                               String title,
+                               String author,
+                               String publisher,
+                               String description,
+                               String thumbnailUrl,
+                               String location) {
+        this.isbn = isbn;
         this.title = title;
-    }
-
-    public void changeLocation(String location) {
+        this.author = author;
+        this.publisher = publisher;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
         this.location = location;
     }
 

@@ -1,3 +1,7 @@
+<!-- 여기 No 모두 1~5만 뜨는 문제 있음 -->
+<!-- 도서목록 관리에서 통계 숫자 망가진 버그 있음 -->
+
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -9,6 +13,7 @@
     <link rel="stylesheet" th:href="@{/css/admin/book/books.css}">
 </head>
 <body>
+
 <div class="admin-page">
     <aside th:replace="~{admin/common/sidebar :: sidebar('books')}"></aside>
 
@@ -22,7 +27,7 @@
 
         <section class="statistics-grid">
             <article class="statistics-card">
-                <p class="statistics-card__label">전체 회원 수</p>
+                <p class="statistics-card__label">전체 도서 재고 수</p>
                 <strong
                         class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.totalBookItemCount : 0}">
@@ -31,7 +36,7 @@
             </article>
 
             <article class="statistics-card">
-                <p class="statistics-card__label">등록 도서 수</p>
+                <p class="statistics-card__label">누적 대출 도서 수</p>
                 <strong
                         class="statistics-card__value"
                         th:text="${borrowStatistics != null ? borrowStatistics.totalBorrowCount : 0}">
@@ -64,7 +69,7 @@
             <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                 title='도서 목록',
                 caption='등록된 도서를 검색하고, 선택한 도서의 상세 정보와 재고 현황을 확인할 수 있습니다.',
-                actions=null
+                actions=~{::headerActions}
             )}"></th:block>
 
             <th:block th:replace="~{admin/common/table-layout :: tableToolbar(searchMode='server')}"></th:block>
@@ -98,6 +103,7 @@
                         </th>
                     </tr>
                     </thead>
+
 
                     <tbody class="table-layout__tbody">
                     <tr
@@ -178,6 +184,13 @@
     </main>
 </div>
 
+<th:block th:fragment="headerActions">
+    <a th:href="@{/admin/books/new}"
+       class="btn btn--action">
+        도서 등록
+    </a>
+</th:block>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const rows = document.querySelectorAll(".table-layout__row--clickable");
@@ -202,5 +215,6 @@
         });
     });
 </script>
+
 </body>
 </html>

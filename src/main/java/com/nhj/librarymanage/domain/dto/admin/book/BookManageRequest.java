@@ -1,8 +1,6 @@
 package com.nhj.librarymanage.domain.dto.admin.book;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -19,17 +17,21 @@ public class BookManageRequest {
                 String author,
                 String publisher,
                 String description,
-                String thumbnailUrl
+                String thumbnailUrl,
+                String location
         ) {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class Update {
-        private long id;
-        private String name;
-
+    public record Update(
+            String isbn,
+            String title,
+            String author,
+            String publisher,
+            String description,
+            String thumbnailUrl,
+            String location
+    ) {
     }
 
 }

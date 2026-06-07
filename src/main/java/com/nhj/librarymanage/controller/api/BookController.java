@@ -1,15 +1,14 @@
 package com.nhj.librarymanage.controller.api;
 
 import com.nhj.librarymanage.domain.annotations.Description;
-import com.nhj.librarymanage.domain.dto.admin.book.BookSearch;
-import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
-import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.domain.dto.admin.book.BookCopyRequest;
 import com.nhj.librarymanage.domain.dto.admin.book.BookManageRequest;
 import com.nhj.librarymanage.domain.dto.admin.book.BookManageResponse;
+import com.nhj.librarymanage.domain.dto.admin.book.BookSearch;
+import com.nhj.librarymanage.domain.dto.admin.common.ApiResponse;
+import com.nhj.librarymanage.domain.dto.admin.common.PageResponse;
 import com.nhj.librarymanage.service.AdminBookService;
 import com.nhj.librarymanage.service.BookCopyService;
-import com.nhj.librarymanage.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -69,9 +68,9 @@ public class BookController {
     }
 
     @Description(value = "도서 수정")
-    @PutMapping("/books")
-    public ResponseEntity<HttpStatus> updateBook(@RequestBody BookManageRequest.Update update) {
-        adminBookService.updateBook(update);
+    @PutMapping("/books/{id}")
+    public ResponseEntity<HttpStatus> updateBook(@PathVariable Long id, @RequestBody BookManageRequest.Update update) {
+        adminBookService.updateBook(id, update);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

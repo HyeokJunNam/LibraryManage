@@ -50,6 +50,7 @@ public class AdminBookService {
                 .publisher(item.publisher())
                 .description(item.description())
                 .thumbnailUrl(item.thumbnailUrl())
+                .location(item.location())
                 .build();
 
             books.add(book);
@@ -59,10 +60,18 @@ public class AdminBookService {
     }
 
     @Transactional
-    public void updateBook(BookManageRequest.Update update) {
-        Book book = bookRepository.getById(update.getId());
+    public void updateBook(Long id, BookManageRequest.Update update) {
+        Book book = bookRepository.getById(id);
 
-        book.changeTitle(update.getName());
+        book.updateBookInfo(
+                update.isbn(),
+                update.title(),
+                update.author(),
+                update.publisher(),
+                update.description(),
+                update.thumbnailUrl(),
+                update.location()
+        );
     }
 
     @Transactional
