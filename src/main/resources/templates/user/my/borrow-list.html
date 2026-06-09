@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{user/common/user-layout}">
+
+<head>
+    <title>전체 대출 목록</title>
+    <link rel="stylesheet" th:href="@{/css/user/my/borrow-list.css}">
+</head>
+
+<body>
+<main layout:fragment="content" class="main-content">
+    <section class="borrow-list-page">
+
+        <header class="borrow-list-header">
+            <div>
+                <p class="borrow-list-header__eyebrow">내 서재</p>
+                <h1 class="borrow-list-header__title">전체 대출 목록</h1>
+                <p class="borrow-list-header__description">
+                    지금까지 대출한 도서 이력을 확인할 수 있습니다.
+                </p>
+            </div>
+
+            <a class="btn btn-secondary"
+               th:href="@{/my}">
+                내 정보로 돌아가기
+            </a>
+        </header>
+
+        <section class="borrow-list-card">
+            <div class="borrow-list-card__header">
+                <h2 class="borrow-list-card__title">대출 이력</h2>
+
+                <span class="borrow-list-card__count"
+                      th:if="${pageMetaData != null}"
+                      th:text="|총 ${pageMetaData.totalElements()}건|">
+                    총 0건
+                </span>
+            </div>
+
+            <div class="borrow-list-empty"
+                 th:if="${content == null or #lists.isEmpty(content)}">
+                <strong class="borrow-list-empty__title">대출 이력이 없습니다.</strong>
+                <p class="borrow-list-empty__description">
+                    도서를 대출하면 이곳에서 전체 이력을 확인할 수 있습니다.
+                </p>
+            </div>
+
+            <div class="borrow-list-table-wrap"
+                 th:unless="${content == null or #lists.isEmpty(content)}">
+                <table class="borrow-list-table">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>도서명</th>
+                        <th>대출일</th>
+                        <th>반납 예정일</th>
+                        <th>반납일</th>
+                        <th>상태</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="borrow, rowStat : ${content}">
+                        <td class="borrow-list-table__number"
+                            th:text="${pageMetaData != null
+                                ? pageMetaData.page() * pageMetaData.size() + rowStat.count
+                                : rowStat.count}">
+                            1
+                        </td>
+
+                        <td class="borrow-list-table__title">
+                            <span th:text="${borrow.bookTitle()}">
+                                도서명
+                            </span>
+                        </td>
+
+                        <td th:text="${#temporals.format(borrow.borrowedAt(), 'yyyy.MM.dd')}">
+                            2026.06.08
+                        </td>
+
+                        <td th:text="${#temporals.format(borrow.dueAt(), 'yyyy.MM.dd')}">
+                            2026.06.15
+                        </td>
+
+                        <td>
+                            <span th:if="${borrow.returnedAt() != null}"
+                                  th:text="${#temporals.format(borrow.returnedAt(), 'yyyy.MM.dd')}">
+                                2026.06.10
+                            </span>
+
+                            <span class="borrow-list-table__muted"
+                                  th:unless="${borrow.returnedAt() != null}">
+                                -
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="borrow-status"
+                                  th:classappend="${borrow.returnStatus() != null}
+                                      ? ' borrow-status--' + ${#strings.toLowerCase(borrow.returnStatus().value())}
+                                      : ' borrow-status--unknown'"
+                                  th:text="${borrow.returnStatus() != null ? borrow.returnStatus().label() : '확인 필요'}">
+                                대출 중
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <th:block th:replace="~{common/pagination :: pagination(
+                paginationMode='server',
+                pageMetadata=${pageMetaData}
+            )}">
+            </th:block>
+        </section>
+
+    </section>
+</main>
+</body>
+</html>

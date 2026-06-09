@@ -4,13 +4,12 @@ import com.nhj.librarymanage.domain.code.BookCopyCondition;
 import com.nhj.librarymanage.domain.code.BorrowStatus;
 import com.nhj.librarymanage.domain.code.ReturnStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,16 +24,21 @@ public class BookCopy extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
+    @Setter
     @Enumerated(EnumType.STRING)
-    @Column(name = "condition")
+    private BorrowStatus borrowStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "copy_condition")
     private BookCopyCondition bookCopyCondition;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private BorrowRecord borrowRecord;
+    @OneToMany(mappedBy = "bookCopy", cascade = CascadeType.PERSIST)
+    private final List<BorrowRecord> borrowRecords = new ArrayList<>();
 
     @Builder
-    public BookCopy(Book book, BookCopyCondition bookCopyCondition) {
+    public BookCopy(Book book, BorrowStatus borrowStatus, BookCopyCondition bookCopyCondition) {
         this.book = book;
+        this.borrowStatus = borrowStatus;
         this.bookCopyCondition = bookCopyCondition;
     }
 
@@ -42,54 +46,26 @@ public class BookCopy extends BaseEntity {
         this.bookCopyCondition = bookCopyCondition;
     }
 
-    public void startBorrow(Member member, long borrowDay) {
+    public void borrow(Member member, long borrowDay) {
         LocalDateTime now = LocalDateTime.now();
 
-        this.borrowRecord = BorrowRecord.builder()
+        BorrowRecord borrowRecord = BorrowRecord.builder()
                 .bookCopy(this)
                 .member(member)
                 .borrowedAt(now)
                 .dueAt(now.plusDays(borrowDay))
                 .build();
+
+        this.borrowRecords.add(borrowRecord);
+        this.borrowStatus = BorrowStatus.BORROWED;
     }
 
-    public void releaseBorrow() {
-        this.borrowRecord = null;
+    public boolean isBorrowable() {
+        return bookCopyCondition == BookCopyCondition.NORMAL && borrowStatus ==  BorrowStatus.AVAILABLE;
     }
 
-    public BorrowStatus getBorrowStatus() {
-        if (borrowRecord != null) {
-            return BorrowStatus.BORROWED;
-        }
-        else {
-            if (BookCopyCondition.NORMAL.equals(bookCopyCondition)) {
-                return BorrowStatus.AVAILABLE;
-            }
-            else {
-                return BorrowStatus.UNAVAILABLE;
-            }
-        }
-    }
-
-    public ReturnStatus getReturnStatus() {
-        if (borrowRecord != null) {
-            if (borrowRecord.getReturnedAt() != null) {
-                return ReturnStatus.RETURNED;
-            }
-            else {
-                LocalDate dueDate = borrowRecord.getDueAt().toLocalDate();
-                boolean overdue = dueDate.isBefore(LocalDate.now());
-
-                if (overdue) {
-                    return  ReturnStatus.OVERDUE;
-                }
-            }
-
-            return  ReturnStatus.BORROWED;
-        }
-        else {
-            return null;
-        }
+    public boolean isBorrowed() {
+        return borrowStatus ==  BorrowStatus.BORROWED;
     }
 
 }

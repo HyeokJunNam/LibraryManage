@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum NotificationErrorCode implements ErrorCode {
 
+    NOTIFICATION_NOT_FOUND("not found", "신청한 알림이 존재하지 않습니다.", null),
     NOTIFICATION_ALREADY_REQUESTED("Already Requested", "이미 신청한 알림 입니다.", null),
     ;
 

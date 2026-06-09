@@ -26,7 +26,7 @@ public class BookController {
     @Description(value = "도서 재고 정보 등록 및 수정, 삭제")
     @PostMapping("/books/{bookId}/copies/batch")
     public ResponseEntity<HttpStatus> createBookItem(@PathVariable Long bookId, @RequestBody BookCopyRequest.Upsert upsert) {
-        bookCopyService.upsetBookCopy(bookId, upsert);
+        bookCopyService.upsertBookCopy(bookId, upsert);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

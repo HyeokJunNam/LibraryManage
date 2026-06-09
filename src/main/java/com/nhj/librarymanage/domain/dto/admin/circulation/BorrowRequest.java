@@ -15,12 +15,14 @@ public class BorrowRequest {
     @FieldNameConstants
     public record Search(
             String bookTitle,
+            String memberNo,
             String memberName,
             Long bookRecordId
     ) {
         public static void applySearchFields(Model model) {
             List<SearchField> searchFields = List.of(
                     SearchField.of(Fields.bookTitle, "도서명"),
+                    SearchField.of(Fields.memberNo, "회원번호"),
                     SearchField.of(Fields.memberName, "회원명"),
                     SearchField.of(Fields.bookRecordId, "재고 ID")
             );

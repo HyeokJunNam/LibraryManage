@@ -1,17 +1,20 @@
 package com.nhj.librarymanage.repository;
 
 import com.nhj.librarymanage.domain.entity.Notification;
+import com.nhj.librarymanage.error.code.BookErrorCode;
+import com.nhj.librarymanage.error.code.NotificationErrorCode;
+import com.nhj.librarymanage.error.exception.EntityNotFoundException;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
-
-    boolean existsByBookIdAndMemberId(Long bookId, Long memberId);
+public interface NotificationRepository extends JpaRepository<Notification, Long>, NotificationRepositoryCustom {
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
@@ -21,7 +24,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     )
     void deleteByBookIdAndMemberId(Long bookId, Long memberId);
 
-    List<Notification> findAllByBookId(Long bookId);
+    Optional<Notification> findByBookIdAndMemberId(Long bookId, Long memberId);
 
-    List<Notification> findAllByBookIdAndNotifiedAtIsNull(Long bookId);
+    default Notification getByBookIdAndMemberId(Long bookId, Long memberId) {
+        return findByBookIdAndMemberId(bookId, memberId)
+                .orElseThrow(() -> new EntityNotFoundException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
+    }
+
+    boolean existsByBookIdAndMemberId(Long bookId, Long memberId);
+
 }

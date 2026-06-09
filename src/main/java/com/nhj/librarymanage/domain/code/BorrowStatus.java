@@ -12,7 +12,7 @@ public enum BorrowStatus implements LabelEnum {
 
     AVAILABLE("대출 가능"),
     BORROWED("대출 중"),
-    UNAVAILABLE("대출 불가"),
+    UNAVAILABLE("대출 불가"), // 이게 언제필요한거지??????? 필요없을듯?
     ;
 
     private final String label;

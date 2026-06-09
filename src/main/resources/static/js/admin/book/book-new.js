@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const bookDrafts = [];
 const DRAFT_PAGE_SIZE = 5;
-const PAGE_BLOCK_SIZE = 3;
 
 let draftSequence = 1;
 let currentDraftPage = 1;
@@ -21,7 +20,6 @@ function bindBookCreateEvents() {
     getElement("saveBookBatchButton")?.addEventListener("click", openSaveBooksConfirmModal);
     getElement("bookDraftRows")?.addEventListener("click", handleDraftRowClick);
     getElement("thumbnailUrl")?.addEventListener("input", updateBookImagePreview);
-    getElement("bookDraftPaginationNav")?.addEventListener("click", handleDraftPaginationClick);
     getElement("isbnLookupKeyword")?.addEventListener("keydown", handleIsbnLookupKeydown);
 }
 
@@ -104,7 +102,7 @@ function addBookDraft() {
         ...draft
     });
 
-    currentDraftPage = getTotalDraftPages();
+    currentDraftPage = Math.max(1, getTotalDraftPages());
 
     clearBookDraftForm();
     refreshBookDraftView();
@@ -124,23 +122,23 @@ function readBookDraftForm() {
 
 function validateBookDraft(draft) {
     if (!draft.isbn) {
-        return {targetId: "isbn", message: "ISBN을 입력해 주세요."};
+        return { targetId: "isbn", message: "ISBN을 입력해 주세요." };
     }
 
     if (!draft.title) {
-        return {targetId: "title", message: "도서명을 입력해 주세요."};
+        return { targetId: "title", message: "도서명을 입력해 주세요." };
     }
 
     if (!draft.author) {
-        return {targetId: "author", message: "저자를 입력해 주세요."};
+        return { targetId: "author", message: "저자를 입력해 주세요." };
     }
 
     if (!draft.publisher) {
-        return {targetId: "publisher", message: "출판사를 입력해 주세요."};
+        return { targetId: "publisher", message: "출판사를 입력해 주세요." };
     }
 
     if (!draft.location) {
-        return {targetId: "location", message: "위치를 입력해 주세요."};
+        return { targetId: "location", message: "위치를 입력해 주세요." };
     }
 
     return null;
@@ -299,87 +297,26 @@ function renderBookDraftRows() {
 }
 
 function renderDraftPagination() {
-    const nav = getElement("bookDraftPaginationNav");
+    const paginationRoot = getElement("bookDraftPagination");
 
-    if (!nav) {
+    if (!paginationRoot || !window.TableLayout?.renderClientPagination) {
         return;
     }
 
-    nav.innerHTML = "";
-
-    const totalPages = getTotalDraftPages();
-    const pageBlockStart = Math.floor((currentDraftPage - 1) / PAGE_BLOCK_SIZE) * PAGE_BLOCK_SIZE + 1;
-    const pageBlockEnd = Math.min(pageBlockStart + PAGE_BLOCK_SIZE - 1, totalPages);
-
-    nav.appendChild(createPageButton({
-        text: "이전",
-        page: currentDraftPage - 1,
-        disabled: currentDraftPage <= 1
-    }));
-
-    for (let page = pageBlockStart; page <= pageBlockEnd; page++) {
-        nav.appendChild(createPageButton({
-            text: String(page),
-            page,
-            active: page === currentDraftPage,
-            disabled: page === currentDraftPage
-        }));
-    }
-
-    nav.appendChild(createPageButton({
-        text: "다음",
-        page: currentDraftPage + 1,
-        disabled: currentDraftPage >= totalPages
-    }));
-}
-
-function createPageButton({text, page, active = false, disabled = false}) {
-    const button = document.createElement("button");
-
-    button.type = "button";
-    button.textContent = text;
-    button.dataset.page = String(page);
-    button.className = "table-layout__page-button";
-    button.disabled = disabled;
-
-    if (active) {
-        button.classList.add("table-layout__page-button--active");
-        button.setAttribute("aria-current", "page");
-    }
-
-    return button;
-}
-
-function handleDraftPaginationClick(event) {
-    const button = event.target.closest(".table-layout__page-button");
-
-    if (!button || button.disabled) {
-        return;
-    }
-
-    const page = Number(button.dataset.page);
-
-    if (!Number.isInteger(page)) {
-        return;
-    }
-
-    moveToDraftPage(page);
-}
-
-function moveToDraftPage(page) {
-    const totalPages = getTotalDraftPages();
-
-    if (page < 1 || page > totalPages || page === currentDraftPage) {
-        return;
-    }
-
-    currentDraftPage = page;
-    refreshBookDraftView();
+    TableLayout.renderClientPagination(paginationRoot, {
+        currentPage: Math.max(0, currentDraftPage - 1),
+        totalPages: getTotalDraftPages(),
+        pageSize: DRAFT_PAGE_SIZE,
+        onPageChange: (nextPage) => {
+            currentDraftPage = nextPage + 1;
+            renderBookDraftRows();
+            renderDraftPagination();
+        }
+    });
 }
 
 function getCurrentDraftPageItems() {
     const startIndex = getCurrentDraftStartIndex();
-
     return bookDrafts.slice(startIndex, startIndex + DRAFT_PAGE_SIZE);
 }
 
@@ -388,11 +325,20 @@ function getCurrentDraftStartIndex() {
 }
 
 function getTotalDraftPages() {
-    return Math.max(1, Math.ceil(bookDrafts.length / DRAFT_PAGE_SIZE));
+    if (bookDrafts.length === 0) {
+        return 0;
+    }
+
+    return Math.ceil(bookDrafts.length / DRAFT_PAGE_SIZE);
 }
 
 function normalizeCurrentDraftPage() {
     const totalPages = getTotalDraftPages();
+
+    if (totalPages === 0) {
+        currentDraftPage = 1;
+        return;
+    }
 
     if (currentDraftPage < 1) {
         currentDraftPage = 1;

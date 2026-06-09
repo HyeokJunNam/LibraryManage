@@ -22,6 +22,7 @@ public class BookService {
         return BookResponse.Detail.from(bookRepository.getById(id));
     }
 
+    @Transactional
     public PageResponse<BookResponse.ListItem> getBooks(BookSearch search, Pageable pageable) {
         Page<Book> books = bookRepository.search(search, pageable);
         return PageResponse.from(books.map(BookResponse.ListItem::from));

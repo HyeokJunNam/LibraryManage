@@ -56,13 +56,6 @@ public class CirculationPageController {
     }
 
 
-    @Description("도서 대출 현황 화면")
-    @GetMapping("/borrows/status")
-    public String borrowStatus() {
-        return "admin/borrow-status/borrow-status";
-    }
-
-
     @Description("멤버 검색(모달)")
     @GetMapping("/members/search")
     public String memberSearchModal(Model model, @ModelAttribute MemberManageRequest.Search search, Pageable pageable) {
@@ -87,36 +80,5 @@ public class CirculationPageController {
 
         return "admin/circulation/modal/book-search-modal :: bookSearchResultPanel";
     }
-
-
-    // 도서 대출 현황
-
-    @Description("도서 대출 목록 패널")
-    @GetMapping("/borrows/list")
-    public String borrowListPanel(Model model, BorrowRequest.Search search, Pageable pageable) {
-        PageResponse<BorrowResponse.ListItem> pageResponse = borrowRecordService.getBorrows(search, pageable);
-        model.addAttribute("content", pageResponse.content());
-        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
-
-        BorrowRequest.Search.applySearchFields(model);
-
-        return "admin/borrow-status/fragments/borrow-list-panel :: borrowListPanel";
-    }
-
-    @Description("도서 대출 연체 목록 패널")
-    @GetMapping("/borrows/overdue")
-    public String overdueBorrowListPanel(Model model, BorrowRequest.Search search, Pageable pageable) {
-        PageResponse<BorrowResponse.OverdueListItem> pageResponse = borrowRecordService.getOverdueBorrows(search, pageable);
-        model.addAttribute("content", pageResponse.content());
-        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
-
-        BorrowRequest.Search.applySearchFields(model);
-
-        return "admin/borrow-status/fragments/overdue-list-panel :: overdueListPanel";
-    }
-
-
-
-
 
 }

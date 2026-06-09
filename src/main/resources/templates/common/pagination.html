@@ -3,16 +3,19 @@
 
 <th:block th:fragment="pagination(paginationMode)">
     <div class="table-layout__pagination"
-         th:classappend="${pageMetaData == null} ? ' table-layout__pagination--empty' : ''"
+         th:classappend="${
+             (paginationMode != null ? paginationMode : 'server') != 'client' and pageMetaData == null
+         } ? ' table-layout__pagination--empty' : ''"
          th:data-pagination-mode="${paginationMode != null ? paginationMode : 'server'}"
          th:data-page-size="${pageMetaData != null ? pageMetaData.size : 5}"
          th:data-current-page="${pageMetaData != null ? pageMetaData.page : 0}"
-         th:data-total-pages="${pageMetaData != null ? pageMetaData.totalPages : 0}">
+         th:data-total-pages="${pageMetaData != null ? pageMetaData.totalPages : 0}"
+         th:data-page-block-size="${3}">
 
         <form class="table-layout__pagination-form"
               method="get"
               data-table-pagination-form
-              th:if="${pageMetaData != null}"
+              th:if="${(paginationMode != null ? paginationMode : 'server') != 'client' and pageMetaData != null}"
               th:with="
                   currentPage=${pageMetaData.page},
                   totalPages=${pageMetaData.totalPages},
@@ -86,8 +89,13 @@
                 </button>
             </nav>
         </form>
+
+        <nav class="table-layout__pagination-nav"
+             th:if="${(paginationMode != null ? paginationMode : 'server') == 'client'}"
+             data-table-pagination-client-nav
+             aria-label="페이지네이션">
+        </nav>
     </div>
 </th:block>
-
 
 </html>

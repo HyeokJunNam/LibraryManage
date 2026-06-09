@@ -11,6 +11,7 @@
             minmax(80px, 3fr)   /* 대출 ID */
             minmax(80px, 3fr)   /* 재고 ID */
             minmax(150px, 6fr)   /* 회원 번호 */
+            minmax(150px, 6fr)    /* 회원 ID */
             minmax(150px, 6fr)   /* 회원명 */
             minmax(400px, 10fr)  /* 도서명 */
             minmax(120px, 7fr)   /* 대출일 */

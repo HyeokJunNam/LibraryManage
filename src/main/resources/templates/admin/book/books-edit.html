@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/admin/book/books-edit.css}">
 </head>
 <body>
+
 <div class="admin-page">
     <aside th:replace="~{admin/common/sidebar :: sidebar('books')}"></aside>
 
@@ -22,7 +23,7 @@
 
         <section class="book-edit-layout">
 
-            <section class="panel-layout table-layout book-edit-card">
+            <section class="panel-layout table-layout table-layout--fixed-height">
 
                 <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                     title='도서 정보 수정',

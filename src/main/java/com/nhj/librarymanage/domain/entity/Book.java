@@ -34,7 +34,7 @@ public class Book extends BaseEntity {
     private String thumbnailUrl;
 
     @OneToMany(mappedBy = "book")
-    private List<BookCopy> bookCopies = new ArrayList<>();
+    private final List<BookCopy> bookCopies = new ArrayList<>();
 
     public void updateBookInfo(String isbn,
                                String title,

@@ -7,7 +7,8 @@
 
     const TABLE_MODE = Object.freeze({
         SERVER: "server",
-        AJAX: "ajax"
+        AJAX: "ajax",
+        CLIENT: "client"
     });
 
     const DATA = Object.freeze({
@@ -16,7 +17,11 @@
         CURRENT_SEARCH_TARGET: "currentSearchTarget",
         SEARCH_MODE: "searchMode",
         PAGINATION_MODE: "paginationMode",
-        SUBMITTING: "isSubmitting" // [최적화] 속성 키 추가
+        CURRENT_PAGE: "currentPage",
+        TOTAL_PAGES: "totalPages",
+        PAGE_SIZE: "pageSize",
+        PAGE_BLOCK_SIZE: "pageBlockSize",
+        SUBMITTING: "isSubmitting"
     });
 
     const SELECTOR = Object.freeze({
@@ -33,15 +38,20 @@
         PAGINATION_PAGE: "[data-table-pagination-page]",
         PAGINATION_SIZE: "[data-table-pagination-size]",
         PAGINATION_PAGE_BUTTON: "[data-table-pagination-page-button]",
-        PAGINATION_HIDDEN: "[data-table-pagination-hidden]"
+        PAGINATION_HIDDEN: "[data-table-pagination-hidden]",
+
+        PAGINATION_CLIENT_NAV: "[data-table-pagination-client-nav]",
+        PAGINATION_CLIENT_BUTTON: "[data-table-pagination-client-button]"
     });
 
     const CLASS_NAME = Object.freeze({
-        HIDDEN: "is-hidden"
+        HIDDEN: "is-hidden",
+        EMPTY_PAGINATION: "table-layout__pagination--empty"
     });
 
     const EVENT_NAME = Object.freeze({
-        UPDATED: "table-layout:updated"
+        UPDATED: "table-layout:updated",
+        CLIENT_PAGE_CHANGE: "table-layout:client-page-change"
     });
 
     const REQUEST_HEADER = Object.freeze({
@@ -49,6 +59,8 @@
     });
 
     const FIRST_PAGE = "0";
+    const DEFAULT_PAGE_BLOCK_SIZE = 3;
+    const clientPaginationStateMap = new WeakMap();
 
     function resolveElement(target) {
         if (!target) return null;
@@ -57,26 +69,60 @@
         return null;
     }
 
+    function resolvePaginationElement(target) {
+        const element = resolveElement(target);
+        if (!element) return null;
+
+        if (element.matches?.(SELECTOR.PAGINATION)) {
+            return element;
+        }
+
+        if (element.closest?.(SELECTOR.PAGINATION)) {
+            return element.closest(SELECTOR.PAGINATION);
+        }
+
+        return element.querySelector?.(SELECTOR.PAGINATION) || null;
+    }
+
     function getFragmentContainer(element) {
         return element?.closest?.(SELECTOR.FRAGMENT_CONTAINER) || null;
     }
 
-    function normalizeMode(value) {
+    function toAbsoluteUrl(url) {
+        return new URL(url, window.location.origin).toString();
+    }
+
+    function toSafeNumber(value, fallback = 0) {
+        const number = Number(value);
+        return Number.isFinite(number) ? number : fallback;
+    }
+
+    function normalizeSearchMode(value) {
         return value === TABLE_MODE.AJAX ? TABLE_MODE.AJAX : TABLE_MODE.SERVER;
     }
 
+    function normalizePaginationMode(value) {
+        if (value === TABLE_MODE.AJAX || value === TABLE_MODE.CLIENT) {
+            return value;
+        }
+
+        return TABLE_MODE.SERVER;
+    }
+
     function isAjaxMode(value) {
-        return normalizeMode(value) === TABLE_MODE.AJAX;
+        return normalizeSearchMode(value) === TABLE_MODE.AJAX;
     }
 
     function getToolbarMode(form) {
         const toolbar = form.closest(SELECTOR.TOOLBAR);
-        return normalizeMode(toolbar?.dataset[DATA.SEARCH_MODE]);
+        return normalizeSearchMode(toolbar?.dataset[DATA.SEARCH_MODE]);
     }
 
-    function getPaginationMode(form) {
-        const pagination = form.closest(SELECTOR.PAGINATION);
-        return normalizeMode(pagination?.dataset[DATA.PAGINATION_MODE]);
+    function getPaginationMode(target) {
+        const pagination = target?.closest?.(SELECTOR.PAGINATION) ||
+            (target?.matches?.(SELECTOR.PAGINATION) ? target : null);
+
+        return normalizePaginationMode(pagination?.dataset[DATA.PAGINATION_MODE]);
     }
 
     function isAjaxSearchForm(form) {
@@ -84,16 +130,16 @@
     }
 
     function isAjaxPaginationForm(form) {
-        return isAjaxMode(getPaginationMode(form));
+        return getPaginationMode(form) === TABLE_MODE.AJAX;
     }
 
-    function toAbsoluteUrl(url) {
-        return new URL(url, window.location.origin).toString();
+    function isClientPagination(target) {
+        return getPaginationMode(target) === TABLE_MODE.CLIENT;
     }
 
     function getContainerCurrentUrl(container) {
         const toolbar = container?.querySelector(SELECTOR.TOOLBAR);
-        const searchMode = normalizeMode(toolbar?.dataset[DATA.SEARCH_MODE]);
+        const searchMode = normalizeSearchMode(toolbar?.dataset[DATA.SEARCH_MODE]);
 
         if (searchMode === TABLE_MODE.SERVER) {
             return window.location.href;
@@ -112,13 +158,16 @@
 
     function getFormBaseUrl(form) {
         const container = getFragmentContainer(form);
+
         if (container?.dataset[DATA.FRAGMENT_URL]?.trim()) {
             return toAbsoluteUrl(container.dataset[DATA.FRAGMENT_URL]);
         }
+
         const action = form.getAttribute("action");
         if (action?.trim()) {
             return toAbsoluteUrl(action);
         }
+
         return toAbsoluteUrl(window.location.pathname);
     }
 
@@ -214,7 +263,6 @@
         const searchForm = container.querySelector(SELECTOR.SEARCH_FORM);
         const paginationForm = container.querySelector(SELECTOR.PAGINATION_FORM);
 
-        // [최적화] 검색 폼이 존재하지 않는 테이블 구조라면 조기 종료하여 과도한 연산 차단
         if (!searchForm || !paginationForm) return;
 
         const fieldNames = getSearchFields(searchForm);
@@ -237,6 +285,7 @@
 
     function appendFormParams(url, form) {
         const formData = new FormData(form);
+
         formData.forEach((value, key) => {
             if (typeof value !== "string") return;
 
@@ -291,6 +340,7 @@
         if (container.id) {
             return doc.getElementById(container.id);
         }
+
         return doc.querySelector(SELECTOR.FRAGMENT_CONTAINER);
     }
 
@@ -350,6 +400,7 @@
         if (!container) {
             throw new Error("테이블 fragment 컨테이너를 찾을 수 없습니다.");
         }
+
         if (!container.matches(SELECTOR.FRAGMENT_CONTAINER)) {
             throw new Error("data-fragment-url이 있는 테이블 컨테이너만 갱신할 수 있습니다.");
         }
@@ -371,7 +422,9 @@
 
     async function submitAjaxSearch(searchForm) {
         const container = getFragmentContainer(searchForm);
-        if (!container) throw new Error("AJAX 검색 테이블 컨테이너를 찾을 수 없습니다.");
+        if (!container) {
+            throw new Error("AJAX 검색 테이블 컨테이너를 찾을 수 없습니다.");
+        }
 
         const baseUrl = getFormBaseUrl(searchForm);
         const requestUrl = buildSearchUrl(baseUrl, searchForm);
@@ -381,12 +434,158 @@
 
     async function submitAjaxPagination(paginationForm) {
         const container = getFragmentContainer(paginationForm);
-        if (!container) throw new Error("AJAX 페이지네이션 테이블 컨테이너를 찾을 수 없습니다.");
+        if (!container) {
+            throw new Error("AJAX 페이지네이션 테이블 컨테이너를 찾을 수 없습니다.");
+        }
 
         const baseUrl = getFormBaseUrl(paginationForm);
         const requestUrl = buildPaginationUrl(baseUrl, paginationForm);
 
         return reloadTableFragment(container, requestUrl);
+    }
+
+    function getClientPaginationState(pagination) {
+        return clientPaginationStateMap.get(pagination) || {};
+    }
+
+    function setClientPaginationState(pagination, state) {
+        clientPaginationStateMap.set(pagination, state);
+    }
+
+    function createClientPaginationButton(options) {
+        const {
+            text,
+            page,
+            disabled = false,
+            active = false,
+            isNumberButton = false
+        } = options;
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "table-layout__page-button";
+        button.textContent = text;
+        button.disabled = disabled;
+        button.dataset.page = String(page);
+        button.setAttribute("data-table-pagination-client-button", "");
+
+        if (isNumberButton) {
+            button.setAttribute("data-table-pagination-number-button", "");
+        }
+
+        if (active) {
+            button.classList.add("table-layout__page-button--active");
+            button.setAttribute("aria-current", "page");
+        }
+
+        return button;
+    }
+
+    function buildClientPageRange(currentPage, totalPages, pageBlockSize) {
+        const startPage = currentPage - (currentPage % pageBlockSize);
+        const endPage = Math.min(startPage + pageBlockSize - 1, totalPages - 1);
+
+        return {
+            startPage,
+            endPage
+        };
+    }
+
+    function renderClientPagination(target, options = {}) {
+        const pagination = resolvePaginationElement(target);
+        if (!pagination) return false;
+        if (!isClientPagination(pagination)) return false;
+
+        const nav = pagination.querySelector(SELECTOR.PAGINATION_CLIENT_NAV) ||
+            pagination.querySelector(".table-layout__pagination-nav");
+
+        if (!nav) return false;
+
+        const previousState = getClientPaginationState(pagination);
+
+        const rawCurrentPage = options.currentPage ?? pagination.dataset[DATA.CURRENT_PAGE] ?? 0;
+        const rawTotalPages = options.totalPages ?? pagination.dataset[DATA.TOTAL_PAGES] ?? 0;
+        const rawPageSize = options.pageSize ?? pagination.dataset[DATA.PAGE_SIZE] ?? 5;
+        const rawPageBlockSize = options.pageBlockSize ?? pagination.dataset[DATA.PAGE_BLOCK_SIZE] ?? DEFAULT_PAGE_BLOCK_SIZE;
+
+        const totalPages = Math.max(0, toSafeNumber(rawTotalPages, 0));
+        const currentPage = totalPages > 0
+            ? Math.min(Math.max(0, toSafeNumber(rawCurrentPage, 0)), totalPages - 1)
+            : 0;
+        const pageSize = Math.max(1, toSafeNumber(rawPageSize, 5));
+        const pageBlockSize = Math.max(1, toSafeNumber(rawPageBlockSize, DEFAULT_PAGE_BLOCK_SIZE));
+
+        pagination.dataset[DATA.CURRENT_PAGE] = String(currentPage);
+        pagination.dataset[DATA.TOTAL_PAGES] = String(totalPages);
+        pagination.dataset[DATA.PAGE_SIZE] = String(pageSize);
+        pagination.dataset[DATA.PAGE_BLOCK_SIZE] = String(pageBlockSize);
+
+        setClientPaginationState(pagination, {
+            onPageChange: typeof options.onPageChange === "function"
+                ? options.onPageChange
+                : previousState.onPageChange || null
+        });
+
+        nav.innerHTML = "";
+
+        if (totalPages === 0) {
+            pagination.classList.add(CLASS_NAME.EMPTY_PAGINATION);
+
+            nav.appendChild(createClientPaginationButton({
+                text: "이전",
+                page: 0,
+                disabled: true
+            }));
+
+            nav.appendChild(createClientPaginationButton({
+                text: "1",
+                page: 0,
+                disabled: true,
+                active: true,
+                isNumberButton: true
+            }));
+
+            nav.appendChild(createClientPaginationButton({
+                text: "다음",
+                page: 0,
+                disabled: true
+            }));
+
+            return true;
+        }
+
+        pagination.classList.remove(CLASS_NAME.EMPTY_PAGINATION);
+
+        const { startPage, endPage } = buildClientPageRange(currentPage, totalPages, pageBlockSize);
+
+        nav.appendChild(createClientPaginationButton({
+            text: "이전",
+            page: Math.max(0, currentPage - 1),
+            disabled: currentPage === 0
+        }));
+
+        for (let pageNumber = startPage; pageNumber <= endPage; pageNumber += 1) {
+            nav.appendChild(createClientPaginationButton({
+                text: String(pageNumber + 1),
+                page: pageNumber,
+                disabled: pageNumber === currentPage,
+                active: pageNumber === currentPage,
+                isNumberButton: true
+            }));
+        }
+
+        nav.appendChild(createClientPaginationButton({
+            text: "다음",
+            page: Math.min(totalPages - 1, currentPage + 1),
+            disabled: currentPage >= totalPages - 1
+        }));
+
+        return true;
+    }
+
+    function initializeClientPagination(pagination) {
+        if (!pagination || !isClientPagination(pagination)) return;
+        renderClientPagination(pagination);
     }
 
     function initializeTableLayout(root) {
@@ -398,6 +597,10 @@
             const container = getFragmentContainer(form);
             syncPaginationSearchParams(container);
             syncPaginationHiddenInputs(form);
+        });
+
+        root.querySelectorAll(SELECTOR.PAGINATION).forEach((pagination) => {
+            initializeClientPagination(pagination);
         });
     }
 
@@ -414,7 +617,6 @@
 
         event.preventDefault();
 
-        // [최적화] 전역 클로저 변수 대신 각 컨테이너 고유 데이터 속성으로 서브밋 상태 제어 (멀티 컴포넌트 안전 보장)
         if (container && container.dataset[DATA.SUBMITTING] === "true") return;
 
         try {
@@ -444,7 +646,6 @@
 
         event.preventDefault();
 
-        // [최적화] 컨테이너 기반으로 중복 서브밋 방지 분리
         if (container && container.dataset[DATA.SUBMITTING] === "true") return;
 
         syncPaginationHiddenInputs(paginationForm);
@@ -458,6 +659,31 @@
         } finally {
             if (container) container.dataset[DATA.SUBMITTING] = "false";
         }
+    }
+
+    function handleClientPaginationClick(event) {
+        const button = event.target.closest(SELECTOR.PAGINATION_CLIENT_BUTTON);
+        if (!button) return;
+
+        const pagination = button.closest(SELECTOR.PAGINATION);
+        if (!pagination || !isClientPagination(pagination) || button.disabled) return;
+
+        event.preventDefault();
+
+        const nextPage = Math.max(0, toSafeNumber(button.dataset.page, 0));
+        const state = getClientPaginationState(pagination);
+
+        if (typeof state.onPageChange === "function") {
+            state.onPageChange(nextPage, pagination);
+        }
+
+        pagination.dispatchEvent(new CustomEvent(EVENT_NAME.CLIENT_PAGE_CHANGE, {
+            bubbles: true,
+            detail: {
+                page: nextPage,
+                pagination
+            }
+        }));
     }
 
     function bindSubmitEvents() {
@@ -477,6 +703,10 @@
         });
     }
 
+    function bindClickEvents() {
+        document.addEventListener("click", handleClientPaginationClick);
+    }
+
     function initAll(root) {
         initializeTableLayout(root);
     }
@@ -488,12 +718,14 @@
     }
 
     bindSubmitEvents();
+    bindClickEvents();
 
     window.TableLayout = Object.freeze({
         MODE: TABLE_MODE,
         EVENT: EVENT_NAME,
         initialize: initializeTableLayout,
-        reload: reloadTableFragment
+        reload: reloadTableFragment,
+        renderClientPagination
     });
 
     window.initializeTableLayout = initializeTableLayout;

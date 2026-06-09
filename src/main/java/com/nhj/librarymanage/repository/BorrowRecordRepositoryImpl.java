@@ -77,6 +77,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
     public Page<BorrowRecord> search(BorrowRequest.Search search, Pageable pageable) {
         return getPage(
                 pageable,
+                like(member.memberNo, search.memberNo()),
                 like(member.name, search.memberName()),
                 like(book.title, search.bookTitle())
         );
@@ -119,6 +120,7 @@ public class BorrowRecordRepositoryImpl implements BorrowRecordRepositoryCustom 
                 pageable,
                 isNull(borrowRecord.returnedAt),
                 before(borrowRecord.dueAt, LocalDate.now()),
+                like(member.memberNo, search.memberNo()),
                 like(member.name, search.memberName()),
                 like(book.title, search.bookTitle())
         );

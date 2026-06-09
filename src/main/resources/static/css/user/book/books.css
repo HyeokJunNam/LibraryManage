@@ -433,6 +433,16 @@
     }
 }
 
+.book-card__status--available {
+    background: #ecfdf3;
+    color: #15803d;
+}
+
+.book-card__status--unavailable {
+    background: #f6f8f7;
+    color: #7a8a80;
+}
+
 @media (max-width: 560px) {
     .book-card {
         grid-template-columns: 1fr;

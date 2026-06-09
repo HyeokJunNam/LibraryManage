@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.domain.entity;
 
+import com.nhj.librarymanage.domain.code.BorrowStatus;
 import com.nhj.librarymanage.domain.code.ReturnStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +36,7 @@ public class BorrowRecord extends BaseEntity {
 
     public void returnBook() {
         this.returnedAt = LocalDateTime.now();
-        bookCopy.releaseBorrow();
+        this.bookCopy.setBorrowStatus(BorrowStatus.AVAILABLE);
     }
 
     public ReturnStatus getReturnStatus() {

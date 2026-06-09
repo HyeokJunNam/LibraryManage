@@ -13,20 +13,18 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class MailEventListener {
 
     private final EmailSender emailSender;
-    private final NotificationDispatchService notificationDispatchService;
+    private final NotificationService notificationService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Async
-    @EventListener
+    @Async // 아 이거 있어서 돌아가나..? 느렸던거 같은데
     public void handle(MailTemplate mailTemplate) {
         emailSender.send(mailTemplate);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Async
-    @EventListener
+    /*@Async*/
     public void sendNotify(BookBorrowableEvent event) {
-        notificationDispatchService.dispatchBorrowableNotifications(event.bookId());
+        notificationService.send(event.bookId());
     }
 
 }

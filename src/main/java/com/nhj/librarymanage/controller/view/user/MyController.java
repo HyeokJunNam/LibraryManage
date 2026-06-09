@@ -80,23 +80,4 @@ public class MyController {
         return "redirect:/my";
     }
 
-
-    @GetMapping("/my/borrows")
-    public String borrowListPanel(Model model, @AuthenticationPrincipal MemberPrincipal memberPrincipal,
-                                  MemberBorrowRequest.Search search,
-                                  Pageable pageable,
-                                  @RequestParam(required = false) BorrowStatus borrowStatus) {
-
-        PageResponse<MyBorrowResponse.ListItem> pageResponse = borrowRecordService.getMyBorrows(memberPrincipal.getId(), search, pageable);
-
-        model.addAttribute("content", pageResponse.content());
-        model.addAttribute("pageMetaData", pageResponse.pageMetaData());
-
-        if (borrowStatus == BorrowStatus.BORROWED) {
-            return "user/my/fragments/current-borrow-panel :: currentBorrowPanel";
-        }
-
-        return "user/my/fragments/all-borrow-panel :: allBorrowPanel";
-    }
-
 }

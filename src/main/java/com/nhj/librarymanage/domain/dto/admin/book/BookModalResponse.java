@@ -1,6 +1,7 @@
 package com.nhj.librarymanage.domain.dto.admin.book;
 
 import com.nhj.librarymanage.domain.code.BookCopyCondition;
+import com.nhj.librarymanage.domain.code.BorrowStatus;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.BookCopy;
 import lombok.AccessLevel;
@@ -25,8 +26,7 @@ public class BookModalResponse {
             for (BookCopy bookCopy : book.getBookCopies()) {
                 stockQuantity++;
 
-                if (bookCopy.getBookCopyCondition() == BookCopyCondition.NORMAL
-                        && bookCopy.getBorrowRecord() == null) {
+                if (bookCopy.isBorrowable()) {
                     availableQuantity++;
                 }
             }

@@ -21,6 +21,7 @@ public class BorrowResponse {
             Long bookCopyId,
             String bookTitle,
             Long memberId,
+            String loginId,
             String memberName, // 얘
             String memberNo,
             LocalDateTime borrowedAt,
@@ -38,6 +39,7 @@ public class BorrowResponse {
                     .bookCopyId(bookCopy.getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())
+                    .loginId(member.getLoginId())
                     .memberName(member.getName())
                     .memberNo(member.getMemberNo())
                     .borrowedAt(borrowRecord.getBorrowedAt())
@@ -55,6 +57,7 @@ public class BorrowResponse {
             Long bookCopyId,
             String bookTitle,
             Long memberId,
+            String loginId,
             String memberNo,
             String memberName, // 얘
             LocalDateTime borrowedAt,
@@ -73,6 +76,7 @@ public class BorrowResponse {
                     .bookCopyId(bookCopy.getId())
                     .bookTitle(book.getTitle())
                     .memberId(member.getId())
+                    .loginId(member.getLoginId())
                     .memberNo(member.getMemberNo())
                     .memberName(member.getName())
                     .borrowedAt(borrowRecord.getBorrowedAt())

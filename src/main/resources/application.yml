@@ -2,9 +2,8 @@ server:
   port: 9000
 
 spring:
-  config:
-    import:
-      - optional:classpath:application-secret.yml
+  profiles:
+    active: local
 
   thymeleaf:
     prefix: classpath:/templates/
@@ -25,26 +24,12 @@ spring:
               - profile
               - email
 
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: ${db.url}
-    username: ${db.username}
-    password: ${db.password}
-
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        highlight_sql: true
-        default_batch_fetch_size: 100
-        query:
-          fail_on_pagination_over_collection_fetch: true
+  threads:
+    virtual:
+      enabled: true
 
   data:
+
     web:
       pageable:
         default-page-size: 5

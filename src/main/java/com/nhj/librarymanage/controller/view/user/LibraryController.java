@@ -57,7 +57,7 @@ public class LibraryController {
     public String bookDetail(Model model, @PathVariable Long id) {
         BookResponse.Detail detail = bookService.getBook(id);
 
-        NotificationResponse.Status status = NotificationResponse.Status.from(notificationService.hasRequested(id));
+        NotificationResponse.Status status = NotificationResponse.Status.from(notificationService.hasNotificationRequest(id));
 
         model.addAttribute("book", detail);
         model.addAttribute("notification", status);

@@ -1,0 +1,225 @@
+.borrow-list-page {
+    width: 100%;
+    max-width: var(--container-width);
+
+    padding: 48px 0 72px;
+}
+
+.borrow-list-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+
+    margin-bottom: 24px;
+}
+
+.borrow-list-header__eyebrow {
+    margin: 0 0 8px;
+
+    color: var(--green-600);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.borrow-list-header__title {
+    margin: 0;
+
+    color: var(--gray-900);
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.borrow-list-header__description {
+    margin: 10px 0 0;
+
+    color: var(--gray-500);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.borrow-list-card {
+    overflow: hidden;
+
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(27, 53, 36, 0.06);
+}
+
+.borrow-list-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 22px 26px;
+
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.borrow-list-card__title {
+    margin: 0;
+
+    color: var(--gray-900);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.borrow-list-card__count {
+    color: var(--gray-500);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.borrow-list-table-wrap {
+    overflow-x: auto;
+}
+
+.borrow-list-table {
+    width: 100%;
+    min-width: 860px;
+
+    border-collapse: collapse;
+}
+
+.borrow-list-table th {
+    padding: 15px 18px;
+
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--gray-50);
+
+    color: var(--gray-500);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.borrow-list-table td {
+    padding: 18px;
+
+    border-bottom: 1px solid var(--gray-100);
+
+    color: var(--gray-700);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.borrow-list-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.borrow-list-table__number {
+    color: var(--gray-400);
+    font-weight: 700;
+}
+
+.borrow-list-table__title {
+    color: var(--gray-900);
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.borrow-list-table__title span {
+    display: block;
+    overflow: hidden;
+
+    max-width: 360px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.borrow-list-table__muted {
+    color: var(--gray-400);
+}
+
+.borrow-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 72px;
+    height: 30px;
+    padding: 0 12px;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.borrow-status--borrowed {
+    border: 1px solid var(--green-200);
+    background: var(--green-50);
+    color: var(--green-700);
+}
+
+.borrow-status--returned {
+    border: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    color: var(--gray-600);
+}
+
+.borrow-status--overdue {
+    border: 1px solid var(--red-200);
+    background: var(--red-50);
+    color: var(--red-600);
+}
+
+.borrow-status--unknown {
+    border: 1px solid var(--gray-200);
+    background: #fff;
+    color: var(--gray-400);
+}
+
+.borrow-list-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 260px;
+    padding: 40px 24px;
+
+    text-align: center;
+}
+
+.borrow-list-empty__title {
+    color: var(--gray-800);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.borrow-list-empty__description {
+    margin: 10px 0 0;
+
+    color: var(--gray-500);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .borrow-list-page {
+        padding: 32px 0 56px;
+    }
+
+    .borrow-list-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .borrow-list-header__title {
+        font-size: 26px;
+    }
+
+    .borrow-list-card__header {
+        padding: 20px;
+    }
+}

@@ -56,7 +56,7 @@ public class BorrowService {
 
             for (int i = 0 ; i < requestQuantity ; i++) {
                 BookCopy bookCopy = bookCopies.get(i);
-                bookCopy.startBorrow(member, BORROW_DAY);
+                bookCopy.borrow(member, BORROW_DAY);
             }
 
         }

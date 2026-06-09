@@ -26,8 +26,7 @@
 
         <section class="book-create-layout">
             <section class="book-create-left">
-
-                <section class="panel-layout table-layout isbn-lookup-card">
+                <section class="panel-layout table-layout table-layout--fixed-height isbn-lookup-card">
                     <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                         title='ISBN으로 도서 정보 불러오기',
                         caption='ISBN을 입력하면 외부 도서 정보를 조회해 입력 폼에 채울 수 있습니다.',
@@ -46,7 +45,7 @@
                                        autocomplete="off">
 
                                 <button type="button"
-                                        class="btn btn--action isbn-lookup-card__button"
+                                        class="btn btn--action"
                                         id="lookupBookByIsbnButton">
                                     정보 불러오기
                                 </button>
@@ -55,7 +54,7 @@
                     </div>
                 </section>
 
-                <section class="panel-layout table-layout book-input-card">
+                <section class="panel-layout table-layout table-layout--fixed-height book-input-card">
                     <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                         title='도서 정보 입력',
                         caption='등록 예정 목록에 추가할 도서 정보를 확인하거나 직접 입력하세요.',
@@ -64,7 +63,6 @@
 
                     <div class="table-layout__body book-input-card__body">
                         <form class="book-input-form" id="bookDraftForm">
-
                             <div class="book-image-row">
                                 <div class="book-image-preview" id="bookImagePreview">
                                     <div class="book-image-preview__dummy">
@@ -160,14 +158,12 @@
                                     등록 예정 목록에 추가
                                 </button>
                             </div>
-
                         </form>
                     </div>
                 </section>
-
             </section>
 
-            <section class="panel-layout table-layout book-draft-panel">
+            <section class="panel-layout table-layout table-layout--fixed-height book-draft-panel">
                 <th:block th:replace="~{admin/common/table-layout :: tableHeader(
                     title='등록 예정 도서 목록',
                     caption='왼쪽에서 추가한 도서들을 확인하고 한 번에 저장합니다.',
@@ -189,13 +185,33 @@
                         <table class="table-layout__table book-draft-table">
                             <thead class="table-layout__thead">
                             <tr class="table-layout__row table-layout__row--head">
-                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">No</th>
-                                <th class="table-layout__cell table-layout__cell--head">도서명</th>
-                                <th class="table-layout__cell table-layout__cell--head">ISBN</th>
-                                <th class="table-layout__cell table-layout__cell--head">저자</th>
-                                <th class="table-layout__cell table-layout__cell--head">출판사</th>
-                                <th class="table-layout__cell table-layout__cell--head">위치</th>
-                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">관리</th>
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--leading">
+                                    <span class="table-layout__text">No</span>
+                                </th>
+
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--fill-start">
+                                    <span class="table-layout__text">도서명</span>
+                                </th>
+
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                                    <span class="table-layout__text">ISBN</span>
+                                </th>
+
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                                    <span class="table-layout__text">저자</span>
+                                </th>
+
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                                    <span class="table-layout__text">출판사</span>
+                                </th>
+
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                                    <span class="table-layout__text">위치</span>
+                                </th>
+
+                                <th class="table-layout__cell table-layout__cell--head table-layout__cell--center-start">
+                                    <span class="table-layout__text">관리</span>
+                                </th>
                             </tr>
                             </thead>
 
@@ -204,29 +220,41 @@
                     </div>
                 </div>
 
-                <div class="table-layout__pagination is-hidden" id="bookDraftPagination">
-                    <nav class="table-layout__pagination-nav"
-                         id="bookDraftPaginationNav"
-                         aria-label="등록 예정 도서 페이지네이션">
-                    </nav>
+                <div id="bookDraftPagination" class="book-draft-pagination is-hidden">
+                    <th:block th:replace="~{common/pagination :: pagination(
+                        paginationMode='client'
+                    )}"></th:block>
                 </div>
 
                 <template id="bookDraftRowTemplate">
                     <tr class="table-layout__row book-draft-row">
-                        <td class="table-layout__cell table-layout__cell--leading" data-field="index"></td>
+                        <td class="table-layout__cell table-layout__cell--leading">
+                            <span class="table-layout__text" data-field="index"></span>
+                        </td>
 
-                        <td class="table-layout__cell table-layout__cell--primary">
+                        <td class="table-layout__cell table-layout__cell--primary table-layout__cell--fill-start">
                             <span class="table-layout__text" data-field="title"></span>
                         </td>
 
-                        <td class="table-layout__cell table-layout__cell--muted" data-field="isbn"></td>
-                        <td class="table-layout__cell" data-field="author"></td>
-                        <td class="table-layout__cell" data-field="publisher"></td>
-                        <td class="table-layout__cell" data-field="location"></td>
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span class="table-layout__text" data-field="isbn"></span>
+                        </td>
 
                         <td class="table-layout__cell table-layout__cell--center-start">
+                            <span class="table-layout__text" data-field="author"></span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span class="table-layout__text" data-field="publisher"></span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start">
+                            <span class="table-layout__text" data-field="location"></span>
+                        </td>
+
+                        <td class="table-layout__cell table-layout__cell--center-start book-draft-table__action-cell">
                             <button type="button"
-                                    class="book-draft-row__remove"
+                                    class="btn btn--danger"
                                     data-role="remove-book-draft">
                                 삭제
                             </button>
@@ -240,7 +268,7 @@
 
 <th:block th:fragment="draftHeaderActions">
     <button type="button"
-            class="btn btn--ghost"
+            class="btn btn--cancel"
             id="clearBookDraftButton"
             disabled>
         전체 비우기

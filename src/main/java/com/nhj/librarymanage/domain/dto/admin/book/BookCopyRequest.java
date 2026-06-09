@@ -20,7 +20,7 @@ public class BookCopyRequest {
         }
 
         public record UpdateItem(
-                Long bookItemId,
+                Long bookCopyId,
                 BookCopyCondition bookCopyCondition
         ) {
         }

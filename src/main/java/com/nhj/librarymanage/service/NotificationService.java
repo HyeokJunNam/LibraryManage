@@ -1,5 +1,6 @@
 package com.nhj.librarymanage.service;
 
+import com.nhj.librarymanage.domain.dto.admin.notification.NotificationTemplate;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.entity.Notification;
@@ -8,11 +9,14 @@ import com.nhj.librarymanage.error.code.NotificationErrorCode;
 import com.nhj.librarymanage.error.exception.notification.AlreadyRequestedNotificationException;
 import com.nhj.librarymanage.repository.BookRepository;
 import com.nhj.librarymanage.repository.MemberRepository;
+import com.nhj.librarymanage.repository.NotificationHistoryRepository;
 import com.nhj.librarymanage.repository.NotificationRepository;
 import com.nhj.librarymanage.security.member.CurrentAuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -20,48 +24,17 @@ public class NotificationService {
 
     private final CurrentAuthenticatedUserProvider currentAuthenticatedUserProvider;
 
+    private final NotificationSender notificationSender;
+    private final NotificationHistoryService notificationHistoryService;
+
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final NotificationRepository notificationRepository;
-
-    private void sendEmail() {
-
-    }
-
-    private void sendPush() {
-
-    }
-
-    // TODO 이름이랑 내용 바꾸자..  알림 신청했는지 아닌지 체크하는거구나.
-    public boolean hasRequested(Long bookId) {
-        Long memberId = currentAuthenticatedUserProvider.findCurrentUserId().orElse(null);
-
-        return hasRequested(memberId, bookId);
-    }
-
-    public boolean hasRequested(Long memberId, Long bookId) {
-        if (memberId != null) {
-            return notificationRepository.existsByBookIdAndMemberId(bookId, memberId);
-        }
-        else {
-            return false;
-        }
-    }
-
-    // 실제 발송인데..  그러니까 Borrowable 을 type으로 바꾸라고? 공용으로 쓸 수 있게끔? 그리고 팩토리로 바꾸고? 하하하 좋은데?
-    // 근데 이건 이벤트잖음?
-    public void sendNotify() {
-
-
-
-    }
-
+    private final NotificationHistoryRepository notificationHistoryRepository;
 
     @Transactional
-    public void createNotify(Long bookId, NotificationRequest.Create create) {
-        Long memberId = currentAuthenticatedUserProvider.getCurrentUserId();
-
-        if (hasRequested(memberId, bookId)) {
+    public void requestNotify(Long bookId, Long memberId, NotificationRequest.Create create) {
+        if (hasNotificationRequest(memberId, bookId)) {
             throw new AlreadyRequestedNotificationException(NotificationErrorCode.NOTIFICATION_ALREADY_REQUESTED);
         }
 
@@ -78,15 +51,51 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    @Transactional
-    public void deleteNotify(Long bookId) {
-        Long memberId = currentAuthenticatedUserProvider.getCurrentUserId();
 
-        notificationRepository.deleteByBookIdAndMemberId(bookId, memberId);
+    @Transactional
+    public void cancelNotify(Long bookId, Long memberId) {
+        Notification notification = notificationRepository.getByBookIdAndMemberId(bookId, memberId);
+
+        notificationRepository.delete(notification);
+        // notificationHistoryService.canceled(notification);
     }
 
-    // 발송 등록 요청
 
+    public void send(Long bookId) {
+        Book book = bookRepository.getById(bookId);
+
+        List<Notification> notifications = notificationRepository.findAllByBookId(bookId); // TODO 다보내면 안되긴 함
+
+        for (Notification notification : notifications) {
+            NotificationTemplate notificationTemplate = NotificationTemplate.of(book, notification);
+            notificationSender.send(notificationTemplate);
+        }
+
+    }
+
+    public void failSend() {
+
+    }
+
+
+
+
+
+
+    public boolean hasNotificationRequest(Long bookId) {
+        Long memberId = currentAuthenticatedUserProvider.findCurrentUserId().orElse(null);
+
+        if (memberId != null) {
+            return hasNotificationRequest(bookId, memberId);
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean hasNotificationRequest(Long bookId, Long memberId) {
+        return notificationRepository.existsByBookIdAndMemberId(bookId, memberId);
+    }
 
 
 
