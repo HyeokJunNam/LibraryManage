@@ -1,15 +1,14 @@
 package com.nhj.librarymanage.service;
 
 import com.nhj.librarymanage.domain.dto.admin.notification.NotificationTemplate;
+import com.nhj.librarymanage.domain.dto.temp.NotificationRequest;
 import com.nhj.librarymanage.domain.entity.Book;
 import com.nhj.librarymanage.domain.entity.Member;
 import com.nhj.librarymanage.domain.entity.Notification;
-import com.nhj.librarymanage.domain.dto.temp.NotificationRequest;
 import com.nhj.librarymanage.error.code.NotificationErrorCode;
 import com.nhj.librarymanage.error.exception.notification.AlreadyRequestedNotificationException;
 import com.nhj.librarymanage.repository.BookRepository;
 import com.nhj.librarymanage.repository.MemberRepository;
-import com.nhj.librarymanage.repository.NotificationHistoryRepository;
 import com.nhj.librarymanage.repository.NotificationRepository;
 import com.nhj.librarymanage.security.member.CurrentAuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class NotificationService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
     private final NotificationRepository notificationRepository;
-    private final NotificationHistoryRepository notificationHistoryRepository;
 
     @Transactional
     public void requestNotify(Long bookId, Long memberId, NotificationRequest.Create create) {
@@ -55,12 +53,14 @@ public class NotificationService {
     @Transactional
     public void cancelNotify(Long bookId, Long memberId) {
         Notification notification = notificationRepository.getByBookIdAndMemberId(bookId, memberId);
+        Book book = bookRepository.getById(bookId);
 
-        notificationRepository.delete(notification);
-        // notificationHistoryService.canceled(notification);
+        notificationHistoryService.canceled(NotificationTemplate.of(book, notification));
+        notificationRepository.deleteByBookIdAndMemberId(bookId, memberId);
     }
 
 
+    @Transactional
     public void send(Long bookId) {
         Book book = bookRepository.getById(bookId);
 

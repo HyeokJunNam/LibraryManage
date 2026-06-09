@@ -73,21 +73,21 @@ public class NotificationHistory extends BaseEntity {
         );
     }
 
-    public static NotificationHistory canceled(NotificationTemplate notificationTemplate) {
-        return new NotificationHistory(
-                notificationTemplate,
-                NotificationResult.CANCELED,
-                LocalDateTime.now(),
-                null
-        );
-    }
-
     public static NotificationHistory failed(NotificationTemplate notificationTemplate, String failureReason) {
         return new NotificationHistory(
                 notificationTemplate,
                 NotificationResult.FAILED,
                 LocalDateTime.now(),
                 failureReason
+        );
+    }
+
+    public static NotificationHistory canceled(NotificationTemplate notificationTemplate) {
+        return new NotificationHistory(
+                notificationTemplate,
+                NotificationResult.CANCELED,
+                LocalDateTime.now(),
+                null
         );
     }
 

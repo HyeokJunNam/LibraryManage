@@ -15,4 +15,6 @@ public interface NotificationRepositoryCustom {
 
     List<Notification> findAllByBookId(Long bookId);
 
+    Optional<Notification> findByBookIdAndMemberId(Long bookId, Long memberId);
+
 }

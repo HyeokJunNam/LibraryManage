@@ -5,6 +5,7 @@ import com.nhj.librarymanage.domain.entity.NotificationHistory;
 import com.nhj.librarymanage.repository.NotificationHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class NotificationHistoryService {
         notificationHistoryRepository.save(notificationHistory);
     }
 
+    @Transactional
     public void canceled(NotificationTemplate notificationTemplate) {
         NotificationHistory notificationHistory = NotificationHistory.canceled(notificationTemplate);
 

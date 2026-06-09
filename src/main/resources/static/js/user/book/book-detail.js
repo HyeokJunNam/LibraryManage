@@ -174,7 +174,7 @@ async function submitNotificationCancel(notifyButton, bookId) {
     try {
         setNotifyButtonLoading(notifyButton, "취소 중...");
 
-        await apiDelete(`/api/books/${bookId}/notifications/me`);
+        await apiDelete(`/api/books/${bookId}/notifications`);
 
         applyNotifyRequestEnabledState(notifyButton);
     } catch (error) {
