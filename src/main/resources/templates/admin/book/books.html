@@ -184,11 +184,13 @@
     </main>
 </div>
 
-<th:block th:fragment="headerActions">
-    <a th:href="@{/admin/books/new}"
-       class="btn btn--action">
-        도서 등록
-    </a>
+<th:block th:remove="all">
+    <th:block th:fragment="headerActions">
+        <a th:href="@{/admin/books/new}"
+           class="btn btn--action">
+            도서 등록
+        </a>
+    </th:block>
 </th:block>
 
 <script>

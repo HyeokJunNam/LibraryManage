@@ -159,17 +159,19 @@
     </main>
 </div>
 
-<th:block th:fragment="headerActions">
-    <a th:href="@{/admin/books/{bookId}(bookId=${book.id})}"
-       class="btn btn--cancel">
-        취소
-    </a>
+<th:block th:remove="all">
+    <th:block th:fragment="headerActions">
+        <a th:href="@{/admin/books/{bookId}(bookId=${book.id})}"
+           class="btn btn--cancel">
+            취소
+        </a>
 
-    <button type="button"
-            id="saveBookButton"
-            class="btn btn--submit">
-        저장
-    </button>
+        <button type="button"
+                id="saveBookButton"
+                class="btn btn--submit">
+            저장
+        </button>
+    </th:block>
 </th:block>
 
 <th:block th:replace="~{common/modal-alert :: alertModal}"></th:block>
